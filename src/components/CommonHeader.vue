@@ -2,7 +2,7 @@
   <div class="header-container">
     <div class="l-content">
       <span class="text"><router-link to="/index/information">ASG后台管理系统<span
-            class="version">v0.9.0</span></router-link></span>
+            class="version">v0.9.1</span></router-link></span>
     </div>
     <div class="r-content">
       <div class="single__router" @click="routerToGw">前往ASG官网<i class="el-icon-d-arrow-right"></i></div>
