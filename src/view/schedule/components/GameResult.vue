@@ -127,6 +127,19 @@ export default {
             if (!this.winteam) {
                 return this.$message.warning('请选择获胜队伍！');
             }
+            const confirmMsg = `您确定设置${this.winteam}为该场比赛的获胜队伍吗？一旦确认，将无法修改赛果。`;
+
+            this.$confirm(confirmMsg, '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning',
+            }).then(() => {
+                this.doSetWinner();
+            }).catch(() => {
+            this.$message.info('已取消设置获胜队伍');
+            });
+        },
+        async doSetWinner() {
             const loading = this.$loading({
                 lock: true,
                 text: "设置获胜者中......",
@@ -135,7 +148,7 @@ export default {
             });
             try {
                 const { status } = await setWinGame(this.gameResult.id, this.winteam);
-                if (status !== 200) throw new Error('服务端异常，设置失败!');
+                if (status !== 200) throw new Error('服务端异常，设置失败');
                 this.winteam = '';
                 this.visible = false;
                 this.$emit('updateLoad');
