@@ -3,22 +3,29 @@
     <!-- 赛程表 -->
     <el-tabs v-model="activeName" @tab-click="handleClick">
       <el-tab-pane label="赛程管理" name="first">
-        <schedule-table ref="schedule" @operation="changeOperation" />
+        <schedule-table ref="schedule" @operation="changeOperation" :tagOptions=tagOptions />
       </el-tab-pane>
       <el-tab-pane label="赛季管理" name="second">
         <SetSeason />
       </el-tab-pane>
     </el-tabs>
-    <add-schedule :operationVisible.sync="operationVisible" :eventOptions="eventOptions" :instructor="instructor"
-      :commentary="commentary" @onSuccess="onRefresh"></add-schedule>
+    <add-schedule
+      :operationVisible.sync="operationVisible"
+      :tagOptions="tagOptions"
+      :eventOptions="eventOptions"
+      :instructor="instructor"
+      :commentary="commentary"
+      @onSuccess="onRefresh"
+    ></add-schedule>
   </div>
 </template>
 
 <script>
-import { pushSchedule, getUserRoles } from "@/api/schedule/index";
+import { getUserRoles } from "@/api/schedule/index";
 import { getPlayerDetails } from "@/api/gameSeason/index.js"
 import { getAllEvents } from "@/api/gameSeason/index";
-import addSchedule from "@/view/schedule/components/addSchedule.vue"
+import addSchedule from "@/view/schedule/components/addSchedule.vue";
+import { getByTitle } from "@/api/config";
 export default {
   name: "seasonSchdule",
   data() {
@@ -44,6 +51,7 @@ export default {
       // 选项卡
       activeName: "first",
       eventOptions: [],
+      tagOptions: [],
     };
   },
   components: {
@@ -77,44 +85,6 @@ export default {
     changeOperation() {
       this.operationVisible = true;
     },
-
-    // 发布
-    // submit() {
-    //   this.btnloading = true;
-    //   this.setSchedule();
-    // },
-    // setSchedule() {
-    //   const comMap = this.commentary_value.map(com => ({id:com.id,chinaname:com.chinaname}));
-    //   const filterArr = comMap.filter(f => f.id !== 0);
-    //   let commentary = JSON.stringify(filterArr);
-    //   pushSchedule(
-    //     this.team1_name,
-    //     this.team2_name,
-    //     this.startTime,
-    //     this.belong,
-    //     commentary,
-    //     this.referee_value,
-    //     this.bilibiliuri,
-    //     this.tag
-    //   )
-    //     .then((res) => {
-    //       this.$message.success(res.data);
-    //       this.btnloading = false;
-    //       this.$refs.schedule.belong = this.belong;
-    //       this.$refs.schedule?.initSchedule(1, 10, this.belong);
-    //       this.team1_name = "";
-    //       this.team2_name = "";
-    //       this.instructor_value = "";
-    //       this.commentary_value = [];
-    //       this.referee_value = "";
-    //       this.tag = "";
-    //       this.active = 1;
-    //     })
-    //     .catch(() => {
-    //       this.$message.error("设置失败，请检查数据！");
-    //       this.btnloading = false;
-    //     });
-    // },
     //获取解说列表
     initGetCommentary() {
       let params = {
@@ -173,10 +143,14 @@ export default {
         .catch((err) => {
           console.log(err);
         });
+
     },
   },
   //METHOD结束
   created() {
+    getByTitle('scheduleType').then(res=>{
+      this.tagOptions = res.data;
+    })
     this.initGetCommentary();
     this.initGetAnchor();
     this.initGetReferee();

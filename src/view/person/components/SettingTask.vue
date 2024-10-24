@@ -24,36 +24,14 @@
             </el-card>
             <div class="task__code--highlight">
                 <p class="title" id="money-1">积分规则</p>
-                <p class="point__title">
-                    0积分
-                    <el-rate :value="0" disabled disabled-void-color="#979797"></el-rate>
-                </p>
-                <p class="content">顺手完成的任务</p>
-                <p class="point__title">
-                    1积分
-                    <el-rate :value="1" disabled disabled-void-color="#979797"></el-rate>
-                </p>
-                <p class="content">需要一定时间完成的任务。</p>
-                <p class="point__title">
-                    2积分
-                    <el-rate :value="2" disabled disabled-void-color="#979797"></el-rate>
-                </p>
-                <p class="content">需要募集材料、花费精力完成的任务。</p>
-                <p class="point__title">
-                    3积分
-                    <el-rate :value="3" disabled disabled-void-color="#979797"></el-rate>
-                </p>
-                <p class="content">需要借助其他力量才能够完成的任务。</p>
-                <p class="point__title">
-                    4积分
-                    <el-rate :value="4" disabled disabled-void-color="#979797"></el-rate>
-                </p>
-                <p class="content">需要统领赛事组，引领整个赛事的走向，花费一定时间和精力才能完成。</p>
-                <p class="point__title">
-                    5积分
-                    <el-rate :value="5" disabled disabled-void-color="#979797"></el-rate>
-                </p>
-                <p class="content">能为ASG赛事团队带来荣誉、金钱以及赞助的任务。</p>
+
+                <div v-for="(item, index) in moneyRules" :key="index">
+                    <p class="point__title">
+                        {{ index }}积分
+                        <el-rate :value="index" disabled disabled-void-color="#979797"></el-rate>
+                    </p>
+                    <p class="content">{{ item.label }}</p>
+                </div>
             </div>
         </div>
     </div>
@@ -61,6 +39,7 @@
 
 <script>
 import { setTask } from '@/api/admin/index.js';
+import { getByTitle } from '@/api/config';
 import { mapGetters } from 'vuex';
 export default {
     name: 'SettingTask',
@@ -69,9 +48,9 @@ export default {
             type: Object,
             default: () => { }
         },
-        qqMap:{
-            type:Array,
-            required:true
+        qqMap: {
+            type: Array,
+            required: true
         }
     },
     data() {
@@ -81,8 +60,14 @@ export default {
                 taskDescription: '',
                 money: 0
             },
-            jsPlumb: null
+            jsPlumb: null,
+            moneyRules: []
         };
+    },
+    created() {
+        getByTitle('moneyRules').then(res => {
+            this.moneyRules = res.data;
+        })
     },
     computed: {
         ...mapGetters(['userInfo']),
@@ -160,7 +145,7 @@ export default {
                         }
                     ]
                 ],
-                Connector: ['Flowchart', { stub: 10, gap: 5, midpoint: 0.04, cornerRadius: 5, alwaysRespectStubs: true  }], //要使用的默认连接器的类型：折线，流程等
+                Connector: ['Flowchart', { stub: 10, gap: 5, midpoint: 0.04, cornerRadius: 5, alwaysRespectStubs: true }], //要使用的默认连接器的类型：折线，流程等
                 DrapOptions: { cursor: "crosshair", zIndex: 2000 },
                 Scope: "jsPlumb_DefaultScope"
             });

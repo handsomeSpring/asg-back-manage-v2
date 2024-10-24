@@ -82,7 +82,7 @@
                     </tbody>
                 </table>
             </el-scrollbar>
-            <el-pagination @size-change="handleChange($event, 'limit')" @current-change="handleChange($event, 'page')"
+            <el-pagination style="margin-top: 18px;text-align: right;" @size-change="handleChange($event, 'limit')" @current-change="handleChange($event, 'page')"
                 :current-page="pageQuery.page" :page-sizes="[10, 20, 30, 40, 50]" :page-size="pageQuery.limit"
                 layout="total, sizes, prev, pager, next, jumper" :total="total">
             </el-pagination>

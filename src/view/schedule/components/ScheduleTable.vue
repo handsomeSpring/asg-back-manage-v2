@@ -67,12 +67,12 @@
           </template>
           <template v-slot:content>
             <el-descriptions>
-              <el-descriptions-item label="主场战队" :span="1">{{ item.team1_name }}（{{
+              <el-descriptions-item label="主场战队" :span="1">{{ item.team1_name }}<span class="like__icon">（❤{{
                 item.team1_piaoshu
-              }}）</el-descriptions-item>
-              <el-descriptions-item label="客场战队" :span="1">{{ item.team2_name }}（{{
+              }}）</span></el-descriptions-item>
+              <el-descriptions-item label="客场战队" :span="1">{{ item.team2_name }}<span class="like__icon">（❤{{
                 item.team2_piaoshu
-              }}）</el-descriptions-item>
+              }}）</span></el-descriptions-item>
               <el-descriptions-item label="裁判" :span="1">{{
                 item.judge || '无裁判'
               }}</el-descriptions-item>
@@ -217,9 +217,9 @@
       </div>
     </el-dialog>
     <!-- 弹出框 -->
-    <dialog-choose :eventName="belong" :showChoose.sync="showChoose" @refresh="handleInit"></dialog-choose>
+    <dialog-choose :eventName="belong" :showChoose.sync="showChoose" @refresh="handleInit" :tagOptions="tagOptions"></dialog-choose>
     <GameResult :dialogVisible.sync="gameResultDialog" :gameResult="gameResult" @updateLoad="handleInit"></GameResult>
-    <matchDialog :dialogVisible.sync="matchDialogVisible" :rowItem="rowItem" :groupOptions="groupOptions"></matchDialog>
+    <MatchDialog :dialogVisible.sync="matchDialogVisible" :rowItem="rowItem" :groupOptions="groupOptions"></MatchDialog>
     <viewResultDialog :dialogVisible.sync="viewGameResultDialog" :gameResult="gameResult"></viewResultDialog>
   </div>
 </template>
@@ -244,6 +244,12 @@ import * as XLSX from "xlsx";
 import { getByTitle } from "@/api/config";
 export default {
   name: "ScheduleTable",
+  props:{
+    tagOptions:{
+      type:Array,
+      default:(()=>[])
+    }
+  },
   components: {
     GameResult,
     exportDia,
@@ -272,21 +278,6 @@ export default {
       pageSize: 10,
       belong: "",
       options: [],
-      tagOptions: [
-        { name: "总决赛" },
-        { name: "季军赛" },
-        { name: "半决赛" },
-        { name: "四强赛" },
-        { name: "八强赛" },
-        { name: "十六强" },
-        { name: "常规赛" },
-        { name: "海选赛" },
-        { name: "高校赛" },
-        { name: "众创赛" },
-        { name: "神将赛" },
-        { name: "淘汰赛" },
-        { name: "擂台赛" },
-      ],
       personGroup: [],
       showChoose: false, //选择参赛队伍弹出框
       // gameResult部分
@@ -692,5 +683,10 @@ export default {
 
 /deep/.el-descriptions__body {
   padding: 5px 24px;
+}
+.like__icon{
+  font-size: 14px;
+  font-weight: bold;
+  color:pink
 }
 </style>

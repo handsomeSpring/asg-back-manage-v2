@@ -69,6 +69,10 @@ export default {
       type: String,
       default: "",
     },
+    tagOptions:{
+      type:Array,
+      default:(()=>[])
+    }
   },
   data() {
     return {
@@ -76,21 +80,6 @@ export default {
       loading: false,
       selectedData: [],
       tag: "",
-      tagOptions: [
-        { name: "总决赛" },
-        { name: "季军赛" },
-        { name: "半决赛" },
-        { name: "四强赛" },
-        { name: "八强赛" },
-        { name: "十六强" },
-        { name: "常规赛" },
-        { name: "海选赛" },
-        { name: "高校赛" },
-        { name: "众创赛" },
-        { name: "神将赛" },
-        { name: "淘汰赛" },
-        { name: "擂台赛" },
-      ],
     };
   },
   watch: {

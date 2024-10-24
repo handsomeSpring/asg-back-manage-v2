@@ -137,6 +137,10 @@ export default {
         commentary: {
             type: Array,
             default: () => []
+        },
+        tagOptions:{
+            type:Array,
+            default:(()=>[])
         }
     },
     computed: {
@@ -164,21 +168,6 @@ export default {
                 personType: ''
             },
             commentary_value: [{ id: 0, chinaname: '待定' }, { id: 0, chinanme: '待定' }],
-            tagOptions: [
-                { name: "总决赛" },
-                { name: "季军赛" },
-                { name: "半决赛" },
-                { name: "四强赛" },
-                { name: "八强赛" },
-                { name: "十六强" },
-                { name: "常规赛" },
-                { name: "海选赛" },
-                { name: "高校赛" },
-                { name: "众创赛" },
-                { name: "神将赛" },
-                { name: "淘汰赛" },
-                { name: "擂台赛" },
-            ],
             btnloading: false,
             rules: {
                 belong: [
