@@ -1,5 +1,6 @@
 <template>
-    <el-dialog title="赛果登记" width="50%" :visible="visible" @close="closeDialog" @open="handleOpen" :close-on-click-modal="false">
+    <el-dialog title="赛果登记" width="50%" :visible="visible" @close="closeDialog" @open="handleOpen"
+        :close-on-click-modal="false">
         <div class="result__content">
             <div class="bili">
                 <div></div>
@@ -17,12 +18,12 @@
                 <div class="bili">
                     <p :class="item.side === '1' ? 'survor' : 'hunter'">{{ item.side === '1' ? '求' : '屠' }}</p>
                     <div class="tl-display-flex">
-                        <el-input-number size="small" style="width:120px" v-model="item.topHalfLeft" controls-position="right"
-                            :min="0" :max="5"></el-input-number>
+                        <el-input-number size="small" style="width:120px" v-model="item.topHalfLeft"
+                            controls-position="right" :min="0" :max="5"></el-input-number>
                     </div>
                     <div class="tl-display-flex">
-                        <el-input-number size="small" style="width:120px" v-model="item.topHalfRight" controls-position="right"
-                            :min="0" :max="5"></el-input-number>
+                        <el-input-number size="small" style="width:120px" v-model="item.topHalfRight"
+                            controls-position="right" :min="0" :max="5"></el-input-number>
                     </div>
 
                     <p :class="item.side === '1' ? 'hunter' : 'survor'">{{ item.side === '1' ? '屠' : '求' }}</p>
@@ -35,20 +36,21 @@
                 <div class="bili">
                     <p :class="item.side === '1' ? 'hunter' : 'survor'">{{ item.side === '1' ? '屠' : '求' }}</p>
                     <div class="tl-display-flex">
-                        <el-input-number size="small" style="width:120px" v-model="item.bottomHalfLeft" controls-position="right"
-                            :min="0" :max="5"></el-input-number>
+                        <el-input-number size="small" style="width:120px" v-model="item.bottomHalfLeft"
+                            controls-position="right" :min="0" :max="5"></el-input-number>
                     </div>
                     <div class="tl-display-flex">
-                        <el-input-number size="small" style="width:120px" v-model="item.bottomHalfRight" controls-position="right"
-                            :min="0" :max="5"></el-input-number>
+                        <el-input-number size="small" style="width:120px" v-model="item.bottomHalfRight"
+                            controls-position="right" :min="0" :max="5"></el-input-number>
                     </div>
 
                     <p :class="item.side === '1' ? 'survor' : 'hunter'">{{ item.side === '1' ? '求' : '屠' }}</p>
                     <div class="tl-display-flex">
                         <el-button-group size="small">
-                            <el-button size="small" :disabled="gameInfo.length > 5" type="primary" icon="el-icon-plus" @click="handleAdd"></el-button>
-                            <el-button size="small" type="primary" :disabled="gameInfo.length === 1" icon="el-icon-close"
-                                @click="handleMinus(index)"></el-button>
+                            <el-button size="small" :disabled="gameInfo.length > 5" type="primary" icon="el-icon-plus"
+                                @click="handleAdd"></el-button>
+                            <el-button size="small" type="primary" :disabled="gameInfo.length === 1"
+                                icon="el-icon-close" @click="handleMinus(index)"></el-button>
                         </el-button-group>
                     </div>
                 </div>
@@ -61,13 +63,13 @@
                 </el-option>
             </el-select>
             <el-button style="margin-left: 20px" type="primary" size="small" @click="setWinner">设置获胜队伍</el-button>
-            <el-button style="margin-left: 20px" type="primary" size="small" @click="handleSaveResult">保存赛果</el-button>
+            <el-button style="margin-left: 20px" :loading="loading" type="primary" size="small" @click="handleSaveResult">保存赛果</el-button>
         </el-row>
     </el-dialog>
 </template>
 
 <script>
-import { setWinGame } from "@/api/schedule/index";
+import { setWinGame, setFinalScore } from "@/api/schedule/index";
 export default {
     name: 'ASGGameResult',
     props: {
@@ -104,12 +106,25 @@ export default {
                 }
             ],
             chooseTeam: [], //选择冠军队伍
-            winteam: ""
+            winteam: "",
+            loading:false
         };
     },
     methods: {
-        handleSaveResult(){
-            this.$message.warning('待后端开发...');
+        async handleSaveResult() {
+            try {
+                this.loading = true;
+                const gameInfo = JSON.stringify(this.gameInfo);
+                const { data, status } = await setFinalScore(this.gameResult.id,gameInfo);
+                if(status !== 200) throw new Error('服务端异常，请联系网站管理员！');
+                if(data && data.code !== 200) throw new Error(data.message ?? '未知错误！');
+                this.$message.success('设置赛果成功！');
+                this.$emit('updateLoad');
+            } catch (error) {
+                this.$message.error(error.message);
+            }finally {
+                this.loading = false;
+            }
         },
         handleMinus(index) {
             this.gameInfo.splice(index, 1);
@@ -136,7 +151,7 @@ export default {
             }).then(() => {
                 this.doSetWinner();
             }).catch(() => {
-            this.$message.info('已取消设置获胜队伍');
+                this.$message.info('已取消设置获胜队伍');
             });
         },
         async doSetWinner() {
@@ -149,6 +164,7 @@ export default {
             try {
                 const { status } = await setWinGame(this.gameResult.id, this.winteam);
                 if (status !== 200) throw new Error('服务端异常，设置失败');
+                this.$message.success('操作成功！');
                 this.winteam = '';
                 this.visible = false;
                 this.$emit('updateLoad');
@@ -199,10 +215,12 @@ export default {
         justify-content: center;
     }
 }
-.survor{
-    color:#4090EF;
+
+.survor {
+    color: #4090EF;
 }
-.hunter{
-    color:#f40
+
+.hunter {
+    color: #f40
 }
 </style>

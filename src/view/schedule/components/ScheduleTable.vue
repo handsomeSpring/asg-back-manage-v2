@@ -55,7 +55,10 @@
               </div>
               <div>
                 <el-button style="margin:0 12px" type="text" size="small" @click="noticeGame(item)">赛程通知</el-button>
-                <el-button style="margin:0 12px" type="text" size="small" @click="fillGameResult(item)">赛果登记</el-button>
+                <el-button v-if="!item.winteam" style="margin:0 12px" type="text" size="small"
+                  @click="fillGameResult(item)">赛果登记</el-button>
+                <el-button v-else style="margin:0 12px" type="text" size="small"
+                  @click="viewGameResult(item)">查看赛果</el-button>
                 <el-button style="margin:0 12px" type="text" size="small" @click="updateGame(item)">编辑赛程</el-button>
                 <el-button style="margin:0 12px;color:#f40" type="text" size="small"
                   @click="delGame(item)">删除赛程</el-button>
@@ -217,6 +220,7 @@
     <dialog-choose :eventName="belong" :showChoose.sync="showChoose" @refresh="handleInit"></dialog-choose>
     <GameResult :dialogVisible.sync="gameResultDialog" :gameResult="gameResult" @updateLoad="handleInit"></GameResult>
     <matchDialog :dialogVisible.sync="matchDialogVisible" :rowItem="rowItem" :groupOptions="groupOptions"></matchDialog>
+    <viewResultDialog :dialogVisible.sync="viewGameResultDialog" :gameResult="gameResult"></viewResultDialog>
   </div>
 </template>
 
@@ -233,6 +237,7 @@ import DialogChoose from "./DialogChoose.vue";
 import asgTableCard from "@/components/asg-table-card.vue";
 import GameResult from "./GameResult.vue";
 import MatchDialog from './MatchDialog.vue'
+import viewResultDialog from './viewResultDialog.vue';
 import { getUserRoles } from "@/api/schedule/index";
 import { getEnrollList } from "@/api/enroll/index.js"
 import * as XLSX from "xlsx";
@@ -244,7 +249,8 @@ export default {
     exportDia,
     DialogChoose,
     asgTableCard,
-    MatchDialog
+    MatchDialog,
+    viewResultDialog
   },
   data() {
     return {
@@ -287,19 +293,24 @@ export default {
       gameResult: {},
       gameResultDialog: false,
       // 通知弹窗
-      matchDialogVisible:false,
-      rowItem:{},
-      groupOptions:[]
+      matchDialogVisible: false,
+      viewGameResultDialog: false,
+      rowItem: {},
+      groupOptions: []
     };
   },
   methods: {
-    noticeGame(item){
+    noticeGame(item) {
       this.rowItem = item;
       this.matchDialogVisible = true;
     },
     fillGameResult(item) {
       this.gameResult = item;
       this.gameResultDialog = true;
+    },
+    viewGameResult(item) {
+      this.gameResult = item;
+      this.viewGameResultDialog = true;
     },
     handleComNumberChange(value) {
       console.log(value, 'value');

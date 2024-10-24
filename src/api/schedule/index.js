@@ -64,3 +64,15 @@ export function importExcel(data){
     data:data
   })
 }
+
+// 设置赛果
+export function setFinalScore(gameid,finalScore){
+  return request({
+    url:'/api/v1/game/final',
+    method:'POST',
+    params:{
+      gameid,
+      finalScore
+    }
+  })
+}
