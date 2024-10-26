@@ -16,7 +16,9 @@
                     <tr :key="index + Math.random()">
                         <td colspan="3">
                             <div class="title__info">
-                                {{ item.chinaname || '无名氏' }}
+                                <p>{{ item.chinaname || '无名氏' }}</p>
+                                <p class="cancel__tbn" v-if="adminType === 'admin'" @click="handleCancelAdmin(item)">
+                                    取消管理员</p>
                             </div>
                         </td>
                     </tr>
@@ -56,7 +58,7 @@
 </template>
 
 <script>
-import { rolealluser } from '@/api/admin/index.js';
+import { rolealluser, removeAdmin } from '@/api/admin/index.js';
 export default {
     name: 'AdminList',
     props: {
@@ -83,21 +85,45 @@ export default {
         return {
             tableData: [],
             loading: false,
-            roles:[],
+            roles: [],
         };
     },
     methods: {
-        initPerson() {
-            this.loading = true;
-            rolealluser(this.adminType).then(res => {
-                this.tableData = res.data;
+        async initPerson(refresh = false) {
+            try {
+                if (!refresh) {
+                    this.loading = true;
+                }
+                const { data, status } = await rolealluser(this.adminType);
+                if (status !== 200) throw new Error('获取列表失败！');
+                this.tableData = data;
+                refresh && this.$message.success('操作成功！');
+            } catch (error) {
+                this.$message.error(error instanceof Error ? error.message : '未知错误');
+            } finally {
                 this.$nextTick(() => {
                     this.loading = false;
                 })
-            }).finally(() => {
-                this.loading = false;
-            })
+            }
         },
+        async handleCancelAdmin(item) {
+            try {
+                const flag = await this.$confirm(`您确定取消${item.chinaname}的管理员吗?`, '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                })
+                if (flag === 'confirm') {
+                    this.loading = true;
+                    const { status } = await removeAdmin(item.id);
+                    if (status !== 200) throw new Error('服务端异常，请联系网站管理员');
+                    this.initPerson(true);
+                }
+            } catch (error) {
+                if (typeof error === 'string' && error === 'cancel') return;
+                this.$message.error(error instanceof Error ? error.message : '未知错误');
+            }
+        }
     },
     created() {
         this.initPerson();
@@ -125,6 +151,18 @@ tr {
     font-weight: bold;
     color: #4090EF;
     font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    .cancel__tbn {
+        color: #f40;
+        cursor: pointer;
+
+        &:hover {
+            color: rgb(241, 129, 88)
+        }
+    }
 }
 
 .one__td,
@@ -134,7 +172,7 @@ tr {
 
 .one__td div img {
     width: 80%;
-    background-size: contain;
+    object-fit:contain;
 }
 
 .main__table {

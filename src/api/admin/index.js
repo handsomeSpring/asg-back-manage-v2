@@ -232,3 +232,14 @@ export function remindTasks(taskId){
     }
    })
 }
+
+// 取消管理员
+export function removeAdmin(userid){
+  return request({
+    url:'/api/v1/admin/removeadmin',
+    method:'POST',
+    params:{
+      userid
+    }
+  })
+}

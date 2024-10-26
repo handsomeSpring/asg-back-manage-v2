@@ -104,7 +104,7 @@
                 </el-col>
             </el-row>
             <footer>
-                <el-button type="primary" size="small" v-loading="btnloading" element-loading-spinner="el-icon-loading"
+                <el-button type="primary" size="small" :loading="btnloading" element-loading-spinner="el-icon-loading"
                     element-loading-background="rgba(0, 0, 0, 0.8)" @click.native="submit">
                     发布
                 </el-button>
