@@ -134,9 +134,9 @@ export default {
     },
     async initGetInfo() {
       const { data } = await getInfo();
-      const menu = localStorage.getItem('asg-menuConfig');
-      const storeMenu = !!menu ? JSON.parse(menu) : menuOptions;
-      this.$store.commit('SET_MENU',storeMenu);
+      // const menu = localStorage.getItem('asg-menuConfig');
+      // const storeMenu = !!menu ? JSON.parse(menu) : menuOptions;
+      this.$store.commit('SET_MENU',menuOptions);
       this.$store.commit("getUserInfo", data);
       sessionStorage.setItem("money", data.money);
       sessionStorage.setItem("baseImg", data.base64);
@@ -195,7 +195,7 @@ export default {
               this.$router.push("/index");
               this.$message.success("登录成功！");
               this.loading = false;
-            }, 2000);
+            }, 1000);
           })
           .catch((err) => {
             console.log("err", err);

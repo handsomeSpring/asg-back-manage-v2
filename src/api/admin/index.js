@@ -243,3 +243,12 @@ export function removeAdmin(userid){
     }
   })
 }
+
+// 管理员帮忙注册账号
+export function adminEnrollUser(data){
+   return request({
+    url:'/api/v1/admin/enroll',
+    method:'POST',
+    data
+   })
+}

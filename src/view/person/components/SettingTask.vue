@@ -47,10 +47,6 @@ export default {
         user: {
             type: Object,
             default: () => { }
-        },
-        qqMap: {
-            type: Array,
-            required: true
         }
     },
     data() {

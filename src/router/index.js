@@ -37,7 +37,8 @@ import budgetIndex from '@/view/budget/index.vue';
 import scheduleMaker from '@/view/scheduleMaker/index.vue';
 import taskGiving from '@/view/person/components/management.vue';
 import menuConfig from '@/view/menuConfig/index.vue';
-const originalPush = VueRouter.prototype.push
+import superAdmin from '@/view/superAdmin/index.vue';
+const originalPush = VueRouter.prototype.push;
 VueRouter.prototype.push = function push(location) {
   return originalPush.call(this, location).catch(err => err)
 }
@@ -213,6 +214,11 @@ const router = new VueRouter({
           path: 'menuConfig',
           component: menuConfig,
           name: '菜单配置'
+        },
+        {
+          path: 'superAdmin',
+          component: superAdmin,
+          name: '超管专享'
         }
       ],
     },
