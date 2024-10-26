@@ -1,6 +1,7 @@
 <template>
   <div>
-    <el-table v-loading="loading" :data="commentator" :header-cell-style="{ background: '#f2f6fd', color: '#000' }">
+    <el-table height="70vh" v-loading="loading" element-loading-text="拼命加载中" element-loading-spinner="el-icon-loading"
+      :data="commentator" :header-cell-style="{ background: '#f2f6fd', color: '#000' }">
       <el-table-column prop="id" label="序号" width="80" align="center"> </el-table-column>
       <el-table-column label="头像" width="150" align="center">
         <template slot-scope="scope">
@@ -20,16 +21,21 @@
           </div>
         </template>
       </el-table-column>
-      <el-table-column prop="chinaname" label="姓名" width="auto">
+      <el-table-column prop="chinaname" label="姓名" width="250">
       </el-table-column>
-      <el-table-column label="邮箱" width="350">
+      <el-table-column label="qq号" width="250">
+        <template #default="{ row }">
+          {{ row.qqnumber || '未绑定qq' }}
+        </template>
+      </el-table-column>
+      <el-table-column label="邮箱" width="auto">
         <template #default="{ row }">
           {{ row.email || '-' }}
         </template>
       </el-table-column>
       <el-table-column label="操作" width="150" align="center">
         <template #default="{ row }">
-          <el-button style="color:#f40" type="text" @click="refuseUser(row)">劝退</el-button>
+          <el-button style="color:#f40" type="text" @click="refuseUser(row)">辞退解说</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -62,7 +68,6 @@ export default {
           this.loading = false;
         })
         .catch((err) => {
-          console.log(err);
           this.loading = false;
         });
     },
