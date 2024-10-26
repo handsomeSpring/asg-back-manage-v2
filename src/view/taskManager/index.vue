@@ -115,8 +115,7 @@ export default {
                 limit: 10
             },
             total: null,
-            row: {},
-            qqMap: []
+            row: {}
         };
     },
     computed: {
@@ -129,9 +128,6 @@ export default {
         }
     },
     created() {
-        getByTitle('qqMap').then(res => {
-            this.qqMap = res.data;
-        })
         this.initTask();
     },
     methods: {

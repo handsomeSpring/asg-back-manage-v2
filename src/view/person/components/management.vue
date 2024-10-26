@@ -19,7 +19,7 @@
         </h2>
         <el-tabs v-model="taskTab" tab-position="right">
           <el-tab-pane label="设置任务" name="setting">
-            <setting-task v-if="taskTab === 'setting'" :user="info" :qqMap="qqMap"></setting-task>
+            <setting-task v-if="taskTab === 'setting'" :user="info"></setting-task>
           </el-tab-pane>
           <el-tab-pane label="他的任务清单" name="view">
             <task-details v-if="taskTab === 'view'" :user="info"></task-details>
@@ -57,7 +57,6 @@ export default {
       info: {},
       text: '',
       taskTab: 'setting',
-      qqMap:[]
     };
   },
   watch: {
@@ -66,9 +65,6 @@ export default {
     }
   },
   created() {
-    getByTitle('qqMap').then(res=>{
-      this.qqMap = res.data;
-    })
     this.init();
   },
   methods: {

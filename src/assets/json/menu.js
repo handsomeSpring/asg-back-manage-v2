@@ -194,6 +194,14 @@ export const menuOptions = [
                 id:25,
                 component:'/view/menuConfig/index.vue',
                 show:true,
+            },
+            {
+                path:'/index/superAdmin',
+                iconClass:'superMenu',
+                title:'超管专享',
+                id:25,
+                component:'/view/superAdmin/index.vue',
+                show:true,
             }
         ]
     }
