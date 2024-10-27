@@ -10,13 +10,15 @@
     </div>
     <!-- 表格开始 -->
     <el-scrollbar style="height: calc(70vh - 40px)">
-      <el-table :header-cell-style="{ background: '#f2f6fd', color: '#000' }" v-loading="loading" element-loading-text="数据加载中，请稍等" element-loading-spinner="el-icon-loading"
-        :data="personList" border style="width: 100%">
+      <el-table :header-cell-style="{ background: '#f2f6fd', color: '#000' }" v-loading="loading"
+        element-loading-text="数据加载中，请稍等" element-loading-spinner="el-icon-loading" :data="personList" border
+        style="width: 100%">
         <el-table-column prop="id" label="序列号" width="90" align="center">
         </el-table-column>
         <el-table-column label="中文名" width="250" align="center">
           <template #default="{ row }">
             {{ row.chinaname || '暂未设置中文名' }}
+            <span v-if="row.isAdmin" style="color:#4090EF;font-weight: bold;">（管理员）</span>
           </template>
         </el-table-column>
         <el-table-column prop="userName" label="用户名" width="250" align="center">
@@ -36,7 +38,8 @@
             <p v-if="$index !== editIndex">{{ row.officium | filterRole }}<i class="el-icon-edit operate-icon edit"
                 @click="handleEditRoles($index)"></i></p>
             <p v-else>
-              <el-select style="width: 70%;" size="small" v-model="row.officium" placeholder="请选择职业" @change="handleJobChange($event, row)">
+              <el-select style="width: 70%;" size="small" v-model="row.officium" placeholder="请选择职业"
+                @change="handleJobChange($event, row)">
                 <el-option v-for="item in jobs" :key="item.value" :label="item.label" :value="item.value">
                 </el-option>
               </el-select>
@@ -46,7 +49,7 @@
         </el-table-column>
         <el-table-column align="center" label="操作" width="180">
           <template slot-scope="scope">
-            <el-button type="text" @click="handleSetAdmin(scope.row.id)">
+            <el-button v-if="!scope.row.isAdmin" type="text" @click="handleSetAdmin(scope.row.id)">
               设为管理员
             </el-button>
             <el-button type="text" @click="handleDelUser(scope.row.id)">
@@ -66,6 +69,8 @@
 <script>
 import { getUsers, setAdmin, delUser, setRole } from "@/api/home";
 import { getByTitle } from "@/api/config";
+import { rolealluser } from '@/api/admin/index.js';
+import { mapGetters } from "vuex";
 export default {
   name: "survivorPage",
   data() {
@@ -85,6 +90,9 @@ export default {
       editIndex: null,
     };
   },
+  computed: {
+    ...mapGetters(['adminList'])
+  },
   created() {
     this.initGetUsers();
     this.initRoles();
@@ -96,29 +104,39 @@ export default {
     resetEditIndex() {
       this.editIndex = null;
     },
-    initGetUsers(flag = false) {
-      if (flag) {
-        this.listQuery.pageindex = 1;
-      }
-      this.loading = true;
-      const postParams = {
-        ...this.listQuery,
-        pageindex: this.listQuery.pageindex - 1,
-      }
-      getUsers(postParams)
-        .then(({ data }) => {
-          this.total = data.cout;
-          this.personList = data.msg;
-        })
-        .catch((err) => {
-          if (err.response.data.code === 400) {
-            return this.$message.error('您无权访问，请更换管理员账号。');
+    async initGetUsers(flag = false) {
+      try {
+        if (flag) {
+          this.listQuery.pageindex = 1;
+        }
+        this.loading = true;
+        if(this.adminList.length === 0){
+          const roleRes = await rolealluser('admin');
+          if(roleRes.status !== 200) throw new Error('获取管理权限失败！');
+          const adminIds = roleRes.data.map(item => item.id);
+          this.$store.commit('SET_ADMIN',adminIds);
+        }
+        console.log(this.adminList,'adminList');
+        const postParams = {
+          ...this.listQuery,
+          pageindex: this.listQuery.pageindex - 1,
+        }
+        const { data } = await getUsers(postParams);
+        this.total = data.cout;
+        this.personList = data.msg.map(item => {
+          return {
+            ...item,
+            isAdmin:this.adminList.includes(item.id)
           }
-          this.$message.error('服务端异常，请联系网站管理员');
-        })
-        .finally(() => {
-          this.loading = false;
-        })
+        });
+      } catch (err) {
+        if (err.response?.data?.code === 400) {
+          return this.$message.error('您无权访问，请更换管理员账号。');
+        }
+        this.$message.error(err.message);
+      } finally {
+        this.loading = false;
+      }
     },
     handleJobChange(value, row) {
       this.handleSetRoles(row.id, value);
@@ -128,6 +146,7 @@ export default {
       setAdmin(id)
         .then(() => {
           this.$message.success("设置成功！");
+          this.$store.commit('ADD_ADMIN',id);
           this.initGetUsers();
         })
         .catch(() => {

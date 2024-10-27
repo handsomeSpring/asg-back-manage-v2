@@ -3,6 +3,7 @@ const app = {
         isCollapse: false, //控制菜单的展开还是收起
         roleList:[], //职位配置
         menu:[], //菜单
+        adminList:[]
     },
     mutations: {
         //修改菜单展开收起的方法
@@ -14,6 +15,12 @@ const app = {
         },
         SET_MENU(state, menu){
             state.menu = menu;
+        },
+        SET_ADMIN(state, admin){
+            state.adminList = admin;
+        },
+        ADD_ADMIN(state, user){
+            state.adminList.push(user);
         }
     },
     actions:{}

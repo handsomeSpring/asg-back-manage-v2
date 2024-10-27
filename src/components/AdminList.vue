@@ -17,8 +17,8 @@
                         <td colspan="3">
                             <div class="title__info">
                                 <p>{{ item.chinaname || '无名氏' }}</p>
-                                <p class="cancel__tbn" v-if="adminType === 'admin'" @click="handleCancelAdmin(item)">
-                                    取消管理员</p>
+                                <!-- <p class="cancel__tbn" v-if="adminType === 'admin'" @click="handleCancelAdmin(item)">
+                                    取消管理员</p> -->
                             </div>
                         </td>
                     </tr>
@@ -58,7 +58,7 @@
 </template>
 
 <script>
-import { rolealluser, removeAdmin } from '@/api/admin/index.js';
+import { rolealluser } from '@/api/admin/index.js';
 export default {
     name: 'AdminList',
     props: {
@@ -84,8 +84,7 @@ export default {
     data() {
         return {
             tableData: [],
-            loading: false,
-            roles: [],
+            loading: false
         };
     },
     methods: {
@@ -104,24 +103,6 @@ export default {
                 this.$nextTick(() => {
                     this.loading = false;
                 })
-            }
-        },
-        async handleCancelAdmin(item) {
-            try {
-                const flag = await this.$confirm(`您确定取消${item.chinaname}的管理员吗?`, '提示', {
-                    confirmButtonText: '确定',
-                    cancelButtonText: '取消',
-                    type: 'warning'
-                })
-                if (flag === 'confirm') {
-                    this.loading = true;
-                    const { status } = await removeAdmin(item.id);
-                    if (status !== 200) throw new Error('服务端异常，请联系网站管理员');
-                    this.initPerson(true);
-                }
-            } catch (error) {
-                if (typeof error === 'string' && error === 'cancel') return;
-                this.$message.error(error instanceof Error ? error.message : '未知错误');
             }
         }
     },
