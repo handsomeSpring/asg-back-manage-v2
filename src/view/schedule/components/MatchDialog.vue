@@ -78,10 +78,15 @@ export default {
         },
         handleOpen() {
             try {
-                const { commentary, belong, tag, team1_name, team2_name, opentime, referee } = this.rowItem;
+                const { commentary, belong, tag, team1_name, team2_name, opentime, referee, winteam, judge } = this.rowItem;
                 const commentarys = JSON.parse(commentary);
                 const comList = commentarys.map(item => item.chinaname).join(',') ?? '待定';
-                const message = `<ASG赛程通知>各位侦探：${belong}-${tag}:${team1_name} vs ${team2_name}的比赛将于${opentime}开赛，解说：${comList}、导播:${referee},敬请期待！`;
+                let message = '';
+                if (!winteam) {
+                    message = `<ASG赛程通知>各位侦探：${belong}-${tag}:${team1_name} vs ${team2_name}的比赛将于${opentime}开赛，解说：${comList}、导播:${referee}、裁判${judge},敬请期待！`;
+                } else {
+                    message = `<ASG赛程通知>各位侦探：${belong}-${tag}:${team1_name} vs ${team2_name}的比赛获胜战队是${winteam},恭喜${winteam}战队获得了该场比赛的胜利！`;
+                }
                 this.$set(this.form, 'message', message);
             } catch (error) {
                 this.$set(this.form, 'message', '未知错误，无法生成模板！');

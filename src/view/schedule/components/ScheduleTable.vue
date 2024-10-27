@@ -54,7 +54,9 @@
                 </p>
               </div>
               <div>
-                <el-button style="margin:0 12px" type="text" size="small" @click="noticeGame(item)">赛程通知</el-button>
+                <el-button style="margin:0 12px" type="text" size="small" @click="noticeGame(item)">
+                  {{ item.winteam ? '赛果通知' : '赛程通知' }}
+                </el-button>
                 <el-button v-if="!item.winteam" style="margin:0 12px" type="text" size="small"
                   @click="fillGameResult(item)">赛果登记</el-button>
                 <el-button v-else style="margin:0 12px" type="text" size="small"
@@ -105,7 +107,7 @@
       :page-size="pageSize" layout="prev, pager, next, jumper" :total="1000">
     </el-pagination>
     <!-- 表单 -->
-    <el-dialog title="赛程信息" top="5vh" :visible.sync="dialogFormVisible" @open="setTeam" :close-on-click-modal="false">
+    <el-dialog title="赛程信息" top="5vh" :visible.sync="dialogFormVisible" :close-on-click-modal="false">
       <el-scrollbar style="height: 60vh">
         <el-form :model="diaData" label-position="top">
           <el-row>
@@ -121,7 +123,7 @@
           <el-row>
             <el-col :span="7">
               <el-form-item label="赛程分类" :label-width="formLabelWidth">
-                <el-input size="small" v-model="diaData.belong" autocomplete="off"></el-input>
+                <el-input size="small" v-model="diaData.belong" disabled autocomplete="off"></el-input>
               </el-form-item>
             </el-col>
             <el-col :span="7">
@@ -148,17 +150,26 @@
           <el-row>
             <el-col :span="7">
               <el-form-item label="导播" v-show="diaData.personType.includes('referee')" :label-width="formLabelWidth">
-                <el-select size="small" filterable clearable value-key="chinaname" v-model="diaData.referee"
+                <!-- <el-select size="small" filterable clearable value-key="chinaname" v-model="diaData.referee"
                   placeholder="请选择导播">
                   <el-option v-for="item in instructorOptions" :key="item.chinaname" :label="item.chinaname"
                     :value="item.chinaname">
                   </el-option>
-                </el-select>
+                </el-select> -->
+                <el-input v-model="diaData.referee" readonly size="small">
+                  <template #append>
+                    <p style="cursor:pointer" @click="handlePersonChoose('referee')"><i class="el-icon-plus"></i></p>
+                  </template>
+                </el-input>
               </el-form-item>
             </el-col>
             <el-col :span="7" v-show="diaData.personType.includes('judge')">
               <el-form-item label="裁判" :label-width="formLabelWidth">
-                <el-input v-model="diaData.judge" size="small" placeholder="请输入裁判"></el-input>
+                <el-input v-model="diaData.judge" readonly size="small">
+                  <template #append>
+                    <p style="cursor:pointer" @click="handlePersonChoose('judge')"><i class="el-icon-plus"></i></p>
+                  </template>
+                </el-input>
               </el-form-item>
             </el-col>
             <el-col :span="7" v-show="hasCom">
@@ -221,6 +232,7 @@
     <GameResult :dialogVisible.sync="gameResultDialog" :gameResult="gameResult" @updateLoad="handleInit"></GameResult>
     <MatchDialog :dialogVisible.sync="matchDialogVisible" :rowItem="rowItem" :groupOptions="groupOptions"></MatchDialog>
     <viewResultDialog :dialogVisible.sync="viewGameResultDialog" :gameResult="gameResult"></viewResultDialog>
+    <personChooseDialog :dialogVisible.sync="choosePersonDialog" @finish="handleChoose"></personChooseDialog>
   </div>
 </template>
 
@@ -242,6 +254,7 @@ import { getUserRoles } from "@/api/schedule/index";
 import { getEnrollList } from "@/api/enroll/index.js"
 import * as XLSX from "xlsx";
 import { getByTitle } from "@/api/config";
+import personChooseDialog from "./personChooseDialog.vue";
 export default {
   name: "ScheduleTable",
   props:{
@@ -256,7 +269,8 @@ export default {
     DialogChoose,
     asgTableCard,
     MatchDialog,
-    viewResultDialog
+    viewResultDialog,
+    personChooseDialog
   },
   data() {
     return {
@@ -271,7 +285,6 @@ export default {
         personType: ''
       },
       commentaryOptions: [], //解说选项
-      instructorOptions: [], //导播选项
       teamList: [], //战队选项
       winteam: "",
       currentPage: 1,
@@ -286,8 +299,11 @@ export default {
       // 通知弹窗
       matchDialogVisible: false,
       viewGameResultDialog: false,
+      choosePersonDialog:false,
       rowItem: {},
-      groupOptions: []
+      groupOptions: [],
+      // 人员选择器
+      diaDataKey:null
     };
   },
   methods: {
@@ -304,9 +320,7 @@ export default {
       this.viewGameResultDialog = true;
     },
     handleComNumberChange(value) {
-      console.log(value, 'value');
       const length = this.diaData.comList.filter(item => Boolean(item)).length;
-      console.log(length, 'length');
       if (length < value) {
         this.diaData.comList.push({ id: 0, chinaname: '待定' })
       }
@@ -319,7 +333,6 @@ export default {
       this.loading = true;
       getSchedule(page, pagesize, belong)
         .then((res) => {
-          console.log(res, 'res');
           this.scheduleData = res.data.map(item => {
             return {
               ...item,
@@ -350,6 +363,13 @@ export default {
         this.$message.error(message.error);
       }
     },
+    handleChoose(userObj){
+        this.diaData[this.diaDataKey] = userObj.chinaname;
+    },
+    handlePersonChoose(key){
+      this.diaDataKey = key;
+      this.choosePersonDialog = true;
+    },
     handleSelect() {
       if (this.belong === "all" || !this.belong) {
         this.$message.error("请选择抽取的赛季");
@@ -359,9 +379,6 @@ export default {
     },
     handleReset() {
       this.$set(this.diaData, "opentime", "1970-01-01T00:00:00.656Z");
-    },
-    setTeam() {
-
     },
     initGetCommentary() {
       let params = {
@@ -585,21 +602,6 @@ export default {
         .map((item) => item.chinaname)
         .join(",");
     },
-    //获取导播列表
-    initGetAnchor() {
-      let params = {
-        opname: "Anchor",
-      };
-      getUserRoles(params)
-        .then((res) => {
-          this.instructorOptions = [];
-          this.instructorOptions.push({ chinaname: "待定" });
-          this.instructorOptions = this.instructorOptions.concat(res.data);
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    },
     // 回放丢失
     setLose() {
       this.diaData.bilibiliuri = "lose";
@@ -621,7 +623,6 @@ export default {
     await this.initSeason();
     this.initSchedule(this.currentPage, this.pageSize, this.belong);
     this.initGetCommentary();
-    this.initGetAnchor();
   },
 };
 </script>
