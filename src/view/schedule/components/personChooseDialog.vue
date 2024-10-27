@@ -73,7 +73,7 @@ export default {
     watch: {
         personType: {
             handler() {
-                this.handleRest();
+                this.handleReset();
             }
         }
     },
