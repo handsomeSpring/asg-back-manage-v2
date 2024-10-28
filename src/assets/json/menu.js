@@ -24,7 +24,7 @@ export const menuOptions = [
                 iconClass:'person',
                 title:'用户管理',
                 id:4,
-                component:'/view/person/index.vue',
+                component:'person/index',
                 show:true,
             },
             {
@@ -32,7 +32,7 @@ export const menuOptions = [
                 iconClass:'enroll',
                 title:'报名管理',
                 id:5,
-                component:'/view/enroll',
+                component:'enroll/index',
                 show:true,
             },
             {
@@ -40,7 +40,7 @@ export const menuOptions = [
                 iconClass:'schedule',
                 title:'赛程管理',
                 id:6,
-                component:'/view/schedule/index.vue',
+                component:'schedule/index',
                 show:true,
             },
             {
@@ -48,7 +48,7 @@ export const menuOptions = [
                 iconClass:'extract',
                 title:'抽签管理',
                 id:7,
-                component:'/view/ballot/index.vue',
+                component:'ballot/index',
                 show:true,
             },
             {
@@ -56,7 +56,7 @@ export const menuOptions = [
                 iconClass:'template',
                 title:'赛程生成模板',
                 id:8,
-                component:'/view/scheduleMaker/index.vue',
+                component:'scheduleMaker/index',
                 show:true,
             },
             {
@@ -64,7 +64,7 @@ export const menuOptions = [
                 iconClass:'gamepic',
                 title:'封面制作',
                 id:9,
-                component:'/view/gamepic/index.vue',
+                component:'gamepic/index',
                 show:true,
             },
             {
@@ -72,7 +72,7 @@ export const menuOptions = [
                 iconClass:'excel',
                 title:'导出表单',
                 id:10,
-                component:'/view/test/index.vue',
+                component:'test/index',
                 show:true,
             }
         ]
@@ -88,7 +88,7 @@ export const menuOptions = [
                 iconClass:'taskPush',
                 title:'任务下发',
                 id:12,
-                component:'/view/person/components/management.vue',
+                component:'person/components/management',
                 show:true,
             },
             {
@@ -96,7 +96,7 @@ export const menuOptions = [
                 iconClass:'champion',
                 title:'冠军管理',
                 id:13,
-                component:'/view/blok/index.vue',
+                component:'blok/index',
                 show:true,
             },
             {
@@ -104,7 +104,7 @@ export const menuOptions = [
                 iconClass:'text',
                 title:'公告管理',
                 id:14,
-                component:'/view/news/index.vue',
+                component:'news/index',
                 show:true,
             },
             {
@@ -112,7 +112,7 @@ export const menuOptions = [
                 iconClass:'whiteblack',
                 title:'合作伙伴',
                 id:15,
-                component:'/view/banpick/index.vue',
+                component:'banpick/index',
                 show:true,
             },
             {
@@ -120,7 +120,7 @@ export const menuOptions = [
                 iconClass:'shopCart',
                 title:'商品发布',
                 id:16,
-                component:'/view/storeManager/index.vue',
+                component:'storeManager/index',
                 show:true,
             }
         ]
@@ -136,7 +136,7 @@ export const menuOptions = [
                 iconClass:'authCom',
                 title:'解说审核',
                 id:18,
-                component:'/view/exchange/index.vue',
+                component:'exchange/index',
                 show:true,
             },
             {
@@ -144,7 +144,7 @@ export const menuOptions = [
                 iconClass:'task',
                 title:'任务审核',
                 id:19,
-                component:'/view/taskManager/index.vue',
+                component:'taskManager/index',
                 show:true,
             },
             {
@@ -152,7 +152,7 @@ export const menuOptions = [
                 iconClass:'verify',
                 title:'商品核销',
                 id:20,
-                component:'/view/storeManager/managerChange.vue',
+                component:'storeManager/managerChange',
                 show:true,
             },
             {
@@ -160,7 +160,7 @@ export const menuOptions = [
                 iconClass:'budget',
                 title:'预算录入',
                 id:21,
-                component:'/view/budget/index.vue',
+                component:'budget/index',
                 show:true,
             }
         ]
@@ -176,7 +176,7 @@ export const menuOptions = [
                 iconClass:'operation',
                 title:'操作手册',
                 id:23,
-                component:'/view/introduction/index.vue',
+                component:'introduction/index',
                 show:true,
             },
             {
@@ -184,7 +184,7 @@ export const menuOptions = [
                 iconClass:'json',
                 title:'全局参数',
                 id:24,
-                component:'/view/global/index.vue',
+                component:'global/index',
                 show:true,
             },
             {
@@ -192,7 +192,7 @@ export const menuOptions = [
                 iconClass:'menuConfig',
                 title:'菜单管理',
                 id:25,
-                component:'/view/menuConfig/index.vue',
+                component:'menuConfig/index',
                 show:true,
             },
             {
@@ -200,7 +200,7 @@ export const menuOptions = [
                 iconClass:'superMenu',
                 title:'超管专享',
                 id:25,
-                component:'/view/superAdmin/index.vue',
+                component:'superAdmin/index',
                 show:true,
             }
         ]
