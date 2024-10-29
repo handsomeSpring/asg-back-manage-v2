@@ -109,6 +109,9 @@ export default {
             this.handleReset();
         },
         handleChoose() {
+            if(!this.choosePerson.chinaname){
+                return this.$message.error('未选择人员！');
+            }
             this.$emit('finish', this.choosePerson);
             this.handleClose();
         },
@@ -219,7 +222,7 @@ export default {
     }
 }
 .slide-fade-enter-active {
-  transition: all 0.23s ease-out;
+  transition: all 0.23s cubic-bezier(1, 0.5, 0.8, 1);
 }
 
 .slide-fade-leave-active {

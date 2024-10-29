@@ -107,9 +107,8 @@
       :page-size="pageSize" layout="prev, pager, next, jumper" :total="1000">
     </el-pagination>
     <!-- 表单 -->
-    <el-dialog title="赛程信息" top="5vh" :visible.sync="dialogFormVisible" :close-on-click-modal="false">
-      <el-scrollbar style="height: 60vh">
-        <el-form :model="diaData" label-position="top">
+    <el-dialog title="赛程信息" width="60%" top="5vh" :visible.sync="dialogFormVisible" :close-on-click-modal="false">
+        <el-form :model="diaData" label-position="right" label-width="100px">
           <el-row>
             <el-col :span="24">
               <el-form-item label="人员构成">
@@ -122,12 +121,12 @@
           </el-row>
           <el-row>
             <el-col :span="7">
-              <el-form-item label="赛程分类" :label-width="formLabelWidth">
+              <el-form-item label="赛程分类">
                 <el-input size="small" v-model="diaData.belong" disabled autocomplete="off"></el-input>
               </el-form-item>
             </el-col>
             <el-col :span="7">
-              <el-form-item label="主场战队" :label-width="formLabelWidth">
+              <el-form-item label="主场战队">
                 <!-- <el-select size="small" filterable clearable value-key="id" v-model="diaData.team1_name"
                   placeholder="请选择战队1">
                   <el-option v-for="item in teamList" :key="item.id" :label="item.name" :value="item.name">
@@ -137,7 +136,7 @@
               </el-form-item>
             </el-col>
             <el-col :span="7">
-              <el-form-item label="客场战队" :label-width="formLabelWidth">
+              <el-form-item label="客场战队">
                 <!-- <el-select size="small" filterable clearable value-key="id" v-model="diaData.team2_name"
                   placeholder="请选择战队2">
                   <el-option v-for="item in teamList" :key="item.id" :label="item.name" :value="item.name">
@@ -149,7 +148,7 @@
           </el-row>
           <el-row>
             <el-col :span="7">
-              <el-form-item label="导播" v-show="diaData.personType.includes('referee')" :label-width="formLabelWidth">
+              <el-form-item label="导播" v-show="diaData.personType.includes('referee')">
                 <!-- <el-select size="small" filterable clearable value-key="chinaname" v-model="diaData.referee"
                   placeholder="请选择导播">
                   <el-option v-for="item in instructorOptions" :key="item.chinaname" :label="item.chinaname"
@@ -164,7 +163,7 @@
               </el-form-item>
             </el-col>
             <el-col :span="7" v-show="diaData.personType.includes('judge')">
-              <el-form-item label="裁判" :label-width="formLabelWidth">
+              <el-form-item label="裁判">
                 <el-input v-model="diaData.judge" readonly size="small">
                   <template #append>
                     <p style="cursor:pointer" @click="handlePersonChoose('judge')"><i class="el-icon-plus"></i></p>
@@ -181,7 +180,7 @@
           </el-row>
           <el-row v-show="hasCom">
             <el-col :span="7" v-for="(com, comIndex) in diaData.comLimit" :key="comIndex">
-              <el-form-item :label="`解说${comIndex + 1}`" :label-width="formLabelWidth">
+              <el-form-item :label="`解说${comIndex + 1}`">
                 <el-select size="small" filterable clearable value-key="id" v-model="diaData.comList[comIndex]"
                   placeholder="请选择解说1">
                   <el-option v-for="item in commentaryOptions" :key="item.chinaname" :label="item.chinaname"
@@ -201,17 +200,17 @@
                 </el-select>
               </el-form-item>
             </el-col>
-            <el-col :span="15">
-              <el-form-item label="开始时间" :label-width="formLabelWidth">
-                <el-date-picker style="width:80%" v-model="diaData.opentime" size="small" type="datetime"
+            <el-col :span="7">
+              <el-form-item label="开始时间">
+                <el-date-picker style="width:100%" v-model="diaData.opentime" size="small" type="datetime"
                   placeholder="选择日期时间" value-format="yyyy-MM-dd HH:mm:ss" format="yyyy-MM-dd HH:mm:ss">
                 </el-date-picker>
               </el-form-item>
             </el-col>
           </el-row>
           <el-row>
-            <el-col :span="22">
-              <el-form-item label="回放链接" :label-width="formLabelWidth">
+            <el-col :span="14">
+              <el-form-item label="B站回放地址">
                 <el-input size="small" v-model="diaData.bilibiliuri" autocomplete="off">
                   <template slot="append">
                     <span style="cursor:pointer" @click="setLose">设置为回放丢失</span>
@@ -221,7 +220,6 @@
             </el-col>
           </el-row>
         </el-form>
-      </el-scrollbar>
       <div slot="footer" class="dialog-footer">
         <el-button size="small" @click="dialogFormVisible = false">取 消</el-button>
         <el-button size="small" type="primary" @click="updateSchedule">确 定</el-button>
@@ -303,7 +301,7 @@ export default {
       rowItem: {},
       groupOptions: [],
       // 人员选择器
-      diaDataKey:null
+      diaDataKey:null,
     };
   },
   methods: {
