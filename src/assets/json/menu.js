@@ -60,6 +60,14 @@ export const menuOptions = [
                 show:true,
             },
             {
+                path:'/index/promotionChart',
+                iconClass:'promote',
+                title:'晋升图设计',
+                id:27,
+                component:'drag/index',
+                show:true,
+            },
+            {
                 path:'/index/gamepic',
                 iconClass:'gamepic',
                 title:'封面制作',
@@ -199,7 +207,7 @@ export const menuOptions = [
                 path:'/index/superAdmin',
                 iconClass:'superMenu',
                 title:'超管专享',
-                id:25,
+                id:26,
                 component:'superAdmin/index',
                 show:true,
             }
