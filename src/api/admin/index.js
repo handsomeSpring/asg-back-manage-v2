@@ -252,3 +252,12 @@ export function adminEnrollUser(data){
     data
    })
 }
+
+// 封装
+export function updateTaskApi(data){
+  return request({
+    url:'/api/v1/admin/UpdateTasks',
+    method:'PUT',
+    data
+  })
+}

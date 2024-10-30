@@ -88,7 +88,7 @@
             </el-pagination>
         </main>
         <el-dialog class="blue-text" title="编辑任务" :visible.sync="dialogVisible" width="50%" @close="resetForm">
-            <el-form :model="editForm" :rules="rules" ref="editFormRef">
+            <el-form :model="editForm" :rules="rules" ref="editFormRef" label-position="right" label-width="100px">
                 <el-form-item class="blue-text" label="任务标题" prop="taskName">
                     <el-input size="small" v-model="editForm.taskName"></el-input>
                 </el-form-item>
@@ -96,13 +96,13 @@
                     <el-input size="small" type="textarea" v-model="editForm.taskDescription" :rows="5"
                         placeholder="请输入任务描述" maxlength="200" show-word-limit clearable></el-input>
                 </el-form-item>
-                <el-form-item class="blue-text" label="任务积分" prop="taskPoints">
-                    <el-input-number v-model="editForm.taskPoints" :min="0" :max="5"></el-input-number>
+                <el-form-item class="blue-text" label="任务积分" prop="money">
+                    <el-input-number size="small" v-model="editForm.money" :min="0" :max="5"></el-input-number>
                 </el-form-item>
             </el-form>
             <span slot="footer" class="dialog-footer">
-                <el-button @click="dialogVisible = false">取 消</el-button>
-                <el-button type="primary" @click="handleSubmit">确 定</el-button>
+                <el-button size="small" @click="dialogVisible = false">取 消</el-button>
+                <el-button size="small" type="primary" @click="handleSubmit">确 定</el-button>
             </span>
         </el-dialog>
         <!-- 查看弹窗 -->
@@ -111,11 +111,10 @@
 </template>
 
 <script>
-import axios from 'axios';
-import { findTasks, deleteTask, taskDone, remindTasks } from "@/api/admin/index.js";
+import { findTasks, deleteTask, taskDone, remindTasks, updateTaskApi } from "@/api/admin/index.js";
 import taskHistory from "./components/taskHistory.vue";
 import { mapGetters } from "vuex";
-import { getByTitle } from "@/api/config";
+
 export default {
     name: 'taskManager',
     components: {
@@ -140,7 +139,7 @@ export default {
                 taskId: '',
                 taskName: '',
                 taskDescription: '',
-                taskPoints: null,
+                money: null,
             },
             rules: {
                 taskName: [
@@ -149,7 +148,7 @@ export default {
                 taskDescription: [
                     { required: true, message: '请输入任务描述', trigger: 'blur' },
                 ],
-                taskPoints: [
+                money: [
                     { required: true, message: '请输入任务积分', trigger: 'blur' },
                 ],
             },
@@ -272,7 +271,12 @@ export default {
             }
         },
         handleEdit(item) {
-            this.editForm = { ...item }; 
+            this.editForm = { 
+                taskId: item.id,
+                taskName: item.taskName,
+                taskDescription: item.taskDescription,
+                money: item.money,
+             }; 
             this.dialogVisible = true; 
         },
         resetForm() {
@@ -280,14 +284,9 @@ export default {
         },
         async handleSubmit() {
             try {
-                this.$refs.editFormRef.validate(async (valid) => {
+                this.$refs.editFormRef.validate(valid => {
                     if (valid) {
-                        await this.updateTask({
-                            taskId: this.editForm.taskId,
-                            taskName: this.editForm.taskName,
-                            taskDescription: this.editForm.taskDescription,
-                            money: this.editForm.taskPoints
-                        });
+                        this.updateTask(this.editForm);
                     }
                 });
             } catch (error) {
@@ -295,18 +294,17 @@ export default {
                 this.$message.error('更新失败');
             }
         },
-        async updateTask(data) {
+        async updateTask(reqDTO) {
             try {
-                const response = await axios.put('https://api.idvasg.cn/api/v1/admin/UpdateTasks', data);
-                if (response.status === 200) {
-                    this.$message.success('任务更新成功');
-                    this.dialogVisible = false;
-                    this.initTask();
-                }
-                return response;
+                const { status, data } = await updateTaskApi(reqDTO);
+                if (status !== 200) throw new Error('服务端异常，请联系网站管理员');
+                if(data.code && data.code === 404) throw new Error(data?.message ?? '未知错误，请联系网站管理员！');
+                if(data.code && data.code === 401) throw new Error(data?.message ?? '没有权限！');
+                this.$message.success('操作成功!');
+                this.dialogVisible = false;
+                this.initTask();
             } catch (error) {
-                console.error('更新任务时发生错误:', error);
-                this.$message.error('更新失败');
+                this.$message.error(error instanceof Error ? error.message : error);
             }
         },
     }
