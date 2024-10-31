@@ -4,10 +4,16 @@
             <div class="parent-node" v-for="item in menuList" :key="item.id">
                 <div class="parent-list" @click="setConfig(item)">
                     <p>{{ item.title }}</p>
+                    <i class="el-icon-circle-plus"></i>
                 </div>
                 <div v-if="item.children && item.children.length > 0" class="children-list">
-                    <li class="child-node" v-for="child in item.children" :key="child.id" @click="setConfig(child)">
+                    <li class="child-node" :class="activeId === child.id ? 'active' : ''" v-for="child in item.children" :key="child.id" @click="setConfig(child)">
                         <p>{{ child.title }}</p>
+                        <div class="flex-icon">
+                            <i class="el-icon-circle-plus-outline"></i>
+                            <i class="el-icon-edit"></i>
+                            <i class="el-icon-circle-close"></i>
+                        </div>
                     </li>
                 </div>
             </div>
@@ -138,21 +144,37 @@ export default {
         justify-content: space-between;
         align-items: center;
         padding: 8px 6px;
-        background: #4090EF;
-        color:#fff;
-        margin:3px 0;
+        background: linear-gradient(90deg, #77A2F3 0%, #1891FD 47%, #145BCF 100%);
+        color: #fff;
+        margin: 3px 0;
         cursor: pointer;
     }
-    .children-list{
-        .child-node{
+
+    .children-list {
+        .child-node {
             display: flex;
             justify-content: space-between;
             align-items: center;
             cursor: pointer;
-            background: #e7e7e7;
-            p{
+            background: #f5f5f5;
+            padding: 3px;
+
+            p {
                 margin-left: 12px;
             }
+
+            .flex-icon {
+                display: flex;
+                align-items: center;
+                gap: 6px;
+            }
+
+            &.active,
+            &:hover {
+                background: rgba(26, 107, 241, 0.08);
+                color:#1B8CFD;
+            }
+            
         }
     }
 }
