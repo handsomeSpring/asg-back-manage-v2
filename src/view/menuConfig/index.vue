@@ -1,7 +1,16 @@
 <template>
     <div class="menu__container">
         <el-card shadow="hover">
-            
+            <div class="parent-node" v-for="item in menuList" :key="item.id">
+                <div class="parent-list" @click="setConfig(item)">
+                    <p>{{ item.title }}</p>
+                </div>
+                <div v-if="item.children && item.children.length > 0" class="children-list">
+                    <li class="child-node" v-for="child in item.children" :key="child.id" @click="setConfig(child)">
+                        <p>{{ child.title }}</p>
+                    </li>
+                </div>
+            </div>
         </el-card>
         <el-card shadow="hover" style="position: relative;">
             <div v-show="!activeId">
@@ -9,6 +18,18 @@
                 <p>左侧菜单是可以拖拽排序的！！！</p>
             </div>
             <el-form v-show="activeId" :model="settingInfo" label-position="top">
+                <el-row>
+                    <el-col :span="10">
+                        <el-form-item label="父节点id">
+                            <el-input size="small" v-model="settingInfo.parentId" disabled></el-input>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="10" :offset="4">
+                        <el-form-item label="菜单Id">
+                            <el-input size="small" v-model="settingInfo.id" disabled></el-input>
+                        </el-form-item>
+                    </el-col>
+                </el-row>
                 <el-row>
                     <el-col :span="10">
                         <el-form-item label="菜单名称">
@@ -36,11 +57,6 @@
                 </el-row>
                 <el-row>
                     <el-col :span="10">
-                        <el-form-item label="菜单Id">
-                            <el-input size="small" v-model="settingInfo.id" disabled></el-input>
-                        </el-form-item>
-                    </el-col>
-                    <el-col :span="10" :offset="4">
                         <el-form-item label="是否启用">
                             <el-switch :disabled="settingInfo.id === 25" v-model="settingInfo.show" active-text="开启"
                                 inactive-text="隐藏">
@@ -62,7 +78,7 @@ export default {
     name: 'menuConfig',
     data() {
         return {
-            menuList:menuOptions,
+            menuList: menuOptions,
             controlOnStart: true,
             settingInfo: {},
             activeId: null
@@ -72,7 +88,7 @@ export default {
         ...mapGetters(['menuOptions'])
     },
     created() {
-        
+
     },
     methods: {
         handleSaveMenu() {
@@ -110,35 +126,34 @@ export default {
     grid-template-columns: 400px auto;
     gap: 24px;
 
-    .parent__title {
-        font-weight: bold;
-        font-size: 1.2rem;
-    }
-
-    .children__menu {
-        margin-left: 1rem;
-        cursor: pointer;
-        position: relative;
-        margin:3px 0;
-        &:hover {
-            color: #4090EF;
-        }
-
-        &.active::after {
-            content: '';
-            position: absolute;
-            width: 20px;
-            height: 20px;
-            -webkit-clip-path: polygon(40% 0%, 32% 45%, 100% 45%, 100% 53%, 32% 54%, 40% 100%, 0% 50%);
-            clip-path: polygon(40% 0%, 32% 45%, 100% 45%, 100% 53%, 32% 54%, 40% 100%, 0% 50%);
-            background: #4090EF;
-            right: 0;
-            bottom:0;
-        }
+    .el-card {
+        height: 70vh;
+        overflow-y: scroll;
     }
 }
 
-.in_place {
-    height: 8px;
+.parent-node {
+    .parent-list {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 8px 6px;
+        background: #4090EF;
+        color:#fff;
+        margin:3px 0;
+        cursor: pointer;
+    }
+    .children-list{
+        .child-node{
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            background: #e7e7e7;
+            p{
+                margin-left: 12px;
+            }
+        }
+    }
 }
 </style>
