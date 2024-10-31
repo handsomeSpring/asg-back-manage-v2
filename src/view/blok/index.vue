@@ -2,9 +2,9 @@
   <div>
     <ChamplionPlubish @refreshList="initAllCham" :eventOptions="options"></ChamplionPlubish>
     <!-- 展示 -->
-    <el-scrollbar v-loading="loading" :native="false" wrapStyle="" wrapClass="" viewClass="" viewStyle="" :noresize="false" tag="section"
+    <el-scrollbar :native="false" wrapStyle="" wrapClass="" viewClass="" viewStyle="" :noresize="false" tag="section"
       style="height: calc(80vh - 80px)">
-      <baseTable :data="cham" :column="tableProps">
+      <baseTable :data="cham" :column="tableProps" v-loading="loading">
         <template #projectHeader="{ data }">
           <div class="header--rela">
             <div class="header__clip">

@@ -1,23 +1,7 @@
 <template>
     <div class="menu__container">
         <el-card shadow="hover">
-            <ul class="parent__container" v-for="item in tolList" :key="item.id">
-                <div class="parent__title">
-                    <svg-icon style="margin-right: 5px" :iconClass="item.iconClass" width="16px" height="16px"
-                        color="#4090EF"></svg-icon>
-                    {{ item.title }}
-                </div>
-                <draggable v-if="item.children && item.children.length > 0" class="dragArea list-group"
-                    :list="item.children" :clone="clone" group="people">
-                    <li class="in_place"></li>
-                    <li :class="element.id === activeId ? 'active' : ''" class="children__menu"
-                        v-for="element in item.children" :key="element.id" @click="setConfig(element)">
-                        <svg-icon style="margin-right: 5px" :iconClass="element.iconClass" width="12px" height="12px"
-                            color="#4090EF"></svg-icon>
-                        {{ element.title }}
-                    </li>
-                </draggable>
-            </ul>
+            
         </el-card>
         <el-card shadow="hover" style="position: relative;">
             <div v-show="!activeId">
@@ -72,17 +56,13 @@
 </template>
 
 <script>
-import draggable from 'vuedraggable';
-import { deepClone } from '@/utils';
+import { menuOptions } from '@/assets/json/menu';
 import { mapGetters } from 'vuex';
 export default {
     name: 'menuConfig',
-    components: {
-        draggable
-    },
     data() {
         return {
-            tolList: [],
+            menuList:menuOptions,
             controlOnStart: true,
             settingInfo: {},
             activeId: null
@@ -92,10 +72,7 @@ export default {
         ...mapGetters(['menuOptions'])
     },
     created() {
-        const menu = localStorage.getItem('asg-menuConfig');
-        const menuOption = menu ? JSON.parse(menu) : this.menuOptions;
-        console.log(menuOption);
-        this.tolList = deepClone(menuOption);
+        
     },
     methods: {
         handleSaveMenu() {
@@ -105,7 +82,7 @@ export default {
                 title: '成功',
                 message: '配置成功，重新登录后将会生效'
             });
-            this.$router.push({ path: '/index/information' })
+            this.$router.push({ path: '/index' })
         },
         setConfig(item) {
             this.settingInfo = item;

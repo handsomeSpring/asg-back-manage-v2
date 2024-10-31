@@ -222,7 +222,7 @@
         </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button size="small" @click="dialogFormVisible = false">取 消</el-button>
-        <el-button size="small" type="primary" @click="updateSchedule">确 定</el-button>
+        <el-button size="small" type="primary" @click="updateSchedule">更 新</el-button>
       </div>
     </el-dialog>
     <!-- 弹出框 -->

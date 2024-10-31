@@ -14,51 +14,49 @@
             </el-select>
             <el-button size="small" type="primary" @click="initChangeList">查询</el-button>
         </header>
-        <el-scrollbar :native="false" wrapStyle="" wrapClass="" viewClass="" viewStyle="" :noresize="false"
-            tag="section" style="height: calc(80vh - 46px); margin-bottom: 10px">
-            <el-table v-loading="loading" style="width:100%" :data="tableData" :header-cell-style="{ background: '#f2f6fd', color: '#000' }">
-                <el-table-column label="序号" type="index" width="80px"></el-table-column>
-                <el-table-column label="商品名称" prop="name"></el-table-column>
-                <el-table-column align="center">
-                    <template #header>
-                        购买者信息<span style="color:#f40"><i class="el-icon-warning-outline"></i>点击详情显示用户信息</span>
-                    </template>
-                    <template #default="{ row }">
-                        <el-popover placement="top" width="150" trigger="click" @show="checkUserName(row)">
-                            <div v-loading="popLoading" style="width:200px">
-                                <li class="user-info">
-                                    <el-tag size="small" type="primary">姓名</el-tag>{{ userInfo.chinaname }}
-                                </li>
-                                <li class="user-info">
-                                    <el-tag size="small" type="primary">用户</el-tag>{{ userInfo.userName }}
-                                </li>
-                                <li class="user-info">
-                                    <el-tag size="small" type="primary">积分</el-tag>{{ userInfo.integral || 0 }}
-                                </li>
-                            </div>
-                            <span class="info" slot="reference">购买者详情信息</span>
-                        </el-popover>
-                    </template>
-                </el-table-column>
-                <el-table-column label="是否核销" align="center">
-                    <template #default="{ row }">
-                        <div style="display: flex;align-items: center;justify-content: center;">
-                            <p class="my-task-success margin-icon" v-if="row.isVerification">
-                                <i class="el-icon-success"></i>已核销
-                            </p>
-                            <p class="my-task-auth margin-icon" v-else>
-                                <i class="el-icon-warning"></i>待核销
-                            </p>
+        <el-table v-loading="loading" style="width:100%" :data="tableData"
+            :header-cell-style="{ background: '#f2f6fd', color: '#000' }">
+            <el-table-column label="序号" type="index" width="80px"></el-table-column>
+            <el-table-column label="商品名称" prop="name"></el-table-column>
+            <el-table-column align="center">
+                <template #header>
+                    购买者信息<span style="color:#f40"><i class="el-icon-warning-outline"></i>点击详情显示用户信息</span>
+                </template>
+                <template #default="{ row }">
+                    <el-popover placement="top" width="150" trigger="click" @show="checkUserName(row)">
+                        <div v-loading="popLoading" style="width:200px">
+                            <li class="user-info">
+                                <el-tag size="small" type="primary">姓名</el-tag>{{ userInfo.chinaname }}
+                            </li>
+                            <li class="user-info">
+                                <el-tag size="small" type="primary">用户</el-tag>{{ userInfo.userName }}
+                            </li>
+                            <li class="user-info">
+                                <el-tag size="small" type="primary">积分</el-tag>{{ userInfo.integral || 0 }}
+                            </li>
                         </div>
-                    </template>
-                </el-table-column>
-                <el-table-column label="操作" align="center">
-                    <template #default="{ row }">
-                        <el-button v-if="!row.isVerification" type="text" @click="verify(row)">核销</el-button>
-                    </template>
-                </el-table-column>
-            </el-table>
-        </el-scrollbar>
+                        <span class="info" slot="reference">购买者详情信息</span>
+                    </el-popover>
+                </template>
+            </el-table-column>
+            <el-table-column label="是否核销" align="center">
+                <template #default="{ row }">
+                    <div style="display: flex;align-items: center;justify-content: center;">
+                        <p class="my-task-success margin-icon" v-if="row.isVerification">
+                            <i class="el-icon-success"></i>已核销
+                        </p>
+                        <p class="my-task-auth margin-icon" v-else>
+                            <i class="el-icon-warning"></i>待核销
+                        </p>
+                    </div>
+                </template>
+            </el-table-column>
+            <el-table-column label="操作" align="center">
+                <template #default="{ row }">
+                    <el-button v-if="!row.isVerification" type="text" @click="verify(row)">核销</el-button>
+                </template>
+            </el-table-column>
+        </el-table>
         <el-pagination style="float:right" @size-change="handleChange($event, 'pagesize')"
             @current-change="handleChange($event, 'pageindex')" :current-page="listQuery.pageindex"
             :page-sizes="[10, 20, 30, 50]" :page-size="listQuery.pagesize"
