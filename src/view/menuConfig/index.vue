@@ -4,26 +4,26 @@
             <div class="parent-node" v-for="item in menuList" :key="item.id">
                 <div class="parent-list" @click="setConfig(item)">
                     <p>{{ item.title }}</p>
-                    <i class="el-icon-circle-plus"></i>
+                    <i class="el-icon-circle-plus" @click.stop="addNew(item)"></i>
                 </div>
                 <div v-if="item.children && item.children.length > 0" class="children-list">
-                    <li class="child-node" :class="activeId === child.id ? 'active' : ''" v-for="child in item.children" :key="child.id" @click="setConfig(child)">
+                    <li class="child-node" :class="activeId === child.id ? 'active' : ''" v-for="child in item.children"
+                        :key="child.id" @click="setConfig(child)">
                         <p>{{ child.title }}</p>
                         <div class="flex-icon">
-                            <i class="el-icon-circle-plus-outline"></i>
-                            <i class="el-icon-edit"></i>
-                            <i class="el-icon-circle-close"></i>
+                            <i class="el-icon-edit" @click.stop="isForbid = false"></i>
+                            <i class="el-icon-circle-close" @click="handleDeleteNode(child)"></i>
                         </div>
                     </li>
                 </div>
             </div>
         </el-card>
         <el-card shadow="hover" style="position: relative;">
-            <div v-show="!activeId">
+            <div v-show="Object.keys(settingInfo).length === 0">
                 <p>点击左侧菜单编辑！！！</p>
                 <p>左侧菜单是可以拖拽排序的！！！</p>
             </div>
-            <el-form v-show="activeId" :model="settingInfo" label-position="top">
+            <el-form v-show="Object.keys(settingInfo).length > 0" :model="settingInfo" label-position="top">
                 <el-row>
                     <el-col :span="10">
                         <el-form-item label="父节点id">
@@ -39,39 +39,51 @@
                 <el-row>
                     <el-col :span="10">
                         <el-form-item label="菜单名称">
-                            <el-input size="small" v-model="settingInfo.title" clearable></el-input>
+                            <el-input size="small" v-model="settingInfo.title" :disabled="isForbid"
+                                clearable></el-input>
                         </el-form-item>
                     </el-col>
                     <el-col :span="10" :offset="4">
                         <el-form-item label="菜单图标">
-                            <svg-icon :iconClass="settingInfo.iconClass" width="40px" height="40px"
-                                color="#4090EF"></svg-icon>
+                            <div class="flex_icon">
+                                <el-select size="small" v-model="settingInfo.iconClass" placeholder="请选择">
+                                    <el-option v-for="item in svgIcon" :key="item.value" :value="item.value">
+                                        <div class="flex_icon">
+                                            <span>{{ item.label }}</span>
+                                            <svg-icon :iconClass="item.value" width="16px" height="16px"
+                                                color="#4090EF"></svg-icon>
+                                        </div>
+                                    </el-option>
+                                </el-select>
+                                <svg-icon :iconClass="settingInfo.iconClass" width="40px" height="40px"
+                                    color="#4090EF"></svg-icon>
+                            </div>
                         </el-form-item>
                     </el-col>
                 </el-row>
                 <el-row>
                     <el-col :span="10">
                         <el-form-item label="网页路径">
-                            <el-input size="small" v-model="settingInfo.path" disabled></el-input>
+                            <el-input size="small" v-model="settingInfo.path" :disabled="isForbid"></el-input>
                         </el-form-item>
                     </el-col>
                     <el-col :span="10" :offset="4">
                         <el-form-item label="前端组件路径">
-                            <el-input size="small" v-model="settingInfo.component" disabled></el-input>
+                            <el-input size="small" v-model="settingInfo.component" :disabled="isForbid"></el-input>
                         </el-form-item>
                     </el-col>
                 </el-row>
                 <el-row>
                     <el-col :span="10">
                         <el-form-item label="是否启用">
-                            <el-switch :disabled="settingInfo.id === 25" v-model="settingInfo.show" active-text="开启"
+                            <el-switch :disabled="isForbid" v-model="settingInfo.show" active-text="开启"
                                 inactive-text="隐藏">
                             </el-switch>
                         </el-form-item>
                     </el-col>
                 </el-row>
             </el-form>
-            <el-button style="position: absolute;right:15px;bottom:15px;" type="primary"
+            <el-button v-show="!isForbid" style="position: absolute;right:15px;bottom:15px;" type="primary"
                 @click="handleSaveMenu">保存</el-button>
         </el-card>
     </div>
@@ -87,16 +99,48 @@ export default {
             menuList: menuOptions,
             controlOnStart: true,
             settingInfo: {},
-            activeId: null
+            activeId: null,
+            isForbid: false,
+            svgIcon: []
         }
     },
     computed: {
         ...mapGetters(['menuOptions'])
     },
-    created() {
+    mounted() {
+        //参数：1.路径；2.是否遍历子目录；3.正则表达式
+        const files = require.context("@/assets/icons", false, /\.svg$/).keys();
+        files.forEach(item => {
+            const className = item.replace('./', '').replace('.svg', '');
+            this.svgIcon.push({
+                value: className,
+                label: className
+            })
+        })
 
     },
     methods: {
+        addNew(item) {
+            this.settingInfo = {
+                parentId: item.id,
+                id: '2222',
+                title: '新子节点',
+                iconClass: 'home',
+                show: true,
+                component: '',
+                path: item.path + '/待输入',
+            }
+            this.isForbid = false;
+        },
+        handleDeleteNode(item) {
+            this.$confirm(`确定删除菜单:${item.title}吗`, "确认", {
+                confirmButtonText: "确定",
+                cancelButtonText: "取消",
+                type: "warning",
+            }).then(() => {
+                this.$message.warning('删除失败，后端未对接！');
+            })
+        },
         handleSaveMenu() {
             const menuJSON = JSON.stringify(this.tolList);
             localStorage.setItem('asg-menuConfig', menuJSON);
@@ -109,6 +153,7 @@ export default {
         setConfig(item) {
             this.settingInfo = item;
             this.activeId = item.id;
+            this.isForbid = true;
         },
         clone(item) {
             return item
@@ -172,10 +217,16 @@ export default {
             &.active,
             &:hover {
                 background: rgba(26, 107, 241, 0.08);
-                color:#1B8CFD;
+                color: #1B8CFD;
             }
-            
+
         }
     }
+}
+
+.flex_icon {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
 }
 </style>
