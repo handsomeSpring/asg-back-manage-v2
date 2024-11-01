@@ -89,7 +89,7 @@ export default {
         this.$store.commit("setToken", data);
         await this.initRoles();
         await this.initGetInfo();
-        this.$router.push("/index");
+        this.$router.push("/guide");
         this.$message.success("登录成功！");
       } catch (error) {
         if (error.response?.data?.message) {
@@ -161,7 +161,7 @@ export default {
               this.$store.commit("setToken", res.data);
               this.initGetInfo();
               setTimeout(() => {
-                this.$router.push("/index");
+                this.$router.push("/guide");
                 this.$message.success("登录成功！");
                 this.loading = false;
               }, 1000);
@@ -241,7 +241,7 @@ main {
     position: absolute;
     right: -435px;
     top: calc((100vh - 140px - 50vh - 40px) / 2);
-    border-radius: 6px;
+    border-radius: 8px;
     animation: forwards move 0.8s;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.12), 0 0 6px rgba(0, 0, 0, 0.04);
 

@@ -7,12 +7,12 @@
             <el-tab-pane v-for="(item, index) in headerTabs" :key="index" :name="item.value" style="position: relative">
                 <template slot="label">
                     <div class="label__container">
-                        <i v-show="item.value === '/index/information'" class="el-icon-s-home" style="margin-right: 6px;"></i>
+                        <i v-show="item.value === '/guide'" class="el-icon-s-home" style="margin-right: 6px;"></i>
                         <span style="padding-right: 15px">
                             {{ item.label }}
                         </span>
                         <div class="label__container" @click="removeTag(index)">
-                            <svg-icon v-show="item.value !== '/index/information'" style="margin-right: 5px"
+                            <svg-icon v-show="item.value !== '/guide'" style="margin-right: 5px"
                                 iconClass="close" width="16px" height="16px" color="#e7e7e7">
                             </svg-icon>
                         </div>
@@ -31,10 +31,10 @@ export default {
             headerTabs: [
                 {
                     label: '工作台',
-                    value: '/index/information'
+                    value: '/guide'
                 }
             ],
-            activeMenu: '/index/information',
+            activeMenu: '/guide',
             isActive:false,
         };
     },

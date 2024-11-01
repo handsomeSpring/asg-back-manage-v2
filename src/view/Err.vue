@@ -18,7 +18,7 @@ export default {
    name: 'Err',
    methods:{
     backToLogin(){
-        this.$router.push({path:"/"})
+        this.$router.push({path:"/login"})
     }
    }
 }

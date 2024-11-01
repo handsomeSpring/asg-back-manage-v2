@@ -1,13 +1,13 @@
 <template>
   <div class="header-container">
     <div class="l-content">
-      <span class="text"><router-link to="/index/information">ASG后台管理系统<span
+      <span class="text"><router-link to="/guide">ASG后台管理系统<span
             class="version">{{ version }}</span></router-link></span>
     </div>
     <div class="r-content">
       <div class="single__router" @click="routerToGw">前往ASG官网<i class="el-icon-d-arrow-right"></i></div>
       <div class="wait__do">
-        <li @click="() => { $router.push({ path: '/index/information' }) }">
+        <li @click="() => { $router.push({ path: '/guide' }) }">
           <el-badge size="small" :max="99" :value="waitDoNumber" class="item">
             <span>任务待办</span>
           </el-badge>
@@ -281,7 +281,7 @@ export default {
       }
     },
     goManager() {
-      this.$router.push({ path: '/index/information' });
+      this.$router.push({ path: '/guide' });
     },
     toCustom() {
       this.$router.push({ path: '/myCustomWorker' });

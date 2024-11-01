@@ -78,10 +78,10 @@ export default {
             const stringParse = JSON.stringify(customWorker);
             window.localStorage.setItem('asg-layout', stringParse);
             this.$message.success('保存成功');
-            this.$router.push({path:'/index/information'})
+            this.$router.push({path:'/guide'})
         },
         back() {
-            this.$router.push({path:'/index/information'})
+            this.$router.push({path:'/guide'})
         },
         getDropNode(node) {
             while (node) {

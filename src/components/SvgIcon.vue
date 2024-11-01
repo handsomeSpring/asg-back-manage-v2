@@ -10,7 +10,7 @@ export default {
   props: {
     iconClass: {
       type: String,
-      required: true,
+      default:'default'
     },
     className: {
       type: String,
