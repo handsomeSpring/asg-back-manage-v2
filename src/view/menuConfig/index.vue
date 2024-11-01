@@ -1,17 +1,31 @@
 <template>
     <div class="menu__container">
         <el-card shadow="hover">
+            <header>
+                <el-button type="primary" size="small" @click="addNewParent">新增父级菜单</el-button>
+            </header>
             <div class="parent-node" v-for="item in menuList" :key="item.id">
-                <div class="parent-list" @click="setConfig(item)">
-                    <p>{{ item.title }}</p>
-                    <i class="el-icon-circle-plus" @click.stop="addNew(item)"></i>
+                <div class="parent-list">
+                    <p>
+                        <i v-if="item.children.length !== 0"
+                            :class="item.isFold ? 'el-icon-arrow-up' : 'el-icon-arrow-down'" style="margin-right: 6px;"
+                            @click="item.isFold = !item.isFold"></i>{{ item.title }}
+                    </p>
+                    <div class="flex-icon">
+                        <i class="el-icon-view" @click="setConfig(item, true)"></i>
+                        <i class="el-icon-edit" @click="setConfig(item, false)"></i>
+                        <i class="el-icon-circle-plus" @click.stop="addNew(item)"></i>
+                    </div>
+
                 </div>
-                <div v-if="item.children && item.children.length > 0" class="children-list">
+                <div v-if="item.children && item.children.length > 0" class="children-list"
+                    :class="item.isFold ? 'fold' : 'unFold'">
                     <li class="child-node" :class="activeId === child.id ? 'active' : ''" v-for="child in item.children"
-                        :key="child.id" @click="setConfig(child)">
+                        :key="child.id">
                         <p>{{ child.title }}</p>
                         <div class="flex-icon">
-                            <i class="el-icon-edit" @click.stop="isForbid = false"></i>
+                            <i class="el-icon-view" @click="setConfig(child, true)"></i>
+                            <i class="el-icon-edit" @click="setConfig(child, false)"></i>
                             <i class="el-icon-circle-close" @click="handleDeleteNode(child)"></i>
                         </div>
                     </li>
@@ -19,11 +33,13 @@
             </div>
         </el-card>
         <el-card shadow="hover" style="position: relative;">
-            <div v-show="Object.keys(settingInfo).length === 0">
-                <p>点击左侧菜单编辑！！！</p>
-                <p>左侧菜单是可以拖拽排序的！！！</p>
+            <div v-show="initFlag">
+                <li><i class="el-icon-view"></i>查看菜单</li>
+                <li><i class="el-icon-edit"></i>编辑菜单</li>
+                <li><i class="el-icon-circle-close">删除菜单</i></li>
+                <li><i class="el-icon-circle-plus"></i>添加菜单</li>
             </div>
-            <el-form v-show="Object.keys(settingInfo).length > 0" :model="settingInfo" label-position="top">
+            <el-form v-show="!initFlag" :model="settingInfo" label-position="top">
                 <el-row>
                     <el-col :span="10">
                         <el-form-item label="父节点id">
@@ -75,6 +91,15 @@
                 </el-row>
                 <el-row>
                     <el-col :span="10">
+                        <el-form-item label="权限配置">
+                            <el-select size="small" multiple v-model="settingInfo.auth" placeholder="请选择">
+                                <el-option v-for="item in permissionList" :key="item.value" :value="item.value"
+                                    :label="item.label">
+                                </el-option>
+                            </el-select>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="10" :offset="4">
                         <el-form-item label="是否启用">
                             <el-switch :disabled="isForbid" v-model="settingInfo.show" active-text="开启"
                                 inactive-text="隐藏">
@@ -90,22 +115,43 @@
 </template>
 
 <script>
+import { getByTitle } from '@/api/config';
 import { menuOptions } from '@/assets/json/menu';
 import { mapGetters } from 'vuex';
+import { uuid } from '@/utils';
 export default {
     name: 'menuConfig',
     data() {
         return {
-            menuList: menuOptions,
-            controlOnStart: true,
+            menuList: [],
             settingInfo: {},
             activeId: null,
             isForbid: false,
-            svgIcon: []
+            svgIcon: [],
+            permissionList: [],
+            initFlag:true
         }
     },
     computed: {
         ...mapGetters(['menuOptions'])
+    },
+    created() {
+        this.menuList = menuOptions.map(item => {
+            return {
+                ...item,
+                auth: item.auth.split(','),
+                isFold: true,
+                children: item.children.map(child => {
+                    return {
+                        ...child,
+                        auth: child.auth.split(',')
+                    }
+                })
+            }
+        });
+        getByTitle('menuPermission').then(res => {
+            this.permissionList = res.data;
+        })
     },
     mounted() {
         //参数：1.路径；2.是否遍历子目录；3.正则表达式
@@ -120,10 +166,23 @@ export default {
 
     },
     methods: {
+        addNewParent(){
+            this.settingInfo = {
+                parentId: '-1',
+                id: uuid(),
+                title: '新父节点',
+                iconClass: 'home',
+                show: true,
+                component: '',
+                path: '/待输入',
+            }
+            this.isForbid = false;
+            this.initFlag = false;
+        },
         addNew(item) {
             this.settingInfo = {
                 parentId: item.id,
-                id: '2222',
+                id: uuid(),
                 title: '新子节点',
                 iconClass: 'home',
                 show: true,
@@ -131,6 +190,7 @@ export default {
                 path: item.path + '/待输入',
             }
             this.isForbid = false;
+            this.initFlag = false;
         },
         handleDeleteNode(item) {
             this.$confirm(`确定删除菜单:${item.title}吗`, "确认", {
@@ -142,31 +202,16 @@ export default {
             })
         },
         handleSaveMenu() {
-            const menuJSON = JSON.stringify(this.tolList);
-            localStorage.setItem('asg-menuConfig', menuJSON);
             this.$notify({
-                title: '成功',
-                message: '配置成功，重新登录后将会生效'
+                title: '失败',
+                message: '等待后端提供接口'
             });
-            this.$router.push({ path: '/index' })
         },
-        setConfig(item) {
+        setConfig(item, dis) {
             this.settingInfo = item;
             this.activeId = item.id;
-            this.isForbid = true;
-        },
-        clone(item) {
-            return item
-        },
-        pullFunction() {
-            return this.controlOnStart ? 'clone' : true
-        },
-        start({ originalEvent }) {
-            this.controlOnStart = originalEvent.ctrlKey
-        },
-        getNewList() {
-            let a = this.tolList
-            console.log(a)
+            this.isForbid = dis;
+            this.initFlag = false;
         }
     }
 }
@@ -176,7 +221,9 @@ export default {
     display: grid;
     grid-template-columns: 400px auto;
     gap: 24px;
-
+    header{
+        margin:12px 0;
+    }
     .el-card {
         height: 70vh;
         overflow-y: scroll;
@@ -196,6 +243,9 @@ export default {
     }
 
     .children-list {
+        transition: 0.5s;
+        overflow: hidden;
+
         .child-node {
             display: flex;
             justify-content: space-between;
@@ -208,12 +258,6 @@ export default {
                 margin-left: 12px;
             }
 
-            .flex-icon {
-                display: flex;
-                align-items: center;
-                gap: 6px;
-            }
-
             &.active,
             &:hover {
                 background: rgba(26, 107, 241, 0.08);
@@ -221,12 +265,30 @@ export default {
             }
 
         }
+
+        &.unFold {
+            height: 0;
+            transform: scaleY(0)
+        }
+
+        &.fold {
+            transform: scaleY(1)
+        }
     }
+}
+
+.flex-icon {
+    display: flex;
+    align-items: center;
+    gap: 6px;
 }
 
 .flex_icon {
     display: flex;
     align-items: center;
     justify-content: space-between;
+}
+::-webkit-scrollbar {
+    display: none !important;
 }
 </style>

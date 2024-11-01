@@ -5,6 +5,7 @@ export const menuOptions = [
         title:'工作台',
         children:[],
         parentId:'-1',
+        auth:'admin',
         id:'information01'
     },
     {
@@ -13,6 +14,7 @@ export const menuOptions = [
         title:'数据可视化大屏',
         children:[],
         parentId:'-1',
+        auth:'admin',
         id:'workPlat'
     },
     {
@@ -21,6 +23,7 @@ export const menuOptions = [
         title:'赛事管理',
         parentId:'-1',
         id:'match01',
+        auth:'admin',
         children:[
             {
                 path:'/index/person',
@@ -28,6 +31,7 @@ export const menuOptions = [
                 title:'用户管理',
                 parentId:'match01',
                 id:'match1',
+                auth:'admin',
                 component:'person/index',
                 show:true,
             },
@@ -37,6 +41,7 @@ export const menuOptions = [
                 title:'报名管理',
                 parentId:'match01',
                 id:'match2',
+                auth:'admin',
                 component:'enroll/index',
                 show:true,
             },
@@ -46,6 +51,8 @@ export const menuOptions = [
                 title:'赛程管理',
                 parentId:'match01',
                 id:'match3',
+                auth:'admin',
+                auth:'admin',
                 component:'schedule/index',
                 show:true,
             },
@@ -55,6 +62,7 @@ export const menuOptions = [
                 title:'抽签管理',
                 parentId:'match01',
                 id:'match4',
+                auth:'admin',
                 component:'ballot/index',
                 show:true,
             },
@@ -64,6 +72,7 @@ export const menuOptions = [
                 title:'赛程生成模板',
                 parentId:'match01',
                 id:'match5',
+                auth:'admin',
                 component:'scheduleMaker/index',
                 show:true,
             },
@@ -73,6 +82,7 @@ export const menuOptions = [
                 title:'晋升图设计',
                 parentId:'match01',
                 id:'match6',
+                auth:'admin',
                 component:'drag/index',
                 show:true,
             },
@@ -82,6 +92,7 @@ export const menuOptions = [
                 title:'封面制作',
                 parentId:'match01',
                 id:'match7',
+                auth:'admin',
                 component:'gamepic/index',
                 show:true,
             },
@@ -91,6 +102,7 @@ export const menuOptions = [
                 title:'导出表单',
                 parentId:'match01',
                 id:'match8',
+                auth:'admin',
                 component:'test/index',
                 show:true,
             }
@@ -102,6 +114,7 @@ export const menuOptions = [
         title:'发布管理',
         parentId:'-1',
         id:'publish',
+        auth:'admin',
         children:[
             {
                 path:'/index/taskGiving',
@@ -109,6 +122,7 @@ export const menuOptions = [
                 title:'任务下发',
                 parentId:'publish',
                 id:'publish1',
+                auth:'admin',
                 component:'person/components/management',
                 show:true,
             },
@@ -118,6 +132,7 @@ export const menuOptions = [
                 title:'冠军管理',
                 parentId:'publish',
                 id:'publish2',
+                auth:'admin',
                 component:'blok/index',
                 show:true,
             },
@@ -127,6 +142,7 @@ export const menuOptions = [
                 title:'公告管理',
                 parentId:'publish',
                 id:'publish3',
+                auth:'admin',
                 component:'news/index',
                 show:true,
             },
@@ -136,6 +152,7 @@ export const menuOptions = [
                 title:'合作伙伴',
                 parentId:'publish',
                 id:'publish4',
+                auth:'admin',
                 component:'banpick/index',
                 show:true,
             },
@@ -145,6 +162,7 @@ export const menuOptions = [
                 title:'商品发布',
                 parentId:'publish',
                 id:'publish5',
+                auth:'admin',
                 component:'storeManager/index',
                 show:true,
             }
@@ -156,6 +174,7 @@ export const menuOptions = [
         title:'审批核销',
         parentId:'-1',
         id:'auth',
+        auth:'admin',
         children:[
             {
                 path:'/index/exchange',
@@ -163,6 +182,7 @@ export const menuOptions = [
                 title:'解说审核',
                 parentId:'auth',
                 id:'auth1h',
+                auth:'admin',
                 component:'exchange/index',
                 show:true,
             },
@@ -172,6 +192,7 @@ export const menuOptions = [
                 title:'任务审核',
                 parentId:'auth',
                 id:'auth2h',
+                auth:'admin',
                 component:'taskManager/index',
                 show:true,
             },
@@ -181,6 +202,7 @@ export const menuOptions = [
                 title:'商品核销',
                 parentId:'auth',
                 id:'auth3h',
+                auth:'admin',
                 component:'storeManager/managerChange',
                 show:true,
             },
@@ -190,6 +212,7 @@ export const menuOptions = [
                 title:'预算录入',
                 parentId:'auth',
                 id:'auth4',
+                auth:'admin',
                 component:'budget/index',
                 show:true,
             }
@@ -201,6 +224,7 @@ export const menuOptions = [
         title:'系统参数',
         parentId:'-1',
         id:'system',
+        auth:'admin',
         children:[
             {
                 path:'/index/introduction',
@@ -208,6 +232,7 @@ export const menuOptions = [
                 title:'操作手册',
                 parentId:'system',
                 id:'system1',
+                auth:'admin',
                 component:'introduction/index',
                 show:true,
             },
@@ -217,6 +242,7 @@ export const menuOptions = [
                 title:'全局参数',
                 parentId:'system',
                 id:'system2',
+                auth:'admin',
                 component:'global/index',
                 show:true,
             },
@@ -226,6 +252,7 @@ export const menuOptions = [
                 title:'菜单管理',
                 parentId:'system',
                 id:'system3',
+                auth:'admin,superAdmin',
                 component:'menuConfig/index',
                 show:true,
             },
@@ -235,6 +262,7 @@ export const menuOptions = [
                 title:'超管专享',
                 parentId:'system',
                 id:'system4',
+                auth:'superAdmin',
                 component:'superAdmin/index',
                 show:true,
             }

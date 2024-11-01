@@ -2,7 +2,7 @@
   <div class="header-container">
     <div class="l-content">
       <span class="text"><router-link to="/index/information">ASG后台管理系统<span
-            class="version">v0.9.3</span></router-link></span>
+            class="version">{{ version }}</span></router-link></span>
     </div>
     <div class="r-content">
       <div class="single__router" @click="routerToGw">前往ASG官网<i class="el-icon-d-arrow-right"></i></div>
@@ -121,6 +121,7 @@ import { updateChinaName } from "@/api/home/index.js";
 import { uploadImg } from "@/api/home/index.js";
 import { mapGetters } from "vuex";
 import { updateQQ } from '@/api/login';
+import { getByTitle } from "@/api/config";
 export default {
   name: "CommonHeader",
   data() {
@@ -147,6 +148,7 @@ export default {
       infoDrawerVisible: false,
       newChiname: '',
       isEdit: false,
+      version:''
     };
   },
   computed: {
@@ -162,6 +164,9 @@ export default {
     }
   },
   created() {
+    getByTitle('versionConfig').then(res=>{
+      this.version = res.data.find(item => item.system === 'admin')?.version ?? '无版本号';
+    })
     this.initBaseNumber();
   },
   methods: {
