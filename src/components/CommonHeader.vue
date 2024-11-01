@@ -12,7 +12,7 @@
             <span>任务待办</span>
           </el-badge>
         </li>
-        <li @click="() => { $router.push({ path: '/index/task' }) }">
+        <li @click="() => { $router.push({ path: '/publish/taskGiving' }) }">
           <el-badge size="small" :max="99" :value="waitAuthNumber" class="item">
             <span>待审核</span>
           </el-badge>
@@ -298,7 +298,7 @@ export default {
           sessionStorage.removeItem('baseImg');
           sessionStorage.removeItem('waitDoNumber');
           sessionStorage.removeItem('waitAuthNumber');
-          this.$router.push("/");
+          this.$router.push("/login");
           this.$message.warning("您已退出登录！");
         }
       } catch (error) {

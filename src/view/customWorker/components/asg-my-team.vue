@@ -75,13 +75,17 @@ export default {
             const res = await getByTitle('historyRank');
             this.historyRanks = res.data;
             const { data, status } = await getDetailForm();
-            if(status !== 200) return;
+            console.log(data,'data');
+            if(status !== 200) throw new Error('服务端异常！');
             this.myTeam = data;
             this.hasTeam = true;
         } catch (error) {
-           if(error.response.data.code === 400){
+           if(error.response?.data?.code === 400){
             this.hasTeam = false;
+            this.$message.error(data.message ?? '未知错误');
+            return;
            }
+           this.$message.error(error.message);
         } finally {
             this.isLoading = false;
         }

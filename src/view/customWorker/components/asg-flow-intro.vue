@@ -90,7 +90,7 @@ export default {
     methods: {
         handleToIntro() {
             this.$router.push({
-                path: '/index/introduction'
+                path: '/system/introduction'
             })
         },
     }

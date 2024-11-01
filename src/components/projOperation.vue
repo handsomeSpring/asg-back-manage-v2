@@ -148,7 +148,7 @@ export default {
       this.$refs.taskHistory.openDialog();
     },
     toShopping(){
-      this.$router.push({path:'/index/shopping'})
+      this.$router.push({path:'/shopping'})
     }
   },
 

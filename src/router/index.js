@@ -12,6 +12,7 @@ import Login from "@/view/login/index.vue";
 import Err from "@/view/Err.vue";
 import Layout from '@/view/homepage/index.vue';
 import customWorker from "@/view/customWorker/index.vue";
+import Shopping from '@/view/shopping/index.vue';
 const originalPush = VueRouter.prototype.push;
 VueRouter.prototype.push = function push(location) {
   return originalPush.call(this, location).catch(err => err)
@@ -39,17 +40,18 @@ VueRouter.prototype.replace = function replace(location) {
 // }
 // const asyncRouteList = createMenuComps();
 
+// 创建权限菜单
 const createMenuComps = () => {
   return menuOptions.map(parent => {
     return {
-      path: parent.path.replace('/',''),
+      path: parent.path.replace('/', ''),
       component: (parent.component && parent.component !== 'router-view') ? _import(parent.component) : {
         render: h => h('router-view')
       },
       name: parent.title,
-      children:parent.children && parent.children.length > 0 ? parent.children.map(child => {
+      children: parent.children && parent.children.length > 0 ? parent.children.map(child => {
         return {
-          path: child.path.replace(`${parent.path}/`,''),
+          path: child.path.replace(`${parent.path}/`, ''),
           component: _import(child.component),
           name: child.title,
         }
@@ -67,12 +69,12 @@ const router = new VueRouter({
   routes: [
     {
       path: "/login",
-      name: "登录页",
+      name: "系统登录",
       component: Login,
     },
     {
       path: "/404",
-      name: "路径丢失",
+      name: "资源丢失",
       component: Err
     },
     {
@@ -83,45 +85,27 @@ const router = new VueRouter({
     {
       path: '*',
       name: "无法匹配路由",
+      redirect: '/404',
       component: Err,
     },
     {
       path: "/",
       component: Layout,
       name: '首页',
-      children:[
-        ...asyncRouteList
+      children: [
+        ...asyncRouteList,
+        {
+          path:'/shopping',
+          name:'购物中心',
+          component:Shopping
+        }
       ]
-      // children: [
-      //   {
-      //     path: "guide",
-      //     component: userInfo,
-      //     name: "工作台",
-      //   },
-      //   {
-      //     path: "index",
-      //     component: visualMap,
-      //     name: '数据化大屏'
-      //   },
-      //   {
-      //     path: "schedule",
-      //     name: '赛事管理',
-      //     component: { // 这时路由页面正常显示, 但这时会嵌套一层router-view; 如果把component注释掉, 页面就空了
-      //       render: h => h('router-view')
-      //     },
-      //     children: [{
-      //       path: "manage",
-      //       component: userInfo,
-      //       name: "赛事管理",
-      //     }]
-      //   }
-      // ]
     },
   ],
 });
 
-// 设置白名单，没有token也可以进入的页面
-const whiteList = ['/', '/login', '/404', '/index/ballot', '/index/gamepic', '/index/apiTest', '/test']
+// 设置白名单：登录、404、临时抽签
+const whiteList = ['/login', '/404', '/match/ballot']
 // 设置路由前置守卫
 router.beforeEach((to, from, next) => {
   // if如果为ture，证明有token,只要不跳转到登录页，去哪都行
@@ -129,21 +113,25 @@ router.beforeEach((to, from, next) => {
   if (getToken()) {
     // 只要路由发生了跳转，就可以执行进度条
     // 设置后置守卫，路由跳转成功就可以关闭进度条
-    next(true)
-    nProgress.done();
+    if (to.path === '/') {
+      next('/guide');
+    } else {
+      next(true)
+    }
   } else {
-    // 如果没有token，执行以下代码，
-    // if判断要进入的页面是否需要token，
-    if (whiteList.includes(to.path)) {
+    if (to.path === '/') {
+      next('/login');
+    } else if (whiteList.includes(to.path)) {
       next(true)
     } else {
       next('/404')
-      nProgress.done();
     }
   }
+  nProgress.done();
 })
 
-router.afterEach(() => {
+router.afterEach((to) => {
+  document.title = 'ASG赛事后台系统 ——' + to.name;
   nProgress.done();
 });
 export default router;
