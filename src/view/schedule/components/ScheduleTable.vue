@@ -71,10 +71,10 @@
             <el-descriptions>
               <el-descriptions-item label="主场战队" :span="1">{{ item.team1_name }}<span class="like__icon">（❤{{
                 item.team1_piaoshu
-              }}）</span></el-descriptions-item>
+                  }}）</span></el-descriptions-item>
               <el-descriptions-item label="客场战队" :span="1">{{ item.team2_name }}<span class="like__icon">（❤{{
                 item.team2_piaoshu
-              }}）</span></el-descriptions-item>
+                  }}）</span></el-descriptions-item>
               <el-descriptions-item label="裁判" :span="1">{{
                 item.judge || '无裁判'
               }}</el-descriptions-item>
@@ -209,7 +209,7 @@
           </el-col>
         </el-row>
         <el-row>
-          <el-col :span="14">
+          <el-col :span="18">
             <el-form-item label="B站回放地址">
               <el-input size="small" v-model="diaData.bilibiliuri" autocomplete="off">
                 <template slot="append">
@@ -220,8 +220,11 @@
           </el-col>
         </el-row>
         <el-row>
-          <el-col :span="14">
-            <el-input size="small" type="textarea" v-model="diaData.remark" :rows="3" maxlength="150" show-word-limit></el-input>
+          <el-col :span="18">
+            <el-form-item label="B站回放地址">
+              <el-input size="small" type="textarea" v-model="diaData.remark" :rows="3" maxlength="150"
+                show-word-limit></el-input>
+            </el-form-item>
           </el-col>
         </el-row>
       </el-form>
