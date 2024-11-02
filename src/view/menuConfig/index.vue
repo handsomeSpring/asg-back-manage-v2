@@ -113,8 +113,8 @@
                     <el-row>
                         <el-col :span="11">
                             <el-form-item label="权限配置（不配置默认所有人可访问）">
-                                <el-select style="width:100%" size="small" multiple v-model="settingInfo.auth" :disabled="isForbid"
-                                    placeholder="请选择">
+                                <el-select style="width:100%" size="small" multiple v-model="settingInfo.auth"
+                                    :disabled="isForbid" placeholder="请选择">
                                     <el-option v-for="item in permissionList" :key="item.value" :value="item.value"
                                         :label="item.label">
                                     </el-option>
@@ -146,7 +146,6 @@
                         </el-col>
                     </el-row>
                 </el-form>
-
             </el-card>
         </div>
     </div>
@@ -157,6 +156,7 @@ import { getByTitle } from '@/api/config';
 import { menuOptions } from '@/assets/json/menu';
 import { mapGetters } from 'vuex';
 import { uuid } from '@/utils';
+import { addMenu, deleteMenu } from '@/api/home';
 export default {
     name: 'menuConfig',
     data() {
@@ -260,29 +260,47 @@ export default {
             this.initFlag = false;
             this.$refs.form.resetFields();
         },
-        handleDeleteNode(item) {
-            if (this.settingInfo.children && this.settingInfo.children.length > 0) {
-                return this.$message.warning('该菜单下面存在子级菜单，无法删除！');
+        async handleDeleteNode() {
+            try {
+                if (this.settingInfo.children && this.settingInfo.children.length > 0) {
+                    return this.$message.warning('该菜单下面存在子级菜单，无法删除！');
+                }
+                const flag = await this.$confirm(`您确定删除菜单<${this.settingInfo.title}>吗`, "确认", {
+                    confirmButtonText: "确定",
+                    cancelButtonText: "取消",
+                    type: "warning",
+                });
+                if (flag === 'confirm') {
+                    const { data, status } = await deleteMenu(this.settingInfo.id);
+                    if (status !== 200) throw new Error('服务端异常！');
+                    if (data && data.code && data.code === 401) throw new Error(data.message ?? '无权限！');
+                    this.$message.success('操作成功！');
+                    //调用接口
+                }
+            } catch (error) {
+                if(typeof error === 'string'){
+                    return;
+                }
+                this.$message.error(error.message);
             }
-            this.$confirm(`您确定删除菜单<${this.settingInfo.title}>吗`, "确认", {
-                confirmButtonText: "确定",
-                cancelButtonText: "取消",
-                type: "warning",
-            }).then(() => {
-                this.$message.warning('删除失败，后端未对接！');
-            })
+
         },
-        handleSaveMenu() {
-            const requestBody = {
-                ...this.settingInfo,
-                path: this.pathPrepend + this.settingInfo.path,
-                auth: Array.isArray(this.settingInfo.auth) ? this.settingInfo.auth.join(',') : ''
+        async handleSaveMenu() {
+            try {
+                const requestBody = {
+                    ...this.settingInfo,
+                    path: this.pathPrepend + this.settingInfo.path,
+                    auth: Array.isArray(this.settingInfo.auth) ? this.settingInfo.auth.join(',') : ''
+                };
+                const { status } = await addMenu(requestBody);
+                if (status !== 200) throw new Error('后端异常，添加失败！');
+                this.$notify({
+                    title: '成功',
+                    message: '菜单更新成功！'
+                });
+            } catch (error) {
+                this.$message.error(error.message);
             }
-            console.log(requestBody, 'requestBody');
-            this.$notify({
-                title: '失败',
-                message: '等待后端提供接口'
-            });
         },
         setParentConfig(item, dis) {
             this.type = 'edit';

@@ -32,6 +32,7 @@
 
 <script>
 import { setAdmin } from "@/api/home";
+import { setRight } from "@/api/home";
 export default {
     name: 'AssignDialog',
     props: {
@@ -62,18 +63,28 @@ export default {
         return {
             roleList: [],
             hasResult: [],
-            adminLoading:false,
+            adminLoading: false,
         };
     },
     methods: {
-        handleMenu(){
-            const req = {
-                roleListName:'',
-                roleListCode:''
+        async handleMenu() {
+            try {
+                const req = {
+                    userId: this.tableItem.id,
+                    roleListName: '',
+                    roleListCode: ''
+                }
+                req.roleListName = this.hasResult.map(item => item.label).join(',');
+                req.roleListCode = this.hasResult.map(item => item.value).join(',');
+                const { status, data } = await setRight(req);
+                if(status !== 200) throw new Error('服务端异常，请联系网站管理员');
+                if(data && data.code && data.code === 401) throw new Error(data.message ?? '没有权限');
+                this.$message.success('操作成功！');
+                this.$emit('refresh');
+                this.closeDialog();
+            } catch (error) {
+                this.$message.error(error.message);
             }
-            req.roleListName = this.hasResult.map(item => item.label).join(',');
-            req.roleListCode = this.hasResult.map(item => item.value).join(',');
-            console.log(req,'req====');
         },
         handleCheck($event, obj) {
             const index = this.hasResult.findIndex(item => item.value === obj.value);
@@ -125,7 +136,7 @@ export default {
                     return;
                 }
                 this.$message.error(error.message);
-            } finally{
+            } finally {
                 this.adminLoading = false;
             }
         },
