@@ -152,10 +152,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(['adminRoles', 'userInfo']),
-    isSuperAdmin() {
-      return this.adminRoles === '2' || sessionStorage.getItem('adminRoles') === '2';
-    },
+    ...mapGetters(['userInfo']),
     avatar() {
       return this.userInfo.base64 || sessionStorage.getItem('baseImg');
     },

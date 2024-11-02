@@ -30,18 +30,18 @@ import { mapGetters } from "vuex";
 
 export default {
     name: 'asgUserInfo',
-    text:'个人信息',
+    text: '个人信息',
     components: {
         TextTitle,
     },
     computed: {
-        ...mapGetters(['adminRoles', 'userInfo']),
+        ...mapGetters(['userInfo']),
         isAdmin() {
-            return this.adminRoles === '1' || sessionStorage.getItem('adminRoles') === '1'
+            return Array.isArray(this.userInfo.roles) && this.userInfo.roles.includes('admin');
         },
         isSuperAdmin() {
-            return this.adminRoles === '2' || sessionStorage.getItem('adminRoles') === '2';
-        }
+            return Array.isArray(this.userInfo.roles) && this.userInfo.roles.includes('nbadmin');
+        },
     },
 }
 </script>
@@ -56,9 +56,10 @@ export default {
         margin: 12px;
         align-items: center;
         gap: 24px;
-        .flex__container{
-            width:8em;
-            height:8em;
+
+        .flex__container {
+            width: 8em;
+            height: 8em;
             flex-basis: 8em;
             flex-shrink: 0;
         }

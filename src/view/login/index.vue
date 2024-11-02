@@ -41,6 +41,7 @@ import { getInfo } from "@/api/home";
 import CommonFooter from "@/components/CommonFooter.vue";
 import { getByTitle } from "@/api/config";
 import { menuOptions } from "@/assets/json/menu";
+import { getPermission } from '@/utils/permission.js'
 export default {
   name: "LoginComp",
   components: {
@@ -103,8 +104,6 @@ export default {
     },
     async initGetInfo() {
       const { data } = await getInfo();
-      // const menu = localStorage.getItem('asg-menuConfig');
-      // const storeMenu = !!menu ? JSON.parse(menu) : menuOptions;
       this.$store.commit('SET_MENU', menuOptions);
       this.$store.commit("getUserInfo", data);
       sessionStorage.setItem("money", data.money);
@@ -114,21 +113,7 @@ export default {
       sessionStorage.setItem("id", data.id);
       sessionStorage.setItem("isadmin", data.isadmin);
       sessionStorage.setItem("money", data.money);
-      if (!!data.roles) {
-        this.$store.commit('setAdmin', '0')
-        sessionStorage.setItem("adminRoles", '0');
-        if (data.roles.includes('admin')) {
-          this.$store.commit('setAdmin', '1')
-          sessionStorage.setItem("adminRoles", '1');
-        }
-        if (data.roles.includes('nbadmin')) {
-          this.$store.commit('setAdmin', '2')
-          sessionStorage.setItem("adminRoles", '2');
-        }
-      } else {
-        this.$store.commit('setAdmin', '0')
-        sessionStorage.setItem("adminRoles", '0');
-      }
+      getPermission();
     },
     toggleEye() {
       if (this.eye_status === "el-icon-lock") {

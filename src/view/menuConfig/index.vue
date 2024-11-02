@@ -51,25 +51,25 @@
                 </div>
                 <el-form ref="form" v-show="!initFlag" :model="settingInfo" label-position="top" :rules="rules">
                     <el-row>
-                        <el-col :span="10">
+                        <el-col :span="11">
                             <el-form-item label="父级菜单主键Id" prop="parentId">
                                 <el-input size="small" v-model="settingInfo.parentId" disabled></el-input>
                             </el-form-item>
                         </el-col>
-                        <el-col :span="10" :offset="4">
+                        <el-col :span="11" :offset="2">
                             <el-form-item label="菜单主键Id" prop="id">
                                 <el-input size="small" v-model="settingInfo.id" disabled></el-input>
                             </el-form-item>
                         </el-col>
                     </el-row>
                     <el-row>
-                        <el-col :span="10">
+                        <el-col :span="11">
                             <el-form-item label="菜单名称" prop="title">
                                 <el-input size="small" v-model="settingInfo.title" :disabled="isForbid"
                                     clearable></el-input>
                             </el-form-item>
                         </el-col>
-                        <el-col :span="10" :offset="4">
+                        <el-col :span="11" :offset="2">
                             <el-form-item label="菜单图标（勿用彩色图标）">
                                 <div class="flex_icon">
                                     <el-select size="small" v-model="settingInfo.iconClass" placeholder="请选择">
@@ -88,7 +88,7 @@
                         </el-col>
                     </el-row>
                     <el-row>
-                        <el-col :span="10">
+                        <el-col :span="11">
                             <el-form-item label="菜单路径" prop="path">
                                 <el-input size="small" v-model="settingInfo.path" :disabled="isForbid"
                                     placeholder="请输入路径">
@@ -96,21 +96,24 @@
                                 </el-input>
                             </el-form-item>
                         </el-col>
-                        <el-col :span="10" :offset="4">
+                        <el-col :span="11" :offset="2">
                             <el-form-item label="前端组件路径" prop="component">
                                 <el-input size="small" v-model="settingInfo.component" :disabled="isForbid"
                                     placeholder="前端组件文件路径">
-                                    <template slot="append">
-                                        <el-button @click="setRouterView">设为无跳转父组件</el-button>
-                                    </template>
+                                    <template slot="prepend">
+                                        {{ settingInfo.component === 'router-view' ? '<' : '@/view/' }} </template>
+                                            <template slot="append">
+                                                {{ settingInfo.component === 'router-view' ? '>' : '.vue' }}
+                                            </template>
                                 </el-input>
+                                <el-button plain @click="setRouterView" size="small">设置为无跳转</el-button>
                             </el-form-item>
                         </el-col>
                     </el-row>
                     <el-row>
-                        <el-col :span="10">
+                        <el-col :span="11">
                             <el-form-item label="权限配置（不配置默认所有人可访问）">
-                                <el-select size="small" multiple v-model="settingInfo.auth" :disabled="isForbid"
+                                <el-select style="width:100%" size="small" multiple v-model="settingInfo.auth" :disabled="isForbid"
                                     placeholder="请选择">
                                     <el-option v-for="item in permissionList" :key="item.value" :value="item.value"
                                         :label="item.label">
@@ -118,7 +121,7 @@
                                 </el-select>
                             </el-form-item>
                         </el-col>
-                        <el-col :span="10" :offset="4">
+                        <el-col :span="11" :offset="2">
                             <el-form-item label="是否启用（关闭则所有人无法访问）">
                                 <el-switch :disabled="isForbid" v-model="settingInfo.show" active-value="1"
                                     inactive-value="0" active-text="开启" inactive-text="隐藏">
@@ -127,14 +130,14 @@
                         </el-col>
                     </el-row>
                     <el-row>
-                        <el-col :span="10">
+                        <el-col :span="11">
                             <el-form-item label="保存后是否允许操作（慎重选择）">
                                 <el-switch :disabled="isForbid" v-model="settingInfo.allowOperate" active-value="1"
                                     inactive-value="0" active-text="允许" inactive-text="禁止">
                                 </el-switch>
                             </el-form-item>
                         </el-col>
-                        <el-col :span="10" :offset="4" v-show="!isForbid">
+                        <el-col :span="11" :offset="2" v-show="!isForbid">
                             <el-form-item label="操作">
                                 <el-button type="primary" size="small" @click="handleSaveMenu">新增/更新菜单</el-button>
                                 <el-button v-if="type === 'edit'" type="danger" size="small" plain
@@ -183,7 +186,7 @@ export default {
                 component: [
                     { required: true, message: '请填写前端组件路径', blur: 'blur' }
                 ]
-            }
+            },
         }
     },
     computed: {
@@ -272,10 +275,10 @@ export default {
         handleSaveMenu() {
             const requestBody = {
                 ...this.settingInfo,
-                path:this.pathPrepend + this.settingInfo.path,
-                auth:Array.isArray(this.settingInfo.auth) ? this.settingInfo.auth.join(',') : ''
+                path: this.pathPrepend + this.settingInfo.path,
+                auth: Array.isArray(this.settingInfo.auth) ? this.settingInfo.auth.join(',') : ''
             }
-            console.log(requestBody,'requestBody');
+            console.log(requestBody, 'requestBody');
             this.$notify({
                 title: '失败',
                 message: '等待后端提供接口'
@@ -385,13 +388,16 @@ export default {
 ::-webkit-scrollbar {
     display: none !important;
 }
-.my__alert{
-    margin-bottom:12px;
-    padding:12px;
-    p{
+
+.my__alert {
+    margin-bottom: 12px;
+    padding: 12px;
+
+    p {
         font-size: 16px !important;
     }
 }
+
 .flex--operation {
     display: flex;
     align-items: center;

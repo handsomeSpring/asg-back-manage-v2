@@ -4,10 +4,6 @@ const user = {
     state: {
         token: getToken(),
         userInfo: {},
-        team_name: '',
-        team1_name: '',
-        team2_name: '',
-        adminRoles: '0'
     },
     mutations: {
         setToken(state, token) {
@@ -30,9 +26,6 @@ const user = {
         SET_LOGO(state, value) {
             state.userInfo.base64 = value;
             sessionStorage.setItem('base64', value);
-        },
-        setAdmin(state, value) {
-            state.adminRoles = value;
         },
         UPDATE_NAME(state, value) {
             state.userInfo.chinaname = value;
