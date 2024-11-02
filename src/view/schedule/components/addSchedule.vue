@@ -226,7 +226,7 @@ export default {
         },
         getPerson(userObj){
             this.form[this.tagKey] = userObj.chinaname;
-            this.form[`${this.tagKey}Id`] = userObj.id;
+            this.form[`${this.tagKey}_Id`] = userObj.id;
         },
         handleComNumberChange(number) {
             this.commentary_value = [];
@@ -248,9 +248,7 @@ export default {
                 this.btnloading = true;
                 const requestParams = {
                     ...this.form,
-                    commentary,
-                    judge_Id:this.form.judgeId,
-                    referee_Id:this.form.refereeId
+                    commentary
                 }
                 const { data, status } = await pushSchedule(requestParams);
                 if (status !== 200) throw new Error(data.message);

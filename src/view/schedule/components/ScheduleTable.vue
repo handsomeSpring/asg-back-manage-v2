@@ -239,7 +239,7 @@
     <GameResult :dialogVisible.sync="gameResultDialog" :gameResult="gameResult" @updateLoad="handleInit"></GameResult>
     <MatchDialog :dialogVisible.sync="matchDialogVisible" :rowItem="rowItem" :groupOptions="groupOptions"></MatchDialog>
     <viewResultDialog :dialogVisible.sync="viewGameResultDialog" :gameResult="gameResult"></viewResultDialog>
-    <personChooseDialog :dialogVisible.sync="choosePersonDialog" @finish="handleChoose"></personChooseDialog>
+    <personChooseDialog :dialogVisible.sync="choosePersonDialog" @finish="handleChoose" :checkId="checkId"></personChooseDialog>
   </div>
 </template>
 
@@ -268,7 +268,7 @@ export default {
     tagOptions: {
       type: Array,
       default: (() => [])
-    }
+    },
   },
   components: {
     GameResult,
@@ -294,7 +294,7 @@ export default {
         judge: '',
         judgeId: '',
         personType: '',
-        remark: ''
+        remarks: ''
       },
       commentaryOptions: [], //解说选项
       teamList: [], //战队选项
@@ -316,6 +316,7 @@ export default {
       groupOptions: [],
       // 人员选择器
       diaDataKey: null,
+      checkId:-1,
     };
   },
   methods: {
@@ -348,7 +349,7 @@ export default {
           this.scheduleData = res.data.map(item => {
             return {
               ...item,
-              personTypeName: this.personGroup.find(el => el.value === item.person_type)?.label ?? '未定义'
+              personTypeName: this.personGroup.find(el => el.value === item.person_type)?.label ?? '未定义',
             }
           });
           this.loading = false;
@@ -377,10 +378,11 @@ export default {
     },
     handleChoose(userObj) {
       this.diaData[this.diaDataKey] = userObj.chinaname ?? '';
-      this.diaData[`${this.diaDataKey}Id`] = userObj.id ?? '';
+      this.diaData[`${this.diaDataKey}_Id`] = userObj.id ?? '';
     },
     handlePersonChoose(key) {
       this.diaDataKey = key;
+      this.checkId = this.diaData[`${key}_Id`] ?? -1;
       this.choosePersonDialog = true;
     },
     handleSelect() {
@@ -463,9 +465,9 @@ export default {
           tag: this.diaData.tag,
           comLimit: this.diaData.comLimit,
           judge: this.diaData.judge,
-          judge_Id: this.diaData.judgeId,
-          referee_Id: this.diaData.refereeId,
-          remark: this.diaData.remark,
+          judge_Id: this.diaData.judge_Id,
+          referee_Id: this.diaData.referee_Id,
+          remarks: this.diaData.remarks,
           personType: this.diaData.personType
         };
         const { data, status } = await updateSchedule(this.diaData.id, info);

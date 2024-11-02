@@ -1,5 +1,5 @@
 <template>
-    <el-dialog title="选择人员" top="5vh" :visible="visible" width="40%" @close="handleClose">
+    <el-dialog title="选择人员" top="5vh" :visible="visible" width="40%" @close="handleClose" @open="initRoles">
         <el-radio-group style="margin-bottom: 12px;" size="small" v-model="personType">
             <el-radio-button label="1">职位库选择</el-radio-button>
             <el-radio-button label="2">自定义名称</el-radio-button>
@@ -8,32 +8,34 @@
             <template v-if="personType === '1'">
                 <div class="person__chose">
                     <el-scrollbar style="height:400px">
-                    <li class="title">
-                        <div>导播列表</div>
-                        <div class="icon__div" :class="refereeVisible ? 'rotate__icon' : ''"
-                            @click="refereeVisible = !refereeVisible"><i class="el-icon-arrow-up"></i></div>
-                    </li>
-                    <Transition name="slide-fade">
-                        <div v-show="refereeVisible">
-                            <li v-for="(item, index) in refereeOptions" :key="`${index}-referee`">
-                                <el-checkbox v-model="item.isCheck" @input="handleCheck($event, item)"></el-checkbox>
-                                <p>{{ item.chinaname }}</p>
-                            </li>
-                        </div>
-                    </Transition>
-                    <li class="title">
-                        <div>裁判列表</div>
-                        <div class="icon__div" :class="judgeVisible ? 'rotate__icon' : ''"
-                            @click="judgeVisible = !judgeVisible"><i class="el-icon-arrow-up"></i></div>
-                    </li>
-                    <Transition name="slide-fade">
-                        <div v-show="judgeVisible">
-                            <li v-for="(item, index) in judgetOptions" :key="`${index}-judge`">
-                                <el-checkbox v-model="item.isCheck" @input="handleCheck($event, item)"></el-checkbox>
-                                <p>{{ item.chinaname }}</p>
-                            </li>
-                        </div>
-                    </Transition>
+                        <li class="title">
+                            <div>导播列表</div>
+                            <div class="icon__div" :class="refereeVisible ? 'rotate__icon' : ''"
+                                @click="refereeVisible = !refereeVisible"><i class="el-icon-arrow-up"></i></div>
+                        </li>
+                        <Transition name="slide-fade">
+                            <div v-show="refereeVisible">
+                                <li v-for="(item, index) in refereeOptions" :key="`${index}-referee`">
+                                    <el-checkbox v-model="item.isCheck"
+                                        @input="handleCheck($event, item)"></el-checkbox>
+                                    <p>{{ item.chinaname }}</p>
+                                </li>
+                            </div>
+                        </Transition>
+                        <li class="title">
+                            <div>裁判列表</div>
+                            <div class="icon__div" :class="judgeVisible ? 'rotate__icon' : ''"
+                                @click="judgeVisible = !judgeVisible"><i class="el-icon-arrow-up"></i></div>
+                        </li>
+                        <Transition name="slide-fade">
+                            <div v-show="judgeVisible">
+                                <li v-for="(item, index) in judgetOptions" :key="`${index}-judge`">
+                                    <el-checkbox v-model="item.isCheck"
+                                        @input="handleCheck($event, item)"></el-checkbox>
+                                    <p>{{ item.chinaname }}</p>
+                                </li>
+                            </div>
+                        </Transition>
                     </el-scrollbar>
                 </div>
                 <div class="choose__item">
@@ -84,6 +86,10 @@ export default {
         dialogVisible: {
             type: Boolean,
             default: false
+        },
+        checkId: {
+            type: Number,
+            default: -1
         }
     },
     computed: {
@@ -140,26 +146,31 @@ export default {
             try {
                 const { data } = await getUserRoles({ opname: 'Anchor' });
                 this.refereeOptions = data.map(item => {
+                    if(item.id === this.checkId){
+                       this.choosePerson.id = item.id;
+                       this.choosePerson.chinaname = item.chinaname
+                    }
                     return {
                         ...item,
-                        isCheck: false
+                        isCheck: item.id === this.checkId
                     }
                 });
                 const { data: judge } = await getUserRoles({ opname: 'Judge' });
                 this.judgetOptions = judge.map(item => {
+                    if(item.id === this.checkId){
+                       this.choosePerson.id = item.id;
+                       this.choosePerson.chinaname = item.chinaname
+                    }
                     return {
                         ...item,
-                        isCheck: false
+                        isCheck: item.id === this.checkId
                     }
                 });
             } catch (error) {
                 this.$message.error(error.message);
             }
         }
-    },
-    created() {
-        this.initRoles();
-    },
+    }
 }
 </script>
 <style lang='less' scoped>
@@ -173,6 +184,7 @@ export default {
         height: 400px;
         border-radius: 3px;
         overflow: auto;
+
         li {
             padding: 6px 24px;
             border-bottom: 1px solid #e7e7e7;
