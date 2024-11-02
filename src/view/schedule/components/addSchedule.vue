@@ -248,7 +248,9 @@ export default {
                 this.btnloading = true;
                 const requestParams = {
                     ...this.form,
-                    commentary
+                    commentary,
+                    judge_Id:this.form.judgeId,
+                    referee_Id:this.form.refereeId
                 }
                 const { data, status } = await pushSchedule(requestParams);
                 if (status !== 200) throw new Error(data.message);

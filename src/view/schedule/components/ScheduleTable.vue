@@ -221,8 +221,8 @@
         </el-row>
         <el-row>
           <el-col :span="18">
-            <el-form-item label="B站回放地址">
-              <el-input size="small" type="textarea" v-model="diaData.remark" :rows="3" maxlength="150"
+            <el-form-item label="备注">
+              <el-input size="small" type="textarea" v-model="diaData.remarks" :rows="3" maxlength="150"
                 show-word-limit></el-input>
             </el-form-item>
           </el-col>
@@ -463,8 +463,8 @@ export default {
           tag: this.diaData.tag,
           comLimit: this.diaData.comLimit,
           judge: this.diaData.judge,
-          judgeId: this.diaData.judgeId,
-          refereeId: this.diaData.refereeId,
+          judge_Id: this.diaData.judgeId,
+          referee_Id: this.diaData.refereeId,
           remark: this.diaData.remark,
           personType: this.diaData.personType
         };
