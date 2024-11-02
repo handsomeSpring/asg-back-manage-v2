@@ -10,6 +10,7 @@ import Login from "@/view/login/index.vue";
 import Err from "@/view/Err.vue";
 import customWorker from "@/view/customWorker/index.vue";
 import { getPermission } from '@/utils/permission.js';
+import Layout from '@/view/homepage/index.vue';
 const originalPush = VueRouter.prototype.push;
 VueRouter.prototype.push = function push(location) {
   return originalPush.call(this, location).catch(err => err)
@@ -46,10 +47,11 @@ const router = new VueRouter({
       redirect: '/404',
       component: Err,
     },
-    // {
-    //   path: "/",
-    //   component: Layout,
-    //   name: '首页',
+    {
+      path: "/",
+      component: Layout,
+      name: 'home'
+    }
     //   children: [
     //     ...asyncRouteList,
     //     {
@@ -61,7 +63,6 @@ const router = new VueRouter({
     // },
   ],
 });
-const getLastUrl = (str, yourStr) => str.slice(str.lastIndexOf(yourStr))//取到浏览器出现网址的最后"/"出现的后边的字符
 // 设置白名单：登录、404、临时抽签
 const whiteList = ['/login', '/404', '/match/ballot']
 // 设置路由前置守卫
@@ -69,8 +70,10 @@ router.beforeEach(async (to, from, next) => {
   // if如果为ture，证明有token,只要不跳转到登录页，去哪都行
   nProgress.start();
   const beforeUploadPath = sessionStorage.getItem('beforeupload-path');
-  const lastUrl = getLastUrl(window.location.href, '/');
-  if (beforeUploadPath && lastUrl === beforeUploadPath) {
+  const lastUrl = window.location.hash;
+  const fullHashPath = '#' + beforeUploadPath;
+  console.log(beforeUploadPath,'beforeUploadPath',lastUrl,'lastUrl');
+  if (beforeUploadPath && fullHashPath ===  lastUrl) {
     await getPermission();
     sessionStorage.removeItem('beforeupload-path')
     router.replace(beforeUploadPath) //replace,保证浏览器回退的时候能直接返回到上个页面，不会叠加

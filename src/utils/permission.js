@@ -25,18 +25,12 @@ const createMenuComps = (menu) => {
 
 export async function getPermission() {
     const asyncRouteList = createMenuComps(menuOptions);
-    const permissionRouter = {
-        path: "/",
-        component: Layout,
-        name: '首页',
-        children: [
-            ...asyncRouteList,
-            {
-                path: '/shopping',
-                name: '购物中心',
-                component: Shopping
-            }
-        ]
-    }
-    router.addRoute(permissionRouter);
+    asyncRouteList.forEach(item => {
+        router.addRoute('home', item);
+    });
+    router.addRoute('home', {
+        path: '/shopping',
+        name: '购物中心',
+        component: Shopping
+    })
 }

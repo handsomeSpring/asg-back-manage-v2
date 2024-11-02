@@ -12,8 +12,8 @@
             <div>
                 <p class="one__line"><span class="title">中文名：</span>{{ userInfo.chinaname }}</p>
                 <p class="one__line"><span class="title">用户id：</span>{{ userInfo.id }}
-                    <span class="admin__blue" v-if="isAdmin"><i class="el-icon-s-custom"></i>管理员</span>
                     <span class="admin__blue" v-if="isSuperAdmin"><i class="el-icon-s-custom"></i>超级管理员</span>
+                    <span class="admin__blue" v-else-if="isAdmin"><i class="el-icon-s-custom"></i>管理员</span>
                 </p>
                 <p class="one__line"><span class="title">账号：</span>{{ userInfo.name }}</p>
                 <p class="one__line"><span class="title">QQ：</span>{{ userInfo.qqnumber || '未绑定' }}</p>
