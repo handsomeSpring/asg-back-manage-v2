@@ -108,125 +108,131 @@
     </el-pagination>
     <!-- 表单 -->
     <el-dialog title="赛程信息" width="60%" top="5vh" :visible.sync="dialogFormVisible" :close-on-click-modal="false">
-        <el-form :model="diaData" label-position="right" label-width="100px">
-          <el-row>
-            <el-col :span="24">
-              <el-form-item label="人员构成">
-                <el-radio-group v-model="diaData.personType">
-                  <el-radio v-for="(item, index) in personGroup" :label="item.value" :key="index">{{
-                    item.label }}</el-radio>
-                </el-radio-group>
-              </el-form-item>
-            </el-col>
-          </el-row>
-          <el-row>
-            <el-col :span="7">
-              <el-form-item label="赛程分类">
-                <el-input size="small" v-model="diaData.belong" disabled autocomplete="off"></el-input>
-              </el-form-item>
-            </el-col>
-            <el-col :span="7">
-              <el-form-item label="主场战队">
-                <!-- <el-select size="small" filterable clearable value-key="id" v-model="diaData.team1_name"
+      <el-form :model="diaData" label-position="right" label-width="100px">
+        <el-row>
+          <el-col :span="24">
+            <el-form-item label="人员构成">
+              <el-radio-group v-model="diaData.personType">
+                <el-radio v-for="(item, index) in personGroup" :label="item.value" :key="index">{{
+                  item.label }}</el-radio>
+              </el-radio-group>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="7">
+            <el-form-item label="赛程分类">
+              <el-input size="small" v-model="diaData.belong" disabled autocomplete="off"></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :span="7">
+            <el-form-item label="主场战队">
+              <!-- <el-select size="small" filterable clearable value-key="id" v-model="diaData.team1_name"
                   placeholder="请选择战队1">
                   <el-option v-for="item in teamList" :key="item.id" :label="item.name" :value="item.name">
                   </el-option>
                 </el-select> -->
-                <el-input v-model="diaData.team1_name" size="small" placeholder="请选择战队1"></el-input>
-              </el-form-item>
-            </el-col>
-            <el-col :span="7">
-              <el-form-item label="客场战队">
-                <!-- <el-select size="small" filterable clearable value-key="id" v-model="diaData.team2_name"
+              <el-input v-model="diaData.team1_name" size="small" placeholder="请选择战队1"></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :span="7">
+            <el-form-item label="客场战队">
+              <!-- <el-select size="small" filterable clearable value-key="id" v-model="diaData.team2_name"
                   placeholder="请选择战队2">
                   <el-option v-for="item in teamList" :key="item.id" :label="item.name" :value="item.name">
                   </el-option>
                 </el-select> -->
-                <el-input v-model="diaData.team2_name" size="small" placeholder="请选择战队2"></el-input>
-              </el-form-item>
-            </el-col>
-          </el-row>
-          <el-row>
-            <el-col :span="7">
-              <el-form-item label="导播" v-show="diaData.personType.includes('referee')">
-                <!-- <el-select size="small" filterable clearable value-key="chinaname" v-model="diaData.referee"
+              <el-input v-model="diaData.team2_name" size="small" placeholder="请选择战队2"></el-input>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="7">
+            <el-form-item label="导播" v-show="diaData.personType.includes('referee')">
+              <!-- <el-select size="small" filterable clearable value-key="chinaname" v-model="diaData.referee"
                   placeholder="请选择导播">
                   <el-option v-for="item in instructorOptions" :key="item.chinaname" :label="item.chinaname"
                     :value="item.chinaname">
                   </el-option>
                 </el-select> -->
-                <el-input v-model="diaData.referee" readonly size="small">
-                  <template #append>
-                    <p style="cursor:pointer" @click="handlePersonChoose('referee')"><i class="el-icon-plus"></i></p>
-                  </template>
-                </el-input>
-              </el-form-item>
-            </el-col>
-            <el-col :span="7" v-show="diaData.personType.includes('judge')">
-              <el-form-item label="裁判">
-                <el-input v-model="diaData.judge" readonly size="small">
-                  <template #append>
-                    <p style="cursor:pointer" @click="handlePersonChoose('judge')"><i class="el-icon-plus"></i></p>
-                  </template>
-                </el-input>
-              </el-form-item>
-            </el-col>
-            <el-col :span="7" v-show="hasCom">
-              <el-form-item label="解说数量" prop="comLimit">
-                <el-input-number size="small" v-model="diaData.comLimit" :min="1" :max="3"
-                  @change="handleComNumberChange($event)" label="解说数量"></el-input-number>
-              </el-form-item>
-            </el-col>
-          </el-row>
-          <el-row v-show="hasCom">
-            <el-col :span="7" v-for="(com, comIndex) in diaData.comLimit" :key="comIndex">
-              <el-form-item :label="`解说${comIndex + 1}`">
-                <el-select size="small" filterable clearable value-key="id" v-model="diaData.comList[comIndex]"
-                  placeholder="请选择解说1">
-                  <el-option v-for="item in commentaryOptions" :key="item.chinaname" :label="item.chinaname"
-                    :value="item">
-                  </el-option>
-                </el-select>
-              </el-form-item>
-            </el-col>
-          </el-row>
-          <el-row>
-            <el-col :span="7">
-              <el-form-item label="赛季标识">
-                <el-select filterable size="small" style="margin-bottom: 10px" v-model="diaData.tag"
-                  placeholder="请输入赛程标签">
-                  <el-option v-for="(item, index) in tagOptions" :key="index" :label="item.name" :value="item.name">
-                  </el-option>
-                </el-select>
-              </el-form-item>
-            </el-col>
-            <el-col :span="7">
-              <el-form-item label="开始时间">
-                <el-date-picker style="width:100%" v-model="diaData.opentime" size="small" type="datetime"
-                  placeholder="选择日期时间" value-format="yyyy-MM-dd HH:mm:ss" format="yyyy-MM-dd HH:mm:ss">
-                </el-date-picker>
-              </el-form-item>
-            </el-col>
-          </el-row>
-          <el-row>
-            <el-col :span="14">
-              <el-form-item label="B站回放地址">
-                <el-input size="small" v-model="diaData.bilibiliuri" autocomplete="off">
-                  <template slot="append">
-                    <span style="cursor:pointer" @click="setLose">设置为回放丢失</span>
-                  </template>
-                </el-input>
-              </el-form-item>
-            </el-col>
-          </el-row>
-        </el-form>
+              <el-input v-model="diaData.referee" readonly size="small">
+                <template #append>
+                  <p style="cursor:pointer" @click="handlePersonChoose('referee')"><i class="el-icon-plus"></i></p>
+                </template>
+              </el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :span="7" v-show="diaData.personType.includes('judge')">
+            <el-form-item label="裁判">
+              <el-input v-model="diaData.judge" readonly size="small">
+                <template #append>
+                  <p style="cursor:pointer" @click="handlePersonChoose('judge')"><i class="el-icon-plus"></i></p>
+                </template>
+              </el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :span="7" v-show="hasCom">
+            <el-form-item label="解说数量" prop="comLimit">
+              <el-input-number size="small" v-model="diaData.comLimit" :min="1" :max="3"
+                @change="handleComNumberChange($event)" label="解说数量"></el-input-number>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row v-show="hasCom">
+          <el-col :span="7" v-for="(com, comIndex) in diaData.comLimit" :key="comIndex">
+            <el-form-item :label="`解说${comIndex + 1}`">
+              <el-select size="small" filterable clearable value-key="id" v-model="diaData.comList[comIndex]"
+                placeholder="请选择解说1">
+                <el-option v-for="item in commentaryOptions" :key="item.chinaname" :label="item.chinaname"
+                  :value="item">
+                </el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="7">
+            <el-form-item label="赛季标识">
+              <el-select filterable size="small" style="margin-bottom: 10px" v-model="diaData.tag"
+                placeholder="请输入赛程标签">
+                <el-option v-for="(item, index) in tagOptions" :key="index" :label="item.name" :value="item.name">
+                </el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="7">
+            <el-form-item label="开始时间">
+              <el-date-picker style="width:100%" v-model="diaData.opentime" size="small" type="datetime"
+                placeholder="选择日期时间" value-format="yyyy-MM-dd HH:mm:ss" format="yyyy-MM-dd HH:mm:ss">
+              </el-date-picker>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="14">
+            <el-form-item label="B站回放地址">
+              <el-input size="small" v-model="diaData.bilibiliuri" autocomplete="off">
+                <template slot="append">
+                  <span style="cursor:pointer" @click="setLose">设置为回放丢失</span>
+                </template>
+              </el-input>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="14">
+            <el-input size="small" type="textarea" v-model="diaData.remark" :rows="3" maxlength="150" show-word-limit></el-input>
+          </el-col>
+        </el-row>
+      </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button size="small" @click="dialogFormVisible = false">取 消</el-button>
         <el-button size="small" type="primary" @click="updateSchedule">更 新</el-button>
       </div>
     </el-dialog>
     <!-- 弹出框 -->
-    <dialog-choose :eventName="belong" :showChoose.sync="showChoose" @refresh="handleInit" :tagOptions="tagOptions"></dialog-choose>
+    <dialog-choose :eventName="belong" :showChoose.sync="showChoose" @refresh="handleInit"
+      :tagOptions="tagOptions"></dialog-choose>
     <GameResult :dialogVisible.sync="gameResultDialog" :gameResult="gameResult" @updateLoad="handleInit"></GameResult>
     <MatchDialog :dialogVisible.sync="matchDialogVisible" :rowItem="rowItem" :groupOptions="groupOptions"></MatchDialog>
     <viewResultDialog :dialogVisible.sync="viewGameResultDialog" :gameResult="gameResult"></viewResultDialog>
@@ -255,10 +261,10 @@ import { getByTitle } from "@/api/config";
 import personChooseDialog from "./personChooseDialog.vue";
 export default {
   name: "ScheduleTable",
-  props:{
-    tagOptions:{
-      type:Array,
-      default:(()=>[])
+  props: {
+    tagOptions: {
+      type: Array,
+      default: (() => [])
     }
   },
   components: {
@@ -280,7 +286,12 @@ export default {
       diaData: {
         comList: [],
         comLimit: 0,
-        personType: ''
+        refereeId: '',
+        referee: '',
+        judge: '',
+        judgeId: '',
+        personType: '',
+        remark: ''
       },
       commentaryOptions: [], //解说选项
       teamList: [], //战队选项
@@ -297,11 +308,11 @@ export default {
       // 通知弹窗
       matchDialogVisible: false,
       viewGameResultDialog: false,
-      choosePersonDialog:false,
+      choosePersonDialog: false,
       rowItem: {},
       groupOptions: [],
       // 人员选择器
-      diaDataKey:null,
+      diaDataKey: null,
     };
   },
   methods: {
@@ -361,10 +372,11 @@ export default {
         this.$message.error(message.error);
       }
     },
-    handleChoose(userObj){
-        this.diaData[this.diaDataKey] = userObj.chinaname;
+    handleChoose(userObj) {
+      this.diaData[this.diaDataKey] = userObj.chinaname ?? '';
+      this.diaData[`${this.diaDataKey}Id`] = userObj.id ?? '';
     },
-    handlePersonChoose(key){
+    handlePersonChoose(key) {
       this.diaDataKey = key;
       this.choosePersonDialog = true;
     },
@@ -448,11 +460,13 @@ export default {
           tag: this.diaData.tag,
           comLimit: this.diaData.comLimit,
           judge: this.diaData.judge,
+          judgeId: this.diaData.judgeId,
+          refereeId: this.diaData.refereeId,
+          remark: this.diaData.remark,
           personType: this.diaData.personType
         };
         const { data, status } = await updateSchedule(this.diaData.id, info);
         if (status !== 200) throw new Error('服务端异常');
-        console.log(data, 'updateSchedule');
         if (data && data.code && data.code !== 200) throw new Error(data.message ?? '未知错误');
         this.$message.success("更新成功！");
         this.dialogFormVisible = false;
@@ -683,9 +697,10 @@ export default {
 /deep/.el-descriptions__body {
   padding: 5px 24px;
 }
-.like__icon{
+
+.like__icon {
   font-size: 14px;
   font-weight: bold;
-  color:pink
+  color: pink
 }
 </style>

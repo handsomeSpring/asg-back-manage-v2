@@ -12,7 +12,7 @@
             <span>任务待办</span>
           </el-badge>
         </li>
-        <li @click="() => { $router.push({ path: '/publish/taskGiving' }) }">
+        <li @click="() => { $router.push({ path: '/authorization/task' }) }">
           <el-badge size="small" :max="99" :value="waitAuthNumber" class="item">
             <span>待审核</span>
           </el-badge>
