@@ -139,7 +139,7 @@
                         </el-col>
                         <el-col :span="11" :offset="2">
                             <el-form-item label="菜单排序（数字越小越靠前）">
-                               <el-input-number size="small" :min="1" v-model="settingInfo.sort"></el-input-number>
+                               <el-input-number :disabled="isForbid" size="small" :min="1" v-model="settingInfo.sort"></el-input-number>
                             </el-form-item>
                         </el-col>
                     </el-row>

@@ -14,6 +14,8 @@ const user = {
         },
         removeToken(state) {
             state.token = null;
+            state.userInfo = {};
+            state.menu = [];
             removeToken();
         },
         //存储用户数据

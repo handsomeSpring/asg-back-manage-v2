@@ -54,9 +54,7 @@ export async function getPermission() {
         const { data, status } = await getMenu();
         if (status !== 200) throw new Error('获取菜单失败！');
         const transferMenu = data?.data ?? [];
-        console.log(transferMenu,'tranferMenu')
         const menu = generateMenu(transferMenu);
-        console.log(menu);
         store.commit('GENERATE_MENU', menu);
         const asyncRouteList = createMenuComps(data.data);
         asyncRouteList.forEach(item => {
