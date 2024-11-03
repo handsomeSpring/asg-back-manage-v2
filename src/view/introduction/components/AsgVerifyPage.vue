@@ -24,7 +24,7 @@ export default {
                         {
                             nodeName: '柴瞳审批',
                             nodeType: '2',
-                            path:'/index/exchange',
+                            path:'/authorization/exchange',
                         },
                         {
                             nodeName: '公布审批结论',
@@ -41,7 +41,7 @@ export default {
                         {
                             nodeName: '超管下发任务',
                             nodeType: '3',
-                            path:'/index/taskGiving'
+                            path:'/publish/taskGiving'
                         },
                         {
                             nodeName: '用户完成任务',
@@ -50,7 +50,7 @@ export default {
                         {
                             nodeName: '超管审批',
                             nodeType: '2',
-                            path:'/index/task'
+                            path:'/authorization/task'
                         },
                         {
                             nodeName: '审批至通过',
@@ -75,7 +75,7 @@ export default {
                         {
                             nodeName: '管理员核销',
                             nodeType: '2',
-                            path:'/index/storeVerify'
+                            path:'/authorization/storeVerify'
                         },
                         {
                             nodeName: '增加积分',
@@ -96,7 +96,7 @@ export default {
                         {
                             nodeName: '预算录入',
                             nodeType: '3',
-                            path:'/index/budget'
+                            path:'/authorization/budget'
                         },
                         {
                             nodeName: '使用预算',

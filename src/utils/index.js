@@ -1,21 +1,21 @@
-function getRandomNumber(min, max){
-    return Math.floor(Math.random() * (max - min + 1) + min);
+function getRandomNumber(min, max) {
+  return Math.floor(Math.random() * (max - min + 1) + min);
 }
 
 // 洗牌函数
-export function shuffle(arr){
-    for(let i = 0;i<arr.length; i++){
-      const j = getRandomNumber(0, i);
-      const temp = arr[i];
-      arr[i] = arr[j];
-      arr[j] = temp;
-    }
-    return arr;
+export function shuffle(arr) {
+  for (let i = 0; i < arr.length; i++) {
+    const j = getRandomNumber(0, i);
+    const temp = arr[i];
+    arr[i] = arr[j];
+    arr[j] = temp;
+  }
+  return arr;
 }
 // 罗澜返回的UTC时间转北京时间（new Date格式）
-export function UTCtransform(utcString){
-  let UTCTime = new Date(utcString+'Z');
-  return new Date(UTCTime.setHours(UTCTime.getUTCHours()+ 8));
+export function UTCtransform(utcString) {
+  let UTCTime = new Date(utcString + 'Z');
+  return new Date(UTCTime.setHours(UTCTime.getUTCHours() + 8));
 }
 
 export function deepClone(source) {
@@ -42,16 +42,28 @@ export function toThousands(num) {
 }
 
 // 创建单例模式
-export function singleton(className){
+export function singleton(className) {
   let ins;
-   const proxy = new Proxy(className,{
+  const proxy = new Proxy(className, {
     construct(target, args) {
-      if(!ins){
+      if (!ins) {
         ins = new target(...args);
       }
       return ins;
     }
-   });
-   className.prototype.constructor = proxy;
-   return proxy;
+  });
+  className.prototype.constructor = proxy;
+  return proxy;
+}
+
+export function uuid() {
+  const s = [];
+  const hexDigits = '0123456789abcdef';
+  for (let i = 0; i < 32; i++) {
+    s[i] = hexDigits.substr(Math.floor(Math.random() * 0x10), 1);
+  }
+  s[12] = '4';
+  s[16] = hexDigits.substr((s[16] & 0x3) | 0x8, 1);
+  const uuid = s.join('');
+  return uuid;
 }

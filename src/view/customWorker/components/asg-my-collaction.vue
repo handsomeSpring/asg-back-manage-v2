@@ -154,7 +154,7 @@ export default {
             }
         },
         routerToAuth() {
-            this.$router.push({ path: '/index/task' });
+            this.$router.push({ path: '/publish/taskGiving' });
         },
         openDialog(task) {
             this.row = task;

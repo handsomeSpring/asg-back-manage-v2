@@ -1,18 +1,18 @@
 <template>
   <div class="header-container">
     <div class="l-content">
-      <span class="text"><router-link to="/index/information">ASG后台管理系统<span
-            class="version">v0.9.2</span></router-link></span>
+      <span class="text"><router-link to="/guide">ASG后台管理系统<span
+            class="version">{{ version }}</span></router-link></span>
     </div>
     <div class="r-content">
       <div class="single__router" @click="routerToGw">前往ASG官网<i class="el-icon-d-arrow-right"></i></div>
       <div class="wait__do">
-        <li @click="() => { $router.push({ path: '/index/information' }) }">
+        <li @click="() => { $router.push({ path: '/guide' }) }">
           <el-badge size="small" :max="99" :value="waitDoNumber" class="item">
             <span>任务待办</span>
           </el-badge>
         </li>
-        <li @click="() => { $router.push({ path: '/index/task' }) }">
+        <li @click="() => { $router.push({ path: '/authorization/task' }) }">
           <el-badge size="small" :max="99" :value="waitAuthNumber" class="item">
             <span>待审核</span>
           </el-badge>
@@ -121,6 +121,7 @@ import { updateChinaName } from "@/api/home/index.js";
 import { uploadImg } from "@/api/home/index.js";
 import { mapGetters } from "vuex";
 import { updateQQ } from '@/api/login';
+import { getByTitle } from "@/api/config";
 export default {
   name: "CommonHeader",
   data() {
@@ -147,13 +148,11 @@ export default {
       infoDrawerVisible: false,
       newChiname: '',
       isEdit: false,
+      version:''
     };
   },
   computed: {
-    ...mapGetters(['adminRoles', 'userInfo']),
-    isSuperAdmin() {
-      return this.adminRoles === '2' || sessionStorage.getItem('adminRoles') === '2';
-    },
+    ...mapGetters(['userInfo']),
     avatar() {
       return this.userInfo.base64 || sessionStorage.getItem('baseImg');
     },
@@ -162,6 +161,9 @@ export default {
     }
   },
   created() {
+    getByTitle('versionConfig').then(res=>{
+      this.version = res.data.find(item => item.system === 'admin')?.version ?? '无版本号';
+    })
     this.initBaseNumber();
   },
   methods: {
@@ -276,7 +278,7 @@ export default {
       }
     },
     goManager() {
-      this.$router.push({ path: '/index/information' });
+      this.$router.push({ path: '/guide' });
     },
     toCustom() {
       this.$router.push({ path: '/myCustomWorker' });
@@ -293,7 +295,7 @@ export default {
           sessionStorage.removeItem('baseImg');
           sessionStorage.removeItem('waitDoNumber');
           sessionStorage.removeItem('waitAuthNumber');
-          this.$router.push("/");
+          this.$router.push("/login");
           this.$message.warning("您已退出登录！");
         }
       } catch (error) {

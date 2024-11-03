@@ -87,3 +87,38 @@ export function mylog(){
   })
 }
 
+// 新增菜单口
+export function addMenu(data){
+  return request({
+    url:'/api/v1/admin/menuAdd',
+    method:'POST',
+    data
+  })
+}
+
+// 设置职位
+export function setRight(params){
+  return request({
+    url:'/api/v1/admin/setRight',
+    method:'POST',
+    params
+  })
+}
+
+// 删除菜单
+export function deleteMenu(uid){
+   return request({
+    url:"/api/v1/admin/menuDel",
+    method:'DELETE',
+    params:{
+      uid
+    }
+   })
+}
+
+export function getMenu(){
+  return request({
+    url:'/api/v1/admin/menuFind',
+    method:'GET'
+  })
+}

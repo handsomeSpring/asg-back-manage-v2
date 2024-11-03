@@ -10,7 +10,7 @@
                 @click="handleGoDetail('', $event)">预算录入</el-button>
         </div>
         <div class="line__divider"></div>
-        <main>
+        <main v-loading="loading">
             <div class="header__bar">
                 <li>序号</li>
                 <li>赛季</li>
@@ -62,6 +62,7 @@ export default {
                 { color: '#1989fa', percentage: 80 },
                 { color: '#6f7ad3', percentage: 100 }
             ],
+            loading:false,
         };
     },
     computed: {
@@ -76,6 +77,7 @@ export default {
     methods: {
         async getTotalUse() {
             try {
+                this.loading = true;
                 const { data, status } = await countBudgetTotal();
                 if (status !== 200) throw new Error('服务端异常');
                 if (data.code == 401) throw new Error('您没有权限，无法获取列表');
@@ -88,6 +90,8 @@ export default {
                 });
             } catch (error) {
                 this.$message.error(error.message);
+            } finally {
+                this.loading = false;
             }
 
         },

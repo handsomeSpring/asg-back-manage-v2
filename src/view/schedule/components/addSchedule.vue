@@ -1,30 +1,32 @@
 <template>
-    <el-dialog :visible="operationVisible" title="添加赛程" width="60%" @close="closeDialog" :close-on-click-modal="false">
-        <el-form ref="form" :model="form" label-position="right" label-width="120px" :rules="rules">
-            <el-row>
-                <el-col :span="12">
-                    <el-form-item label="所属赛季" prop="belong">
-                        <el-select style="width:80%" size="small" v-model="form.belong" placeholder="请选择所属赛季">
-                            <el-option v-for="item in eventOptions" :key="item.name" :label="item.name"
-                                :value="item.name">
-                            </el-option>
-                        </el-select>
-                    </el-form-item>
-                </el-col>
-                <el-col :span="12">
-                    <el-form-item label="赛程分类" prop="tag">
-                        <el-select style="width:80%" size="small" v-model="form.tag" placeholder="请输入赛程标签">
-                            <el-option v-for="(item, index) in tagOptions" :key="index" :label="item.name"
-                                :value="item.name">
-                            </el-option>
-                        </el-select>
-                    </el-form-item>
-                </el-col>
-            </el-row>
-            <el-row>
-                <el-col :span="12">
-                    <el-form-item label="主场战队名" prop="team1_name">
-                        <!-- <el-select size="small" v-model="team1_name" clearable filterable placeholder="请填写主场战队名">
+    <div>
+        <el-dialog :visible="operationVisible" title="添加赛程" width="60%" @close="closeDialog"
+            :close-on-click-modal="false">
+            <el-form ref="form" :model="form" label-position="right" label-width="120px" :rules="rules">
+                <el-row>
+                    <el-col :span="12">
+                        <el-form-item label="所属赛季" prop="belong">
+                            <el-select style="width:80%" size="small" v-model="form.belong" placeholder="请选择所属赛季">
+                                <el-option v-for="item in eventOptions" :key="item.name" :label="item.name"
+                                    :value="item.name">
+                                </el-option>
+                            </el-select>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="12">
+                        <el-form-item label="赛程分类" prop="tag">
+                            <el-select style="width:80%" size="small" v-model="form.tag" placeholder="请输入赛程标签">
+                                <el-option v-for="(item, index) in tagOptions" :key="index" :label="item.name"
+                                    :value="item.name">
+                                </el-option>
+                            </el-select>
+                        </el-form-item>
+                    </el-col>
+                </el-row>
+                <el-row>
+                    <el-col :span="12">
+                        <el-form-item label="主场战队名" prop="team1_name">
+                            <!-- <el-select size="small" v-model="team1_name" clearable filterable placeholder="请填写主场战队名">
                       <el-option
                         v-for="item in gameList"
                         :key="item.id"
@@ -33,13 +35,13 @@
                       >
                       </el-option>
                     </el-select> -->
-                        <el-input style="width:80%" size="small" v-model="form.team1_name"
-                            placeholder="请填写主场战队名"></el-input>
-                    </el-form-item>
-                </el-col>
-                <el-col :span="12">
-                    <el-form-item label="客场战队名" prop="team2_name">
-                        <!--<el-select size="small" v-model="team2_name" clearable filterable placeholder="请填写客场战队名">
+                            <el-input style="width:80%" size="small" v-model="form.team1_name"
+                                placeholder="请填写主场战队名"></el-input>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="12">
+                        <el-form-item label="客场战队名" prop="team2_name">
+                            <!--<el-select size="small" v-model="team2_name" clearable filterable placeholder="请填写客场战队名">
                       <el-option
                         v-for="item in gameList"
                         :key="item.id"
@@ -48,79 +50,91 @@
                       >
                       </el-option>
                     </el-select> -->
-                        <el-input style="width:80%" size="small" v-model="form.team2_name"
-                            placeholder="请填写客场战队名"></el-input>
-                    </el-form-item>
-                </el-col>
-            </el-row>
-            <el-row>
-                <el-col :span="12">
-                    <el-form-item label="比赛开始时间" prop="opentime">
-                        <el-date-picker style="width:80%" v-model="form.opentime" size="small" type="datetime"
-                            placeholder="选择日期时间" value-format="yyyy-MM-dd HH:mm:ss" format="yyyy-MM-dd HH:mm:ss">
-                        </el-date-picker>
-                    </el-form-item>
-                </el-col>
-                <el-col :span="12" v-if="requiredReferee">
-                    <el-form-item label="导播" prop="referee">
-                        <el-select style="width:80%" size="small" v-model="form.referee" placeholder="请选择导播">
-                            <el-option v-for="item in instructor" :key="item.chinaname" :label="item.chinaname"
-                                :value="item.chinaname">
-                            </el-option>
-                        </el-select>
-                    </el-form-item>
-                </el-col>
-                <el-col :span="24">
-                    <el-form-item label="人员构成模式" prop="personType">
-                        <el-radio-group v-model="form.personType">
-                            <el-radio v-for="(item, index) in personGroup" :label="item.value" :key="index">{{
-                                item.label }}</el-radio>
-                        </el-radio-group>
-                    </el-form-item>
-                </el-col>
-                <el-col :span="12" v-if="requiredJudge">
-                    <el-form-item label="裁判" prop="judge">
-                        <el-input style="width:80%" size="small" v-model="form.judge" placeholder="请输入裁判">
-                        </el-input>
-                    </el-form-item>
-                </el-col>
-                <el-col :span="12" v-if="requireComs">
-                    <el-form-item label="解说数量" prop="comLimit">
-                        <el-input-number size="small" v-model="form.comLimit" @change="handleComNumberChange" :min="1"
-                            :max="3" label="解说数量"></el-input-number>
-                    </el-form-item>
-                </el-col>
-            </el-row>
-            <el-row v-if="requireComs">
-                <el-col :span="8" v-for="(com, index) in commentary_value" :key="index">
-                    <el-form-item :label="`解说${index + 1}`">
-                        <el-select style="width:80%" size="small" filterable clearable value-key="id"
-                            v-model="commentary_value[index]" placeholder="请选择解说1">
-                            <el-option v-for="item in commentary" :key="item.chinaname" :label="item.chinaname"
-                                :value="item">
-                            </el-option>
-                        </el-select>
-                    </el-form-item>
-                </el-col>
-            </el-row>
-            <footer>
-                <el-button type="primary" size="small" :loading="btnloading" element-loading-spinner="el-icon-loading"
-                    element-loading-background="rgba(0, 0, 0, 0.8)" @click.native="submit">
-                    发布
-                </el-button>
-                <el-button size="small" @click="closeDialog">
-                    关闭
-                </el-button>
-            </footer>
-        </el-form>
-    </el-dialog>
+                            <el-input style="width:80%" size="small" v-model="form.team2_name"
+                                placeholder="请填写客场战队名"></el-input>
+                        </el-form-item>
+                    </el-col>
+                </el-row>
+                <el-row>
+                    <el-col :span="12">
+                        <el-form-item label="比赛开始时间" prop="opentime">
+                            <el-date-picker style="width:80%" v-model="form.opentime" size="small" type="datetime"
+                                placeholder="选择日期时间" value-format="yyyy-MM-dd HH:mm:ss" format="yyyy-MM-dd HH:mm:ss">
+                            </el-date-picker>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="12" v-if="requiredReferee">
+                        <el-form-item label="导播" prop="referee">
+                            <el-input style="width:80%" v-model="form.referee" readonly size="small">
+                              <template #append>
+                                  <p style="cursor:pointer" @click="handlePersonChoose('referee')"><i class="el-icon-plus"></i></p>
+                              </template>
+                            </el-input>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="24">
+                        <el-form-item label="人员构成模式" prop="personType">
+                            <el-radio-group v-model="form.personType">
+                                <el-radio v-for="(item, index) in personGroup" :label="item.value" :key="index">{{
+                                    item.label }}</el-radio>
+                            </el-radio-group>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="12" v-if="requiredJudge">
+                        <el-form-item label="裁判" prop="judge">
+                            <el-input style="width:80%" v-model="form.judge" readonly size="small">
+                              <template #append>
+                                  <p style="cursor:pointer" @click="handlePersonChoose('judge')"><i class="el-icon-plus"></i></p>
+                              </template>
+                            </el-input>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="12" v-if="requireComs">
+                        <el-form-item label="解说数量" prop="comLimit">
+                            <el-input-number size="small" v-model="form.comLimit" @change="handleComNumberChange"
+                                :min="1" :max="3" label="解说数量"></el-input-number>
+                        </el-form-item>
+                    </el-col>
+                </el-row>
+                <el-row v-if="requireComs">
+                    <el-col :span="8" v-for="(com, index) in commentary_value" :key="index">
+                        <el-form-item :label="`解说${index + 1}`">
+                            <el-select style="width:80%" size="small" filterable clearable value-key="id"
+                                v-model="commentary_value[index]" placeholder="请选择解说1">
+                                <el-option v-for="item in commentary" :key="item.chinaname" :label="item.chinaname"
+                                    :value="item">
+                                </el-option>
+                            </el-select>
+                        </el-form-item>
+                    </el-col>
+                </el-row>
+                <footer>
+                    <el-button type="primary" size="small" :loading="btnloading"
+                        element-loading-spinner="el-icon-loading" element-loading-background="rgba(0, 0, 0, 0.8)"
+                        @click.native="submit">
+                        发布
+                    </el-button>
+                    <el-button size="small" @click="closeDialog">
+                        关闭
+                    </el-button>
+                </footer>
+            </el-form>
+        </el-dialog>
+        <personChooseDialog :dialogVisible.sync="choosePersonDialog" @finish="getPerson"></personChooseDialog>
+    </div>
+
 </template>
 
 <script>
 import { pushSchedule } from "@/api/schedule/index.js";
 import { getByTitle } from "@/api/config";
+import personChooseDialog from "./personChooseDialog.vue";
+
 export default {
     name: 'addSchedule',
+    components:{
+        personChooseDialog
+    },
     props: {
         operationVisible: {
             type: Boolean,
@@ -138,19 +152,19 @@ export default {
             type: Array,
             default: () => []
         },
-        tagOptions:{
-            type:Array,
-            default:(()=>[])
+        tagOptions: {
+            type: Array,
+            default: (() => [])
         }
     },
     computed: {
         requiredJudge() {
             return this.form.personType.includes('judge');
         },
-        requiredReferee(){
+        requiredReferee() {
             return this.form.personType.includes('referee');
         },
-        requireComs(){
+        requireComs() {
             return this.form.personType.includes('commentary');
         }
     },
@@ -162,8 +176,10 @@ export default {
                 opentime: '',
                 team1_name: '',
                 team2_name: '',
-                referee: '待定',
+                referee: '',
                 judge: '',
+                judgeId:'',
+                refereeId:'',
                 comLimit: 2,
                 personType: ''
             },
@@ -189,25 +205,34 @@ export default {
                     { required: true, message: '请输入客场战队', trigger: 'blur' }
                 ],
                 referee: [
-                    { required: true, message: '请选择', trigger: 'change' }
+                    { required: false, message: '请选择', trigger: 'change' }
                 ],
                 comLimit: [
                     { required: true, message: '请选择', trigger: 'change' }
                 ],
-                judge:[
-                   { required: true, message: '请输入裁判名称', trigger: 'change' }
+                judge: [
+                    { required: false, message: '请输入裁判名称', trigger: 'change' }
                 ]
             },
-            personGroup: []
+            personGroup: [],
+            choosePersonDialog:false,
+            tagKey:'referee'
         }
     },
     methods: {
+        handlePersonChoose(key){
+            this.tagKey = key;
+            this.choosePersonDialog = true;
+        },
+        getPerson(userObj){
+            this.form[this.tagKey] = userObj.chinaname;
+            this.form[`${this.tagKey}_Id`] = userObj.id;
+        },
         handleComNumberChange(number) {
             this.commentary_value = [];
             for (let i = 0; i < number; i++) {
                 this.commentary_value.push({ id: 0, chinaname: '待定' })
             }
-
         },
         closeDialog() {
             this.$refs.form.resetFields();

@@ -72,7 +72,7 @@ export default {
         };
     },
     computed: {
-        ...mapGetters(['userInfo','adminRoles']),
+        ...mapGetters(['userInfo']),
         myUser() {
             return this.userInfo.chinaname || sessionStorage.getItem('chinaname');
         },
@@ -80,10 +80,10 @@ export default {
             return this.userInfo.base64 || sessionStorage.getItem("baseImg")
         },
         isAdmin() {
-            return this.adminRoles === '1' || sessionStorage.getItem('adminRoles') === '1'
+            return Array.isArray(this.userInfo.roles) && this.userInfo.roles.includes('admin');
         },
         isSuperAdmin() {
-            return this.adminRoles === '2' || sessionStorage.getItem('adminRoles') === '2';
+            return Array.isArray(this.userInfo.roles) && this.userInfo.roles.includes('nbadmin');
         },
         officium() {
             return this.userInfo.officium || sessionStorage.getItem('officium');

@@ -5,25 +5,24 @@
       <p><i class="el-icon-warning"></i>注意：全局参数的配置会影响整个系统（不要随便修改，请咨询超级管理员修改）</p>
     </header>
     <main>
-      <el-scrollbar style="height: 68vh">
-        <el-table v-loading="loading" :header-cell-style="tableColor" :data="tableData" size="small" stript
-          style="width: 100%">
-          <el-table-column prop="id" label="序号" width="80">
-          </el-table-column>
-          <el-table-column prop="title" label="编码" width="180">
-          </el-table-column>
-          <el-table-column prop="msg" label="说明" width="180">
-          </el-table-column>
-          <el-table-column prop="substance" label="值"> </el-table-column>
-          <el-table-column label="操作" width="180" align="center">
-            <template #default="{ row }">
-              <el-button size="small" type="text" @click="openDialog('edit', row)">编辑</el-button>
-              <el-button size="small" type="text" style="color: red" @click="deleteItem(row.id)">删除</el-button>
-            </template>
-          </el-table-column>
-        </el-table>
-      </el-scrollbar>
-      <el-pagination background style="float: right" @size-change="handleChange('limit', $event)"
+      <el-table height="66vh" v-loading="loading" element-loading-text="数据加载中，请稍等"
+        element-loading-spinner="el-icon-loading" :header-cell-style="tableColor" :data="tableData" size="small" stript
+        style="width: 100%">
+        <el-table-column prop="id" label="序号" width="80">
+        </el-table-column>
+        <el-table-column prop="title" label="编码" width="180">
+        </el-table-column>
+        <el-table-column prop="msg" label="说明" width="180">
+        </el-table-column>
+        <el-table-column prop="substance" label="值"> </el-table-column>
+        <el-table-column label="操作" width="180" align="center">
+          <template #default="{ row }">
+            <el-button size="small" type="text" @click="openDialog('edit', row)">编辑</el-button>
+            <el-button size="small" type="text" style="color: red" @click="deleteItem(row.id)">删除</el-button>
+          </template>
+        </el-table-column>
+      </el-table>
+      <el-pagination background style="float: right;margin-top: 12px;" @size-change="handleChange('limit', $event)"
         @current-change="handleChange('page', $event)" :current-page="listQuery.page" :page-sizes="[10, 20, 30, 50]"
         :page-size="listQuery.limit" layout="total, sizes, prev, pager, next, jumper" :total="total">
       </el-pagination>
@@ -42,15 +41,14 @@
           <el-input v-model="system.msg" placeholder="请输入备注" clearable> </el-input>
         </el-form-item>
         <editor height="400" width="100%" ref="editor" :content="system.substance" v-model="system.substance"
-        theme="json"
-          :options="editorOptions" lang="javascript" @init="editorInit">
-        </editor> 
+          theme="json" :options="editorOptions" lang="javascript" @init="editorInit">
+        </editor>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button size="small" @click="dialogVisible = false">取 消</el-button>
         <el-button size="small" type="primary" @click="checkSubmit('ruleForm')">{{
-        title
-      }}</el-button>
+          title
+          }}</el-button>
       </div>
     </el-dialog>
   </div>
@@ -76,7 +74,7 @@ export default {
         tabSize: 6,
         fontSize: 14,
         showPrintMargin: false,   //去除编辑器里的竖线
-        theme:"monokai"
+        theme: "monokai"
       },
       total: 0,
       tableData: [],
@@ -140,15 +138,15 @@ export default {
       this.total = data.total;
       this.loading = false;
     },
-    checkSubmit(formName){
+    checkSubmit(formName) {
       this.$refs[formName].validate((valid) => {
-          if (valid) {
-            this.updateForm();
-          } else {
-            this.$message.error("请完整填写表单！");
-            return false;
-          }
-        });
+        if (valid) {
+          this.updateForm();
+        } else {
+          this.$message.error("请完整填写表单！");
+          return false;
+        }
+      });
     },
     async updateForm() {
       try {

@@ -19,7 +19,6 @@
             </div>
         </header>
         <main>
-            <el-scrollbar style="height: 65vh;">
                 <table v-loading="loading" element-loading-text="系统加载中，请稍等" element-loading-spinner="el-icon-loading">
                     <thead>
                         <th width="10%">任务标题</th>
@@ -32,8 +31,7 @@
                         <template v-if="tableData.length > 0">
                             <tr v-for="(item, index) in tableData" :key="index">
                                 <td width="150">
-                                    <el-tooltip class="item" effect="dark" :content="item.taskName"
-                                        placement="top-start">
+                                    <el-tooltip class="item" effect="dark" :content="item.taskName" placement="top-start">
                                         <p class="ellipse">{{ item.taskName }}</p>
                                     </el-tooltip>
                                 </td>
@@ -58,9 +56,9 @@
                                     </p>
                                 </td>
                                 <td align="center" width="150">
-                                    <template v-if="['0','3'].includes(item.status)">
-                                        <el-button type="text" @click="handleNotice(item)">通知
-                                        </el-button>
+                                    <template v-if="['0', '3'].includes(item.status)">
+                                        <el-button type="text" @click="handleEdit(item)">编辑</el-button>
+                                        <el-button type="text" @click="handleNotice(item)">通知</el-button>
                                     </template>
                                     <template v-if="item.status === '1'">
                                         <el-button type="text" @click="handleTaskDone('通过', item, '2')">通过</el-button>
@@ -81,22 +79,41 @@
 
                     </tbody>
                 </table>
-            </el-scrollbar>
-            <el-pagination style="margin-top: 18px;text-align: right;" @size-change="handleChange($event, 'limit')" @current-change="handleChange($event, 'page')"
-                :current-page="pageQuery.page" :page-sizes="[10, 20, 30, 40, 50]" :page-size="pageQuery.limit"
+
+            <el-pagination style="margin-top: 18px;text-align: right;" @size-change="handleChange($event, 'limit')"
+                @current-change="handleChange($event, 'page')" :current-page="pageQuery.page"
+                :page-sizes="[10, 20, 30, 40, 50]" :page-size="pageQuery.limit"
                 layout="total, sizes, prev, pager, next, jumper" :total="total">
             </el-pagination>
         </main>
+        <el-dialog class="blue-text" title="编辑任务" :visible.sync="dialogVisible" width="50%" @close="resetForm">
+            <el-form :model="editForm" :rules="rules" ref="editFormRef" label-position="right" label-width="100px">
+                <el-form-item class="blue-text" label="任务标题" prop="taskName">
+                    <el-input size="small" v-model="editForm.taskName"></el-input>
+                </el-form-item>
+                <el-form-item class="blue-text" label="任务描述" prop="taskDescription">
+                    <el-input size="small" type="textarea" v-model="editForm.taskDescription" :rows="5"
+                        placeholder="请输入任务描述" maxlength="200" show-word-limit clearable></el-input>
+                </el-form-item>
+                <el-form-item class="blue-text" label="任务积分" prop="money">
+                    <el-input-number size="small" v-model="editForm.money" :min="0" :max="5"></el-input-number>
+                </el-form-item>
+            </el-form>
+            <span slot="footer" class="dialog-footer">
+                <el-button size="small" @click="dialogVisible = false">取 消</el-button>
+                <el-button size="small" type="primary" @click="handleSubmit">确 定</el-button>
+            </span>
+        </el-dialog>
         <!-- 查看弹窗 -->
         <taskHistory ref="taskHistory" :row="row"></taskHistory>
     </div>
 </template>
 
 <script>
-import { findTasks, deleteTask, taskDone, remindTasks  } from "@/api/admin/index.js";
+import { findTasks, deleteTask, taskDone, remindTasks, updateTaskApi } from "@/api/admin/index.js";
 import taskHistory from "./components/taskHistory.vue";
 import { mapGetters } from "vuex";
-import { getByTitle } from "@/api/config";
+
 export default {
     name: 'taskManager',
     components: {
@@ -116,7 +133,24 @@ export default {
             },
             total: null,
             row: {},
-            qqMap: []
+            dialogVisible: false,
+            editForm: {
+                taskId: '',
+                taskName: '',
+                taskDescription: '',
+                money: null,
+            },
+            rules: {
+                taskName: [
+                    { required: true, message: '请输入任务标题', trigger: 'blur' },
+                ],
+                taskDescription: [
+                    { required: true, message: '请输入任务描述', trigger: 'blur' },
+                ],
+                money: [
+                    { required: true, message: '请输入任务积分', trigger: 'blur' },
+                ],
+            },
         };
     },
     computed: {
@@ -129,9 +163,6 @@ export default {
         }
     },
     created() {
-        getByTitle('qqMap').then(res => {
-            this.qqMap = res.data;
-        })
         this.initTask();
     },
     methods: {
@@ -205,7 +236,7 @@ export default {
                 }
             } catch (error) {
                 if (typeof error === 'string' && error === 'cancel') return;
-                console.log(error,'error');
+                console.log(error, 'error');
             }
         },
         async initTask(type) {
@@ -238,6 +269,43 @@ export default {
                 this.loading = false;
             }
         },
+        handleEdit(item) {
+            this.editForm = { 
+                taskId: item.id,
+                taskName: item.taskName,
+                taskDescription: item.taskDescription,
+                money: item.money,
+             }; 
+            this.dialogVisible = true; 
+        },
+        resetForm() {
+            this.$refs.editFormRef.resetFields();
+        },
+        async handleSubmit() {
+            try {
+                this.$refs.editFormRef.validate(valid => {
+                    if (valid) {
+                        this.updateTask(this.editForm);
+                    }
+                });
+            } catch (error) {
+                console.error(error);
+                this.$message.error('更新失败');
+            }
+        },
+        async updateTask(reqDTO) {
+            try {
+                const { status, data } = await updateTaskApi(reqDTO);
+                if (status !== 200) throw new Error('服务端异常，请联系网站管理员');
+                if(data.code && data.code === 404) throw new Error(data?.message ?? '未知错误，请联系网站管理员！');
+                if(data.code && data.code === 401) throw new Error(data?.message ?? '没有权限！');
+                this.$message.success('操作成功!');
+                this.dialogVisible = false;
+                this.initTask();
+            } catch (error) {
+                this.$message.error(error instanceof Error ? error.message : error);
+            }
+        },
     }
 }
 </script>
@@ -246,6 +314,7 @@ export default {
 @bgColor: #f2f6fd;
 @hoverBgColor: #e7f0ff;
 @ContainerBgColor: #f2f2f2;
+@textBlueColor: #4090EF;
 
 header {
     display: flex;
@@ -330,5 +399,10 @@ main {
             }
         }
     }
+}
+
+.blue-text ::v-deep .el-dialog__title,
+.blue-text ::v-deep .el-form-item__label {
+    color: @textBlueColor !important;
 }
 </style>

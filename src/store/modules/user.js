@@ -4,10 +4,7 @@ const user = {
     state: {
         token: getToken(),
         userInfo: {},
-        team_name: '',
-        team1_name: '',
-        team2_name: '',
-        adminRoles: '0'
+        menu:[]
     },
     mutations: {
         setToken(state, token) {
@@ -17,6 +14,8 @@ const user = {
         },
         removeToken(state) {
             state.token = null;
+            state.userInfo = {};
+            state.menu = [];
             removeToken();
         },
         //存储用户数据
@@ -31,12 +30,12 @@ const user = {
             state.userInfo.base64 = value;
             sessionStorage.setItem('base64', value);
         },
-        setAdmin(state, value) {
-            state.adminRoles = value;
-        },
         UPDATE_NAME(state, value) {
             state.userInfo.chinaname = value;
             sessionStorage.setItem('chinaname', value);
+        },
+        GENERATE_MENU(state, menu){
+            state.menu = menu;
         }
     },
     actions:{}

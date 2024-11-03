@@ -11,7 +11,7 @@ export default {
     data(){
       return{
         hiddenFooter:[
-          '/index/budget',
+          '/authorization/budget',
           '/index'
         ]
       }

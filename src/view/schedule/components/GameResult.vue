@@ -58,12 +58,15 @@
         </div>
         <el-divider>选择获胜队伍</el-divider>
         <el-row>
-            <el-select size="small" v-model="winteam" clearable>
-                <el-option v-for="item in chooseTeam" :key="item.id" :label="item.label" :value="item.value">
-                </el-option>
-            </el-select>
-            <el-button style="margin-left: 20px" type="primary" size="small" @click="setWinner">设置获胜队伍</el-button>
-            <el-button style="margin-left: 20px" :loading="loading" type="primary" size="small" @click="handleSaveResult">保存赛果</el-button>
+            <el-button style="margin-left: 20px" :loading="loading" type="primary" size="small"
+                @click="handleSaveResult">{{ showResult ? '更新' : '保存' }}赛果</el-button>
+            <template v-if="showResult">
+                <el-select size="small" v-model="winteam" clearable>
+                    <el-option v-for="item in chooseTeam" :key="item.id" :label="item.label" :value="item.value">
+                    </el-option>
+                </el-select>
+                <el-button style="margin-left: 20px" type="primary" size="small" @click="setWinner">设置获胜队伍</el-button>
+            </template>
         </el-row>
     </el-dialog>
 </template>
@@ -107,7 +110,8 @@ export default {
             ],
             chooseTeam: [], //选择冠军队伍
             winteam: "",
-            loading:false
+            loading: false,
+            showResult: false
         };
     },
     methods: {
@@ -115,14 +119,15 @@ export default {
             try {
                 this.loading = true;
                 const gameInfo = JSON.stringify(this.gameInfo);
-                const { data, status } = await setFinalScore(this.gameResult.id,gameInfo);
-                if(status !== 200) throw new Error('服务端异常，请联系网站管理员！');
-                if(data && data.code !== 200) throw new Error(data.message ?? '未知错误！');
+                const { data, status } = await setFinalScore(this.gameResult.id, gameInfo);
+                if (status !== 200) throw new Error('服务端异常，请联系网站管理员！');
+                if (data && data.code !== 200) throw new Error(data.message ?? '未知错误！');
                 this.$message.success('设置赛果成功！');
+                this.showResult = true;
                 this.$emit('updateLoad');
             } catch (error) {
                 this.$message.error(error.message);
-            }finally {
+            } finally {
                 this.loading = false;
             }
         },
@@ -181,11 +186,26 @@ export default {
         },
         handleOpen() {
             console.log(this.gameResult, 'gameResult');
-            const { winteam, team1_name, team2_name } = this.gameResult;
+            const { winteam, team1_name, team2_name, final_score } = this.gameResult;
             this.leftTeam = team1_name;
             this.rightTeam = team2_name;
             this.chooseTeam = [];
             this.winteam = winteam || "";
+            if (!!final_score) {
+                this.gameInfo = JSON.parse(final_score);
+                this.showResult = true;
+            } else {
+                this.gameInfo = [
+                    {
+                        side: '1',
+                        topHalfLeft: 0,
+                        topHalfRight: 0,
+                        bottomHalfLeft: 0,
+                        bottomHalfRight: 0,
+                    }
+                ];
+                this.showResult = false;
+            }
             this.chooseTeam.push({ label: '待赛果确认', value: '', id: '0' })
             this.chooseTeam.push({ label: team1_name, value: team1_name, id: "1" });
             this.chooseTeam.push({ label: team2_name, value: team2_name, id: "2" });

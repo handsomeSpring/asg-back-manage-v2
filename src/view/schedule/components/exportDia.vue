@@ -5,7 +5,7 @@
       size="mini"
       type="primary"
       @click="openDialog"
-      >导出赛程<i class="el-icon-share"></i></el-button
+      >赛程直览<i class="el-icon-share"></i></el-button
     >
     <el-dialog
       :visible.sync="exportVisible"
@@ -16,17 +16,10 @@
     >
       <el-button
         style="margin-bottom: 20px"
-        type="success"
+        type="primary"
         size="mini"
         @click="exportData(scheduleData, `${belong}赛程表`)"
         >导出excel</el-button
-      >
-      <el-button
-        style="margin-bottom: 20px"
-        type="danger"
-        size="mini"
-        @click="exportVisible = false"
-        >关闭</el-button
       >
       <el-table border :data="scheduleData" style="width: 100%">
         <el-table-column
@@ -51,6 +44,8 @@
           </template>
         </el-table-column>
         <el-table-column prop="referee" label="导播" width="auto">
+        </el-table-column>
+        <el-table-column prop="remarks" label="备注" width="250">
         </el-table-column>
       </el-table>
     </el-dialog>
