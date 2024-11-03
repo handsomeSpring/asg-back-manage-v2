@@ -1,6 +1,7 @@
 <template>
     <div class="menu__container">
-        <el-card shadow="hover" v-loading="loading" element-loading-text="获取数据中..." element-loading-spinner="el-icon-loading">
+        <el-card shadow="hover" v-loading="loading" element-loading-text="获取数据中..."
+            element-loading-spinner="el-icon-loading">
             <header>
                 <el-button type="primary" size="small" @click="addNewParent">新增父级菜单</el-button>
             </header>
@@ -139,16 +140,20 @@
                         </el-col>
                         <el-col :span="11" :offset="2">
                             <el-form-item label="菜单排序（数字越小越靠前）">
-                               <el-input-number :disabled="isForbid" size="small" :min="1" v-model="settingInfo.sort"></el-input-number>
+                                <el-input-number :disabled="isForbid" size="small" :min="1"
+                                    v-model="settingInfo.sort"></el-input-number>
                             </el-form-item>
                         </el-col>
                     </el-row>
-                    <el-row  v-show="!isForbid">
+                    <el-row v-show="!isForbid">
                         <el-col :span="11" :offset="13">
                             <el-form-item>
-                                    <el-button type="primary" size="small" @click="handleSaveMenu">{{ type==='edit' ? '更新' : '新增' }}菜单</el-button>
-                                    <el-button v-if="type === 'edit'" type="danger" size="small" plain
-                                        @click="handleDeleteNode">删除菜单</el-button>
+                                <el-button type="primary" size="small" @click="handleSaveMenu">{{ type === 'edit' ? '更新'
+                                    :
+                                    '新增'
+                                    }}菜单</el-button>
+                                <el-button v-if="type === 'edit'" type="danger" size="small" plain
+                                    @click="handleDeleteNode">删除菜单</el-button>
                             </el-form-item>
                         </el-col>
                     </el-row>
@@ -194,7 +199,7 @@ export default {
                     { required: true, message: '请填写前端组件路径', blur: 'blur' }
                 ]
             },
-            loading:false
+            loading: false
         }
     },
     computed: {
@@ -227,12 +232,12 @@ export default {
                 this.menuList = (data?.data ?? []).map(item => {
                     return {
                         ...item,
-                        auth: item.auth ? item.auth.split(',') :[],
+                        auth: item.auth ? item.auth.split(',') : [],
                         isFold: true,
                         children: item.children.map(child => {
                             return {
                                 ...child,
-                                auth: child.auth ? child.auth.split(',') :[]
+                                auth: child.auth ? child.auth.split(',') : []
                             }
                         })
                     }
@@ -257,9 +262,9 @@ export default {
                 show: '1',
                 component: '',
                 path: '',
-                auth:[],
+                auth: [],
                 allowOperate: '1',
-                sort:this.menuList.length + 1,
+                sort: this.menuList.length + 1,
             }
             this.isForbid = false;
             this.initFlag = false;
@@ -278,9 +283,9 @@ export default {
                 show: '1',
                 allowOperate: '1',
                 component: '',
-                auth:[],
+                auth: [],
                 path: '',
-                sort:item.children.length + 1,
+                sort: item.children.length + 1,
             }
             this.isForbid = false;
             this.initFlag = false;
@@ -311,23 +316,30 @@ export default {
             }
 
         },
-        async handleSaveMenu() {
+        handleSaveMenu() {
             try {
-                const requestBody = {
-                    ...this.settingInfo,
-                    path: this.pathPrepend + this.settingInfo.path,
-                    auth: Array.isArray(this.settingInfo.auth) ? this.settingInfo.auth.join(',') : ''
-                };
-                const { status } = await addMenu(requestBody);
-                if (status !== 200) throw new Error('后端异常，添加失败！');
-                this.$notify({
-                    title: '成功',
-                    message: '菜单更新成功！'
-                });
-                this.initMenu();
-                this.initFlag = true;
+                this.$refs.form.validate(async valid => {
+                    if (valid) {
+                        const requestBody = {
+                            ...this.settingInfo,
+                            path: this.pathPrepend + this.settingInfo.path,
+                            auth: Array.isArray(this.settingInfo.auth) ? this.settingInfo.auth.join(',') : ''
+                        };
+                        const { status } = await addMenu(requestBody);
+                        if (status !== 200) throw new Error('后端异常，添加失败！');
+                        this.$notify({
+                            title: '成功',
+                            message: '菜单更新成功！'
+                        });
+                        this.initMenu();
+                        this.initFlag = true;
+                    }
+                })
             } catch (error) {
-                this.$message.error(error.message);
+                if(error instanceof Error && 'message' in error){
+                    return this.$message.error(error.message);
+                }
+                this.$message.error('请完整填写表单！');
             }
         },
         setParentConfig(item, dis) {
@@ -342,7 +354,7 @@ export default {
             this.initFlag = false;
         },
         setConfig(item, dis) {
-            console.log(item,'item');
+            console.log(item, 'item');
             this.type = 'edit';
             const pathArr = item.path.split('/');
             this.pathPrepend = `/${pathArr[1]}/`

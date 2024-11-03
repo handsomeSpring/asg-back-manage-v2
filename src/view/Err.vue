@@ -1,5 +1,5 @@
 <template>
-  <div class="content">
+  <div class="content__Err">
     <canvas class="snow" id="snow" width="1349" height="400"></canvas>
     <div class="main-text">
       <h1>404 <br><br>您好像去了一个不存在的地方！ (灬ꈍ ꈍ灬)</h1>
@@ -28,7 +28,7 @@ export default {
 </script>
 
 <style scoped lang="less">
-.content {
+.content__Err {
   height: 100vh;
   position: relative;
   z-index: 1;

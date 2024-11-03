@@ -72,7 +72,6 @@ router.beforeEach(async (to, from, next) => {
   const beforeUploadPath = sessionStorage.getItem('beforeupload-path');
   const lastUrl = window.location.hash;
   const fullHashPath = '#' + beforeUploadPath;
-  console.log(beforeUploadPath,'beforeUploadPath',lastUrl,'lastUrl');
   if (beforeUploadPath && fullHashPath ===  lastUrl) {
     await getPermission();
     sessionStorage.removeItem('beforeupload-path')
