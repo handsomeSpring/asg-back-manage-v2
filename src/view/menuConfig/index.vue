@@ -321,6 +321,7 @@ export default {
                     if (data && data.code && data.code === 401) throw new Error(data.message ?? '无权限！');
                     this.$message.success('操作成功！');
                     this.initMenu();
+                    this.initFlag = true;
                 }
             } catch (error) {
                 if (typeof error === 'string') {
