@@ -70,6 +70,14 @@
                 <el-radio label="first">我的任务</el-radio>
                 <el-radio label="second">任务待审</el-radio>
             </el-radio-group>
+            <label><br/>任务待审优先展示状态：</label>
+            <el-radio-group v-status="settingConfig.authTaskStatus">
+                <el-radio label="">全部</el-radio>
+                <el-radio label="0">进行中</el-radio>
+                <el-radio label="1">待审核</el-radio>
+                <el-radio label="2">已完成</el-radio>
+                <el-radio label="3">已驳回</el-radio>
+            </el-radio-group>
             <span slot="footer">
                 <el-button plain size="small" @click="handleSave">保存</el-button>
             </span>
