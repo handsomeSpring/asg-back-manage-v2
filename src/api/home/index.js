@@ -115,3 +115,10 @@ export function deleteMenu(uid){
     }
    })
 }
+
+export function getMenu(){
+  return request({
+    url:'/api/v1/admin/menuFind',
+    method:'GET'
+  })
+}

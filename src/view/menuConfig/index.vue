@@ -137,11 +137,18 @@
                                 </el-switch>
                             </el-form-item>
                         </el-col>
-                        <el-col :span="11" :offset="2" v-show="!isForbid">
-                            <el-form-item label="操作">
-                                <el-button type="primary" size="small" @click="handleSaveMenu">新增/更新菜单</el-button>
-                                <el-button v-if="type === 'edit'" type="danger" size="small" plain
-                                    @click="handleDeleteNode">删除菜单</el-button>
+                        <el-col :span="11" :offset="2">
+                            <el-form-item label="菜单排序（数字越小越靠前）">
+                               <el-input-number size="small" :min="1" v-model="settingInfo.sort"></el-input-number>
+                            </el-form-item>
+                        </el-col>
+                    </el-row>
+                    <el-row  v-show="!isForbid">
+                        <el-col :span="11" :offset="13">
+                            <el-form-item>
+                                    <el-button type="primary" size="small" @click="handleSaveMenu">新增/更新菜单</el-button>
+                                    <el-button v-if="type === 'edit'" type="danger" size="small" plain
+                                        @click="handleDeleteNode">删除菜单</el-button>
                             </el-form-item>
                         </el-col>
                     </el-row>
@@ -153,10 +160,10 @@
 
 <script>
 import { getByTitle } from '@/api/config';
-import { menuOptions } from '@/assets/json/menu';
+// import { menuOptions } from '@/assets/json/menu';
 import { mapGetters } from 'vuex';
 import { uuid } from '@/utils';
-import { addMenu, deleteMenu } from '@/api/home';
+import { addMenu, deleteMenu, getMenu } from '@/api/home';
 export default {
     name: 'menuConfig',
     data() {
@@ -193,22 +200,10 @@ export default {
         ...mapGetters(['menuOptions'])
     },
     created() {
-        this.menuList = menuOptions.map(item => {
-            return {
-                ...item,
-                auth: item.auth.split(','),
-                isFold: true,
-                children: item.children.map(child => {
-                    return {
-                        ...child,
-                        auth: child.auth.split(',')
-                    }
-                })
-            }
-        });
         getByTitle('menuPermission').then(res => {
             this.permissionList = res.data;
         })
+        this.initMenu();
     },
     mounted() {
         //参数：1.路径；2.是否遍历子目录；3.正则表达式
@@ -223,6 +218,27 @@ export default {
 
     },
     methods: {
+        async initMenu() {
+            try {
+                const { status, data } = await getMenu();
+                if (status !== 200) throw new Error('服务端异常，请联系网站管理员');
+                this.menuList = (data?.data ?? []).map(item => {
+                    return {
+                        ...item,
+                        auth: item.auth.split(','),
+                        isFold: true,
+                        children: item.children.map(child => {
+                            return {
+                                ...child,
+                                auth: child.auth.split(',')
+                            }
+                        })
+                    }
+                });
+            } catch (error) {
+                this.$message.error(error.message);
+            }
+        },
         setRouterView() {
             this.settingInfo.component = 'router-view'
         },
@@ -237,7 +253,8 @@ export default {
                 show: '1',
                 component: '',
                 path: '',
-                allowOperate: '1'
+                allowOperate: '1',
+                sort:1,
             }
             this.isForbid = false;
             this.initFlag = false;
@@ -255,6 +272,7 @@ export default {
                 allowOperate: '1',
                 component: '',
                 path: '',
+                sort:1,
             }
             this.isForbid = false;
             this.initFlag = false;
@@ -278,7 +296,7 @@ export default {
                     //调用接口
                 }
             } catch (error) {
-                if(typeof error === 'string'){
+                if (typeof error === 'string') {
                     return;
                 }
                 this.$message.error(error.message);
@@ -298,6 +316,7 @@ export default {
                     title: '成功',
                     message: '菜单更新成功！'
                 });
+                this.initMenu();
             } catch (error) {
                 this.$message.error(error.message);
             }
