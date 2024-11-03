@@ -54,7 +54,10 @@
                     <el-row>
                         <el-col :span="11">
                             <el-form-item label="父级菜单主键Id" prop="parentId">
-                                <el-input size="small" v-model="settingInfo.parentId" disabled></el-input>
+                                <el-select size="small" v-model="settingInfo.parentId" :disabled="type !== 'edit' || isForbid">
+                                    <el-option v-for="item in parentOptions" :key="item.value" :value="item.value"
+                                        :label="item.label"></el-option>
+                                </el-select>
                             </el-form-item>
                         </el-col>
                         <el-col :span="11" :offset="2">
@@ -148,11 +151,11 @@
                     <el-row v-show="!isForbid">
                         <el-col :span="11" :offset="13">
                             <el-form-item>
-                                <el-button type="primary" size="small" @click="handleSaveMenu">{{ type === 'edit' ? '更新'
+                                <el-button type="primary" size="small" @click="handleSaveMenu">{{ ['edit','parentEdit'].includes(type) ? '更新'
                                     :
                                     '新增'
                                     }}菜单</el-button>
-                                <el-button v-if="type === 'edit'" type="danger" size="small" plain
+                                <el-button v-if="['edit','parentEdit'].includes(type)" type="danger" size="small" plain
                                     @click="handleDeleteNode">删除菜单</el-button>
                             </el-form-item>
                         </el-col>
@@ -199,7 +202,8 @@ export default {
                     { required: true, message: '请填写前端组件路径', blur: 'blur' }
                 ]
             },
-            loading: false
+            loading: false,
+            parentOptions: []
         }
     },
     computed: {
@@ -242,6 +246,16 @@ export default {
                         })
                     }
                 });
+                this.parentOptions = (data?.data ?? []).map(item => {
+                    return {
+                        label: item.title,
+                        value: item.id
+                    }
+                });
+                this.parentOptions.unshift({
+                    label:'根目录',
+                    value:'-1'
+                })
             } catch (error) {
                 this.$message.error(error.message);
             } finally {
@@ -336,14 +350,14 @@ export default {
                     }
                 })
             } catch (error) {
-                if(error instanceof Error && 'message' in error){
+                if (error instanceof Error && 'message' in error) {
                     return this.$message.error(error.message);
                 }
                 this.$message.error('请完整填写表单！');
             }
         },
         setParentConfig(item, dis) {
-            this.type = 'edit';
+            this.type = 'parentEdit';
             this.pathPrepend = '/'
             this.settingInfo = {
                 ...item,

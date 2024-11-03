@@ -40,7 +40,7 @@ function filterMenu(auth) {
 }
 function generateMenu(menu = []) {
     return menu.filter(item => {
-        return filterMenu(item.auth)
+        return filterMenu(item.auth) && item.show === '1'
     }).map(item => {
         return {
             ...item,
