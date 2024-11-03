@@ -4,6 +4,7 @@ const user = {
     state: {
         token: getToken(),
         userInfo: {},
+        menu:[]
     },
     mutations: {
         setToken(state, token) {
@@ -30,6 +31,9 @@ const user = {
         UPDATE_NAME(state, value) {
             state.userInfo.chinaname = value;
             sessionStorage.setItem('chinaname', value);
+        },
+        GENERATE_MENU(state, menu){
+            state.menu = menu;
         }
     },
     actions:{}

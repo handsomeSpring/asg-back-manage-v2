@@ -1,6 +1,6 @@
 <template>
     <div class="menu__container">
-        <el-card shadow="hover">
+        <el-card shadow="hover" v-loading="loading" element-loading-text="获取数据中..." element-loading-spinner="el-icon-loading">
             <header>
                 <el-button type="primary" size="small" @click="addNewParent">新增父级菜单</el-button>
             </header>
@@ -146,7 +146,7 @@
                     <el-row  v-show="!isForbid">
                         <el-col :span="11" :offset="13">
                             <el-form-item>
-                                    <el-button type="primary" size="small" @click="handleSaveMenu">新增/更新菜单</el-button>
+                                    <el-button type="primary" size="small" @click="handleSaveMenu">{{ type==='edit' ? '更新' : '新增' }}菜单</el-button>
                                     <el-button v-if="type === 'edit'" type="danger" size="small" plain
                                         @click="handleDeleteNode">删除菜单</el-button>
                             </el-form-item>
@@ -194,6 +194,7 @@ export default {
                     { required: true, message: '请填写前端组件路径', blur: 'blur' }
                 ]
             },
+            loading:false
         }
     },
     computed: {
@@ -220,23 +221,26 @@ export default {
     methods: {
         async initMenu() {
             try {
+                this.loading = true;
                 const { status, data } = await getMenu();
                 if (status !== 200) throw new Error('服务端异常，请联系网站管理员');
                 this.menuList = (data?.data ?? []).map(item => {
                     return {
                         ...item,
-                        auth: item.auth.split(','),
+                        auth: item.auth ? item.auth.split(',') :[],
                         isFold: true,
                         children: item.children.map(child => {
                             return {
                                 ...child,
-                                auth: child.auth.split(',')
+                                auth: child.auth ? child.auth.split(',') :[]
                             }
                         })
                     }
                 });
             } catch (error) {
                 this.$message.error(error.message);
+            } finally {
+                this.loading = false;
             }
         },
         setRouterView() {
@@ -253,6 +257,7 @@ export default {
                 show: '1',
                 component: '',
                 path: '',
+                auth:[],
                 allowOperate: '1',
                 sort:1,
             }
@@ -271,8 +276,9 @@ export default {
                 show: '1',
                 allowOperate: '1',
                 component: '',
+                auth:[],
                 path: '',
-                sort:1,
+                sort:item.children.length + 1,
             }
             this.isForbid = false;
             this.initFlag = false;
@@ -293,7 +299,7 @@ export default {
                     if (status !== 200) throw new Error('服务端异常！');
                     if (data && data.code && data.code === 401) throw new Error(data.message ?? '无权限！');
                     this.$message.success('操作成功！');
-                    //调用接口
+                    this.initMenu();
                 }
             } catch (error) {
                 if (typeof error === 'string') {
@@ -317,6 +323,7 @@ export default {
                     message: '菜单更新成功！'
                 });
                 this.initMenu();
+                this.initFlag = true;
             } catch (error) {
                 this.$message.error(error.message);
             }
@@ -333,12 +340,13 @@ export default {
             this.initFlag = false;
         },
         setConfig(item, dis) {
+            console.log(item,'item');
             this.type = 'edit';
             const pathArr = item.path.split('/');
             this.pathPrepend = `/${pathArr[1]}/`
             this.settingInfo = {
                 ...item,
-                path: pathArr.at(-1),
+                path: pathArr.at(-1)
             };
             this.activeId = item.id;
             this.isForbid = dis;
@@ -401,12 +409,11 @@ export default {
 
         &.unFold {
             height: 0;
-            transform: scaleY(0)
         }
 
-        &.fold {
-            transform: scaleY(1)
-        }
+        // &.fold {
+
+        // }
     }
 }
 

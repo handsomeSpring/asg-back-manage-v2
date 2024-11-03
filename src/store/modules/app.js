@@ -2,7 +2,6 @@ const app = {
     state: {
         isCollapse: false, //控制菜单的展开还是收起
         roleList:[], //职位配置
-        menu:[], //菜单
         adminList:[]
     },
     mutations: {
@@ -12,9 +11,6 @@ const app = {
         },
         initRoleList(state,data){
             state.roleList = data;
-        },
-        SET_MENU(state, menu){
-            state.menu = menu;
         },
         SET_ADMIN(state, admin){
             state.adminList = admin;

@@ -104,7 +104,6 @@ export default {
     },
     async initGetInfo() {
       const { data } = await getInfo();
-      this.$store.commit('SET_MENU', menuOptions);
       this.$store.commit("getUserInfo", data);
       sessionStorage.setItem("money", data.money);
       sessionStorage.setItem("baseImg", data.base64);
@@ -113,7 +112,7 @@ export default {
       sessionStorage.setItem("id", data.id);
       sessionStorage.setItem("isadmin", data.isadmin);
       sessionStorage.setItem("money", data.money);
-      getPermission();
+      await getPermission();
     },
     toggleEye() {
       if (this.eye_status === "el-icon-lock") {
