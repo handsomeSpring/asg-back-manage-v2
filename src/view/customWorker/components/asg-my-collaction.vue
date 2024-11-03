@@ -65,19 +65,23 @@
         </el-dialog>
         <el-dialog :visible.sync="settingDialog" title="配置" width="40%" :append-to-body="true"
             :close-on-click-modal="false" center>
-            <label>优先展示栏目</label>
-            <el-radio-group v-model="settingConfig.labelIndex">
-                <el-radio label="first">我的任务</el-radio>
-                <el-radio label="second">任务待审</el-radio>
-            </el-radio-group>
-            <label><br/>任务待审优先展示状态：</label>
-            <el-radio-group v-status="settingConfig.authTaskStatus">
-                <el-radio label="">全部</el-radio>
-                <el-radio label="0">进行中</el-radio>
-                <el-radio label="1">待审核</el-radio>
-                <el-radio label="2">已完成</el-radio>
-                <el-radio label="3">已驳回</el-radio>
-            </el-radio-group>
+            <div  style="margin-bottom:12px">
+                <label>优先展示栏目:</label>
+                <el-radio-group v-model="settingConfig.labelIndex">
+                    <el-radio label="first">我的任务</el-radio>
+                    <el-radio label="second">任务待审</el-radio>
+                </el-radio-group>
+            </div>
+            <div>
+                <label>任务待审优先展示状态:</label>
+                <el-radio-group v-model="settingConfig.authTaskStatus">
+                    <el-radio label="">全部</el-radio>
+                    <el-radio label="0">进行中</el-radio>
+                    <el-radio label="1">待审核</el-radio>
+                    <el-radio label="2">已完成</el-radio>
+                    <el-radio label="3">已驳回</el-radio>
+                </el-radio-group>
+            </div>
             <span slot="footer">
                 <el-button plain size="small" @click="handleSave">保存</el-button>
             </span>
@@ -91,7 +95,7 @@ import taskHistory from "@/view/taskManager/components/taskHistory.vue";
 import { mapGetters } from "vuex";
 export default {
     name: 'asgMyCollaction',
-    text:'任务待办',
+    text: '任务待办',
     components: {
         taskHistory
     },
@@ -112,7 +116,8 @@ export default {
             row: {},
             settingDialog: false,
             settingConfig: {
-                labelIndex: 'first'
+                labelIndex: 'first',
+                authTaskStatus: ''
             }
         };
     },
@@ -143,7 +148,7 @@ export default {
             try {
                 const requestParams = {
                     chinaname: '',
-                    status: ''
+                    status: this.settingConfig?.authTaskStatus ?? ''
                 };
                 const { data, status, message } = await findTasks(requestParams);
                 if (status !== 200) throw new Error(message);
@@ -154,7 +159,7 @@ export default {
             }
         },
         routerToAuth() {
-            this.$router.push({ path: '/publish/taskGiving' });
+            this.$router.push({ path: '/authorization/task' });
         },
         openDialog(task) {
             this.row = task;
@@ -176,7 +181,7 @@ export default {
     },
     created() {
         const settingConfig = localStorage.getItem('workplat-setting');
-        if(settingConfig){
+        if (settingConfig) {
             const settings = JSON.parse(settingConfig)
             this.settingConfig.labelIndex = settings.labelIndex;
             this.activeName = this.settingConfig?.labelIndex ?? 'first';
