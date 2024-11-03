@@ -24,7 +24,7 @@
         </div>
         <span slot="footer">
             <el-button size="small" type="primary" @click="handleMenu">分配菜单权限</el-button>
-            <el-button :loading="adminLoading" size="small" type="primary" @click="handleSetAdmin">设置为后台管理员</el-button>
+            <el-button v-if="!tableItem.isAdmin" :loading="adminLoading" size="small" type="primary" @click="handleSetAdmin">设置为后台管理员</el-button>
             <el-button size="small" @click="closeDialog">关 闭</el-button>
         </span>
     </el-dialog>

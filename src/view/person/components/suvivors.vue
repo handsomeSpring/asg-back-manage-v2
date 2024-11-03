@@ -3,7 +3,7 @@
     <!-- 搜索 -->
     <div class="operation_wrap">
       <div style="width: 580px">
-        <el-input size="small" v-model="listQuery.keyword" clearable placeholder="请输入用户名搜索">
+        <el-input size="small" v-model="listQuery.keyword" clearable placeholder="请输入用户名/中文名进行搜索">
           <el-button size="small" slot="append" icon="el-icon-search" @click="initGetUsers(true)"></el-button>
         </el-input>
       </div>

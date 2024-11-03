@@ -259,13 +259,15 @@ export default {
                 path: '',
                 auth:[],
                 allowOperate: '1',
-                sort:1,
+                sort:this.menuList.length + 1,
             }
             this.isForbid = false;
             this.initFlag = false;
+            this.activeId = null;
             this.$refs.form.resetFields();
         },
         addNew(item) {
+            this.activeId = null;
             this.type = 'new';
             this.pathPrepend = `${item.path}/`;
             this.settingInfo = {
@@ -366,7 +368,7 @@ export default {
     }
 
     .el-card {
-        height: 70vh;
+        height: 80vh;
         overflow-y: scroll;
     }
 }
