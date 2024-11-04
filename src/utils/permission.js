@@ -3,19 +3,27 @@ import store from '@/store/index';
 import router from "@/router/index.js";
 const _import = require("@/router/_import.js");
 import { getMenu } from "@/api/home/index.js";
+import Err from '@/view/Err.vue';
+function importComponent(componentPath){
+    try {
+        return _import(componentPath);
+    } catch (error) {
+        return Err;
+    }
+};
 // 创建权限菜单
 const createMenuComps = (menu) => {
     return menu.map(parent => {
         return {
             path: parent.path.replace('/', ''),
-            component: (parent.component && parent.component !== 'router-view') ? _import(parent.component) : {
+            component: (parent.component && parent.component !== 'router-view') ? importComponent(parent.component) : {
                 render: h => h('router-view')
             },
             name: parent.title,
             children: parent.children && parent.children.length > 0 ? parent.children.map(child => {
                 return {
                     path: child.path.replace(`${parent.path}/`, ''),
-                    component: _import(child.component),
+                    component: importComponent(child.component),
                     name: child.title,
                 }
             }) : []

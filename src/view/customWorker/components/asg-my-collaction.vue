@@ -65,7 +65,7 @@
         </el-dialog>
         <el-dialog :visible.sync="settingDialog" title="配置" width="40%" :append-to-body="true"
             :close-on-click-modal="false" center>
-            <div  style="margin-bottom:12px">
+            <div style="margin-bottom:12px">
                 <label>优先展示栏目:</label>
                 <el-radio-group v-model="settingConfig.labelIndex">
                     <el-radio label="first">我的任务</el-radio>
@@ -180,15 +180,23 @@ export default {
         }
     },
     created() {
-        const settingConfig = localStorage.getItem('workplat-setting');
-        if (settingConfig) {
-            const settings = JSON.parse(settingConfig)
-            this.settingConfig.labelIndex = settings.labelIndex;
-            this.activeName = this.settingConfig?.labelIndex ?? 'first';
-        };
+        try {
+            const settingConfig = localStorage.getItem('workplat-setting');
+            if (settingConfig) {
+                const settings = JSON.parse(settingConfig);
+                Object.assign(this.settingConfig, settings)
+                this.activeName = this.settingConfig?.labelIndex ?? 'first';
+            };
+        } catch (error) {
+            this.settingConfig = {
+                labelIndex: 'first',
+                authTaskStatus: ''
+            }
+        } finally {
+            this.initAssign();
+            this.initWaitDo();
+        }
 
-        this.initAssign();
-        this.initWaitDo();
     },
 }
 </script>
