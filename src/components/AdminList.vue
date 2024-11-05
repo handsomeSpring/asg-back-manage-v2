@@ -98,6 +98,9 @@ export default {
                 this.tableData = data;
                 refresh && this.$message.success('操作成功！');
             } catch (error) {
+                if(error?.response?.data?.code && error.response.data.code === 400){
+                    return this.$message.error(error.response.data.message);
+                }
                 this.$message.error(error instanceof Error ? error.message : '未知错误');
             } finally {
                 this.$nextTick(() => {

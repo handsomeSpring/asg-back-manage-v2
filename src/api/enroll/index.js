@@ -19,6 +19,16 @@ export function getEnrollList(page,pagesize,sort,eventsname){
 export function delEnrollTeam(id){
     return request.delete(`/api/v1/admin/form?formid=${id}`)
 }
+// 删除v2口
+export function delEnrollTeamV2(formId){
+    return request({
+        url:'/api/v2/form/delete',
+        method:'DELETE',
+        params:{
+            formId
+        }
+    })
+}
 //获取详细信息表单
 export function getDetailForm(){
     return request.get('/api/v1/user/form')

@@ -30,7 +30,7 @@
     </div>
     <!-- 数据主体 -->
     <el-scrollbar :native="false" wrapStyle="" wrapClass="" viewClass="" viewStyle="" :noresize="false" tag="section"
-      v-loading="loading" element-loading-text="正在加载中......" style="height: calc(60vh - 50px); margin-bottom: 15px">
+      v-loading="loading" element-loading-text="正在加载中......" style="height: calc(65vh - 50px); margin-bottom: 15px">
       <template v-if="scheduleData.length > 0">
         <asgTableCard v-for="(item, index) in scheduleData" :key="index">
           <template v-slot:header>
