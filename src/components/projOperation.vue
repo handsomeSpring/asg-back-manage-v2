@@ -43,20 +43,17 @@
       </footer>
     </div>
     <taskHistory ref="taskHistory" :row="row"></taskHistory>
-    <AdminList></AdminList>
   </div>
 </template>
 
 <script>
 import taskHistory from "@/view/taskManager/components/taskHistory.vue";
 import { getTask, taskFinish } from "@/api/admin/index.js";
-import AdminList from "@/components/AdminList.vue";
 import { mapGetters } from "vuex";
 export default {
   name: "projOperation",
   components: {
-    taskHistory,
-    AdminList
+    taskHistory
   },
   data() {
     return {

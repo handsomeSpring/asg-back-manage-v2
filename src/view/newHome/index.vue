@@ -142,15 +142,17 @@ export default {
       const { data } = await getStatic();
       this.static = data;
       const { data:budgetInfo } = await countBudgetTotal();
+      if(budgetInfo && budgetInfo.code === 401) throw new Error(budgetInfo.message ?? '没有权限！');
       this.budgetInfo = budgetInfo.data.filter(item => Boolean(item.budgetTotalMoney)).map(el => {
         return {
           value:el.budgetTotalMoney,
           name:el.sourceEventName
         }
       })
-      this.t();
     } catch (error) {
       this.$message.error(error.message);
+    } finally{
+      this.t();
     }
   },
   methods: {

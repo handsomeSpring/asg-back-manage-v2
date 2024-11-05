@@ -1,75 +1,75 @@
 <template>
   <div class="enroll__container">
     <header>
-      <p>报名赛季:</p>
+      <p>报名赛季</p>
       <el-select size="small" v-model="eventId" @change="handleEventChange">
-        <el-option
-          v-for="item in eventList"
-          :key="item.id"
-          :value="item.value"
-          :label="item.label"
-        ></el-option>
+        <el-option v-for="item in eventList" :key="item.id" :value="item.value" :label="item.label"></el-option>
+      </el-select>
+      <p style="margin-left:12px">排序</p>
+      <el-select size="small" v-model="listQuery.sort" @change="handleEventChange">
+        <el-option v-for="item in sortOptions" :key="item.value" :value="item.value" :label="item.label"></el-option>
       </el-select>
     </header>
-    <el-table
-      :header-cell-style="{ background: '#f2f6fd', color: '#000' }"
-      :data="tableData"
-      style="width: 100%"
-      height="65vh"
-      v-loading="loading"
-    >
-      <el-table-column
-        label="序号"
-        type="index"
-        width="80px"
-        align="center"
-      ></el-table-column>
-      <el-table-column label="战队LOGO" align="center">
-        <template #default="{ row }">
-          <img class="logo" :src="`${prefix}${eventName}/${row.teamName}.png`" />
-        </template>
-      </el-table-column>
-      <el-table-column
-        label="战队Id"
-        prop="formId"
-        align="center"
-      ></el-table-column>
-      <el-table-column
-        label="战队名称"
-        prop="teamName"
-        width="250px"
-        align="center"
-      ></el-table-column>
-      <el-table-column
-        label="点赞数"
-        prop="voteOfLikes"
-        width="250px"
-        align="center"
-      ></el-table-column>
-      <el-table-column label="操作" width="120px">
-        <el-button type="text">查阅</el-button>
-      </el-table-column>
-    </el-table>
-    <el-pagination
-      style="float: right; margin-top: 12px"
-      @size-change="handlePageChange('limit', $event)"
-      @current-change="handlePageChange('page', $event)"
-      :current-page="listQuery.page"
-      :page-sizes="[10, 20, 30, 100]"
-      :page-size="listQuery.limit"
-      layout="total, sizes, prev, pager, next, jumper"
-      :total="total"
-    >
+    <el-scrollbar :native="false" wrapStyle="" wrapClass="" viewClass="" viewStyle="" :noresize="false" tag="section"
+      v-loading="loading" element-loading-text="正在加载中......" style="height: calc(65vh - 50px); margin-bottom: 15px">
+      <template v-if="tableData.length > 0">
+        <asgTableCard v-for="(item, index) in tableData" :key="index">
+          <template v-slot:header>
+            <div class="header__wrap">
+              <div class="flex--align">
+                <span class="table-title">战队名</span>
+                <p class="team__name">{{ item.teamName }}</p>
+              </div>
+              <div>
+                <el-button style="margin:0 12px" type="text" size="small" @click="handleView(item)">
+                  查看成员
+                </el-button>
+                <el-button style="color:#f40" type="text" size="small" @click="handleDeleteTeam(item)">删除战队</el-button>
+              </div>
+            </div>
+          </template>
+          <template v-slot:content>
+            <div class="content__wrap">
+              <div style="display: flex;
+              align-items: center;justify-content: center;">
+                <img class="logo" :src="`${prefix}${eventName}/${item.teamName}.png`" @error="imgErrorHandler" />
+              </div>
+              <div>
+                <p class="flex--align"><span class="table-title">队长联系方式</span>{{ item.tel }}</p>
+                <p class="flex--align"><span class="table-title">获赞数</span>{{ item.vote }}</p>
+                <p class="flex--align"><span class="table-title">报名时间</span>{{ new Date(item.registerTime) |
+                  parseTime("{y}-{m}-{d} {h}:{i}:{s}") }}</p>
+              </div>
+              <div class="team__roles">
+                <el-tag size="small" v-for="(role, index) in item.roles" :key="index"
+                  :type="role.isSur ? 'primary' : 'danger'">{{ role.name }}</el-tag>
+              </div>
+            </div>
+          </template>
+        </asgTableCard>
+      </template>
+      <el-empty v-else description="无报名信息"></el-empty>
+    </el-scrollbar>
+    <el-pagination style="float: right; margin-top: 12px" @size-change="handlePageChange('limit', $event)"
+      @current-change="handlePageChange('page', $event)" :current-page="listQuery.page" :page-sizes="[10, 20, 30, 100]"
+      :page-size="listQuery.limit" layout="total, sizes, prev, pager, next, jumper" :total="total">
     </el-pagination>
+    <dialoginfo :dialog-visible.sync="dialogVisible" :tableList="tableList"></dialoginfo>
   </div>
 </template>
 
 <script>
 import { getByTitle } from "@/api/config";
 import { getAllEvents } from "@/api/gameSeason/index";
-import { getEnrollTeam } from "@/api/enroll/index.js";
+import { getEnrollTeam, delEnrollTeam } from "@/api/enroll/index.js";
+import asgTableCard from "@/components/asg-table-card.vue";
+import dialoginfo from "./component/dialoginfo.vue";
 export default {
   name: "enrollList",
+  components: {
+    asgTableCard,
+    dialoginfo
+  },
   data() {
     return {
       historyRank: [],
@@ -79,14 +79,46 @@ export default {
       eventId: "",
       eventName: "",
       listQuery: {
-        sort: "1",
+        sort: 0,
         page: 1,
         limit: 10,
       },
       total: null,
+      fullScreenLoading: null,
+      defaultImgUrl: require("../../assets/logo.png"),
+      dialogVisible: false,
+      tableList: [],
+      sortOptions: [
+        {
+          label: '默认',
+          value: 0
+        },
+        {
+          label: '按票数升序',
+          value: 1
+        },
+        {
+          label: '按票数降序',
+          value: 2
+        },
+        {
+          label: '3按时间升序',
+          value: 3
+        },
+        {
+          label: '按时间降序',
+          value: 4
+        }
+      ]
     };
   },
   created() {
+    this.fullScreenLoading = this.$loading({
+      lock: true,
+      text: "正在刷新数据中......",
+      spinner: "el-icon-loading",
+      background: "rgba(0, 0, 0, 0.8)",
+    });
     getByTitle("historyRank").then(({ data }) => {
       this.historyRank = data;
     });
@@ -98,6 +130,31 @@ export default {
     },
   },
   methods: {
+    handleView(item) {
+      this.dialogVisible = true;
+      this.tableList = item.roles ?? [];
+    },
+    imgErrorHandler(event) {
+      let img = event.srcElement;
+      img.src = this.defaultImgUrl;
+      img.onerror = null;
+    },
+    async handleDeleteTeam(item) {
+      try {
+        const result = await this.$confirm("您确定删除该战队的报名信息?", "提示", {
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+        });
+        if (result === 'confirm') {
+          const { status } = await delEnrollTeam(item.id);
+          if (status !== 200) throw new Error('服务端异常，请联系网站管理员。');
+          this.getList();
+        }
+      } catch (error) {
+        if (typeof error === 'string' && error === 'cancel') return;
+        this.$message.error(error.message);
+      }
+    },
     async initAllData() {
       try {
         const result = await getAllEvents();
@@ -137,12 +194,30 @@ export default {
         if (status !== 200) throw new Error("服务端异常，请联系网站管理员");
         if (data && data?.code === 401)
           throw new Error(data?.message ?? "没有权限，获取失败");
-        this.tableData = data.data;
+        this.tableData = data.data.map(item => {
+          return {
+            teamName: item.form.team_name,
+            tel: item.form.team_tel,
+            registerTime: item.form.time,
+            logo: item.form.logo_uri,
+            id: item.form.id,
+            vote: item.form.piaoshu,
+            roles: (item?.roles ?? []).map(role => {
+              return {
+                commonRoles: role?.commonRoles ?? '未公布',
+                isSur: role.roleLin === '求生者',
+                name: role.roleName,
+                rank: this.historyRank.find(rank => rank.value.toString() === (role.roleRank ?? -1).toString())?.label ?? '位置段位'
+              }
+            })
+          }
+        });
         this.total = data.total;
       } catch (error) {
         this.$message.error(error.message);
       } finally {
         this.loading = false;
+        this.fullScreenLoading.close();
       }
     },
     handleEventChange($event) {
@@ -162,13 +237,55 @@ export default {
     align-items: center;
     margin-bottom: 12px;
     margin-right: 12px;
+
     p {
       margin-right: 12px;
     }
   }
 }
-.logo{
-  width:50px;
-  height:50px;
+
+.header__wrap {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 100%;
+  padding: 0 12px;
+}
+
+.content__wrap {
+  display: grid;
+  grid-template-columns: 220px auto 500px;
+  align-items: center;
+  padding: 12px;
+
+  .logo {
+    width: 50px;
+    height: 50px;
+    text-align: center;
+  }
+}
+
+.team__roles {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 24px;
+  margin-right: 50px;
+}
+
+.table-title {
+  font-size: 14px;
+  font-weight: bold;
+  margin-right: 12px;
+}
+
+.flex--align {
+  display: flex;
+  align-items: center;
+
+  .team__name {
+    color: rgb(255, 123, 0);
+    font-size: 1.1rem;
+    font-weight: bold;
+  }
 }
 </style>
