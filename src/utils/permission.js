@@ -8,6 +8,7 @@ function importComponent(componentPath){
     try {
         return _import(componentPath);
     } catch (error) {
+        console.log(error,'找不到模块！');
         return Err;
     }
 };
@@ -63,8 +64,11 @@ export async function getPermission() {
         if (status !== 200) throw new Error('获取菜单失败！');
         const transferMenu = data?.data ?? [];
         const menu = generateMenu(transferMenu);
-        store.commit('GENERATE_MENU', menu);
-        const asyncRouteList = createMenuComps(data.data);
+        const filterMenu = menu.filter(item => {
+            return item.component !== 'router-view' || (item.component === 'router-view' && item.children.length > 0);
+        })
+        store.commit('GENERATE_MENU', filterMenu);
+        const asyncRouteList = createMenuComps(filterMenu);
         asyncRouteList.forEach(item => {
             router.addRoute('home', item);
         });

@@ -49,7 +49,6 @@ export default {
             this.multipleSelection = this.$refs.curTransfer.save();
         },
         routePath(path){
-            console.log(path,'path');
             this.$router.push({path});
         }
     }

@@ -23,3 +23,14 @@ export function delEnrollTeam(id){
 export function getDetailForm(){
     return request.get('/api/v1/user/form')
 }
+
+
+// 获取报名队伍v3
+// page limit sort eventId
+export function getEnrollTeam(params){
+    return request({
+        url:'/api/v3/form/all',
+        method:'GET',
+        params
+    })
+}

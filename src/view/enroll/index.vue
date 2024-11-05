@@ -1,109 +1,123 @@
 <template>
-  <div>
-    <el-row>
-      <el-col :span="24">
-        <all-team @searchteam="search" />
-      </el-col>
-    </el-row>
-    <el-dialog :visible.sync="dialogVisible" :title="title" width="60%">
-      <el-scrollbar :native="false" wrapStyle="" wrapClass="" viewClass="" viewStyle="" :noresize="false" tag="section"
-        style="height: calc(60vh - 30px); margin-bottom: 10px">
-        <div style="margin:10px 0;" v-for="item in teamInfo" :key="item.id">
-          <el-tag size="small">{{ item.name }}</el-tag>
-          <el-table :data="item.role">
-            <el-table-column label="选手名" prop="role_name">
-            </el-table-column>
-            <el-table-column label="选手ID" prop="role_id">
-            </el-table-column>
-            <el-table-column label="阵营" prop="role_lin">
-            </el-table-column>
-            <el-table-column label="历史段位">
-              <template #default="{ row }">
-                <el-tag type="success" size="small">{{ computedRank(row.historical_Ranks) }}</el-tag>
-              </template>
-            </el-table-column>
-            <el-table-column label="常用角色" prop="common_Roles">
-            </el-table-column>
-          </el-table>
-        </div>
-      </el-scrollbar>
-    </el-dialog>
+  <div class="enroll__container">
+    <header>
+      <p>报名赛季:</p>
+      <el-select v-model="eventId" @change="handleEventChange">
+        <el-option
+          v-for="item in eventList"
+          :key="item.id"
+          :value="item.value"
+          :label="item.label"
+        ></el-option>
+      </el-select>
+    </header>
+    <el-table :data="tableData" style="width:100%" height="70vh" v-loading="loading">
+      <el-table-column label="序号" type="index" width="80px" align="center"></el-table-column>
+      <el-table-column label="战队Id" prop="formId" align="center"></el-table-column>
+      <el-table-column label="战队名称" prop="teamName" width="250px" align="center"></el-table-column>
+      <el-table-column label="点赞数" prop="voteOfLikes" width="250px" align="center"></el-table-column>
+    </el-table>
+    <el-pagination
+      @size-change="handlePageChange('limit',$event)"
+      @current-change="handlePageChange('page',$event)"
+      :current-page="listQuery.page"
+      :page-sizes="[10, 20, 30, 100]"
+      :page-size="listQuery.limit"
+      layout="total, sizes, prev, pager, next, jumper"
+      :total="total"
+    >
+    </el-pagination>
   </div>
 </template>
 
 <script>
-import { searchInfo } from '@/api/enroll/index'
-import { getByTitle } from '@/api/config';
-const AllTeam = () => import('./component/AllTeam.vue');
+import { getByTitle } from "@/api/config";
+import { getAllEvents } from "@/api/gameSeason/index";
+import { getEnrollTeam } from '@/api/enroll/index.js';
 export default {
-  name: "enrollDialog",
-  components: {
-    AllTeam
-  },
-  methods: {
-    search(name) {
-      this.dialogVisible = true;
-      searchInfo(name)
-        .then(res => {
-          this.teamInfo = res.data
-        })
-        .catch(() => {
-          this.$message.error('未寻找到该战队！')
-        })
-    },
-    computedRank(rank){
-      return this.historyRank.find(item => item.value === rank)?.label ?? '未知段位'
-    }
-  },
+  name: "enrollList",
   data() {
     return {
-      teamInfo: [],
-      historyRank:[],
-      //加载
-      dialogVisible: false,
-      title: '搜索战队弹窗'
-    }
+      historyRank: [],
+      eventList: [],
+      tableData: [],
+      loading: false,
+      eventId: "",
+      listQuery:{
+        sort:'1',
+        page:1,
+        limit:10
+      },
+      total:null
+    };
   },
   created() {
-      getByTitle("historyRank").then(({data})=>{
-        this.historyRank = data;
-      })
+    getByTitle("historyRank").then(({ data }) => {
+      this.historyRank = data;
+    });
+    this.initAllData();
+  },
+  methods: {
+    async initAllData() {
+      try {
+        const result = await getAllEvents();
+        this.eventList = result.data.map((item) => {
+          return {
+            label: item.name,
+            value: item.id,
+            over: item.is_over,
+          };
+        });
+        this.eventId = this.eventList.filter((item) => !item.over).at(-1)?.value ?? null;
+        if(!this.eventId) throw new Error('获取赛季信息失败！');
+        this.getList();
+      } catch (error) {
+        this.$message.error(error.message);
+      }
+    },
+    handlePageChange(prop,value){
+      this.listQuery = {
+        ...this.listQuery,
+        [prop]:value
+      };
+      this.getList();
+    },
+    async getList() {
+      try {
+        this.loading = true;
+        const reqQuery = {
+          ...this.listQuery,
+          eventId:this.eventId
+        }
+        const { data, status } = await getEnrollTeam(reqQuery);
+        console.log('表格数据是===',data);
+        if(status !== 200) throw new Error('服务端异常，请联系网站管理员');
+        if(data && data?.code === 401) throw new Error(data?.message ?? '没有权限，获取失败');
+        this.tableData = data.data;
+        this.total = data.total;
+      } catch (error) {
+        this.$message.error(error.message);
+      } finally {
+        this.loading = false;
+      }
+    },
+    handleEventChange(){
+      this.getList();
+    }
   },
 };
 </script>
 
 <style scoped lang="less">
-.el-row {
-  margin-bottom: 10px;
-}
-
-.el-col {
-  margin-right: 10px;
-}
-
-.topSearch {
-  padding: 10px;
-  border-bottom: 1px solid #ddd;
-
-  h3 {
-    margin-bottom: 5px;
-  }
-}
-
-.showTeam {
-  li {
-    box-sizing: border-box;
-    list-style: none;
-    width: 100%;
-    height: 58px;
-    border-bottom: 1px solid #ddd;
+.enroll__container {
+  header {
     display: flex;
-    justify-content: space-around;
+    justify-content: flex-start;
     align-items: center;
-
-    img {
-      width: 50px;
-      height: 50px;
+    margin-bottom: 12px;
+    margin-right:12px;
+    p{
+      margin-right:12px;
     }
   }
 }
