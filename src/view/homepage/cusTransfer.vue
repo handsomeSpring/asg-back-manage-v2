@@ -52,7 +52,7 @@
 
 <script>
 import { transferData } from "@/view/homepage/transferData.js";
-import { menuOptions } from "@/assets/json/menu";
+import { mapGetters } from 'vuex';
 export default {
   name: "cusTransfer",
   props: {
@@ -61,6 +61,9 @@ export default {
       type: Array,
       default: () => []
     }
+  },
+  computed:{
+    ...mapGetters(['menuOptions'])
   },
   data() {
     return {
@@ -72,12 +75,12 @@ export default {
     };
   },
   created() {
-    menuOptions.forEach(item => {
+    this.menuOptions.forEach(item => {
       if(item.children && item.children.length > 0){
         this.queryNoSelected = this.queryNoSelected.concat(item.children);
       }
     })
-    this.querySelected = JSON.parse(localStorage.getItem("asgshortcut-v2") || "[]");
+    this.querySelected = JSON.parse(localStorage.getItem("asgshortcut-v3") || "[]");
   },
   mounted() {
     this.setCheckedRows();
@@ -110,7 +113,7 @@ export default {
     },
 
     save() {
-      localStorage.setItem("asgshortcut-v2", JSON.stringify(this.querySelected));
+      localStorage.setItem("asgshortcut-v3", JSON.stringify(this.querySelected));
       return this.querySelected;
     },
     // 回显已勾选的数据

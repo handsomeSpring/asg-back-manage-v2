@@ -41,7 +41,7 @@ export default {
         };
     },
     created(){
-        this.multipleSelection = JSON.parse(localStorage.getItem("asgshortcut-v2")) ?? [];
+        this.multipleSelection = JSON.parse(localStorage.getItem("asgshortcut-v3")) ?? [];
     },
     methods: {
         handleSaveShort() {
