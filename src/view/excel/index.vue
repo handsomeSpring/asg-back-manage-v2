@@ -1,26 +1,49 @@
 <template>
   <div>
     <header>
-      <el-select v-model="eventname" size="small" placeholder="请选择赛季" @change="handleChange">
-        <el-option v-for="item in options" :key="item.name" :label="item.name" :value="item.name">
+      <el-select
+        v-model="eventname"
+        size="small"
+        placeholder="请选择赛季"
+        @change="handleChange"
+      >
+        <el-option
+          v-for="item in options"
+          :key="item.name"
+          :label="item.name"
+          :value="item.id"
+        >
         </el-option>
       </el-select>
 
       <div>
-        <el-button size="small" type="warning" @click="downloadLogos">批量下载logo<i
-            class="el-icon-download"></i></el-button>
-        <el-button size="small" type="success" @click="exportDetails">导出队伍所有信息<i
-            class="el-icon-download"></i></el-button>
-        <el-button size="small" type="success" @click="exportData(tableData, `${eventname}战队信息表`)">导出excel表格<i
-            class="el-icon-download"></i></el-button>
-        <el-button size="small" type="danger" plain @click="handleClear">清除服务器文件<i
-            class="el-icon-delete"></i></el-button>
+        <el-button size="small" type="warning" @click="downloadLogos"
+          >批量下载logo<i class="el-icon-download"></i
+        ></el-button>
+        <el-button size="small" type="success" @click="exportDetails"
+          >导出队伍所有信息<i class="el-icon-download"></i
+        ></el-button>
+        <el-button
+          size="small"
+          type="success"
+          @click="exportData(tableData, `${eventname}战队信息表`)"
+          >导出excel表格<i class="el-icon-download"></i
+        ></el-button>
+        <el-button size="small" type="danger" plain @click="handleClear"
+          >清除服务器文件<i class="el-icon-delete"></i
+        ></el-button>
       </div>
     </header>
     <!-- 表格 -->
-    <el-scrollbar style="height:70vh">
-      <el-table size="small" border v-loading="loading" :span-method="mergeRowMethod" :data="tableData"
-        style="width: 100%">
+    <el-scrollbar style="height: 70vh">
+      <el-table
+        size="small"
+        border
+        v-loading="loading"
+        :span-method="mergeRowMethod"
+        :data="tableData"
+        style="width: 100%"
+      >
         <el-table-column label="所属赛季" prop="赛季名" width="150">
         </el-table-column>
         <el-table-column label="战队名" prop="战队名" width="180">
@@ -30,7 +53,12 @@
         <el-table-column label="报名时间" prop="报名时间" width="250">
         </el-table-column>
         <el-table-column label="票数" prop="票数" width="80"> </el-table-column>
-        <el-table-column label="logo地址" width="auto" align="center" prop="logo">
+        <el-table-column
+          label="logo地址"
+          width="auto"
+          align="center"
+          prop="logo"
+        >
           <template slot="header">
             下载单个logo替换域名为{{ serveIp }}
           </template>
@@ -62,8 +90,8 @@ export default {
   },
   computed: {
     serveIp() {
-      return window.SERVE_IP
-    }
+      return window.SERVE_IP;
+    },
   },
   methods: {
     // 下载所有信息表单
@@ -137,14 +165,16 @@ export default {
       XLSX.writeFile(wb, fileName + ".xlsx");
     },
     // 获取赛季
-    initSeason() {
-      getAllEvents()
-        .then((res) => {
-          this.options = res.data;
-        })
-        .catch((err) => {
-          console.log(err);
-        });
+    async initSeason() {
+      try {
+        const { status, data } = await getAllEvents();
+        if (status !== 200) throw new Error("服务端异常，请联系网站管理员！");
+        this.options = data;
+        this.eventname =
+          data.filter((item) => !item.is_over).at(-1)?.name ?? "未知赛季";
+      } catch (error) {
+        this.$message.error(error.message);
+      }
     },
     // 获取详细信息
     async getPlayerDetails() {
@@ -163,9 +193,9 @@ export default {
         });
       } catch (error) {
         if (error.response.data.code === 400) {
-          return this.$message.error('操作失败，无权访问');
+          return this.$message.error("操作失败，无权访问");
         }
-        this.$message.error('操作失败，后端服务器异常');
+        this.$message.error("操作失败，后端服务器异常");
       } finally {
         this.loading = false;
       }
@@ -192,13 +222,13 @@ export default {
         type: "warning",
       })
         .then(async () => {
-          await deleteFiles()
+          await deleteFiles();
           this.$message({
             type: "success",
             message: "删除成功!",
           });
         })
-        .catch(() => { });
+        .catch(() => {});
     },
   },
 };
