@@ -1,7 +1,6 @@
 <template>
   <div>
     <el-tabs v-model="activeName">
-      <el-tab-pane label="邮箱发布" name="first"></el-tab-pane>
       <el-tab-pane label="发布隐私策略" name="second"></el-tab-pane>
       <el-tab-pane label="机器人公告" name="third"></el-tab-pane>
     </el-tabs>
@@ -13,9 +12,6 @@
       >
     </div>
     </template>
-    <template v-if="activeName ==='first'">
-      <sendE></sendE>
-    </template>
     <template v-if="activeName ==='third'">
       <bot></bot>
     </template>
@@ -24,7 +20,6 @@
 
 <script>
 import { pushPrivatePolice } from "@/api/admin/index";
-import sendE from "@/view/sendE/index.vue"
 import bot from "./components/bot"
 export default {
   name: "Private",

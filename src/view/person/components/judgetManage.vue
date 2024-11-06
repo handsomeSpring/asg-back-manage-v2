@@ -59,7 +59,7 @@ export default {
                 if (status !== 200) throw new Error('服务端异常，请联系网站管理员！');
                 this.judgeList = data;
             } catch (error) {
-                this.$message.error(message.error);
+                this.$message.error(error.message);
             } finally {
                 this.loading = false;
             }

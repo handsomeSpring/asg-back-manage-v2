@@ -235,7 +235,7 @@ export default {
         });
         console.log("模板", this.$refs.templateComponent.promChart);
         updateProm(
-          this.checkInfo.name,
+          this.checkInfo.id,
           JSON.stringify(this.$refs.templateComponent.promChart)
         )
           .then(() => {

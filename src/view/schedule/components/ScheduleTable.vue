@@ -373,7 +373,7 @@ export default {
         const group = await getByTitle('qqGroup');
         this.groupOptions = group.data;
       } catch (error) {
-        this.$message.error(message.error);
+        this.$message.error(error.message);
       }
     },
     handleChoose(userObj) {

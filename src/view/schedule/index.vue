@@ -1,14 +1,6 @@
 <template>
   <div>
-    <!-- 赛程表 -->
-    <el-tabs v-model="activeName" @tab-click="handleClick">
-      <el-tab-pane label="赛程管理" name="first">
-        <schedule-table ref="schedule" @operation="changeOperation" :tagOptions=tagOptions />
-      </el-tab-pane>
-      <el-tab-pane label="赛季管理" name="second">
-        <SetSeason />
-      </el-tab-pane>
-    </el-tabs>
+    <schedule-table ref="schedule" @operation="changeOperation" :tagOptions=tagOptions />
     <add-schedule
       :operationVisible.sync="operationVisible"
       :tagOptions="tagOptions"
@@ -26,8 +18,9 @@ import { getPlayerDetails } from "@/api/gameSeason/index.js"
 import { getAllEvents } from "@/api/gameSeason/index";
 import addSchedule from "@/view/schedule/components/addSchedule.vue";
 import { getByTitle } from "@/api/config";
+import  ScheduleTable from"./components/ScheduleTable.vue";
 export default {
-  name: "seasonSchdule",
+  name: "scheduleList",
   data() {
     return {
       active: 1,
@@ -55,8 +48,7 @@ export default {
     };
   },
   components: {
-    ScheduleTable: () => import("./components/ScheduleTable.vue"),
-    SetSeason: () => import("./components/SetSeason.vue"),
+    ScheduleTable,
     addSchedule,
   },
   watch: {

@@ -17,7 +17,7 @@ export function getEventProm(){
   })
 }
 // 修改晋升图
-export function updateProm(event_name,string){
+export function updateProm(eventId,string){
   return request({
     url:"/api/v1/admin/poem",
     method:"POST",
@@ -25,7 +25,7 @@ export function updateProm(event_name,string){
       "Content-Type":"application/json"
     },
     params:{
-      event_name
+      eventId
     },
     data:JSON.stringify(string)
   })
@@ -42,23 +42,24 @@ export function pushNewEvents(data){
     })
 }
 //删除
-export function deleteEvents(name){
-  return request.delete(`/api/v1/admin/Events?event_name=${name}`)
+export function deleteEvents(eventId){
+  return request({
+    url:'/api/v1/admin/Events',
+    method:'DELETE',
+    params:{
+      eventId
+    }
+  })
 }
 //更新赛季
-export function updateEvents(event_name,row){
+export function updateEvents(data){
   return request({
     url:'/api/v1/admin/Events',
     method:'put',
     params:{
-      event_name
+      eventId:data.id
     },
-    data:{
-      id:row.id,
-      name:row.name,
-      is_over:row.is_over,
-      opentime:row.opentime
-    }
+    data
   })
 }
 //获取用户详细信息
