@@ -1,0 +1,262 @@
+<!-- 导播选班列表 -->
+<template>
+  <div>
+    <div class="header__content">
+      <el-select
+        size="small"
+        v-model="belong"
+        placeholder="请选择赛季名称"
+        @change="getList(true)"
+      >
+        <el-option
+          v-for="(item, index) in eventList"
+          :key="index"
+          :label="item.label"
+          :value="item.value"
+        ></el-option>
+      </el-select>
+      <el-button size="small" type="primary" @click="handleSave"
+        >确定选班</el-button
+      >
+    </div>
+    <div class="main__container" v-loading="loading">
+      <div
+        class="schedule__box"
+        v-for="(item, index) in tableData"
+        :key="index"
+      >
+        <div class="sch__header">
+          <div class="flex-group">
+            <el-checkbox
+              v-if="new Date() < new Date(item.opentime)"
+              v-model="item.isCheck"
+              @input="handleCheck($event, item)"
+              :disabled="item.referee_Id === userInfo.id"
+            ></el-checkbox>
+            <p>{{ item.team1_name }} vs {{ item.team2_name }}</p>
+            <el-button
+              size="mini"
+              v-if="
+                item.referee_Id === userInfo.id &&
+                new Date() < new Date(item.opentime)
+              "
+              type="danger"
+              @click="handleCancel(item)"
+              >取消选班</el-button
+            >
+          </div>
+        </div>
+        <div class="sch__body">
+          <div class="grid--three">
+            <p class="text">比赛时间：{{ item.opentime }}</p>
+            <p class="text">解说：{{ item.commentary }}</p>
+            <p class="text">裁判：{{ item.judge || "无裁判报名" }}</p>
+          </div>
+          <div class="grid--three">
+            <p class="text">赛程类别：{{ item.tag }}</p>
+            <p class="text">导播：{{ item.referee }}</p>
+          </div>
+        </div>
+      </div>
+      <div class="noMore">
+        <el-button
+          v-if="hasMore"
+          :loading="loading"
+          size="small"
+          type="primary"
+          @click="getList(false)"
+          >加载更多</el-button
+        >
+        <p v-else>没有更多了~</p>
+      </div>
+    </div>
+    <cancelDialog :scheduleItem="scheduleItem" :dialogVisible.sync="dialogVisible"></cancelDialog>
+  </div>
+</template>
+
+<script>
+import { getAllEvents } from "@/api/gameSeason/index";
+import { getScheduleFrontNew } from "@/api/schedule/index.js";
+import { mapGetters } from "vuex";
+import cancelDialog from "./components/cancelDialog.vue";
+export default {
+  name: "refereeChoose",
+  components: {
+    cancelDialog,
+  },
+  data() {
+    return {
+      tableData: [],
+      eventList: [],
+      loading: false,
+      belong: "",
+      fullScreenLoading: null,
+      listQuery: {
+        page: 1,
+        page_long: 3,
+      },
+      hasMore: true,
+      checkSet: null,
+      dialogVisible:false,
+      scheduleItem:{}
+    };
+  },
+  computed: {
+    ...mapGetters(["userInfo"]),
+  },
+  created() {
+    this.checkSet = new Set();
+    this.initEvent();
+  },
+  methods: {
+    handleCancel(item) {
+        this.scheduleItem = item;
+        this.dialogVisible = true;
+    },
+    handleCheck($event, item) {
+      if ($event) {
+        this.checkSet.add(item.id);
+      } else {
+        this.checkSet.delete(item.id);
+      }
+    },
+    async getList(reset = false) {
+      try {
+        this.loading = true;
+        this.listQuery.page = Math.floor(this.tableData.length / 3) + 1;
+        if (reset) {
+          this.listQuery.page = 1;
+          this.listQuery.page_long = 3;
+          this.hasMore = true;
+        }
+        const req = {
+          ...this.listQuery,
+          belong: this.belong,
+        };
+        const { data, status } = await getScheduleFrontNew(req);
+        if (status !== 200) throw new Error("服务端异常，请联系网站管理员");
+        this.tableData = [
+          ...this.tableData,
+          ...data.map((item) => {
+            return {
+              ...item,
+              isCheck: false,
+              commentary: !!item.commentary
+                ? JSON.parse(item.commentary)
+                    .map((role) => role.chinaname)
+                    .join(",")
+                : "暂无解说报名",
+            };
+          }),
+        ];
+        if (data.length < 3) {
+          this.hasMore = false;
+        }
+      } catch (error) {
+        this.$message.error(error.message);
+      } finally {
+        this.loading = false;
+        this.fullScreenLoading.close();
+      }
+    },
+    async initEvent() {
+      this.fullScreenLoading = this.$loading({
+        lock: true,
+        text: "努力获取数据中......",
+        spinner: "el-icon-loading",
+        background: "rgba(0, 0, 0, 0.8)",
+      });
+      try {
+        const { data, status } = await getAllEvents();
+        if (status !== 200) throw new Error("服务端异常，请联系网站管理员");
+        this.eventList = (data ?? []).map((item) => {
+          return {
+            value: item.name,
+            label: item.name,
+          };
+        });
+        this.belong = (data ?? []).filter((item) => !item.is_over).at(-1).name;
+        this.getList();
+      } catch (error) {
+        this.$message.error(error.message);
+      }
+    },
+    handleSave() {
+      if (this.checkSet.size === 0)
+        return this.$message.error("至少选择一个场次");
+      const allId = [];
+      this.checkSet.forEach((item) => {
+        allId.push(item);
+      });
+      const allIds = allId.join(",");
+      console.log(allIds);
+      this.$message.warning("调用选班接口,待后端开发......");
+    },
+  },
+};
+</script>
+
+<style scoped lang="less">
+.header__content {
+  margin-bottom: 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.main__container {
+  height: 65vh;
+  overflow: auto;
+  .schedule__box {
+    margin-bottom: 24px;
+    .sch__header {
+      width: 100%;
+      background: linear-gradient(
+        172deg,
+        #b3d4ff 0%,
+        rgba(255, 255, 255, 0) 93%
+      );
+      border-radius: 10px 10px 0 0;
+      .flex-group {
+        display: flex;
+        align-items: center;
+        padding: 8px 0;
+        margin-left: 30px;
+        p {
+          margin: 0 12px;
+          font-weight: 500;
+          font-size: 16px;
+        }
+      }
+    }
+    .sch__body {
+      width: calc(100% - 84px);
+      padding: 18px 42px;
+      border-left: 1px solid #e7e7e7;
+      box-sizing: border-box;
+      .grid--three {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        align-items: center;
+        margin: 4px 0;
+        .text {
+          font-weight: 400;
+          font-size: 14px;
+          color: #404040;
+        }
+      }
+    }
+  }
+  .noMore {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    p {
+      color: #aaaaaa;
+      font-size: 14px;
+    }
+  }
+}
+::-webkit-scrollbar {
+  display: none !important;
+}
+</style>

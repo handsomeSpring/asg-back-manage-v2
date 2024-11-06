@@ -13,6 +13,15 @@ export function getSchedule(page, pagesize, belong) {
   );
 }
 
+// 前端新获取赛程接口
+export function getScheduleFrontNew(params){
+  return request({
+    url:'/api/v1/game',
+    method:'GET',
+    params
+  })
+}
+
 //删除赛程
 export function delSchedule(id) {
   return request.delete(`/api/v1/admin/game?gameid=${id}`);
