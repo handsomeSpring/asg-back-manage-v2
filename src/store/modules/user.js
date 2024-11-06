@@ -34,6 +34,10 @@ const user = {
             state.userInfo.chinaname = value;
             sessionStorage.setItem('chinaname', value);
         },
+        UPDATE_QQ(state, value) {
+            state.userInfo.qqnumber = value;
+            sessionStorage.setItem('qqnumber', value);
+        },
         GENERATE_MENU(state, menu){
             state.menu = menu;
         }

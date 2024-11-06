@@ -1,13 +1,7 @@
 <template>
   <div>
     <header>
-      <el-button
-        icon="el-icon-plus"
-        size="small"
-        type="primary"
-        @click="openDialog('add')"
-        >开启新赛季</el-button
-      >
+      <el-button icon="el-icon-plus" size="small" type="primary" @click="openDialog('add')">开启新赛季</el-button>
     </header>
     <el-scrollbar style="height: 60vh">
       <baseTable v-loading="loading" :data="events" :column="tableProps">
@@ -17,22 +11,13 @@
             <span class="fontWeight">{{ data.name }}</span>
           </div>
           <div>
-            <span
-              ><i
-                class="el-icon-edit"
-                style="
+            <span><i class="el-icon-edit" style="
                   color: rgb(91, 182, 242);
                   font-size: 16px;
                   cursor: pointer;
-                "
-                @click="handleUpdate(data)"
-              ></i
-            ></span>
-            <i
-              class="el-icon-delete"
-              style="color: red; font-size: 16px; cursor: pointer"
-              @click="deleteItem(data.id)"
-            ></i>
+                " @click="handleUpdate(data)"></i></span>
+            <i class="el-icon-delete" style="color: red; font-size: 16px; cursor: pointer"
+              @click="deleteItem(data.id)"></i>
           </div>
         </template>
         <template #opentime="{ data }">
@@ -48,54 +33,26 @@
         </template>
         <template #rule="{ data }">
           <el-button type="text" @click="checkRuleInfo(data)">
-            查看规则详情
+            预览规则
           </el-button>
         </template>
       </baseTable>
     </el-scrollbar>
-    <el-dialog
-      top="5vh"
-      :close-on-click-modal="false"
-      append-to-body
-      :title="title"
-      width="70%"
-      :visible.sync="dialogVisible"
-    >
-      <el-form
-        ref="seasonForm"
-        :model="seasonForm"
-        label-width="120px"
-        label-position="right"
-        :rules="rules"
-      >
+    <el-dialog top="5vh" :close-on-click-modal="false" append-to-body :title="title" width="70%"
+      :visible.sync="dialogVisible">
+      <el-form ref="seasonForm" :model="seasonForm" label-width="120px" label-position="right" :rules="formRules">
         <el-row type="flex">
           <el-col :span="11">
             <el-form-item label="赛季名" prop="name">
-              <el-input
-                size="mini"
-                v-model="seasonForm.name"
-                placeholder="输入赛季名"
-              ></el-input>
+              <el-input size="mini" v-model="seasonForm.name" placeholder="输入赛季名"></el-input>
             </el-form-item>
           </el-col>
           <el-col :span="11" :offset="2">
             <el-form-item label="赛季开始时间" prop="opentime">
-              <el-date-picker
-                v-if="type === 'add'"
-                v-model="seasonForm.opentime"
-                size="small"
-                type="datetime"
-                placeholder="选择日期时间"
-                value-format="yyyy-MM-ddThh:mm:ss.656Z"
-                format="yyyy-MM-dd hh:mm:ss"
-              >
+              <el-date-picker v-if="type === 'add'" v-model="seasonForm.opentime" size="small" type="datetime"
+                placeholder="选择日期时间" value-format="yyyy-MM-ddThh:mm:ss.656Z" format="yyyy-MM-dd hh:mm:ss">
               </el-date-picker>
-              <el-input
-                v-else
-                v-model="seasonForm.opentime"
-                size="small"
-                placeholder="格式yyyy-MM-ddThh:mm:ss.656Z"
-              >
+              <el-input v-else v-model="seasonForm.opentime" size="small" placeholder="格式yyyy-MM-ddThh:mm:ss.656Z">
               </el-input>
             </el-form-item>
           </el-col>
@@ -122,51 +79,23 @@
             </el-form-item>
           </el-col>
         </el-row>
-        <template v-if="type === 'add'">
-          <label
-            >赛季规则<span style="color: #f40; font-weight: bold"
-              >（*一旦上传规则，将无法修改）</span
-            ></label
-          >
+        <template>
+          <label>赛季规则<span style="color: #f40; font-weight: bold">（*一旦上传规则，将无法修改）</span></label>
           <el-row style="margin-top: 12px">
-            <v-md-editor
-              v-model="rules"
-              height="400px"
-              width="800"
-            ></v-md-editor>
+            <v-md-editor v-model="rules" height="400px" width="800"></v-md-editor>
           </el-row>
         </template>
         <div style="text-align: right; margin-top: 12px">
-          <el-button
-            v-if="type === 'add'"
-            size="small"
-            type="primary"
-            @click="handleAddEvent"
-            >发布</el-button
-          >
-          <el-button v-else type="primary" size="small" @click="updateItem"
-            >更新</el-button
-          >
-          <el-button size="small" plain @close="dialogVisible = false"
-            >关 闭</el-button
-          >
+          <el-button v-if="type === 'add'" size="small" type="primary" @click="handleAddEvent">发布</el-button>
+          <el-button v-else type="primary" size="small" @click="updateItem">更新</el-button>
+          <el-button size="small" plain @click="dialogVisible = false">关 闭</el-button>
         </div>
       </el-form>
     </el-dialog>
-    <el-dialog
-      top="5vh"
-      title="规则详情"
-      :close-on-click-modal="false"
-      append-to-body
-      width="60%"
-      :visible.sync="checkDialogVisible"
-    >
+    <el-dialog top="5vh" title="规则详情" :close-on-click-modal="false" append-to-body width="60%"
+      :visible.sync="checkDialogVisible">
       <el-scrollbar style="height: 55vh">
-        <v-md-preview
-          :text="checkRules"
-          height="400px"
-          width="800"
-        ></v-md-preview>
+        <v-md-preview :text="checkRules" height="400px" width="800"></v-md-preview>
       </el-scrollbar>
     </el-dialog>
   </div>
@@ -216,7 +145,7 @@ export default {
           slot: true,
           style: {
             textAlign: "center",
-            width: "150px",
+            width: "200px",
           },
         },
         {
@@ -252,7 +181,7 @@ export default {
       ],
       checkRules: "",
       checkDialogVisible: false,
-      rules: {
+      formRules: {
         name: [{ required: true, message: "请填写赛季名称", trigger: "blur" }],
         opentime: [
           { required: true, message: "请填写赛季开始时间", trigger: "change" },
@@ -299,7 +228,10 @@ export default {
         this.checkRules = "暂无规则";
       }
     },
-    handleUpdate(row) {
+    async handleUpdate(row) {
+      const result = await fetch(`${this.serveIp}/doc/rule/${row.name}.md`);
+      const res = await result.text();
+      this.rules = res || "未设置规则";
       this.openDialog("edit");
       this.seasonForm = row;
     },
@@ -334,12 +266,12 @@ export default {
             rule_markdown: this.rules,
           };
           pushNewEvents(reqDTO).then(({ status }) => {
-            if(status !== 200) throw new Error('服务端异常，新增赛季失败！');
+            if (status !== 200) throw new Error('服务端异常，新增赛季失败！');
             this.$message.success('新增赛季成功！');
             this.initEvents();
           }).catch(error => {
             this.$message.error(error.message);
-          }).finally(()=>{
+          }).finally(() => {
             this.dialogVisible = false;
           })
         }
@@ -349,11 +281,11 @@ export default {
       try {
         this.loading = true;
         const { data, status } = await getAllEvents();
-        if(status !== 200) throw new Error('服务端异常，获取赛季失败！');
+        if (status !== 200) throw new Error('服务端异常，获取赛季失败！');
         this.events = data;
       } catch (error) {
         this.$message.error(error.message);
-      } finally{
+      } finally {
         this.loading = false;
       }
     },
@@ -370,17 +302,21 @@ export default {
               this.initEvents();
             })
             .catch((err) => {
-              if(err?.response?.data){
+              if (err?.response?.data) {
                 return this.$message.error(err.response.data.message);
               }
               this.$message.error("服务器异常，请联系管理员！");
             });
         })
-        .catch(() => {});
+        .catch(() => { });
     },
     async updateItem() {
       try {
-        const { status } = await updateEvents(this.seasonForm);
+        const req = {
+          ...this.seasonForm,
+          rule_markdown: this.rules,
+        }
+        const { status } = await updateEvents(req);
         if (status !== 200) throw new Error("服务端异常，请联系网站管理员！");
         this.dialogVisible = false;
         this.$message.success("更新成功！");

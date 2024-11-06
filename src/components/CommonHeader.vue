@@ -1,8 +1,8 @@
 <template>
   <div class="header-container">
     <div class="l-content">
-      <span class="text"><router-link to="/guide">ASG后台管理系统<span
-            class="version">{{ version }}</span></router-link></span>
+      <span class="text"><router-link to="/guide">ASG后台管理系统<span class="version">{{ version
+            }}</span></router-link></span>
     </div>
     <div class="r-content">
       <div class="single__router" @click="routerToGw">前往ASG官网<i class="el-icon-d-arrow-right"></i></div>
@@ -19,97 +19,28 @@
         </li>
       </div>
       <div class="operation__container">
-        <li @click="handleCommand('1')">
-          <i class="el-icon-s-home"></i>
-        </li>
-        <li @click="handleCommand('4')">
-          <i class="el-icon-s-tools"></i>
-        </li>
-        <li @click="handleCommand('2')">
-          <i class="el-icon-crop"></i>
-        </li>
-        <li @click="handleCommand('3')">
-          <i class="el-icon-switch-button"></i>
-        </li>
+        <el-tooltip class="item" effect="dark" content="回到首页" placement="bottom">
+          <li @click="handleCommand('1')">
+            <i class="el-icon-s-home"></i>
+          </li>
+        </el-tooltip>
+        <el-tooltip class="item" effect="dark" content="个人中心" placement="bottom">
+          <li @click="handleCommand('4')">
+            <i class="el-icon-s-tools"></i>
+          </li>
+        </el-tooltip>
+        <el-tooltip class="item" effect="dark" content="自定义工作台" placement="bottom">
+          <li @click="handleCommand('2')">
+            <i class="el-icon-crop"></i>
+          </li>
+        </el-tooltip>
+        <el-tooltip class="item" effect="dark" content="退出登录" placement="bottom">
+          <li @click="handleCommand('3')">
+            <i class="el-icon-switch-button"></i>
+          </li>
+        </el-tooltip>
       </div>
-      <!-- <el-dropdown type="primary" @command="handleCommand">
-        <span class="el-dropdown-link">
-          <img class="user" :src="imgUrl">
-        </span>
-        <el-dropdown-menu slot="dropdown">
-          <el-dropdown-item icon="el-icon-s-home" command="1">我的工作台</el-dropdown-item>
-          <el-dropdown-item icon="el-icon-crop" command="2">自定义工作台</el-dropdown-item>
-          <el-dropdown-item command="3">
-            <span style="color:#f40"><i class="el-icon-switch-button"></i>退出</span>
-          </el-dropdown-item>
-        </el-dropdown-menu>
-      </el-dropdown> -->
     </div>
-    <el-dialog title="修改密码" :visible.sync="dialogVisible" :append-to-body="true" :close-on-click-modal="false"
-      width="500px" @close="closeD('form')" @open="openD">
-      <div class="form-body">
-        <el-form ref="form" :model="form" :rules="rules" label-position="top">
-          <el-form-item label="请输入邮箱" prop="email">
-            <el-input v-model="form.email"></el-input>
-          </el-form-item>
-          <el-form-item label="请输入新密码" prop="password">
-            <div style="display: flex; gap: 20px; align-items: center">
-              <el-input type="password" v-model="form.password" show-password></el-input>
-              <el-button @click.prevent="getToken('form')" :disabled="showToken"
-                v-loading="changeLoading">获取验证</el-button>
-            </div>
-          </el-form-item>
-          <transition name="run">
-            <el-form-item label="请输入邮箱验证码" v-show="showToken">
-              <div style="display: flex; gap: 20px; align-items: center">
-                <el-input v-model="form.token"></el-input>
-                <el-button @click="confirm" type="success">确认更换</el-button>
-              </div>
-            </el-form-item>
-          </transition>
-        </el-form>
-      </div>
-    </el-dialog>
-    <el-drawer title="个人信息" :visible.sync="infoDrawerVisible" direction="rtl" @close="infoDrawerVisible = false">
-      <div class="info-body">
-        <header>
-          <div class="image__container">
-            <el-image :src="avatar" style="width:100%;height:100%">
-              <div slot="error">
-                <img style="width:99px;height:98px;border:1px dashed #4090EF" src="@/assets/logo.png">
-              </div>
-            </el-image>
-            <div class="mask__content">
-              <p @click="uploadAvatar">更新头像</p>
-            </div>
-          </div>
-          <div class="info-columns">
-            <h4>{{ chinaname }}</h4>
-            <p @click="routerToGw">前往ASG官网</p>
-          </div>
-        </header>
-        <input id="avatar" type="file" style="display: none;" @input="beforeInputAvatar" />
-        <el-collapse>
-          <el-collapse-item title="中文名称-编辑" name="1">
-            <div class="fix_name_body" v-show="isEdit">
-              <el-input v-model="newChiname" ref="nameipt" size="small" placeholder="请输入中文名" clearable></el-input>
-              <i class="el-icon-folder-checked saveIcon" @click="changeName"></i>
-              <i class="el-icon-close closeIcon" @click="isEdit = false"></i>
-            </div>
-            <div class="fix_name_body" v-show="!isEdit">
-              <el-input v-model="chinaname" disabled size="small"></el-input>
-              <i v-show="!isEdit" class="el-icon-edit" @click="handleChangeName"></i>
-            </div>
-          </el-collapse-item>
-          <el-collapse-item title="qq号-编辑" name="2">
-            <div class="fix_name_body">
-              <el-input v-model="userInfo.qqnumber" size="small" placeholder="请输入QQ号" clearable></el-input>
-              <i class="el-icon-folder-checked saveIcon" @click="changeQQ"></i>
-            </div>
-          </el-collapse-item>
-        </el-collapse>
-      </div>
-    </el-drawer>
   </div>
 </template>
 
@@ -117,17 +48,12 @@
 import { confirmUpdate } from "@/api/login/index.js";
 import { findTasks, getTask } from "@/api/admin/index.js";
 import { getToken } from "@/utils/auth";
-import { updateChinaName } from "@/api/home/index.js";
-import { uploadImg } from "@/api/home/index.js";
-import { mapGetters } from "vuex";
-import { updateQQ } from '@/api/login';
 import { getByTitle } from "@/api/config";
 export default {
   name: "CommonHeader",
   data() {
     return {
       userType: '管理',
-      dialogVisible: false,
       form: {
         email: "",
         password: "",
@@ -145,88 +71,18 @@ export default {
       },
       waitDoNumber: 0,
       waitAuthNumber: 0,
-      infoDrawerVisible: false,
       newChiname: '',
       isEdit: false,
-      version:''
+      version: ''
     };
   },
-  computed: {
-    ...mapGetters(['userInfo']),
-    avatar() {
-      return this.userInfo.base64 || sessionStorage.getItem('baseImg');
-    },
-    chinaname() {
-      return this.userInfo.chinaname || sessionStorage.getItem('chinaname');
-    }
-  },
   created() {
-    getByTitle('versionConfig').then(res=>{
+    getByTitle('versionConfig').then(res => {
       this.version = res.data.find(item => item.system === 'admin')?.version ?? '无版本号';
     })
     this.initBaseNumber();
   },
   methods: {
-    uploadAvatar() {
-      const ipt = document.getElementById('avatar');
-      ipt.click();
-    },
-    beforeInputAvatar(e) {
-      try {
-        const fileTypes = ["JPEG", "JPEG", "PNG"];//文件后缀只能是这五类
-        const maxSize = 1024;
-        const file = e.target.files[0];
-        const fileType = file.type.split('/').at(-1).toUpperCase();
-        const fileSize = file.size / 1024;
-        if (!fileTypes.includes(fileType)) throw new Error('头像只允许是JPG、JPEG、或者是PNG类型');
-        if (fileSize > maxSize) throw new Error('图片不能超过1MB');
-        const reader = new FileReader();
-        reader.readAsDataURL(file);
-        const vue = this;
-        reader.onload = async function (event) {
-          const fileBase = event.target.result;
-          const { status } = await uploadImg(fileBase);
-          if (status !== 200) throw new Error('服务端异常，请联系网站管理员');
-          vue.$message.success('上传成功');
-          vue.$store.commit('SET_LOGO', fileBase);
-        }
-      } catch (error) {
-        this.$message.error(error.message);
-      }
-    },
-    async changeQQ(){
-         try {
-          const qq = this.userInfo.qqnumber;
-          const {  status } = await updateQQ(qq);
-          if(status !== 200) throw new Error('操作失败，后端异常');
-          this.$message.success('修改成功');
-         } catch (error) {
-          this.$message.error(error.message);
-         }
-    },
-    handleChangeName() {
-      this.newChiname = this.chinaname;
-      this.isEdit = true;
-      console.log(this.$refs.nameipt, 'this.$refs.nameipt');
-      this.$nextTick(() => {
-        this.$refs.nameipt.focus();
-      })
-
-    },
-    async changeName() {
-      if (!this.newChiname) {
-        return this.$message.error('请输入中文名');
-      }
-      try {
-        await updateChinaName(this.newChiname);
-        this.$store.commit('UPDATE_NAME', this.newChiname);
-        this.$message.success('修改成功！');
-      } catch (error) {
-        this.$message.error('服务端异常，请联系网站管理');
-      } finally {
-        this.isEdit = false;
-      }
-    },
     routerToGw() {
       window.location.href = `https://idvasg.cn/#/?${encodeURIComponent(getToken())}`;
     },
@@ -274,7 +130,7 @@ export default {
       } else if (command === '3') {
         this.logout();
       } else if (command === '4') {
-        this.infoDrawerVisible = true;
+        this.$router.push({ path: '/userInfo' })
       }
     },
     goManager() {
@@ -305,9 +161,6 @@ export default {
     },
     handleMenu() {
       this.$store.commit("collapseMenu");
-    },
-    handleUpdate() {
-      this.dialogVisible = true;
     },
     // getToken(formName) {
     //   this.$refs[formName].validate((valid) => {
@@ -344,15 +197,6 @@ export default {
       }
 
     },
-    closeD(formName) {
-      this.dialogVisible = false
-      this.showToken = false
-      this.form.token = ''
-      this.$refs[formName].resetFields();
-    },
-    openD() {
-      this.form.email = sessionStorage.getItem("email") || ''
-    }
   },
 };
 </script>
@@ -567,30 +411,6 @@ span {
     }
   }
 
-  .image__container {
-    width: 100px;
-    height: 100px;
-    position: relative;
 
-    .mask__content {
-      position: absolute;
-      inset: 0;
-      align-items: center;
-      justify-content: center;
-      display: none;
-      background: rgba(0, 0, 0, 0.63);
-      cursor: pointer;
-
-      p {
-        color: #4090EF;
-      }
-    }
-
-    &:hover {
-      .mask__content {
-        display: flex;
-      }
-    }
-  }
 }
 </style>

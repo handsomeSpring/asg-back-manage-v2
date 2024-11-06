@@ -11,6 +11,7 @@ import Err from "@/view/Err.vue";
 import customWorker from "@/view/customWorker/index.vue";
 import { getPermission } from '@/utils/permission.js';
 import Layout from '@/view/homepage/index.vue';
+import userInfo from '@/view/userInfo/index.vue';
 const originalPush = VueRouter.prototype.push;
 VueRouter.prototype.push = function push(location) {
   return originalPush.call(this, location).catch(err => err)
@@ -50,7 +51,14 @@ const router = new VueRouter({
     {
       path: "/",
       component: Layout,
-      name: 'home'
+      name: 'home',
+      children:[
+        {
+          path: "/userInfo",
+          component: userInfo,
+          name: '个人中心',
+        }
+      ]
     }
     //   children: [
     //     ...asyncRouteList,
