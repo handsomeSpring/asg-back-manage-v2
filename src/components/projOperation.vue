@@ -2,29 +2,63 @@
   <div ref="container" class="online_container">
     <div class="online_icon" @click="showPhone">
       <el-badge :value="noCompleteNumber" class="item">
-        <svg-icon iconClass="project-collection" width="22px" height="22px" color="#e7e7e7"></svg-icon>
+        <svg-icon
+          iconClass="project-collection"
+          width="22px"
+          height="22px"
+          color="#e7e7e7"
+        ></svg-icon>
       </el-badge>
       任务卡
     </div>
     <div class="online_windows">
       <h3 class="h3__flex">
         <p><i class="el-icon-s-claim"></i>我的任务清单</p>
-        <el-button icon="el-icon-refresh-right" size="small" type="primary" @click="initAssign">刷新</el-button>
+        <el-button
+          icon="el-icon-refresh-right"
+          size="small"
+          type="primary"
+          @click="initAssign"
+          >刷新</el-button
+        >
       </h3>
       <el-scrollbar class="list">
         <ul v-if="list.length > 0">
           <li class="box__li" v-for="(item, index) in list" :key="index">
             <header>
-              <p class="task__title">{{ item.taskName }}</p>
-              <el-button v-if="['0', '3'].includes(item.status)" icon="el-icon-circle-check" size="small" type="primary"
-                @click="taskComplete(item.id)">完成</el-button>
-              <el-button v-else icon="el-icon-view" size="small" type="primary" @click="viewTask(item)">查看</el-button>
+              <p class="task__title">
+                {{ item.taskName }}
+                <span :class="`level-${item.priority}`">{{
+                  item.priority | filterPriority
+                }}</span>
+              </p>
+              <el-button
+                v-if="['0', '3'].includes(item.status)"
+                icon="el-icon-circle-check"
+                size="small"
+                type="primary"
+                @click="taskComplete(item.id)"
+                >完成</el-button
+              >
+              <el-button
+                v-else
+                icon="el-icon-view"
+                size="small"
+                type="primary"
+                @click="viewTask(item)"
+                >查看</el-button
+              >
             </header>
             <main>
               <p>{{ item.taskDescription }}</p>
               <div class="footer__container">
-                <p class="money__icon">{{ item.money }}<span class="chies__icon">积分</span></p>
-                <p class="status__icon" :style="{ color: textColor(item.status) }">
+                <p class="money__icon">
+                  {{ item.money }}<span class="chies__icon">积分</span>
+                </p>
+                <p
+                  class="status__icon"
+                  :style="{ color: textColor(item.status) }"
+                >
                   {{ item.status | filterComplete }}
                 </p>
               </div>
@@ -35,11 +69,18 @@
       </el-scrollbar>
       <h3><i class="el-icon-shopping-cart-1"></i>购物信息</h3>
       <p>
-        我的积分：<span style="color: rgb(255, 133, 46); font-weight: bold">{{ money || 0 }}</span>
+        我的积分：<span style="color: rgb(255, 133, 46); font-weight: bold">{{
+          money || 0
+        }}</span>
       </p>
       <footer @click="toShopping">
         前往购物中心
-        <svg-icon iconClass="router" width="16px" height="16px" color="#000"></svg-icon>
+        <svg-icon
+          iconClass="router"
+          width="16px"
+          height="16px"
+          color="#000"
+        ></svg-icon>
       </footer>
     </div>
     <taskHistory ref="taskHistory" :row="row"></taskHistory>
@@ -53,7 +94,7 @@ import { mapGetters } from "vuex";
 export default {
   name: "projOperation",
   components: {
-    taskHistory
+    taskHistory,
   },
   data() {
     return {
@@ -63,30 +104,40 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(['userInfo']),
+    ...mapGetters(["userInfo"]),
     money() {
-      return this.userInfo.money || sessionStorage.getItem("money") || 0
+      return this.userInfo.money || sessionStorage.getItem("money") || 0;
     },
     noCompleteNumber() {
       let number = 0;
-      this.list.forEach(item => {
-        if (item.status === '0') {
+      this.list.forEach((item) => {
+        if (item.status === "0") {
           number++;
         }
-      })
+      });
       return number;
-    }
+    },
   },
   filters: {
     filterComplete(val) {
       const map = {
-        '0': '进行中',
-        '1': '待审核',
-        '2': '审核通过',
-        '3': '审核不通过'
-      }
+        0: "进行中",
+        1: "待审核",
+        2: "审核通过",
+        3: "审核不通过",
+      };
       return map[val];
-    }
+    },
+    filterPriority(val) {
+      const mapList = {
+        0: "不急",
+        1: "轻微",
+        2: "一般",
+        3: "紧需",
+        4: "致命",
+      };
+      return mapList[val];
+    },
   },
   created() {
     this.initAssign();
@@ -95,24 +146,24 @@ export default {
     $route: {
       handler() {
         if (this.$refs.container) {
-          this.$refs.container.style.right = '-440px';
+          this.$refs.container.style.right = "-440px";
           this.toggle = true;
         }
-      }
-    }
+      },
+    },
   },
   methods: {
     textColor(val) {
-      if (val === '0') {
-        return '#979797';
-      } else if (val === '1') {
-        return '#ebb563'
-      } else if (val === '2') {
-        return '#67C23A'
-      } else if (val === '3') {
-        return '#f40';
+      if (val === "0") {
+        return "#979797";
+      } else if (val === "1") {
+        return "#ebb563";
+      } else if (val === "2") {
+        return "#67C23A";
+      } else if (val === "3") {
+        return "#f40";
       } else {
-        return '#303030'
+        return "#303030";
       }
     },
     showPhone() {
@@ -120,8 +171,8 @@ export default {
       this.toggle = !this.toggle;
     },
     initAssign() {
-      const id = Number(window.sessionStorage.getItem('id'))
-      if (Number.isNaN(id)) throw new Error('id不合法');
+      const id = Number(window.sessionStorage.getItem("id"));
+      if (Number.isNaN(id)) throw new Error("id不合法");
       getTask(id)
         .then((res) => {
           this.list = res.data;
@@ -135,7 +186,7 @@ export default {
         const { status, message } = await taskFinish(id);
         if (status !== 200) throw new Error(message);
         this.initAssign();
-        this.$message.success('操作成功');
+        this.$message.success("操作成功");
       } catch (error) {
         this.$message.error(error.message);
       }
@@ -144,11 +195,10 @@ export default {
       this.row = item;
       this.$refs.taskHistory.openDialog();
     },
-    toShopping(){
-      this.$router.push({path:'/shopping'})
-    }
+    toShopping() {
+      this.$router.push({ path: "/shopping" });
+    },
   },
-
 };
 </script>
 
@@ -186,7 +236,7 @@ export default {
 .online_windows {
   position: relative;
   width: 420px;
-  height:500px;
+  height: 500px;
   transform: translateY(-20vh);
   background: #f2f2f2;
   border: 1px solid #e7e7e7;
@@ -203,8 +253,8 @@ export default {
   footer {
     cursor: pointer;
     margin-top: 12px;
-    &:hover{
-      color:#4090EF;
+    &:hover {
+      color: #4090ef;
     }
   }
 }
@@ -227,7 +277,6 @@ h3 {
     margin: 12px 0;
     border-radius: 7px;
     box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
-
     &:hover {
       background: #e9f1fb;
     }
@@ -286,7 +335,7 @@ h3 {
           }
 
           &.waitAuth {
-            color: rgb(255, 132, 0)
+            color: rgb(255, 132, 0);
           }
         }
       }
@@ -304,5 +353,25 @@ h3 {
 
 /deep/.el-badge__content.is-fixed {
   z-index: 999;
+}
+.level-0 {
+  color: #cddc39;
+  font-size: 12px;
+}
+.level-1 {
+  color: #8bc34a;
+  font-size: 12px;
+}
+.level-2 {
+  color: #fdd835;
+  font-size: 12px;
+}
+.level-3 {
+  color: #ff8f00;
+  font-size: 12px;
+}
+.level-4 {
+  color: #c62828;
+  font-size: 12px;
 }
 </style>

@@ -18,6 +18,10 @@
                     </el-input-number>
                 </li>
                 <li>
+                    <p class="item__title--pointer">任务优先级</p>
+                    <AsgPriorityComp :priority.sync="taskObj.priority"></AsgPriorityComp>
+                </li>
+                <li>
                     <el-button size="small" icon="el-icon-document-checked" type="primary"
                         @click="addTask">新建任务</el-button>
                 </li>
@@ -38,11 +42,15 @@
 </template>
 
 <script>
+import AsgPriorityComp from '@/components/AsgPriorityComp.vue';
 import { setTask } from '@/api/admin/index.js';
 import { getByTitle } from '@/api/config';
 import { mapGetters } from 'vuex';
 export default {
     name: 'SettingTask',
+    components:{
+        AsgPriorityComp
+    },
     props: {
         user: {
             type: Object,
@@ -54,7 +62,8 @@ export default {
             taskObj: {
                 taskName: '',
                 taskDescription: '',
-                money: 0
+                money: 0,
+                priority:'0'
             },
             jsPlumb: null,
             moneyRules: []
@@ -89,7 +98,7 @@ export default {
             if (myId.toString() === this.user.id.toString()) {
                 return this.$message.error('您不能给自己建任务');
             }
-            if (!this.taskObj.taskName || !this.taskObj.taskDescription) {
+            if (!this.taskObj.taskName || !this.taskObj.taskDescription || !this.taskObj.priority) {
                 return this.$message.error('请完整填写任务表单');
             }
             const postRequest = {
@@ -111,7 +120,8 @@ export default {
             this.taskObj = {
                 taskName: '',
                 taskDescription: '',
-                money: 0
+                money: 0,
+                priority:'0'
             }
         },
         initJSPlumb() {
