@@ -1,8 +1,10 @@
 <template>
   <div>
     <header class="clearfix">
-      <el-image style="margin-left: 40px; display: block; width: 50px; height: 50px"
-        :src="require('@/assets/logo.png')"></el-image>
+      <el-image
+        style="margin-left: 40px; display: block; width: 50px; height: 50px"
+        :src="require('@/assets/logo.png')"
+      ></el-image>
       <span class="title">ASG赛事后台管理系统</span>
     </header>
     <main>
@@ -13,19 +15,34 @@
           <p>系统登录</p>
         </div>
         <div class="info">
-          <el-form ref="ruleForm" :model="userform" :rules="rules" class="demo-ruleForm">
+          <el-form
+            ref="ruleForm"
+            :model="userform"
+            :rules="rules"
+            class="demo-ruleForm"
+          >
             <el-form-item label="用户名" prop="username">
-              <el-input suffix-icon="el-icon-user-solid" v-model="userform.username" placeholder="请输入用户名"></el-input>
+              <el-input
+                suffix-icon="el-icon-user-solid"
+                v-model="userform.username"
+                placeholder="请输入用户名"
+              ></el-input>
             </el-form-item>
             <el-form-item label="密码" prop="password">
-              <el-input v-model="userform.password" :type="inputtype" placeholder="请输入密码"
-                @keyup.enter.native="submit('ruleForm')">
+              <el-input
+                v-model="userform.password"
+                :type="inputtype"
+                placeholder="请输入密码"
+                @keyup.enter.native="submit('ruleForm')"
+              >
                 <i @click="toggleEye" slot="suffix" :class="eye_status"></i>
               </el-input>
             </el-form-item>
             <el-form-item>
-              <el-button type="primary" :loading="loading" style="width: 100%;margin-top: 12px"
-                @click="submit('ruleForm')">登录</el-button>
+              <div class="login__btn--primary" :class="loading ? 'disabled' : ''" @click="submit('ruleForm')">
+                <p class="login__btn--text">登录</p>
+                <div v-show="loading" class="loader"></div>
+              </div>
             </el-form-item>
           </el-form>
         </div>
@@ -41,20 +58,16 @@ import { getInfo } from "@/api/home";
 import CommonFooter from "@/components/CommonFooter.vue";
 import { getByTitle } from "@/api/config";
 import { menuOptions } from "@/assets/json/menu";
-import { getPermission } from '@/utils/permission.js'
+import { getPermission } from "@/utils/permission.js";
 export default {
   name: "LoginComp",
   components: {
-    CommonFooter
+    CommonFooter,
   },
   data() {
     return {
       userform: {
         username: "",
-        password: "",
-      },
-      typeTwoForm: {
-        email: "",
         password: "",
       },
       loading: false,
@@ -67,17 +80,7 @@ export default {
         password: [
           { required: true, message: "密码不能为空", trigger: "blur" },
         ],
-      },
-      rules2: {
-        email: [
-          { required: true, message: "邮箱地址不能为空", trigger: "blur" },
-        ],
-        password: [
-          { required: true, message: "密码不能为空", trigger: "blur" },
-        ],
-      },
-      activeTab: '1',
-      enrollForm: {}
+      }
     };
   },
   methods: {
@@ -124,6 +127,7 @@ export default {
       }
     },
     submit(formName) {
+      if(this.loading) return;
       this.$refs[formName].validate((valid) => {
         if (valid) {
           this.login();
@@ -132,41 +136,11 @@ export default {
         }
       });
     },
-    submitByEmail(formName) {
-      this.$refs[formName].validate((valid) => {
-        if (valid) {
-          const data = {
-            userEmail: this.typeTwoForm.email,
-            password: this.typeTwoForm.password,
-          };
-          this.loading = true;
-          loginByEmail(data)
-            .then((res) => {
-              this.$store.commit("setToken", res.data);
-              this.initGetInfo();
-              setTimeout(() => {
-                this.$router.push("/guide");
-                this.$message.success("登录成功！");
-                this.loading = false;
-              }, 1000);
-            })
-            .catch((err) => {
-              console.log("err", err);
-              this.$message.error(err.response.data.message);
-            })
-            .finally(() => {
-              this.loading = false;
-            });
-        } else {
-          this.$message.warning("请完整输入邮箱地址和密码！");
-        }
-      });
-    },
     async initRoles() {
-      const { data } = await getByTitle('roleList');
+      const { data } = await getByTitle("roleList");
       this.$store.commit("initRoleList", data);
-      localStorage.setItem('roleList', JSON.stringify(data));
-    }
+      localStorage.setItem("roleList", JSON.stringify(data));
+    },
   },
 };
 </script>
@@ -299,7 +273,64 @@ footer {
   p {
     font-size: 1.2rem;
     font-weight: bold;
-    color:#4090EF;
+    color: #4090ef;
+  }
+}
+.login__btn--primary {
+  background: #66b1ff;
+  border-color: #66b1ff;
+  color: #fff;
+  white-space: nowrap;
+  cursor: pointer;
+  box-sizing: border-box;
+  outline: 0;
+  transition: 0.1s;
+  border-radius: 4px;
+  margin-top: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height:40px;
+  .login__btn--text {
+    font-size: 14px;
+    font-weight: 500;
+    margin-right:12px;
+  }
+  &.disabled{
+    background: #7eb8f7;
+    border-color: #7bb3f0;
+    cursor:not-allowed;
+  }
+  &:hover {
+    background: #7eb8f7;
+    border-color: #7bb3f0;
+  }
+  /* HTML: <div class="loader"></div> */
+  .loader {
+    width: 18px;
+    --b: 4px;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    padding: 1px;
+    background: conic-gradient(#0000 10%, #d36e3b) content-box;
+    -webkit-mask: repeating-conic-gradient(
+        #0000 0deg,
+        #000 1deg 20deg,
+        #0000 21deg 36deg
+      ),
+      radial-gradient(
+        farthest-side,
+        #0000 calc(100% - var(--b) - 1px),
+        #000 calc(100% - var(--b))
+      );
+    -webkit-mask-composite: destination-in;
+    mask-composite: intersect;
+    animation: l4 1s infinite steps(10);
+  }
+  @keyframes l4 {
+    to {
+      transform: rotate(1turn);
+    }
   }
 }
 </style>
