@@ -22,7 +22,7 @@
               v-model="listQuery.msg"
               size="small"
               clearable
-              placeholder="输入输入说明进行检索"
+              placeholder="请输入说明进行检索"
             ></el-input>
             <div class="button--right">
               <el-button size="small" type="primary" @click="getList"
@@ -70,7 +70,7 @@
             <el-button
               size="small"
               type="text"
-              style="color: red"
+              style="color: #f40"
               @click="deleteItem(row.id)"
               >删除</el-button
             >
@@ -237,8 +237,8 @@ export default {
         this.loading = true;
         const { data, status } = await getConfig(this.listQuery);
         if(status !== 200) throw new Error('服务端异常，请联系网站管理员！');
-        this.tableData = data?.result?.rows ?? [];
-        this.total = data?.result?.total ?? 0;
+        this.tableData = data?.data?.rows ?? [];
+        this.total = data?.data?.total ?? 0;
       } catch (error) {
         this.$message.error(error.message);
       } finally {
