@@ -85,3 +85,12 @@ export function setFinalScore(gameid,finalScore){
     }
   })
 }
+
+// 获取赛程新（NEW V2）page limit teamName1 teamName2 belong
+export function getAllScheduleV2(params){
+  return request({
+    url:"/api/v2/game",
+    method:"GET",
+    params
+  })
+}
