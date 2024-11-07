@@ -25,7 +25,7 @@
               placeholder="请输入说明进行检索"
             ></el-input>
             <div class="button--right">
-              <el-button size="small" type="primary" @click="getList"
+              <el-button size="small" type="primary" @click="resetPageSearch"
                 >查询</el-button
               >
               <el-button plain size="small" @click="handleResetSearch"
@@ -212,6 +212,14 @@ export default {
     tableColor() {
       return { background: "#f2f6fd" };
     },
+    resetPageSearch(){
+      this.listQuery = {
+        ...this.listQuery,
+        page:1,
+        limit:10
+      };
+      this.getList();
+    },
     handleResetSearch() {
       this.listQuery = {
         page: 1,
@@ -227,9 +235,7 @@ export default {
         this.system = {};
       } else {
         this.title = "更改";
-        this.system = {
-          ...row,
-        };
+        this.system = row;
       }
     },
     async getList() {

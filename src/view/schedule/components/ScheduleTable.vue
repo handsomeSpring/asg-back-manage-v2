@@ -55,7 +55,7 @@
           ></el-input>
 
           <div class="button--right">
-            <el-button size="small" type="primary" @click="initSchedule"
+            <el-button size="small" type="primary" @click="handlePageOneSearch"
               >查询</el-button
             >
             <el-button plain size="small" @click="handleResetSearch"
@@ -585,6 +585,14 @@ export default {
     },
     openDialog() {
       this.$emit("operation");
+    },
+    handlePageOneSearch(){
+      this.listQuery = {
+        ...this.listQuery,
+        page: 1,
+        limit: 10,
+      };
+      this.initSchedule();
     },
     handleResetSearch() {
       this.belong = "";
