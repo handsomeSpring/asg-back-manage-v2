@@ -127,9 +127,9 @@ export default {
         }
         this.loading = true;
         if(this.adminList.length === 0){
-          const roleRes = await rolealluser('admin');
+          const roleRes = await rolealluser('admin',{onlyId:'1'});
           if(roleRes.status !== 200) throw new Error('获取管理权限失败！');
-          const adminIds = roleRes.data.map(item => item.id);
+          const adminIds = (roleRes?.data?.data ?? []).map(item => item.id);
           this.$store.commit('SET_ADMIN',adminIds);
         }
         const postParams = {

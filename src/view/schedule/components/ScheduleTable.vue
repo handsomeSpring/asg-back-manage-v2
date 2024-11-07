@@ -38,8 +38,8 @@
           ></i>
         </div>
       </div>
-
-      <div v-show="foldIcon" class="operation_list">
+      <transition name="mybox">
+        <div v-show="foldIcon" class="operation_list">
         <div class="grid__container">
           <el-input
             v-model="listQuery.teamName1"
@@ -90,7 +90,8 @@
             @change="handleFileChange"
           />
         </div>
-      </div>
+        </div>
+      </transition>
     </div>
     <!-- 数据主体 -->
     <el-scrollbar
@@ -999,5 +1000,8 @@ export default {
   font-weight: 500;
   margin-left: 12px;
   color: rgb(237, 81, 14);
+}
+/deep/.el-form-item__content .el-input-group{
+  vertical-align: middle;
 }
 </style>

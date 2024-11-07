@@ -151,7 +151,7 @@ export default {
 
     .has__permission,
     .role__list {
-        height: 500px;
+        height: 400px;
         overflow-y: scroll;
 
         header {
@@ -161,6 +161,9 @@ export default {
             padding: 8px 6px;
             background: linear-gradient(90deg, #77A2F3 0%, #1891FD 47%, #145BCF 100%);
             color: #fff;
+            position: sticky;
+            z-index:999;
+            top:0;
         }
 
         li {

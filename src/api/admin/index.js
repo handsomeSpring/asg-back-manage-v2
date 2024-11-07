@@ -201,12 +201,13 @@ export function approvalCommentary(data){
   })
 }
 //获取管理员列表
-export function rolealluser(rolename){
+export function rolealluser(rolename,others = {}){
   return request({
     url:"/api/v1/admin/rolealluser",
     method:"GET",
     params:{
-      rolename
+      rolename,
+      ...others
     }
   })
 }

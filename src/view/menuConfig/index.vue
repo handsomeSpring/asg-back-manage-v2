@@ -20,8 +20,8 @@
                     </div>
 
                 </div>
-                <div v-if="item.children && item.children.length > 0" class="children-list"
-                    :class="item.isFold ? 'fold' : 'unFold'">
+                <transition name="mybox">
+                  <div v-show="item.isFold" v-if="item.children && item.children.length > 0" class="children-list">
                     <li class="child-node" :class="activeId === child.id ? 'active' : ''" v-for="child in item.children"
                         :key="child.id">
                         <p>{{ child.title }}</p>
@@ -30,7 +30,8 @@
                             <i class="el-icon-edit" @click="setConfig(child, false)"></i>
                         </div>
                     </li>
-                </div>
+                  </div>
+                </transition>
             </div>
         </el-card>
         <div>
@@ -44,7 +45,6 @@
                 </template>
                 <p>1、请勿随便修改菜单的前端配置。</p>
                 <p>2、菜单图标需要导入到前端项目，在阿里图标库查询，并发给任何一个前端导入到项目中即可选择，请勿选择有颜色的ICON。</p>
-                <p>3、工作台和可视化大屏是固定菜单，不可编辑。</p>
             </el-alert>
             <el-card shadow="hover" style="position: relative;">
                 <div v-show="initFlag">
@@ -433,16 +433,7 @@ export default {
                 background: rgba(26, 107, 241, 0.08);
                 color: #1B8CFD;
             }
-
         }
-
-        &.unFold {
-            height: 0;
-        }
-
-        // &.fold {
-
-        // }
     }
 }
 
@@ -467,7 +458,7 @@ export default {
     padding: 12px;
 
     p {
-        font-size: 16px !important;
+        font-size: 12px !important;
     }
 }
 
@@ -475,6 +466,6 @@ export default {
     display: flex;
     align-items: center;
     gap: 12px;
-    font-size: 22px !important;
+    font-size: 14px !important;
 }
 </style>

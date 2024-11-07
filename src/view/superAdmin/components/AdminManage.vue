@@ -71,7 +71,7 @@ export default {
                 }
                 const { data, status } = await rolealluser('admin');
                 if (status !== 200) throw new Error('获取列表失败！');
-                this.tableData = data;
+                this.tableData = data?.data ?? [];
                 refresh && this.$message.success('操作成功！');
             } catch (error) {
                 this.$message.error(error instanceof Error ? error.message : '未知错误');
