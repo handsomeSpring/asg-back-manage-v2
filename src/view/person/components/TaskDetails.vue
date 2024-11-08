@@ -40,7 +40,7 @@
       </template>
       <template v-else>
         <tr align="center">
-          <td width="20%" class="no__task" colspan="4">暂无任务</td>
+          <td width="20%" class="no__task" colspan="5">暂无任务</td>
         </tr>
       </template>
     </tbody>
@@ -138,11 +138,11 @@ table {
   border: 1px solid @borderColor;
   background:#fff;
   thead {
-    background: @bgColor;
-    height: 50px;
-
-    th {
-      border: 1px solid @borderColor;
+    background: linear-gradient( 270deg, #4171F7 0%, #5095FA 100%);
+    th{
+      padding:8px 0;
+      font-size: 14px;
+      color:#fff;
     }
   }
 
@@ -154,6 +154,7 @@ table {
         padding: 6px;
         border: 1px solid @borderColor;
         cursor: pointer;
+        font-size: 15px;
         .ellipse {
           width: inherit;
           text-overflow: ellipsis;

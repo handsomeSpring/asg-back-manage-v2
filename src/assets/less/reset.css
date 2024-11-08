@@ -6,7 +6,6 @@
 /* 一下是公共颜色 */
 .el-menu .el-menu-item.is-active {
   background-color: #245aa1 !important;
-
   svg {
     fill: #f7e157;
   }
