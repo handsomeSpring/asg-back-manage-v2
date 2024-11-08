@@ -186,7 +186,7 @@ export default {
 
         .custom__card--auto {
             min-height: 50vh;
-            background: #fffbfb;
+            background: #fff;
 
             li {
                 background: #fff;
