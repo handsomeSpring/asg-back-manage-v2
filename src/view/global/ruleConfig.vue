@@ -2,13 +2,8 @@
   <div class="rule__config--grid">
     <div class="left_tabs">
       <li class="header__tabs items">流程规则</li>
-      <li
-        class="items item-children"
-        :class="bizType === item.bizType ? 'active' : ''"
-        v-for="item in tabs"
-        :key="item.bizType"
-        @click="handleChooseBizType(item)"
-      >
+      <li class="items item-children" :class="bizType === item.bizType ? 'active' : ''" v-for="item in tabs"
+        :key="item.bizType" @click="handleChooseBizType(item)">
         {{ item.label }}
       </li>
     </div>
@@ -17,46 +12,48 @@
         <div class="biz__header">
           <p>{{ bizName }}</p>
           <div class="operation--ops">
-            <el-button type="primary" size="small" @click="addNewNode"
-              >新增节点</el-button
-            >
+            <el-button v-if="bizType" type="primary" size="small" @click="addNewNode">新增节点</el-button>
+            <el-button type="primary" size="small" :loading="loading" @click="handleSave">保存规则</el-button>
           </div>
         </div>
       </template>
-      <div class="main-body" v-if="bizType">
-        <div class="start__btn">开始</div>
-        <div
-          class="process__item"
-          v-for="(item, index) in processInfo"
-          @click="openDialog(item)"
-          :key="index"
-        >
+      <div class="main-body" id="efContainer" v-show="bizType">
+        <div class="start__btn" id="start">
+          <p>开始</p>
+          <div class="line"></div>
+        </div>
+        <div class="process__item" v-for="(item, index) in processInfo" @click="openDialog(item, index)" :key="index">
           <div class="title">
-            <i style="margin-right:3px" class="el-icon-s-custom"></i>
-            {{ item.chinaname || "未配置" }}
+            <p> <i style="margin-right:3px" class="el-icon-s-custom"></i>
+              {{ item.chinaname || "未配置" }}
+            </p>
+            <i class="el-icon-close icon" @click.stop="closeNode(index)"></i>
           </div>
           <div class="operation__box">
             <p>{{ item.isAllowReturn === "1" ? "允许退回" : "不允许退回" }}</p>
           </div>
+          <div class="line"></div>
+          <div class="return--pointer" v-if="item.isAllowReturn === '1'"></div>
         </div>
-        <div class="end__btn">
+        <div class="end__btn" id="end">
           <div class="circle__list"></div>
           <p>流程结束</p>
         </div>
       </div>
-      <el-empty description="未选择业务" v-else></el-empty>
+      <el-empty description="未选择业务" v-show="!bizType"></el-empty>
     </el-card>
-    <roleChooseDialog :dialogVisible="dialogVisible" :personInfo="personInfo"></roleChooseDialog>
+    <roleChooseDialog :dialogVisible.sync="dialogVisible" :personInfo="personInfo" @finish="handleChoose">
+    </roleChooseDialog>
   </div>
 </template>
 
 <script>
-import { getByTitle } from "@/api/config";
+import { getByTitle, addConfig } from "@/api/config";
 import roleChooseDialog from './components/roleChooseDialog.vue';
 
 export default {
   name: "ruleConfig",
-  components:{
+  components: {
     roleChooseDialog
   },
   data() {
@@ -64,8 +61,10 @@ export default {
       tabs: [],
       bizType: "",
       processInfo: [],
-      dialogVisible:false,
-      personInfo:{}
+      dialogVisible: false,
+      personInfo: {},
+      tableIndex: null,
+      loading: false,
     };
   },
   computed: {
@@ -76,10 +75,43 @@ export default {
       );
     },
   },
+  watch: {
+    bizType: {
+      handler(newVal) {
+
+      }
+    }
+  },
   methods: {
-    openDialog(item){
+    async handleSave() {
+      try {
+        this.loading = true;
+        const bizObj = this.tabs.find(item => item.bizType === this.bizType);
+        bizObj.process = this.processInfo;
+        console.log(this.tabs, 'this.tabs');
+        const req = {
+          id: 327,
+          msg: "审批规则配置",
+          substance: JSON.stringify(this.tabs),
+          title: "ruleConfig",
+        }
+        const { status } = await addConfig(req);
+        if (status !== 200) throw new Error('服务端异常');
+        this.$message.success('保存成功！');
+      } catch (error) {
+        this.$message.error(error.message);
+      } finally {
+        this.loading = false;
+      }
+    },
+    handleChoose(obj) {
+      this.processInfo[this.tableIndex] = obj;
+      this.dialogVisible = false;
+    },
+    openDialog(item, index) {
       this.dialogVisible = true;
       this.personInfo = item;
+      this.tableIndex = index;
     },
     handleChooseBizType(item) {
       this.bizType = item.bizType;
@@ -87,18 +119,20 @@ export default {
     },
     addNewNode() {
       this.processInfo.push({
-        userId: "",
+        id: "",
         chinaname: "",
         isAllowReturn: "0",
       });
     },
+    closeNode(index){
+      this.processInfo.splice(index,1)
+    }
   },
   created() {
     getByTitle("ruleConfig").then((res) => {
       this.tabs = res.data;
-      console.log(this.tabs, "tabs");
     });
-  },
+  }
 };
 </script>
 
@@ -107,25 +141,30 @@ export default {
   display: grid;
   grid-template-columns: 246px auto;
   gap: 12px;
+
   .left_tabs {
     .items {
       display: flex;
       align-items: center;
       height: 50px;
       padding-left: 25px;
+
       &.item-children {
         color: #252527;
         cursor: pointer;
+
         &:hover {
           background: rgba(26, 107, 241, 0.08);
           color: #1a6bf1;
         }
+
         &.active {
           background: rgba(26, 107, 241, 0.08);
           color: #1a6bf1;
         }
       }
     }
+
     .header__tabs {
       background: linear-gradient(90deg, #77a2f3 0%, #1891fd 47%, #145bcf 100%);
       color: #fff;
@@ -133,43 +172,61 @@ export default {
       font-weight: 500;
     }
   }
+
   // card头部
   .biz__header {
     display: flex;
     align-items: center;
     justify-content: space-between;
   }
+
   .main-body {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
+
     .start__btn {
       padding: 4px 12px;
       width: 120px;
       background: #40a9ff;
       text-align: center;
       color: #fff;
-      overflow: hidden;
       border-radius: 4px;
       margin-bottom: 36px;
+      height: 20px;
+      position: relative;
+
+      .line {
+        position: absolute;
+        left: 50%;
+        bottom: -34px;
+        transform: translate(-50%);
+        width: 2px;
+        height: 32px;
+        background: #d7d7d7;
+      }
     }
+
     .end__btn {
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
+
       .circle__list {
         background: #cdcdcd;
         border-radius: 50%;
         height: 15px;
         width: 15px;
       }
+
       p {
         font-size: 12px;
         color: #cdcdcd;
       }
     }
+
     .process__item {
       display: flex;
       flex-direction: column;
@@ -182,9 +239,35 @@ export default {
       margin-bottom: 36px;
       box-sizing: border-box;
       border: 1px solid transparent;
+      position: relative;
+
       &:hover {
         border-color: #40a9ff;
       }
+
+      .line {
+        position: absolute;
+        position: absolute;
+        left: 50%;
+        bottom: -36px;
+        transform: translate(-50%);
+        width: 2px;
+        height: 32px;
+        background: #d7d7d7;
+      }
+
+      .return--pointer {
+        left: -100px;
+        height: 50px;
+        width: 50px;
+        top: 50%;
+        transform: translate(0, -50%);
+        background: #f40;
+        position: absolute;
+        -webkit-clip-path: polygon(40% 0%, 40% 20%, 100% 20%, 100% 80%, 40% 80%, 40% 100%, 0% 50%);
+        clip-path: polygon(40% 0%, 40% 20%, 100% 20%, 100% 80%, 40% 80%, 40% 100%, 0% 50%);
+      }
+
       .title {
         color: #fff;
         padding: 3px 12px;
@@ -192,12 +275,22 @@ export default {
         font-weight: 500;
         background: rgb(255, 148, 62);
         border-radius: 4px 4px 0 0;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
       }
+
       .operation__box {
         font-size: 14px;
         padding: 14px 12px;
       }
     }
+  }
+}
+.icon{
+  color:#fff;
+  &:hover{
+    color:#f40;
   }
 }
 </style>
