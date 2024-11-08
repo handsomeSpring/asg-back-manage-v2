@@ -78,8 +78,8 @@ export default {
   },
   methods: {
     openDialog() {
-      if(!this.belong || this.belong === 'all'){
-          this.$message.error("请选择一个赛季进行导出！")
+      if(!this.belong){
+          this.$message.error("只能选择一个赛季进行导出！")
       }else{
         this.exportVisible = true;
       }

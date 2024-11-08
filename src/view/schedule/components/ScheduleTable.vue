@@ -614,7 +614,8 @@ export default {
         };
         const { data, status } = await getAllScheduleV2(req);
         if (status !== 200) throw new Error("服务端异常，请联系网站管理员");
-        this.scheduleData = data.data.map((item) => {
+        console.log(data,'====data');
+        this.scheduleData = (data?.data?.rows ?? []).map((item) => {
           return {
             ...item,
             personTypeName:
@@ -622,7 +623,7 @@ export default {
                 ?.label ?? "未定义",
           };
         });
-        this.total = data.total;
+        this.total = data?.data?.total ?? 0;
       } catch (error) {
         this.$message.error(error.message);
       } finally {
