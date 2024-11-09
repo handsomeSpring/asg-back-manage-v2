@@ -4,7 +4,9 @@ const user = {
     state: {
         token: getToken(),
         userInfo: {},
-        menu:[]
+        menu:[],
+        waitDoNumber:null,
+        waitAuthNumber:null,
     },
     mutations: {
         setToken(state, token) {
@@ -40,6 +42,12 @@ const user = {
         },
         GENERATE_MENU(state, menu){
             state.menu = menu;
+        },
+        SET_WAITDO_NUMBER(state, number){
+            state.waitDoNumber = number;
+        },
+        SET_WAITAUTH_NUMBER(state, number){
+            state.waitAuthNumber = number;
         }
     },
     actions:{}

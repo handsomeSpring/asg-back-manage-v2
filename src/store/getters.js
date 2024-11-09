@@ -5,6 +5,8 @@ const getters = {
     roleList:state => state.app.roleList,
     menuOptions:state => state.user.menu,
     adminList:state => state.app.adminList,
-    roles:state => state.user.userInfo.roleListName
+    roles:state => state.user.userInfo.roleListName,
+    waitDoNumber:state => state.user.waitDoNumber,
+    waitAuthNumber:state => state.user.waitAuthNumber,
 };
 export default getters;

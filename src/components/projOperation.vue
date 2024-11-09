@@ -176,6 +176,8 @@ export default {
       getTask(id)
         .then((res) => {
           this.list = res.data;
+          const number = this.list.filter(item => item.status === '0').length ?? 0;
+          this.$store.commit("SET_WAITDO_NUMBER", number);
         })
         .catch((err) => {
           this.$message.error(err instanceof Error ? err.message : err);

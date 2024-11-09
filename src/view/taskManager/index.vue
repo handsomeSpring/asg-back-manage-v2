@@ -379,6 +379,8 @@ export default {
         if (status !== 200) throw new Error(message);
         if (data.code === 401) throw new Error(data.message);
         this.tableData = data.data.rows;
+        const number = this.tableData.filter(item => item.status === '1').length ?? 0;
+        this.$store.commit("SET_WAITAUTH_NUMBER", number);
         this.total = data.data.total;
       } catch (error) {
         this.$message.error(error.message);

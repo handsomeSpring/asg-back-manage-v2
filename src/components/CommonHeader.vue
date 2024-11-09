@@ -46,81 +46,27 @@
 
 <script>
 import { confirmUpdate } from "@/api/login/index.js";
-import { findTasks, getTask } from "@/api/admin/index.js";
 import { getToken } from "@/utils/auth";
 import { getByTitle } from "@/api/config";
+import { mapGetters } from "vuex";
 export default {
   name: "CommonHeader",
   data() {
     return {
-      userType: '管理',
-      form: {
-        email: "",
-        password: "",
-        token: "",
-      },
-      showToken: false,
-      changeLoading: false,
-      rules: {
-        email: [
-          { required: true, message: '请填写邮箱地址', trigger: 'blur' }
-        ],
-        password: [
-          { required: true, message: '请填写新密码', trigger: 'blur' }
-        ]
-      },
-      waitDoNumber: 0,
-      waitAuthNumber: 0,
-      newChiname: '',
-      isEdit: false,
       version: ''
     };
+  },
+  computed:{
+    ...mapGetters(['waitDoNumber', 'waitAuthNumber'])
   },
   created() {
     getByTitle('versionConfig').then(res => {
       this.version = res.data.find(item => item.system === 'admin')?.version ?? '无版本号';
     })
-    this.initBaseNumber();
   },
   methods: {
     routerToGw() {
       window.location.href = `https://idvasg.cn/#/?${encodeURIComponent(getToken())}`;
-    },
-    initBaseNumber() {
-      const waitDoNumber = sessionStorage.getItem('waitDoNumber');
-      const waitAuthNumber = sessionStorage.getItem('waitAuthNumber');
-      if (!waitDoNumber) {
-        const id = Number(window.sessionStorage.getItem('id'))
-        if (Number.isNaN(id)) throw new Error('id不合法');
-        getTask(id)
-          .then((res) => {
-            this.waitDoNumber = res.data.filter(item => item.status === '0').length;
-            sessionStorage.setItem('waitDoNumber', this.waitDoNumber)
-          })
-          .catch((err) => {
-            this.$message.error(err instanceof Error ? err.message : err);
-          });
-      } else {
-        this.waitDoNumber = waitDoNumber;
-      }
-      if (!waitAuthNumber) {
-        const requestBody = {
-          chinaname: '',
-          status: '1',
-          page: 1,
-          limit: 999
-        }
-        findTasks(requestBody).then(({ data, status }) => {
-          if (status !== 200 || data.code === 401) {
-            this.waitAuthNumber = 0;
-          } else {
-            this.waitAuthNumber = data.total;
-          }
-          sessionStorage.setItem('waitAuthNumber', this.waitAuthNumber)
-        })
-      } else {
-        this.waitAuthNumber = waitAuthNumber;
-      }
     },
     handleCommand(command) {
       if (command === '1') {
@@ -149,38 +95,18 @@ export default {
         if (flag === 'confirm') {
           this.$store.commit("removeToken");
           sessionStorage.removeItem('baseImg');
-          sessionStorage.removeItem('waitDoNumber');
-          sessionStorage.removeItem('waitAuthNumber');
+          this.$store.commit("SET_WAITDO_NUMBER", null);
+          this.$store.commit("SET_WAITAUTH_NUMBER", null);
           this.$router.push("/login");
           this.$message.warning("您已退出登录！");
         }
       } catch (error) {
         if (typeof error === 'string' && error === 'cancel') return;
-
       }
     },
     handleMenu() {
       this.$store.commit("collapseMenu");
     },
-    // getToken(formName) {
-    //   this.$refs[formName].validate((valid) => {
-    //     if (valid) {
-    //       this.changeLoading = true
-    //       updatePassword(this.form.email)
-    //         .then(() => {
-    //           this.$message.success("发送成功,请输入验证码");
-    //           this.showToken = true;
-    //           this.changeLoading = false
-    //         })
-    //         .catch(err => {
-    //           this.$message.error(err.message)
-    //           this.changeLoading = false
-    //         })
-    //     } else {
-    //       this.$message.error("请完整填写表单内容！");
-    //     }
-    //   });
-    // },
     confirm() {
       if (this.form.token) {
         confirmUpdate(this.form.email, this.form.password, this.form.token)

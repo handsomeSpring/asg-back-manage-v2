@@ -201,6 +201,9 @@ export default {
         .then((res) => {
           if (typeof res.data === "string") throw new Error(res.data);
           this.list = res.data;
+          const number = this.list.filter(item => item.status === '0').length ?? 0;
+          this.$store.commit("SET_WAITDO_NUMBER", number);
+          
         })
         .catch((err) => {
           this.$message.error(err instanceof Error ? err.message : err);
@@ -215,7 +218,7 @@ export default {
         const { data, status, message } = await findTasks(requestParams);
         if (status !== 200) throw new Error(message);
         if (data.code === 401) return;
-        this.waitAuthList = data.rows;
+        this.waitAuthList = data?.data?.rows ?? [];
       } catch (error) {
         this.$message.error(error.message);
       }
