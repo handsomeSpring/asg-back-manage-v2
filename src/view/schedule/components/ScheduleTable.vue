@@ -736,8 +736,8 @@ export default {
           tag: this.diaData.tag,
           comLimit: this.diaData.comLimit,
           judge: this.diaData.judge,
-          judge_Id: this.diaData.judge_Id,
-          referee_Id: this.diaData.referee_Id,
+          judge_Id: this.diaData.judge_Id || 0,
+          referee_Id: this.diaData.referee_Id || 0,
           remarks: this.diaData.remarks,
           personType: this.diaData.personType,
         };
