@@ -38,6 +38,7 @@ export default {
                 qq:[{ required: true, message: '请输入qq号', trigger: 'change' }],
                 message: [{ required: true, message: '请输入消息', trigger: 'blur' }],
             },
+            loading:false,
         }
     },
     methods: {

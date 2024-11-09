@@ -459,3 +459,10 @@ export function dayFormat(value) {
   const day = date.getDay();
   return year + '年' + month + '月' + day + '日'
 }
+
+export function getTodayString(){
+  const year = new Date().getFullYear();
+  const month = new Date().getMonth() + 1;
+  const day = new Date().getDate();
+  return year + '-' + month + '-' + day;
+}

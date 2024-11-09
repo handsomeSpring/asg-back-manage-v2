@@ -12,7 +12,8 @@ export default {
       return{
         hiddenFooter:[
           '/authorization/budget',
-          '/index'
+          '/index',
+          '/publish/refereeemploy'
         ]
       }
     }

@@ -102,7 +102,7 @@ export default {
           value: 2
         },
         {
-          label: '3按时间升序',
+          label: '按时间升序',
           value: 3
         },
         {

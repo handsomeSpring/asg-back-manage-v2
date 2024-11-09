@@ -36,15 +36,13 @@ export default {
 .footer-wrap{
   position:fixed;
   bottom: 0px;
-  width: calc(100% - 208px);
+  width: calc(100% - 224px);
   margin-left:200px;
-  height: 30px;
   display: flex;
   justify-content: center;
   align-items: center;
-  gap:20px;
   box-shadow: 0 -2px 2px #f5f5f5;
-  padding: 5px;
+  padding: 12px;
   background-color: #FFFFFF;
   text-align: center;
   background-color: hsla(0, 0%, 100%, 0.9);
