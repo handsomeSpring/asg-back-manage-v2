@@ -3,11 +3,10 @@
     <header>
       <el-button icon="el-icon-plus" size="small" type="primary" @click="openDialog('add')">开启新赛季</el-button>
     </header>
-    <el-scrollbar style="height: 60vh">
+    <el-scrollbar style="height: 70vh">
       <baseTable v-loading="loading" :data="events" :column="tableProps">
         <template #projectHeader="{ data }">
           <div>
-            <span>赛季名</span>
             <span class="fontWeight">{{ data.name }}</span>
           </div>
           <div>
@@ -29,7 +28,7 @@
           }}</el-tag>
         </template>
         <template #status="{ data }">
-          {{ data.status | filterStatus }}
+          <span class="season_text">{{ data.status | filterStatus }}</span>
         </template>
         <template #rule="{ data }">
           <el-button type="text" @click="checkRuleInfo(data)">
@@ -92,7 +91,7 @@
         </div>
       </el-form>
     </el-dialog>
-    <el-dialog top="5vh" title="规则详情" :close-on-click-modal="false" append-to-body width="60%"
+    <el-dialog top="5vh" title="规则详情" append-to-body width="60%"
       :visible.sync="checkDialogVisible">
       <el-scrollbar style="height: 55vh">
         <v-md-preview :text="checkRules" height="400px" width="800"></v-md-preview>
@@ -336,10 +335,12 @@ header {
 
 .fontWeight {
   font-weight: bold;
+  color: #4f73eb;
 }
-
-.a-text {
+.season_text{
   color: rgb(161, 175, 241);
   text-decoration: underline;
+  font-weight: bold;
+  text-underline-offset: 0.2rem;
 }
 </style>

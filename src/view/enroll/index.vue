@@ -17,7 +17,6 @@
           <template v-slot:header>
             <div class="header__wrap">
               <div class="flex--align">
-                <span class="table-title">战队名</span>
                 <p class="team__name">{{ item.teamName }}</p>
               </div>
               <div>
@@ -284,7 +283,7 @@ export default {
   align-items: center;
 
   .team__name {
-    color: rgb(255, 123, 0);
+    color: rgb(121, 140, 222);
     font-size: 1.1rem;
     font-weight: bold;
   }

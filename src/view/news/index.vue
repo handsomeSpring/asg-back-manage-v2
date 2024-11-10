@@ -113,39 +113,44 @@ export default {
         }
       });
     },
-    pushNews() {
-      pushNews(this.form)
-        .then(() => {
-          this.$message.success("发布成功！");
-          this.form = {};
-          this.isShowBox = false;
-          this.initNews();
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    },
-    updNews() {
-      updateNews(this.form).then(() => {
-        this.$message.success("更新成功！");
-        this.form.title === '';
-        this.form.msg === '';
+    async pushNews() {
+      try {
+        const { data, status } = await pushNews(this.form);
+        if (status !== 200) throw new Error('后端服务器异常，请联系后端人员修复！');
+        if (data && data.code !== 200) throw new Error(data?.message ?? '未知错误！');
+        this.$message.success("发布成功！");
+        this.form = {};
         this.isShowBox = false;
         this.initNews();
-      })
-        .catch((err) => {
-          console.log(err);
-        });
+      } catch (error) {
+        this.$message.error(error.message);
+      }
+    },
+    async updNews() {
+      try {
+        const { data, status } = await updateNews(this.form);
+        if (status !== 200) throw new Error('后端服务器异常，请联系后端人员修复！');
+        if (data && data.code !== 200) throw new Error(data?.message ?? '未知错误！');
+        this.$message.success("更新成功！");
+        this.form.title = '';
+        this.form.msg = '';
+        this.isShowBox = false;
+        this.initNews();
+      } catch (error) {
+        this.$message.error(error.message);
+      }
     },
     //获取news
-    initNews() {
-      getNews(this.search_Type)
-        .then((res) => {
-          this.newsData = res.data;
-        })
-        .catch((err) => {
-          console.log(err);
-        });
+    async initNews() {
+      try {
+        const { data, status } = await getNews(this.search_Type);
+        if (status !== 200) throw new Error('后端服务器异常，请联系后端人员修复！');
+        this.newsData = data;
+      } catch (error) {
+        console.log(error, '===进入catch了吗');
+        this.newsData = [];
+        this.$message.error(error.message);
+      }
     },
     //删除公告
     delNews(row) {
