@@ -59,7 +59,7 @@
         </template>
       </baseTable>
     </el-scrollbar>
-    <el-dialog title="修改冠军" :visible.sync="editVisible" width="60%" @close="closeEditDialog">
+    <el-dialog title="修改冠军" :close-on-click-modal="false" :visible.sync="editVisible" width="60%" @close="closeEditDialog">
       <el-form ref="updateForm" :model="editForm" label-position="right" label-width="120px" :rules="rules">
         <el-row>
           <el-col :span="6">
@@ -69,7 +69,7 @@
           </el-col>
           <el-col :span="12">
             <el-form-item label="赛季" prop="eventname">
-              <el-select size="small" v-model="editForm.eventname" style="margin-bottom: 10px; margin-right: 30px"
+              <el-select size="small" v-model="editForm.eventname" disabled style="margin-bottom: 10px; margin-right: 30px"
                 placeholder="请选择赛季">
                 <el-option v-for="item in options" :key="item.name" :label="item.name" :value="item.name">
                 </el-option>
@@ -128,7 +128,7 @@ export default {
           slot: true,
           style: {
             textAlign: "left",
-            minWidth: "180px",
+            width: "250px",
           },
         },
         {
@@ -138,7 +138,7 @@ export default {
           slot: true,
           style: {
             textAlign: "left",
-            minWidth: "180px",
+            width: "250px",
           },
         },
         {
@@ -148,7 +148,7 @@ export default {
           slot: true,
           style: {
             textAlign: "left",
-            minWidth: "250px",
+            minwidth: "450px",
           },
         },
         {
