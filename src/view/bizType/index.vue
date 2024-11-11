@@ -22,7 +22,7 @@ import detail from "./components/detail.vue";
 import { getByTitle } from "@/api/config";
 
 export default {
-  name: "test-1",
+  name: "bizTypeAuth",
   components: {
     list,
     detail,

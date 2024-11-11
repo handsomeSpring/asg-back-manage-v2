@@ -56,6 +56,7 @@
     <el-table
       :data="tableData"
       :header-cell-style="{ background: '#f2f6fd', color: '#000' }"
+      height="70vh"
     >
       <el-table-column
         label="序号"
@@ -91,7 +92,7 @@
       <el-table-column label="金额/是否使用预算" align="center" width="180px">
         <template #default="{ row }">
           <p v-if="row.budgetUse === '1'" class="ellipsis__text money__text">
-            {{ row.budgetMoney | moneyFormat }} / 
+            {{ row.budgetMoney | moneyFormat }} /
             <span class="green_tag">是</span>
           </p>
           <p v-else class="ellipsis__text none__data">
@@ -131,20 +132,34 @@
         </template>
       </el-table-column>
     </el-table>
-    <AsgHistoryRecord :dialog-visible.sync="dialogVisible" :tableData="historyLine"></AsgHistoryRecord>
+    <el-pagination
+      style="float: right; margin-top: 12px"
+      @size-change="handlePageChange('limit', $event)"
+      @current-change="handlePageChange('page', $event)"
+      :current-page="listQuery.page"
+      :page-sizes="[10, 20, 30, 100]"
+      :page-size="listQuery.limit"
+      layout="total, sizes, prev, pager, next, jumper"
+      :total="total"
+    >
+    </el-pagination>
+    <AsgHistoryRecord
+      :dialog-visible.sync="dialogVisible"
+      :tableData="historyLine"
+    ></AsgHistoryRecord>
   </div>
 </template>
 
 <script>
 import AsgHighSearch from "@/components/AsgHighSearch.vue";
 import AsgHistoryRecord from "@/components/AsgHistoryRecord.vue";
-import { findAudit } from '@/api/admin/index';
+import { findAudit } from "@/api/admin/index";
 export default {
   name: "bizType-list",
   components: {
     AsgHighSearch,
-    AsgHistoryRecord
-},
+    AsgHistoryRecord,
+  },
   props: {
     bizTypeOptions: {
       type: Array,
@@ -159,9 +174,10 @@ export default {
         bizType: "", //业务类型code，精确搜索
         startPerson: "", // 发起人，模糊搜索
         budgetUse: "", //是否使用预算 ''全部 '1' 是 '0' 否
-        page:1,
-        limit:10
+        page: 1,
+        limit: 10,
       },
+      total: null,
       tableData: [
         {
           id: "123123wsdasdasdasd",
@@ -197,7 +213,8 @@ export default {
           nowAuthPerson: "浊泉",
           nowAuthPersonId: 429,
           description: "制作第四届ASG高校赛冠军海报标签申请",
-          reason: "晓月节点审批不通过，理由：我觉得没必要做这个。再次退回，请浊泉再次审批（退回到浊泉手上）",
+          reason:
+            "晓月节点审批不通过，理由：我觉得没必要做这个。再次退回，请浊泉再次审批（退回到浊泉手上）",
           supplementaryInfo:
             '[{"userId":429,"opinion":"同意","choose":"1","time":"2024-11-09 22:00:00","authPerson":"浊泉"},{"userId":422,"opinion":"不同意","choose":"2","time":"2024-11-09 22:00:00","authPerson":"晓月"}]',
           status: "2",
@@ -228,7 +245,7 @@ export default {
       historyLine: [],
     };
   },
-  created(){
+  created() {
     this.getList();
   },
   methods: {
@@ -241,17 +258,17 @@ export default {
       } finally {
         this.historyLine = [
           {
-            time:row.startTime,
-            person:row.startPerson,
-            choose:'0'
+            time: row.startTime,
+            person: row.startPerson,
+            choose: "0",
           },
-          ...authTime.map(item => {
+          ...authTime.map((item) => {
             return {
-              time:item.time,
-              person:item.authPerson,
-              choose:item.choose
-            }
-          })
+              time: item.time,
+              person: item.authPerson,
+              choose: item.choose,
+            };
+          }),
         ];
         this.dialogVisible = true;
       }
@@ -276,13 +293,20 @@ export default {
     },
     async getList() {
       try {
-        const { data,status } = await findAudit(this.listQuery);
-        if(status !== 200) throw new Error('后端服务器异常！');
-        this.tableData = data.rows;
+        const { data, status } = await findAudit(this.listQuery);
+        if (status !== 200) throw new Error("后端服务器异常！");
+        this.tableData = data?.data?.rows ?? [];
+        this.total = data?.data?.total ?? 0;
       } catch (error) {
         this.$message.error(error.message);
       }
-
+    },
+    handlePageChange(prop, value) {
+      this.listQuery = {
+        ...this.listQuery,
+        [prop]: value,
+      };
+      this.getList();
     },
     jumpToBudget() {
       this.$router.push("/authorization/budget");
@@ -333,7 +357,7 @@ export default {
     color: #d9d9d9;
   }
   .green_tag {
-    color: #429F46;
+    color: #429f46;
   }
   .red_tag {
     color: #f40;
