@@ -1,0 +1,85 @@
+<!-- ASG流程跟踪组件 -->
+<template>
+  <el-dialog
+    :visible="visible"
+    title="流程跟踪"
+    width="50%"
+    @close="handleClose"
+  >
+    <el-table :data="tableData">
+      <el-table-column
+        label="人员信息"
+        prop="person"
+        min-width="180px"
+        align="center"
+      ></el-table-column>
+      <el-table-column label="审批结论" align="center" >
+        <template #default="{ row }">
+          <span
+            :style="{
+              color: computedText(row.choose),
+            }"
+            >{{ row.choose | filterChoose }}</span
+          >
+        </template>
+      </el-table-column>
+      <el-table-column
+        label="发起/审批时间"
+        prop="time"
+        align="center"
+        min-width="180px"
+      ></el-table-column>
+    </el-table>
+  </el-dialog>
+</template>
+
+<script>
+export default {
+  name: "AsgHistoryRecord",
+  props: {
+    dialogVisible: {
+      type: Boolean,
+      default: false,
+    },
+    tableData: {
+      type: Array,
+      default: () => [],
+    },
+  },
+  computed: {
+    visible: {
+      get() {
+        return this.dialogVisible;
+      },
+      set(val) {
+        this.$emit("update:dialogVisible", val);
+      },
+    },
+  },
+  filters: {
+    filterChoose(val) {
+      const mapList = {
+        0: "发起",
+        1: "同意",
+        2: "不同意/退回",
+      };
+      return mapList[val];
+    },
+  },
+  methods: {
+    handleClose() {
+      this.visible = false;
+    },
+    computedText(choose) {
+      const mapList = {
+        0: "#1E87E3",
+        1: "#429F46",
+        2: "#FF3C00",
+      };
+      return mapList[choose];
+    },
+  },
+};
+</script>
+
+<style scoped lang="scss"></style>

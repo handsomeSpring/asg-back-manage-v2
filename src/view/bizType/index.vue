@@ -1,42 +1,55 @@
 <template>
   <div>
-    <list v-if="isPageIndex" @toDeTail="handleToDetail" :bizTypeOptions="bizTypeOptions"></list>
-    <detail v-else :info="info" :type="type" @returnBack="isPageIndex = true" :bizTypeOptions="bizTypeOptions"></detail>
+    <list
+      v-if="isPageIndex"
+      @toDeTail="handleToDetail"
+      :bizTypeOptions="bizTypeOptions"
+    ></list>
+    <detail
+      v-else
+      :info="info"
+      :type="type"
+      @returnBack="isPageIndex = true"
+      :bizTypeOptions="bizTypeOptions"
+      @toList="toList"
+    ></detail>
   </div>
-
 </template>
 
 <script>
-import list from './components/list.vue';
-import detail from './components/detail.vue'
-import { getByTitle } from '@/api/config';
+import list from "./components/list.vue";
+import detail from "./components/detail.vue";
+import { getByTitle } from "@/api/config";
 
 export default {
-  name: 'test-1',
+  name: "test-1",
   components: {
     list,
-    detail
+    detail,
   },
   data() {
     return {
       isPageIndex: true,
-      type: '',
+      type: "",
       info: {},
-      bizTypeOptions:[]
+      bizTypeOptions: [],
     };
   },
   methods: {
     handleToDetail(type, row) {
       this.info = row;
-      this.type = type
+      this.type = type;
       this.isPageIndex = false;
+    },
+    toList(){
+      this.isPageIndex = true;
     }
   },
   created() {
-    getByTitle('ruleConfig').then(res => {
+    getByTitle("ruleConfig").then((res) => {
       this.bizTypeOptions = res.data;
-    })
-  }
-}
+    });
+  },
+};
 </script>
-<style lang='less' scoped></style>
+<style lang="less" scoped></style>

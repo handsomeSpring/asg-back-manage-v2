@@ -262,3 +262,23 @@ export function updateTaskApi(data){
     data
   })
 }
+
+// 查询口
+export function findAudit(params,archive){
+  return request({
+    url:'/api/v1/admin/AuditFind',
+    method:'GET',
+    params:{
+      ...params,
+      archive
+    }
+  })
+}
+// 新增业务审批
+export function postAudit(data){
+  return request({
+    url:'/api/v1/admin/AuditPost',
+    method:'POST',
+    data
+  })
+}

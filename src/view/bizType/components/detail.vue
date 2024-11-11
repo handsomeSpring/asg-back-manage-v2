@@ -41,7 +41,7 @@
                   style="width: 100%"
                   size="small"
                   v-model="form.bizType"
-                  :disabled="disabledStartForm"
+                  :disabled="type !== 'add'"
                 >
                   <el-option
                     v-for="(item, index) in bizTypeOptions"
@@ -120,26 +120,32 @@
                 :key="index"
               >
                 <template #header>
-                  <div
-                    style="
-                      display: flex;
-                      justify-content: space-between;
-                      align-items: center;
-                      height: 100%;
-                      padding: 0 12px;
-                    "
-                  >
-                    <el-tag size="small" type="danger">{{
-                      item.authPerson
-                    }}</el-tag>
-                    <p>{{ item.time }}</p>
+                  <div class="asg-table-header">
+                    <div class="node_name_tag">
+                      <i class="el-icon-s-custom" style="margin-right:4px"></i>{{ item.authPerson }}
+                    </div>
+                    <p class="time">{{ item.time }}</p>
                   </div>
                 </template>
                 <template #content>
-                  <div style="padding: 8px">
-                    <p>审批意见：{{ item.opinion }}</p>
-                    <p>补充意见：{{ item.otherOpinion }}</p>
-                    <p>修正意见：{{ item.reviseOpinion }}</p>
+                  <div class="asg-table-content">
+                    <div class="asg-opinion-group">
+                      <p>审批意见：{{ item.opinion }}</p>
+                      <p v-if="item.otherOpinion">
+                        补充意见：{{ item.otherOpinion }}
+                      </p>
+                      <p v-if="item.reviseOpinion">
+                        修正意见：{{ item.reviseOpinion }}
+                      </p>
+                    </div>
+                    <div class="asg-opinion-right">
+                      <div
+                        class="tag"
+                        :class="item.choose === '1' ? 'success' : 'danger'"
+                      >
+                        {{ item.choose === "1" ? "审核已通过" : "申请被退回" }}
+                      </div>
+                    </div>
                   </div>
                 </template>
               </asgTableCard>
@@ -151,18 +157,25 @@
               ref="authForm"
               class="asg-form-main"
               :model="nowSupplementaryInfo"
+              :rules="authRules"
               label-position="right"
               label-width="150px"
             >
-              <el-form-item label="主要审批意见">
+              <el-form-item label="主要审批意见" prop="opinion">
                 <el-input
                   style="width: 80%"
                   v-model="nowSupplementaryInfo.opinion"
+                  maxlength="25"
+                  show-word-limit
                 ></el-input>
               </el-form-item>
-              <el-form-item label="修订意见" v-if="form.status === '2'">
+              <el-form-item
+                label="修订意见"
+                v-if="form.status === '2'"
+                prop="reviseOpinion"
+              >
                 <el-input
-                  maxlength="100"
+                  maxlength="50"
                   show-word-limit
                   style="width: 80%"
                   type="textarea"
@@ -171,9 +184,9 @@
                   v-model="nowSupplementaryInfo.reviseOpinion"
                 ></el-input>
               </el-form-item>
-              <el-form-item label="补充意见">
+              <el-form-item label="补充意见" prop="otherOpinion">
                 <el-input
-                  maxlength="100"
+                  maxlength="50"
                   show-word-limit
                   style="width: 80%"
                   type="textarea"
@@ -187,7 +200,10 @@
         </div>
       </el-col>
       <el-col :span="4">
-        <HistoryRecord></HistoryRecord>
+        <HistoryRecord
+          :info="info"
+          :bizTypeArr="bizTypeOptions"
+        ></HistoryRecord>
       </el-col>
     </el-row>
     <button-fix>
@@ -239,6 +255,7 @@ import { getTodayString, parseTime } from "@/utils/filters";
 import { uuid } from "@/utils";
 import asgTableCard from "@/components/asg-table-card.vue";
 import { deepClone } from "@/utils";
+import { postAudit } from '@/api/admin/index.js';
 export default {
   name: "bizType-detail",
   components: {
@@ -289,6 +306,7 @@ export default {
         opinion: "",
         otherOpinion: "",
         reviseOpinion: "",
+        choose: "1", // choose : '1' 是同意  // choose '2' 退回不同意
         time: null,
       },
       nextNodeInfo: {}, //下一个节点
@@ -358,6 +376,29 @@ export default {
           },
         ],
       },
+      authRules: {
+        opinion: [
+          {
+            required: true,
+            message: "请输入主要审核意见",
+            trigger: "blur",
+          },
+        ],
+        reviseOpinion: [
+          {
+            required: true,
+            message: "请输入修订意见",
+            trigger: "blur",
+          },
+        ],
+        otherOpinion: [
+          {
+            required: true,
+            message: "请输入补充意见",
+            trigger: "blur",
+          },
+        ],
+      },
     };
   },
   computed: {
@@ -386,6 +427,7 @@ export default {
       const arr = deepClone(this.supplementaryInfo);
       const nowSupplementaryInfo = {
         ...this.nowSupplementaryInfo,
+        choose: "2",
         time: parseTime(new Date(), "{y}-{m}-{d} {h}:{i}:{s}"),
       };
       arr.push(nowSupplementaryInfo);
@@ -409,7 +451,7 @@ export default {
       });
     },
     // 送审/办结
-    handleAccept() {
+    async handleAccept() {
       let req = {};
       if (this.type === "add") {
         req = {
@@ -424,6 +466,7 @@ export default {
         const arr = deepClone(this.supplementaryInfo);
         const nowSupplementaryInfo = {
           ...this.nowSupplementaryInfo,
+          choose: "1",
           time: parseTime(new Date(), "{y}-{m}-{d} {h}:{i}:{s}"),
         };
         arr.push(nowSupplementaryInfo);
@@ -435,7 +478,15 @@ export default {
           status: this.nextNodeInfo.chinaname ? "1" : "3", //下一个节点有的话则退回到1，没有的话则办结
         };
       }
-      console.log(req, "发起的req");
+      try {
+        const { data, status } = await postAudit(req);
+        if(status !== 200) throw new Error('服务端异常，请联系网站管理员！');
+        if(data.code && data.code !== 200) throw new Error(data.message ?? '未知错误');
+        this.$message.success('操作成功！');
+        this.$emit('toList');
+      } catch (error) {
+        this.$message.error(error.message);
+      }
     },
     checkBudget() {
       if (this.disabledStartForm) return;
@@ -535,5 +586,58 @@ export default {
 }
 .i-r-6 {
   margin-right: 6px;
+}
+.asg-table-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 100%;
+  padding: 0 12px;
+  .node_name_tag {
+    background: linear-gradient(141deg, #44a3fd 0%, #0c80e5 100%);
+    border-radius: 4px;
+    padding: 2px 8px;
+    color: #fff;
+    font-size: 14px;
+  }
+  .time {
+    font-weight: 500;
+    font-size: 13px;
+    color: #0c80e5;
+    line-height: 16px;
+  }
+}
+.asg-table-content {
+  display: grid;
+  grid-template-columns: auto 120px;
+  align-items: center;
+  padding: 8px;
+  .asg-opinion-group {
+    border-right: 1px solid #e7e7e7;
+    font-size: 13px;
+    font-weight: 500;
+  }
+  .asg-opinion-right {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    .tag {
+      padding: 4px 8px;
+      border-radius: 4px;
+      color: #fff;
+      width: fit-content;
+      font-size: 14px;
+      &.success {
+        background: linear-gradient(141deg, #3cda7a 0%, #32b16c 100%);
+      }
+      &.danger {
+        background: linear-gradient(
+          141deg,
+          rgba(239, 146, 142, 0.96) 0%,
+          #ee281f 100%
+        );
+      }
+    }
+  }
 }
 </style>
