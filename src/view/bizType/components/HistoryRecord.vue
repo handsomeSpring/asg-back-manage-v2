@@ -25,11 +25,15 @@
               <span class="title-font">节点人员</span>
               <span class="content-font">{{ item.name }}</span>
             </p>
-            <p>
+            <p v-if="index !== 0">
               <span class="title-font">能否退回</span>
               <span class="content-font">{{
                 item.allowReturn ? "允许" : "不允许"
               }}</span>
+            </p>
+            <p v-else>
+              <span class="title-font">初始节点</span>
+              <span class="content-font">发起人</span>
             </p>
           </div>
         </div>
@@ -79,7 +83,7 @@ export default {
   methods: {
     constructorTree() {
       const process =
-        this.bizTypeArr.find((item) => item.bizType === this.info.bizType)
+        this.bizTypeArr.find(item => item.bizType === this.info.bizType)
           ?.process ?? [];
       console.log(process, "process");
       if (this.info.status === "0") {
@@ -97,6 +101,21 @@ export default {
             };
           }),
         ];
+      } else if(this.info.status === '3'){
+        this.realTimeLine = [
+          {
+            name: this.userInfo.chinaname,
+            allowReturn: false,
+            status: "success",
+          },
+          ...process.map((item) => {
+            return {
+              name: item.chinaname,
+              allowReturn: item.isAllowReturn === "1",
+              status: "success",
+            };
+          }),
+        ];
       } else {
         const labelIndex = process.findIndex(
           (item) => item.id === this.userInfo.id
@@ -104,7 +123,7 @@ export default {
         if (labelIndex !== -1) {
           process.forEach((item, index) => {
             if (index < labelIndex) {
-              item.status = "sucess";
+              item.status = "success";
             } else if (index === labelIndex) {
               item.status = "process";
             } else {

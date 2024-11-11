@@ -1,18 +1,8 @@
 <template>
   <div>
-    <list
-      v-if="isPageIndex"
-      @toDeTail="handleToDetail"
-      :bizTypeOptions="bizTypeOptions"
-    ></list>
-    <detail
-      v-else
-      :info="info"
-      :type="type"
-      @returnBack="isPageIndex = true"
-      :bizTypeOptions="bizTypeOptions"
-      @toList="toList"
-    ></detail>
+    <list v-if="isPageIndex" @toDeTail="handleToDetail" :bizTypeOptions="bizTypeOptions"></list>
+    <detail v-else :info="info" :type="type" @returnBack="isPageIndex = true" :bizTypeOptions="bizTypeOptions"
+      @toList="toList"></detail>
   </div>
 </template>
 
@@ -41,14 +31,25 @@ export default {
       this.type = type;
       this.isPageIndex = false;
     },
-    toList(){
+    toList() {
       this.isPageIndex = true;
     }
   },
   created() {
-    getByTitle("ruleConfig").then((res) => {
-      this.bizTypeOptions = res.data;
+    const loading = this.$loading({
+      lock: true,
+      text: "正在加载中......",
+      spinner: "el-icon-loading",
+      background: "rgba(0, 0, 0, 0.8)",
     });
+    getByTitle("ruleConfig")
+    .then((res) => {
+      this.bizTypeOptions = res.data;
+    }).catch(err => {
+      this.$message.error(err);
+    }).finally(()=>{
+      loading.close();
+    })
   },
 };
 </script>

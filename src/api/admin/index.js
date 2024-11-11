@@ -264,14 +264,11 @@ export function updateTaskApi(data){
 }
 
 // 查询口
-export function findAudit(params,archive){
+export function findAudit(params){
   return request({
     url:'/api/v1/admin/AuditFind',
     method:'GET',
-    params:{
-      ...params,
-      archive
-    }
+    params
   })
 }
 // 新增业务审批
