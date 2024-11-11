@@ -139,3 +139,16 @@
 .mybox-leave-active {
   opacity: 0;
 }
+
+/* 按钮覆盖样式 */
+.el-button.return-button {
+  background: #fef0ef;
+  color: #e63939;
+  border: 1px solid #e63939;
+}
+.el-button.return-button:hover {
+  //opacity: 0.7;
+  color: #e63939;
+  background: #f6e2e1;
+  border: 1px solid #e63939;
+}

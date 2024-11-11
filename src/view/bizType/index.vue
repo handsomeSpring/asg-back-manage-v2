@@ -1,6 +1,6 @@
 <template>
   <div>
-    <list v-if="isPageIndex" @toDeTail="handleToDetail"></list>
+    <list v-if="isPageIndex" @toDeTail="handleToDetail" :bizTypeOptions="bizTypeOptions"></list>
     <detail v-else :info="info" :type="type" @returnBack="isPageIndex = true" :bizTypeOptions="bizTypeOptions"></detail>
   </div>
 
