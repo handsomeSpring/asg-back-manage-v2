@@ -2,43 +2,96 @@
 <template>
   <div>
     <div class="header__content">
-      <el-select size="small" v-model="belong" placeholder="请选择赛季名称" @change="getList(true)">
-        <el-option v-for="(item, index) in eventList" :key="index" :label="item.label" :value="item.value"></el-option>
+      <el-select
+        size="small"
+        v-model="belong"
+        placeholder="请选择赛季名称"
+        @change="getList(true)"
+      >
+        <el-option
+          v-for="(item, index) in eventList"
+          :key="index"
+          :label="item.label"
+          :value="item.value"
+        ></el-option>
       </el-select>
-      <el-button size="small" type="primary" @click="handleSave">确定选班</el-button>
+      <el-button size="small" type="primary" @click="handleSave"
+        >确定选班</el-button
+      >
     </div>
     <div class="main__container" v-loading="loading">
-      <div class="schedule__box" v-for="(item, index) in tableData" :key="index">
+      <div
+        class="schedule__box"
+        v-for="(item, index) in tableData"
+        :key="index"
+      >
         <div class="sch__header">
           <div class="flex-group">
-            <el-checkbox v-if="new Date() < new Date(item.opentime)" v-model="item.isCheck"
-              @input="handleCheck($event, item)" :disabled="item.referee_Id === userInfo.id"></el-checkbox>
+            <el-checkbox
+              v-if="new Date() < new Date(item.opentime)"
+              v-model="item.isCheck"
+              @input="handleCheck($event, item)"
+              :disabled="item.referee_Id === userInfo.id"
+            ></el-checkbox>
             <p>{{ item.team1_name }} vs {{ item.team2_name }}</p>
-            <el-button size="mini" v-if="
-              item.referee_Id === userInfo.id &&
-              new Date() < new Date(item.opentime)
-            " type="danger" @click="handleCancel(item)">取消选班</el-button>
+            <el-button
+              size="mini"
+              v-if="
+                item.referee_Id === userInfo.id &&
+                new Date() < new Date(item.opentime)
+              "
+              type="danger"
+              @click="handleCancel(item)"
+              >取消选班</el-button
+            >
           </div>
         </div>
         <div class="sch__body">
           <div class="grid--three">
-            <p class="text">比赛时间：{{ item.opentime }}</p>
-            <p class="text">解说：{{ item.commentary }}</p>
-            <p class="text">裁判：{{ item.judge || "无裁判报名" }}</p>
+            <p class="text">比赛时间：
+              <span style="color: #4090ef">{{ item.opentime }}</span>
+            </p>
+            <p class="text">
+              解说：<span style="color: #4090ef">{{
+                item.commentary || "无解说报名"
+              }}</span>
+            </p>
+            <p class="text">
+              裁判：<span style="color: #4090ef">{{
+                item.judge || "无裁判报名"
+              }}</span>
+            </p>
           </div>
           <div class="grid--three">
-            <p class="text">赛程类别：{{ item.tag }}</p>
-            <p class="text">导播：{{ item.referee }}</p>
+            <p class="text">
+              赛程类别：
+              <span class="my-task-auth">{{ item.tag || "未定义" }}</span>
+            </p>
+            <p class="text">
+              导播：<span class="referee-comp" :class="item.referee ? 'success' : 'primary'">{{
+                item.referee || "虚位以待"
+              }}</span>
+            </p>
           </div>
         </div>
       </div>
       <div class="noMore">
-        <el-button v-if="hasMore" :loading="loading" size="small" type="primary"
-          @click="getList(false)">加载更多</el-button>
+        <el-button
+          v-if="hasMore"
+          :loading="loading"
+          size="small"
+          type="primary"
+          @click="getList(false)"
+          >加载更多</el-button
+        >
         <p v-else>没有更多了~</p>
       </div>
     </div>
-    <cancelDialog :scheduleItem="scheduleItem" :dialogVisible.sync="dialogVisible" @finish="getList(true)"></cancelDialog>
+    <cancelDialog
+      :scheduleItem="scheduleItem"
+      :dialogVisible.sync="dialogVisible"
+      @finish="getList(true)"
+    ></cancelDialog>
   </div>
 </template>
 
@@ -46,7 +99,7 @@
 import { getAllEvents } from "@/api/gameSeason/index";
 import { getScheduleFrontNew } from "@/api/schedule/index.js";
 import { mapGetters } from "vuex";
-import { anchorChoose } from '@/api/schedule/referee.js';
+import { anchorChoose } from "@/api/schedule/referee.js";
 import cancelDialog from "./components/cancelDialog.vue";
 export default {
   name: "refereeChoose",
@@ -67,7 +120,7 @@ export default {
       hasMore: true,
       checkSet: null,
       dialogVisible: false,
-      scheduleItem: {}
+      scheduleItem: {},
     };
   },
   computed: {
@@ -113,8 +166,8 @@ export default {
               isCheck: item.referee_Id === this.userInfo.id,
               commentary: !!item.commentary
                 ? JSON.parse(item.commentary)
-                  .map((role) => role.chinaname)
-                  .join(",")
+                    .map((role) => role.chinaname)
+                    .join(",")
                 : "暂无解说报名",
             };
           }),
@@ -161,9 +214,9 @@ export default {
         });
         const allIds = allId.join(",");
         const { status, data } = await anchorChoose(allIds);
-        if(status !== 200) throw new Error('服务端异常');
-        if(data && data.code !== 200) throw new Error(data.message);
-        this.$message.success('选班成功！');
+        if (status !== 200) throw new Error("服务端异常");
+        if (data && data.code !== 200) throw new Error(data.message);
+        this.$message.success("选班成功！");
         this.getList(true);
       } catch (error) {
         this.$message.error(error.message);
@@ -190,9 +243,11 @@ export default {
 
     .sch__header {
       width: 100%;
-      background: linear-gradient(172deg,
-          #b3d4ff 0%,
-          rgba(255, 255, 255, 0) 93%);
+      background: linear-gradient(
+        172deg,
+        #b3d4ff 0%,
+        rgba(255, 255, 255, 0) 93%
+      );
       border-radius: 10px 10px 0 0;
 
       .flex-group {
@@ -219,12 +274,12 @@ export default {
         display: grid;
         grid-template-columns: repeat(3, 1fr);
         align-items: center;
-        margin: 4px 0;
+        margin: 8px 0;
 
         .text {
-          font-weight: 400;
+          font-weight: 500;
           font-size: 14px;
-          color: #404040;
+          color: #505050;
         }
       }
     }
@@ -244,5 +299,17 @@ export default {
 
 ::-webkit-scrollbar {
   display: none !important;
+}
+.referee-comp {
+  border-radius: 4px;
+  padding:3px 8px;
+  font-size: 13px;
+  color:#fff;
+  &.primary {
+    background: linear-gradient(141deg, #44a3fd 0%, #0c80e5 100%);
+  }
+  &.success{
+    background: linear-gradient( 141deg, #3CDA7A 0%, #32B16C 100%);
+  }
 }
 </style>
