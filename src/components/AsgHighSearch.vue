@@ -103,8 +103,8 @@ export default {
             .search_content{
                 display: grid;
                 align-items: center;
-                grid-template-columns: repeat(4, 1fr);
-                gap:12px;
+                grid-template-columns: repeat(3, 1fr);
+                gap:12px 24px;
                 width:100%
             }
             .button--right {

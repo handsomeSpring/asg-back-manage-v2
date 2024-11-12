@@ -7,22 +7,22 @@
         </el-button>
       </template>
       <template #search>
-        <el-input v-model="listQuery.projName" size="small" placeholder="输入项目名称检索"></el-input>
-        <el-input v-model="listQuery.projNo" size="small" placeholder="输入项目编号检索"></el-input>
-        <el-input v-model="listQuery.startPerson" size="small" placeholder="输入发起人检索"></el-input>
-        <el-select size="small" v-model="listQuery.budgetUse">
+        <el-input v-model="listQuery.projName" size="small" placeholder="输入项目名称检索" clearable></el-input>
+        <el-input v-model="listQuery.projNo" size="small" placeholder="输入项目编号检索" clearable></el-input>
+        <el-input v-model="listQuery.startPerson" size="small" placeholder="输入发起人检索" clearable></el-input>
+        <el-select size="small" v-model="listQuery.budgetUse" clearable>
           <el-option label="全部" value=""></el-option>
           <el-option label="使用预算" value="1"></el-option>
           <el-option label="未使用预算" value="0"></el-option>
         </el-select>
-        <el-select size="small" v-model="listQuery.bizType" placeholder="选择业务类型进行检索">
+        <el-select size="small" v-model="listQuery.bizType" placeholder="选择业务类型进行检索" clearable>
           <el-option label="全部" value=""></el-option>
           <el-option :label="item.label" :value="item.bizType" v-for="(item, index) in bizTypeOptions"
             :key="index"></el-option>
         </el-select>
-        <el-radio-group v-model="listQuery.archive">
-          <el-radio label="">我的待办</el-radio>
-          <el-radio label="1">归档</el-radio>
+        <el-radio-group size="small" v-model="listQuery.archive">
+          <el-radio label="" border>我的待办</el-radio>
+          <el-radio label="1" border>归档</el-radio>
         </el-radio-group>
       </template>
       <template #btnList>
@@ -69,7 +69,8 @@
       </el-table-column>
       <el-table-column label="当前审批人" prop="nowAuthPerson" align="center" width="120px">
         <template #default="{ row }">
-          <p class="ellipsis__text emphysis">{{ row.nowAuthPerson }}</p>
+          <p v-if="row.status !== '3'" class="ellipsis__text emphysis">{{ row.nowAuthPerson }}</p>
+          <p v-else class="ellipsis__text emphysis">已归档</p>
         </template>
       </el-table-column>
       <el-table-column label="操作" align="center" width="120px">
@@ -124,6 +125,8 @@ export default {
     };
   },
   created() {
+    const { querySearchMap } = this.$store.state?.cacheQuery ?? {};
+    this.listQuery = querySearchMap?.bizType || this.listQuery;
     this.getList();
   },
   methods: {
@@ -196,6 +199,7 @@ export default {
           }
         });
         this.total = data?.data?.total ?? 0;
+        this.$store.commit("cacheQuery/setQueryCondition", { businessName:'bizType', condition: this.listQuery });
       } catch (error) {
         this.$message.error(error.message);
       } finally {

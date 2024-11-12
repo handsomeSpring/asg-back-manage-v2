@@ -6,7 +6,7 @@
     width="50%"
     @close="handleClose"
   >
-    <el-table :data="tableData">
+    <el-table :data="tableData" border>
       <el-table-column
         label="人员信息"
         prop="person"
@@ -81,5 +81,3 @@ export default {
   },
 };
 </script>
-
-<style scoped lang="scss"></style>
