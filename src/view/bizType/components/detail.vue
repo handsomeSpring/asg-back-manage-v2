@@ -218,6 +218,7 @@
       <el-col :span="4">
         <HistoryRecord
           :info="info"
+          :type="type"
           :bizTypeArr="bizTypeOptions"
         ></HistoryRecord>
       </el-col>

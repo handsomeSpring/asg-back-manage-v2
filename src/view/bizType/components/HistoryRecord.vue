@@ -65,6 +65,10 @@ export default {
       type: Array,
       default: () => [],
     },
+    type: {
+      type: String,
+      default: "add",
+    },
   },
   computed: {
     ...mapGetters(["userInfo"]),
@@ -83,7 +87,7 @@ export default {
   methods: {
     constructorTree() {
       const process =
-        this.bizTypeArr.find(item => item.bizType === this.info.bizType)
+        this.bizTypeArr.find((item) => item.bizType === this.info.bizType)
           ?.process ?? [];
       console.log(process, "process");
       if (this.info.status === "0") {
@@ -101,7 +105,7 @@ export default {
             };
           }),
         ];
-      } else if(this.info.status === '3'){
+      } else if (this.info.status === "3") {
         this.realTimeLine = [
           {
             name: this.userInfo.chinaname,
@@ -117,9 +121,16 @@ export default {
           }),
         ];
       } else {
-        const labelIndex = process.findIndex(
-          (item) => item.id === this.userInfo.id
-        );
+        let labelIndex = 0;
+        if (this.type !== "check") {
+          labelIndex = process.findIndex(
+            (item) => item.id === this.userInfo.id
+          );
+        }else{
+          labelIndex = process.findIndex(
+            (item) => item.id === this.info.nowAuthPersonId
+          );
+        }
         if (labelIndex !== -1) {
           process.forEach((item, index) => {
             if (index < labelIndex) {

@@ -75,7 +75,7 @@
       </el-table-column>
       <el-table-column label="操作" align="center" width="120px">
         <template #default="{ row }">
-          <el-button v-if="row.status !== '3'" type="text" @click="handleToDetail('auth', row)">审核</el-button>
+          <el-button v-if="row.status !== '3' && listQuery.archive !== '1'" type="text" @click="handleToDetail('auth', row)">审核</el-button>
           <el-button v-else type="text" @click="handleToDetail('check', row)">查看</el-button>
           <el-button type="text" @click="handleHistoryTrance(row)">跟踪</el-button>
         </template>
