@@ -53,7 +53,7 @@
             <el-input size="small" v-model="form.account" placeholder="请输入社交媒体账号" clearable></el-input>
           </el-form-item>
           <el-form-item label="合作时间" prop="comTime">
-            <el-date-picker v-model="form.comTime" type="date" placeholder="选择合作日期" clearable>
+            <el-date-picker size="small" v-model="form.comTime" type="date" placeholder="选择合作日期" clearable>
             </el-date-picker>
           </el-form-item>
         </el-form>
