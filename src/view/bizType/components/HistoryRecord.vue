@@ -13,11 +13,7 @@
           <div class="title_parent">
             <p class="node__title">{{ index === 0 ? "发起" : "审批节点" }}</p>
             <div class="icon--right" v-if="item.status === 'process'">
-              当前节点<svg-icon
-                iconClass="nowProcess"
-                width="13px"
-                height="13px"
-              ></svg-icon>
+              当前节点<svg-icon iconClass="nowProcess" width="13px" height="13px"></svg-icon>
             </div>
           </div>
           <div class="info__box">
@@ -59,7 +55,7 @@ export default {
   props: {
     info: {
       type: Object,
-      default: () => {},
+      default: () => { },
     },
     bizTypeArr: {
       type: Array,
@@ -121,16 +117,10 @@ export default {
           }),
         ];
       } else {
-        let labelIndex = 0;
-        if (this.type !== "check") {
-          labelIndex = process.findIndex(
-            (item) => item.id === this.userInfo.id
-          );
-        }else{
-          labelIndex = process.findIndex(
-            (item) => item.id === this.info.nowAuthPersonId
-          );
-        }
+        const labelIndex = process.findIndex(
+          (item) => item.id === this.info.nowAuthPersonId
+        );
+
         if (labelIndex !== -1) {
           process.forEach((item, index) => {
             if (index < labelIndex) {
@@ -183,6 +173,7 @@ export default {
 <style lang="less" scoped>
 .history__content {
   padding: 0 12px;
+
   .wf_title {
     margin: 12px 0;
     padding: 12px;
@@ -195,25 +186,31 @@ export default {
     color: #000000;
     line-height: 15px;
   }
+
   .workflow-content {
     width: 100%;
+
     .grid-wrap {
       display: grid;
       grid-template-columns: 30px auto;
       gap: 12px;
       align-items: flex-start;
+
       .main--content {
         margin-bottom: 12px;
+
         .title_parent {
           display: flex;
           align-items: center;
           justify-content: space-between;
+
           .node__title {
             font-weight: 400;
             font-size: 13px;
             color: #5b5d5f;
             line-height: 15px;
           }
+
           .icon--right {
             display: flex;
             align-items: center;
@@ -223,11 +220,13 @@ export default {
             color: #4090ef;
           }
         }
+
         .info__box {
           background: #f6f6f6;
           border-radius: 8px;
           padding: 8px;
           margin-top: 4px;
+
           .title-font {
             font-weight: 400;
             font-size: 12px;
@@ -235,6 +234,7 @@ export default {
             line-height: 14px;
             margin-right: 12px;
           }
+
           .content-font {
             font-weight: 400;
             font-size: 13px;
@@ -244,6 +244,7 @@ export default {
         }
       }
     }
+
     .line--content {
       display: flex;
       flex-direction: column;
@@ -252,6 +253,7 @@ export default {
       gap: 6px;
       margin-bottom: 6px;
       height: 100%;
+
       .circle-content {
         width: 15px;
         height: 15px;
@@ -259,39 +261,50 @@ export default {
         display: flex;
         justify-content: center;
         align-items: center;
+
         &.process {
           background: #edf3fc;
         }
+
         &.wait {
           background: #f3f3f3;
         }
+
         &.success {
           background: #e5f8f2;
         }
+
         .inner-content {
           width: 8px;
           height: 8px;
           border-radius: 50%;
+
           &.process {
             background: #0c80e5;
           }
+
           &.wait {
             background: #747474;
           }
+
           &.success {
             background: #00b87b;
           }
         }
       }
+
       .line {
         height: calc(100% - 28px);
         width: 2px;
+
         &.process {
           background: #4090ef;
         }
+
         &.wait {
           background: #e7e7e7;
         }
+
         &.success {
           background: #00b87b;
         }
