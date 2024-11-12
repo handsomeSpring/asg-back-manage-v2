@@ -279,3 +279,13 @@ export function postAudit(data){
     data
   })
 }
+// 修改状态为4-终止申请
+export function statusChange4(Id){
+  return request({
+    url:'/api/v1/admin/statusChange4',
+    method:'GET',
+    params:{
+      Id
+    }
+  })
+}

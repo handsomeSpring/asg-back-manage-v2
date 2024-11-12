@@ -67,15 +67,18 @@
           <p class="ellipsis__text emphysis">{{ row.startPerson }}</p>
         </template>
       </el-table-column>
-      <el-table-column label="当前审批人" prop="nowAuthPerson" align="center" width="120px">
+      <el-table-column label="当前节点" prop="nowAuthPerson" align="center" width="120px">
         <template #default="{ row }">
-          <p v-if="row.status !== '3'" class="ellipsis__text emphysis">{{ row.nowAuthPerson }}</p>
+          <p v-if="row.status === '4'" class="ellipsis__text stop">已终止</p>
+          <p v-else-if="row.status !== '3'" class="ellipsis__text emphysis">{{ row.nowAuthPerson }}</p>
           <p v-else class="ellipsis__text emphysis">已归档</p>
         </template>
       </el-table-column>
       <el-table-column label="操作" align="center" width="120px">
         <template #default="{ row }">
-          <el-button v-if="row.status !== '3' && listQuery.archive !== '1'" type="text" @click="handleToDetail('auth', row)">审核</el-button>
+          <el-button v-if="row.status !== '3' && listQuery.archive !== '1'" type="text" @click="handleToDetail('auth', row)">
+            {{ row.status === '0' ? '编辑' : '查看' }}
+          </el-button>
           <el-button v-else type="text" @click="handleToDetail('check', row)">查看</el-button>
           <el-button type="text" @click="handleHistoryTrance(row)">跟踪</el-button>
         </template>
@@ -151,6 +154,13 @@ export default {
             };
           }),
         ];
+        if(row.status === '4'){
+          this.historyLine.push({
+            time:'-',
+            person:row.startPerson,
+            choose:'4'
+          })
+        }
         this.dialogVisible = true;
       }
     },
@@ -258,7 +268,10 @@ export default {
     color: #4090ef;
     font-weight: 600;
   }
-
+  &.stop{
+    color: #f40;
+    font-weight: 600;
+  }
   &.money__text {
     font-size: 14px;
     font-weight: 500;

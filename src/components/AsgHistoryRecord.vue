@@ -4,6 +4,7 @@
     :visible="visible"
     title="流程跟踪"
     width="50%"
+    append-to-body
     @close="handleClose"
   >
     <el-table :data="tableData" border>
@@ -13,7 +14,7 @@
         min-width="180px"
         align="center"
       ></el-table-column>
-      <el-table-column label="审批结论" align="center" >
+      <el-table-column label="节点动态" align="center" >
         <template #default="{ row }">
           <span
             :style="{
@@ -24,7 +25,7 @@
         </template>
       </el-table-column>
       <el-table-column
-        label="发起/审批时间"
+        label="操作时间"
         prop="time"
         align="center"
         min-width="180px"
@@ -62,6 +63,7 @@ export default {
         0: "发起",
         1: "同意",
         2: "不同意/退回",
+        4: "终止申请"
       };
       return mapList[val];
     },
@@ -75,6 +77,7 @@ export default {
         0: "#1E87E3",
         1: "#429F46",
         2: "#FF3C00",
+        4: "#FF3C00",
       };
       return mapList[choose];
     },

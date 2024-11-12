@@ -13,7 +13,7 @@
         <p style="text-align: center">节点状态</p>
       </div>
       <template v-if="tableData.length > 0">
-        <div class="grid-item" v-for="(item, index) in tableData" :key="index">
+        <div class="grid-item" v-for="item in tableData" :key="item.id" @click="showHistory(item)">
           <p>{{ item.projName }}</p>
           <p class="auth--person" style="text-align: center;font-weight: bold;">
             {{ item.status !== "3" ? item.nowAuthPerson : "已办结" }}
@@ -25,14 +25,19 @@
       </template>
       <div class="no_msg" v-else>没有数据</div>
     </main>
+    <AsgHistoryRecord :dialog-visible.sync="dialogVisible" :tableData="historyLine"></AsgHistoryRecord>
   </div>
 </template>
 
 <script>
+import AsgHistoryRecord from "@/components/AsgHistoryRecord.vue";
 import { findAudit } from "@/api/admin/index";
 export default {
   name: "asg-audit-list",
   text: "业务待办列表",
+  components:{
+    AsgHistoryRecord
+  },
   data() {
     return {
       listQuery: {
@@ -47,6 +52,8 @@ export default {
       },
       tableData: [],
       loading: false,
+      dialogVisible:false,
+      historyLine:[],
     };
   },
   filters: {
@@ -56,11 +63,43 @@ export default {
         1: "进行中",
         2: "退回",
         3: "流程结束",
+        4: "流程终止"
       };
       return mapList[val];
     },
   },
   methods: {
+    showHistory(row) {
+      let authTime = [];
+      try {
+        authTime = JSON.parse(row.supplementaryInfo ?? "[]");
+      } catch (error) {
+        authTime = [];
+      } finally {
+        this.historyLine = [
+          {
+            time: row.startTime,
+            person: row.startPerson,
+            choose: "0",
+          },
+          ...authTime.map((item) => {
+            return {
+              time: item.time,
+              person: item.authPerson,
+              choose: item.choose,
+            };
+          }),
+        ];
+        if(row.status === '4'){
+          this.historyLine.push({
+            time:'-',
+            person:row.startPerson,
+            choose:'4'
+          })
+        }
+        this.dialogVisible = true;
+      }
+    },
     async getList() {
       try {
         this.loading = true;
@@ -68,10 +107,23 @@ export default {
         if (status !== 200) throw new Error("服务端异常，请联系网站管理员！");
         this.tableData = (data?.data?.rows ?? []).map((item) => {
           return {
+            bizType: item.biz_type,
+            budgetId: item.budget_id,
+            budgetName: item.budget_name,
+            budgetUse: item.budget_use,
+            budgetMoney: item.budget_money,
+            description: item.description,
+            id: item.id,
+            nowAuthPerson: item.now_auth_person,
+            nowAuthPersonId: item.now_auth_person_id,
             projName: item.proj_name,
             projNo: item.proj_no,
-            nowAuthPerson: item.now_auth_person,
+            reason: item.reason,
+            startPerson: item.start_person,
+            startPersonId: item.start_person_id,
+            startTime: item.start_time,
             status: item.status,
+            supplementaryInfo: item.supplementary_info
           };
         });
       } catch (error) {
@@ -104,7 +156,7 @@ main {
     padding:8px 2px;
     cursor: pointer;
     &:hover{
-        background: #dae4f2;
+      background: #e5f0ff
     }
     .auth--person {
       color: #4090ef;
@@ -133,6 +185,9 @@ main {
       color: #32b16c;
     }
     .status-2 {
+      color: #ee281f;
+    }
+    .status-4 {
       color: #ee281f;
     }
   }

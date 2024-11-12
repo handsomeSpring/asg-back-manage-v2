@@ -1,6 +1,6 @@
 <template>
   <div class="history__content">
-    <div class="wf_title">{{ bizName }}</div>
+    <div class="wf_title">{{ bizName }}<span class="wf_over" v-if="info.status === '4'">(已终止)</span></div>
     <div class="workflow-content">
       <div class="grid-wrap" v-for="(item, index) in realTimeLine" :key="index">
         <div class="line--content">
@@ -116,6 +116,24 @@ export default {
             };
           }),
         ];
+      } else if (this.info.status === '4') {
+        process.forEach((item) => {
+          item.status = 'wait';
+        });
+        this.realTimeLine = [
+          {
+            name: this.info.startPerson,
+            allowReturn: false,
+            status: "danger",
+          },
+          ...process.map((item) => {
+            return {
+              ...item,
+              name: item.chinaname,
+              allowReturn: item.isAllowReturn === "1",
+            };
+          }),
+        ];
       } else {
         const labelIndex = process.findIndex(
           (item) => item.id === this.info.nowAuthPersonId
@@ -185,6 +203,10 @@ export default {
     font-size: 13px;
     color: #000000;
     line-height: 15px;
+    .wf_over{
+      color:#d62a2a;
+      margin-left: 4px;
+    }
   }
 
   .workflow-content {
@@ -270,6 +292,10 @@ export default {
           background: #f3f3f3;
         }
 
+        &.danger {
+          background: #e8b6b6;
+        }
+
         &.success {
           background: #e5f8f2;
         }
@@ -285,6 +311,10 @@ export default {
 
           &.wait {
             background: #747474;
+          }
+
+          &.danger {
+            background: #d62a2a;
           }
 
           &.success {
@@ -303,6 +333,10 @@ export default {
 
         &.wait {
           background: #e7e7e7;
+        }
+
+        &.danger {
+          background: #d62a2a;
         }
 
         &.success {
