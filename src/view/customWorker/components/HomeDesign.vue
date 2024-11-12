@@ -182,9 +182,7 @@ export default {
       });
       this.$nextTick(() => {
         const lis = document.querySelectorAll(".box-li");
-        console.log(lis, "list===");
         const lastLi = lis[lis.length - 1];
-        console.log(lastLi, "lastLI");
         lastLi && lastLi.scrollIntoView();
       });
     },

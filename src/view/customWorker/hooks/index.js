@@ -6,6 +6,7 @@ import asgMyGuess from '../components/asg-my-guess.vue';
 import asgOtherSystem from '../components/asg-other-system.vue';
 import asgFlowIntro from "../components/asg-flow-intro.vue";
 import asgMyTeam from '../components/asg-my-team.vue';
+import asgAuditList from '../components/asg-audit-list.vue';
 const components = {
     asgMyCollaction,
     asgUserInfo,
@@ -14,7 +15,8 @@ const components = {
     asgMyGuess,
     asgOtherSystem,
     asgFlowIntro,
-    asgMyTeam
+    asgMyTeam,
+    asgAuditList
 };
 
 const widgets = [];
