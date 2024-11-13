@@ -18,9 +18,6 @@
       <baseTable :data="cham" :column="tableProps" v-loading="loading">
         <template #projectHeader="{ data }">
           <div class="header--rela">
-            <div class="header__clip">
-              <div class="path__half">{{ data.eventId }}</div>
-            </div>
             <span>
               <span class="fontWeight">{{ data.teamName }}</span>
             </span>
@@ -44,31 +41,26 @@
             ></span>
             <i
               class="el-icon-delete"
-              style="color: red; font-size: 16px; cursor: pointer"
+              style="color: #EE281F; font-size: 16px; cursor: pointer"
               @click="handleDelete(data)"
             ></i>
           </div>
         </template>
-        <template #hunMember="{ data }">
-          <div class="info" v-for="item in data.hunMember" :key="item.roleName">
-            <p class="roleName">{{ item.roleName }}</p>
-            <div class="flex-content">
-              <p class="person">监管者</p>
-              <p class="rank">{{ item.rank }}</p>
-            </div>
-          </div>
-        </template>
-        <template #surMember="{ data }">
-          <div class="info" v-for="item in data.surMember" :key="item.roleName">
-            <p class="roleName">{{ item.roleName }}</p>
-            <div class="flex-content">
-              <p class="person">求生者</p>
-              <p class="rank">{{ item.rank }}</p>
+        <template #member="{ data }">
+          <div class="member-container">
+            <div class="info" v-for="item in data.member" :key="item.roleName">
+              <p class="roleName">{{ item.roleName }}</p>
+              <div class="flex-content">
+                <p class="person" :class="item.classType">{{ item.camp }}</p>
+                <p class="rank">{{ item.rank }}</p>
+              </div>
             </div>
           </div>
         </template>
         <template #msg="{ data }">
-          <div style="width: 100%">{{ data.message }}</div>
+          <div class="message__box">
+            <p>{{ data.message }}</p>
+          </div>
         </template>
         <template #tel="{ data }">
           <span>{{ data.contact }}</span>
@@ -171,23 +163,13 @@ export default {
           },
         },
         {
-          type: "hunMember",
+          type: "member",
           label: "监管者",
-          prop: "hunMember",
+          prop: "member",
           slot: true,
           style: {
             textAlign: "left",
-            width: "250px",
-          },
-        },
-        {
-          type: "surMember",
-          label: "求生者",
-          prop: "surMember",
-          slot: true,
-          style: {
-            textAlign: "left",
-            width: "250px",
+            width: "500px",
           },
         },
         {
@@ -199,6 +181,10 @@ export default {
             textAlign: "left",
             minwidth: "450px",
           },
+          tdStyle:{
+            valign:'top',
+            align:'left'
+          }
         },
         {
           type: "tel",
@@ -255,34 +241,19 @@ export default {
               vote: item.form.piaoshu,
               contact: item.form.team_tel,
               teamName: item.form.team_name,
-              surMember: item.form.role
-                .filter((role) => role.role_lin === "求生者")
-                .map((el) => {
-                  return {
-                    roleName: el.role_name,
-                    rank:
-                      this.historyRanks.find(
-                        (rankEle) =>
-                          rankEle.value ===
-                          (el.historical_Ranks ?? -1).toString()
-                      )?.label ?? "未知段位",
-                    commonRoles: el.common_Roles,
-                  };
-                }),
-              hunMember: item.form.role
-                .filter((role) => role.role_lin === "监管者")
-                .map((el) => {
-                  return {
-                    roleName: el.role_name,
-                    rank:
-                      this.historyRanks.find(
-                        (rankEle) =>
-                          rankEle.value ===
-                          (el.historical_Ranks ?? -1).toString()
-                      )?.label ?? "未知段位",
-                    commonRoles: el.common_Roles,
-                  };
-                }),
+              member: item.form.role.map((el) => {
+                return {
+                  roleName: el.role_name,
+                  camp: el.role_lin,
+                  classType:el.role_lin === '监管者' ? 'hunter' : 'survivor',
+                  rank:
+                    this.historyRanks.find(
+                      (rankEle) =>
+                        rankEle.value === (el.historical_Ranks ?? -1).toString()
+                    )?.label ?? "未知段位",
+                  commonRoles: el.common_Roles,
+                };
+              }),
             };
           });
         })
@@ -357,66 +328,66 @@ thead .el-table-column--selection .cell {
   display: none;
 }
 
-.info {
-  background: linear-gradient(180deg, #f0f3f6 0%, #ffffff 100%);
-  box-shadow: 0px 2px 6px 0px rgba(220, 231, 241, 0.7);
-  border-radius: 4px;
-  border: 1px solid #ffffff;
-  padding: 8px 12px !important;
-  margin-bottom: 12px;
-  .roleName {
-    font-weight: 500;
-    font-size: 16px;
-    color: #000000;
-    line-height: 15px;
-    margin-bottom: 9px;
-  }
-  .flex-content {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 3px 6px;
-    background: #fff;
-    .person {
-      font-weight: 400;
-      font-size: 12px;
-      color: #8C8C8C;
-      line-height: 14px;
+.member-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap:12px;
+  .info {
+    background: linear-gradient(180deg, #f0f3f6 0%, #ffffff 100%);
+    box-shadow: 0px 2px 6px 0px rgba(220, 231, 241, 0.7);
+    border-radius: 4px;
+    border: 1px solid #ffffff;
+    padding: 8px 12px !important;
+    margin-bottom: 12px;
+    width: 213px;
+    flex-shrink: 0;
+    .roleName {
+      font-weight: 500;
+      font-size: 16px;
+      color: #000000;
+      line-height: 15px;
+      margin-bottom: 9px;
     }
-    .rank {
-      padding: 3px;
-      border-radius: 3px;
-      font-weight: 400;
-      font-size: 12px;
-      background: #ebf3fe;
-      color: #0c80e5;
-      line-height: 14px;
+    .flex-content {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 3px 6px;
+      background: #fff;
+      .person {
+        font-weight: 400;
+        font-size: 12px;
+        color: #8c8c8c;
+        line-height: 14px;
+        text-decoration: underline;
+        text-underline-offset:0.2em;
+        &.hunter{
+          color:#EE281F;
+        }
+        &.survivor{
+          color:#0C80E5;
+        }
+      }
+      .rank {
+        padding: 3px;
+        border-radius: 3px;
+        font-weight: 400;
+        font-size: 12px;
+        background: #ebf3fe;
+        color: #0c80e5;
+        line-height: 14px;
+      }
     }
   }
 }
-
-.header--rela {
-  position: relative;
-  padding-left: 26px;
-
-  .header__clip {
-    position: absolute;
-    top: -15px;
-    left: -28px;
-    -webkit-clip-path: polygon(0 0, 0% 100%, 100% 0);
-    clip-path: polygon(0 0, 0% 100%, 100% 0);
-    height: 50px;
-    width: 50px;
-    background-color: #c5cceb;
-    .path__half {
-      width: 60%;
-      height: 60%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: bold;
-      color: #409eff;
-    }
+.message__box{
+  display: flex;
+  justify-content: left;
+  align-items: flex-start;
+  height:100%;
+  width:100%;
+  p{
+    text-indent: 2rem;
   }
 }
 </style>

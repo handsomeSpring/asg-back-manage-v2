@@ -332,6 +332,7 @@ export default {
     },
     async handleTaskDone(text, item, status) {
       try {
+        if(this.userInfo.id === item.userId) throw new Error('操作失败，您不能审批自己的任务！');
         const userChoose = await this.$confirm(
           `您是否确定${text}该任务？, 是否继续?`,
           "提示",
@@ -353,7 +354,7 @@ export default {
         }
       } catch (error) {
         if (typeof error === "string" && error === "cancel") return;
-        console.log(error, "error");
+        this.$message.error(error.message);
       }
     },
     async initTask(type) {
