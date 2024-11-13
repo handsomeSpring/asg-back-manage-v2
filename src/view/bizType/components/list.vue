@@ -7,18 +7,42 @@
         </el-button>
       </template>
       <template #search>
-        <el-input v-model="listQuery.projName" size="small" placeholder="输入项目名称检索" clearable></el-input>
-        <el-input v-model="listQuery.projNo" size="small" placeholder="输入项目编号检索" clearable></el-input>
-        <el-input v-model="listQuery.startPerson" size="small" placeholder="输入发起人检索" clearable></el-input>
+        <el-input
+          v-model="listQuery.projName"
+          size="small"
+          placeholder="输入项目名称检索"
+          clearable
+        ></el-input>
+        <el-input
+          v-model="listQuery.projNo"
+          size="small"
+          placeholder="输入项目编号检索"
+          clearable
+        ></el-input>
+        <el-input
+          v-model="listQuery.startPerson"
+          size="small"
+          placeholder="输入发起人检索"
+          clearable
+        ></el-input>
         <el-select size="small" v-model="listQuery.budgetUse" clearable>
           <el-option label="全部" value=""></el-option>
           <el-option label="使用预算" value="1"></el-option>
           <el-option label="未使用预算" value="0"></el-option>
         </el-select>
-        <el-select size="small" v-model="listQuery.bizType" placeholder="选择业务类型进行检索" clearable>
+        <el-select
+          size="small"
+          v-model="listQuery.bizType"
+          placeholder="选择业务类型进行检索"
+          clearable
+        >
           <el-option label="全部" value=""></el-option>
-          <el-option :label="item.label" :value="item.bizType" v-for="(item, index) in bizTypeOptions"
-            :key="index"></el-option>
+          <el-option
+            :label="item.label"
+            :value="item.bizType"
+            v-for="(item, index) in bizTypeOptions"
+            :key="index"
+          ></el-option>
         </el-select>
         <el-radio-group size="small" v-model="listQuery.archive">
           <el-radio label="" border>我的待办</el-radio>
@@ -26,21 +50,47 @@
         </el-radio-group>
       </template>
       <template #btnList>
-        <el-button size="small" type="primary" @click="originGetList">查询</el-button>
+        <el-button size="small" type="primary" @click="originGetList"
+          >查询</el-button
+        >
         <el-button plain size="small" @click="resetSearch">重置</el-button>
       </template>
       <template #operation>
-        <el-button size="small" type="primary" @click="jumpToBudget">新增预算</el-button>
+        <el-button size="small" type="primary" @click="jumpToBudget"
+          >新增预算</el-button
+        >
       </template>
     </AsgHighSearch>
-    <el-table :data="tableData" v-loading="loading" :header-cell-style="{ background: '#f2f6fd', color: '#000' }" height="70vh">
-      <el-table-column label="序号" type="index" align="center" width="60px"></el-table-column>
-      <el-table-column label="项目名称" prop="projName" align="center" min-width="220px">
+    <el-table
+      :data="tableData"
+      v-loading="loading"
+      element-loading-text="拼命加载中"
+      element-loading-spinner="el-icon-loading"
+      :header-cell-style="{ background: '#f2f6fd', color: '#000' }"
+      height="70vh"
+    >
+      <el-table-column
+        label="序号"
+        type="index"
+        align="center"
+        width="60px"
+      ></el-table-column>
+      <el-table-column
+        label="项目名称"
+        prop="projName"
+        align="center"
+        min-width="220px"
+      >
         <template #default="{ row }">
           <p class="ellipsis__text">{{ row.projName }}</p>
         </template>
       </el-table-column>
-      <el-table-column label="项目编号" prop="projNo" align="center" width="180px">
+      <el-table-column
+        label="项目编号"
+        prop="projNo"
+        align="center"
+        width="180px"
+      >
         <template #default="{ row }">
           <p class="ellipsis__text">{{ row.projNo }}</p>
         </template>
@@ -62,33 +112,63 @@
           </p>
         </template>
       </el-table-column>
-      <el-table-column prop="startPerson" label="发起人" align="center" width="120px">
+      <el-table-column
+        prop="startPerson"
+        label="发起人"
+        align="center"
+        width="120px"
+      >
         <template #default="{ row }">
           <p class="ellipsis__text emphysis">{{ row.startPerson }}</p>
         </template>
       </el-table-column>
-      <el-table-column label="当前节点" prop="nowAuthPerson" align="center" width="120px">
+      <el-table-column
+        label="当前节点"
+        prop="nowAuthPerson"
+        align="center"
+        width="120px"
+      >
         <template #default="{ row }">
           <p v-if="row.status === '4'" class="ellipsis__text stop">已终止</p>
-          <p v-else-if="row.status !== '3'" class="ellipsis__text emphysis">{{ row.nowAuthPerson }}</p>
+          <p v-else-if="row.status !== '3'" class="ellipsis__text emphysis">
+            {{ row.nowAuthPerson }}
+          </p>
           <p v-else class="ellipsis__text emphysis">已归档</p>
         </template>
       </el-table-column>
       <el-table-column label="操作" align="center" width="120px">
         <template #default="{ row }">
-          <el-button v-if="row.status !== '3' && listQuery.archive !== '1'" type="text" @click="handleToDetail('auth', row)">
-            {{ row.status === '0' ? '编辑' : '查看' }}
+          <el-button
+            v-if="!['3', '4'].includes(row.status) && listQuery.archive !== '1'"
+            type="text"
+            @click="handleToDetail('auth', row)"
+          >
+            {{ row.status === "0" ? "编辑" : "审批" }}
           </el-button>
-          <el-button v-else type="text" @click="handleToDetail('check', row)">查看</el-button>
-          <el-button type="text" @click="handleHistoryTrance(row)">跟踪</el-button>
+          <el-button v-else type="text" @click="handleToDetail('check', row)"
+            >查看</el-button
+          >
+          <el-button type="text" @click="handleHistoryTrance(row)"
+            >跟踪</el-button
+          >
         </template>
       </el-table-column>
     </el-table>
-    <el-pagination style="float: right; margin-top: 12px" @size-change="handlePageChange('limit', $event)"
-      @current-change="handlePageChange('page', $event)" :current-page="listQuery.page" :page-sizes="[10, 20, 30, 100]"
-      :page-size="listQuery.limit" layout="total, sizes, prev, pager, next, jumper" :total="total">
+    <el-pagination
+      style="float: right; margin-top: 12px"
+      @size-change="handlePageChange('limit', $event)"
+      @current-change="handlePageChange('page', $event)"
+      :current-page="listQuery.page"
+      :page-sizes="[10, 20, 30, 100]"
+      :page-size="listQuery.limit"
+      layout="total, sizes, prev, pager, next, jumper"
+      :total="total"
+    >
     </el-pagination>
-    <AsgHistoryRecord :dialog-visible.sync="dialogVisible" :tableData="historyLine"></AsgHistoryRecord>
+    <AsgHistoryRecord
+      :dialog-visible.sync="dialogVisible"
+      :tableData="historyLine"
+    ></AsgHistoryRecord>
   </div>
 </template>
 
@@ -116,7 +196,7 @@ export default {
         bizType: "", //业务类型code，精确搜索
         startPerson: "", // 发起人，模糊搜索
         budgetUse: "", //是否使用预算 ''全部 '1' 是 '0' 否
-        archive:"",
+        archive: "",
         page: 1,
         limit: 10,
       },
@@ -124,7 +204,7 @@ export default {
       tableData: [],
       dialogVisible: false,
       historyLine: [],
-      loading:false
+      loading: false,
     };
   },
   created() {
@@ -154,12 +234,12 @@ export default {
             };
           }),
         ];
-        if(row.status === '4'){
+        if (row.status === "4") {
           this.historyLine.push({
-            time:'-',
-            person:row.startPerson,
-            choose:'4'
-          })
+            time: "-",
+            person: row.startPerson,
+            choose: "4",
+          });
         }
         this.dialogVisible = true;
       }
@@ -187,7 +267,7 @@ export default {
         this.loading = true;
         const { data, status } = await findAudit(this.listQuery);
         if (status !== 200) throw new Error("后端服务器异常！");
-        this.tableData = (data?.data?.rows ?? []).map(item => {
+        this.tableData = (data?.data?.rows ?? []).map((item) => {
           return {
             bizType: item.biz_type,
             budgetId: item.budget_id,
@@ -205,11 +285,14 @@ export default {
             startPersonId: item.start_person_id,
             startTime: item.start_time,
             status: item.status,
-            supplementaryInfo: item.supplementary_info
-          }
+            supplementaryInfo: item.supplementary_info,
+          };
         });
         this.total = data?.data?.total ?? 0;
-        this.$store.commit("cacheQuery/setQueryCondition", { businessName:'bizType', condition: this.listQuery });
+        this.$store.commit("cacheQuery/setQueryCondition", {
+          businessName: "bizType",
+          condition: this.listQuery,
+        });
       } catch (error) {
         this.$message.error(error.message);
       } finally {
@@ -268,7 +351,7 @@ export default {
     color: #4090ef;
     font-weight: 600;
   }
-  &.stop{
+  &.stop {
     color: #f40;
     font-weight: 600;
   }

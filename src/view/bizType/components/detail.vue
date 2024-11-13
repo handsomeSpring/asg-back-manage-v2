@@ -1,7 +1,7 @@
 <template>
   <div>
     <el-row class="main-row-content">
-      <el-col :span="!isStartForm ? 20 : 24">
+      <el-col :span="20">
         <div class="form_content--main">
           <TextTitle title-name="业务信息"></TextTitle>
           <el-form ref="startForm" class="asg-form-main" :model="form" label-position="right" label-width="150px"
@@ -119,7 +119,8 @@
         </div>
       </el-col>
       <el-col :span="4">
-        <HistoryRecord :info="info" :type="type" :bizTypeArr="bizTypeOptions"></HistoryRecord>
+        <HistoryRecord v-if="!isStartForm" :info="info" :type="type" :bizTypeArr="bizTypeOptions"></HistoryRecord>
+        <helpAssignInfo v-else :bizTypeOptions="bizTypeOptions"></helpAssignInfo>
       </el-col>
     </el-row>
     <button-fix>
@@ -157,6 +158,7 @@
 import TextTitle from "@/components/TextTitle.vue";
 import HistoryRecord from "./HistoryRecord.vue";
 import BudgetCheck from "./BudgetCheck.vue";
+import helpAssignInfo from './helpAssignInfo.vue';
 import { mapGetters } from "vuex";
 import { getTodayString, parseTime } from "@/utils/filters";
 import { uuid } from "@/utils";
@@ -170,6 +172,7 @@ export default {
     HistoryRecord,
     BudgetCheck,
     asgTableCard,
+    helpAssignInfo
   },
   props: {
     type: {
