@@ -164,7 +164,7 @@ export default {
         },
         {
           type: "member",
-          label: "监管者",
+          label: "冠军成员",
           prop: "member",
           slot: true,
           style: {
