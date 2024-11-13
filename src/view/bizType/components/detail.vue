@@ -4,67 +4,142 @@
       <el-col :span="20">
         <div class="form_content--main">
           <TextTitle title-name="业务信息"></TextTitle>
-          <el-form ref="startForm" class="asg-form-main" :model="form" label-position="right" label-width="150px"
-            :rules="startFormRules">
+          <el-form
+            ref="startForm"
+            class="asg-form-main"
+            :model="form"
+            label-position="right"
+            label-width="150px"
+            :rules="startFormRules"
+          >
             <div class="grid--three">
               <el-form-item label="项目名称" prop="projName">
-                <el-input size="small" v-model="form.projName" :disabled="disabledStartForm"></el-input>
+                <el-input
+                  size="small"
+                  v-model="form.projName"
+                  :disabled="disabledStartForm"
+                ></el-input>
               </el-form-item>
               <el-form-item label="项目编号" prop="projNo">
-                <el-input size="small" v-model="form.projNo" disabled></el-input>
+                <el-input
+                  size="small"
+                  v-model="form.projNo"
+                  disabled
+                ></el-input>
               </el-form-item>
               <el-form-item label="发起人" prop="startPerson">
-                <el-input disabled size="small" v-model="form.startPerson"></el-input>
+                <el-input
+                  disabled
+                  size="small"
+                  v-model="form.startPerson"
+                ></el-input>
               </el-form-item>
             </div>
             <div class="grid--three">
               <el-form-item label="业务类型" prop="bizType">
-                <el-select style="width: 100%" size="small" v-model="form.bizType" :disabled="type !== 'add'">
-                  <el-option v-for="(item, index) in bizTypeOptions" :key="index" :value="item.bizType"
-                    :label="item.label"></el-option>
+                <el-select
+                  style="width: 100%"
+                  size="small"
+                  v-model="form.bizType"
+                  :disabled="type !== 'add'"
+                >
+                  <el-option
+                    v-for="(item, index) in bizTypeOptions"
+                    :key="index"
+                    :value="item.bizType"
+                    :label="item.label"
+                  ></el-option>
                 </el-select>
               </el-form-item>
               <el-form-item label="发起日期" prop="startTime">
-                <el-input size="small" v-model="form.startTime" disabled></el-input>
+                <el-input
+                  size="small"
+                  v-model="form.startTime"
+                  disabled
+                ></el-input>
               </el-form-item>
               <el-form-item label="是否需要使用预算" prop="budgetUse">
-                <el-radio-group v-model="form.budgetUse" :disabled="disabledStartForm">
+                <el-radio-group
+                  v-model="form.budgetUse"
+                  :disabled="disabledStartForm"
+                >
                   <el-radio label="1">是</el-radio>
                   <el-radio label="0">否</el-radio>
                 </el-radio-group>
               </el-form-item>
             </div>
-            <el-form-item v-if="form.budgetUse === '1'" label="使用的预算" prop="budgetName">
+            <el-form-item
+              v-if="form.budgetUse === '1'"
+              label="使用的预算"
+              prop="budgetName"
+            >
               <div class="use--content">
-                <el-input v-model="form.budgetName" readOnly>
-                  <el-button slot="append" icon="el-icon-edit" @click="checkBudget"></el-button>
-                </el-input>
-                <p class="conver_money">{{ form.budgetMoney | moneyFormat }}</p>
-                <p class="conver_money">
-                  {{ form.budgetMoney | convertMoney }}
+                <p v-if="disabledStartForm">
+                  {{ form.budgetName }}
+                  <span class="conver_money" style="margin-left:8px">{{ form.budgetMoney | moneyFormat }}</span>
+                  <span class="conver_money" style="margin-left:8px">{{ form.budgetMoney | convertMoney }}</span>
                 </p>
+                <template v-else>
+                  <el-input v-model="form.budgetName" readOnly>
+                    <el-button
+                      slot="append"
+                      icon="el-icon-edit"
+                      @click="checkBudget"
+                    ></el-button>
+                  </el-input>
+                  <p class="conver_money">
+                    {{ form.budgetMoney | moneyFormat }}
+                  </p>
+                  <p class="conver_money">
+                    {{ form.budgetMoney | convertMoney }}
+                  </p>
+                </template>
               </div>
             </el-form-item>
             <el-form-item label="申请原因" prop="reason">
-              <el-input maxlength="100" :disabled="disabledStartForm" show-word-limit style="width: 80%" type="textarea"
-                :rows="4" size="small" v-model="form.reason"></el-input>
+              <el-input
+                maxlength="100"
+                :disabled="disabledStartForm"
+                show-word-limit
+                style="width: 80%"
+                type="textarea"
+                :rows="4"
+                size="small"
+                v-model="form.reason"
+              ></el-input>
             </el-form-item>
             <el-form-item label="申请描述" prop="description">
-              <el-input maxlength="100" :disabled="disabledStartForm" show-word-limit style="width: 80%" type="textarea"
-                :rows="4" size="small" v-model="form.description"></el-input>
+              <el-input
+                maxlength="100"
+                :disabled="disabledStartForm"
+                show-word-limit
+                style="width: 80%"
+                type="textarea"
+                :rows="4"
+                size="small"
+                v-model="form.description"
+              ></el-input>
             </el-form-item>
           </el-form>
           <template v-if="supplementaryInfo.length > 0">
             <TextTitle title-name="历史意见"></TextTitle>
             <div class="p-r-20">
-              <asgTableCard v-for="(item, index) in supplementaryInfo" :key="index">
+              <asgTableCard
+                v-for="(item, index) in supplementaryInfo"
+                :key="index"
+              >
                 <template #header>
                   <div class="asg-table-header">
                     <div class="node_name_tag">
-                      <i :class="item.choose !== '0'
-                        ? 'el-icon-s-custom'
-                        : 'el-icon-user-solid'
-                        " style="margin-right: 4px"></i>{{ item.authPerson }}
+                      <i
+                        :class="
+                          item.choose !== '0'
+                            ? 'el-icon-s-custom'
+                            : 'el-icon-user-solid'
+                        "
+                        style="margin-right: 4px"
+                      ></i
+                      >{{ item.authPerson }}
                     </div>
                     <p class="time">{{ item.time }}</p>
                   </div>
@@ -85,7 +160,10 @@
                     </div>
                     <div class="asg-opinion-right">
                       <template v-if="item.choose !== '0'">
-                        <div class="tag" :class="item.choose === '1' ? 'success' : 'danger'">
+                        <div
+                          class="tag"
+                          :class="item.choose === '1' ? 'success' : 'danger'"
+                        >
                           {{
                             item.choose === "1" ? "审核已通过" : "申请被退回"
                           }}
@@ -100,32 +178,73 @@
           </template>
           <template v-if="disabledStartForm && type !== 'check'">
             <TextTitle title-name="审批意见"></TextTitle>
-            <el-form ref="authForm" class="asg-form-main" :model="nowSupplementaryInfo" :rules="authRules"
-              label-position="right" label-width="150px">
+            <el-form
+              ref="authForm"
+              class="asg-form-main"
+              :model="nowSupplementaryInfo"
+              :rules="authRules"
+              label-position="right"
+              label-width="150px"
+            >
               <el-form-item label="主要审批意见" prop="opinion">
-                <el-input style="width: 80%" v-model="nowSupplementaryInfo.opinion" maxlength="25"
-                  show-word-limit></el-input>
+                <el-input
+                  style="width: 80%"
+                  v-model="nowSupplementaryInfo.opinion"
+                  maxlength="25"
+                  show-word-limit
+                ></el-input>
               </el-form-item>
-              <el-form-item label="修订意见" v-if="form.status === '2'" prop="reviseOpinion">
-                <el-input maxlength="50" show-word-limit style="width: 80%" type="textarea" :rows="4" size="small"
-                  v-model="nowSupplementaryInfo.reviseOpinion"></el-input>
+              <el-form-item
+                label="修订意见"
+                v-if="form.status === '2'"
+                prop="reviseOpinion"
+              >
+                <el-input
+                  maxlength="50"
+                  show-word-limit
+                  style="width: 80%"
+                  type="textarea"
+                  :rows="4"
+                  size="small"
+                  v-model="nowSupplementaryInfo.reviseOpinion"
+                ></el-input>
               </el-form-item>
               <el-form-item label="补充意见" prop="otherOpinion">
-                <el-input maxlength="50" show-word-limit style="width: 80%" type="textarea" :rows="4" size="small"
-                  v-model="nowSupplementaryInfo.otherOpinion"></el-input>
+                <el-input
+                  maxlength="50"
+                  show-word-limit
+                  style="width: 80%"
+                  type="textarea"
+                  :rows="4"
+                  size="small"
+                  v-model="nowSupplementaryInfo.otherOpinion"
+                ></el-input>
               </el-form-item>
             </el-form>
           </template>
         </div>
       </el-col>
       <el-col :span="4">
-        <HistoryRecord v-if="!isStartForm" :info="info" :type="type" :bizTypeArr="bizTypeOptions"></HistoryRecord>
-        <helpAssignInfo v-else :bizTypeOptions="bizTypeOptions"></helpAssignInfo>
+        <HistoryRecord
+          v-if="!isStartForm"
+          :info="info"
+          :type="type"
+          :bizTypeArr="bizTypeOptions"
+        ></HistoryRecord>
+        <helpAssignInfo
+          v-else
+          :bizTypeOptions="bizTypeOptions"
+        ></helpAssignInfo>
       </el-col>
     </el-row>
     <button-fix>
       <template v-if="type !== 'check' && form.status !== '4'">
-        <el-button v-if="form.bizType" size="small" type="primary" @click="handleValidForm">
+        <el-button
+          v-if="form.bizType"
+          size="small"
+          type="primary"
+          @click="handleValidForm"
+        >
           <template v-if="nextNodeInfo.chinaname">
             <i class="el-icon-s-custom i-r-6"></i>送{{
               nextNodeInfo.chinaname
@@ -135,21 +254,43 @@
             <i class="el-icon-circle-check i-r-6"></i>办结
           </template>
         </el-button>
-        <el-button class="return-button" v-if="canReturn" size="small" @click="handleReturn">
+        <el-button
+          class="return-button"
+          v-if="canReturn"
+          size="small"
+          @click="handleReturn"
+        >
           <div class="button__text-flex">
-            <svg-icon iconClass="auditReturn" width="13px" height="13px"></svg-icon>退回
+            <svg-icon
+              iconClass="auditReturn"
+              width="13px"
+              height="13px"
+            ></svg-icon
+            >退回
           </div>
         </el-button>
         <el-button
           v-if="form.status === '0' && !['add', 'check'].includes(type)"
-          class="return-button" size="small"
-          @click="handleWitdraw">
+          class="return-button"
+          size="small"
+          @click="handleWitdraw"
+        >
           <i class="el-icon-circle-close i-r-6"></i>终止申请
         </el-button>
       </template>
-      <el-button icon="el-icon-arrow-left" size="small" plain @click="returnBack">返回</el-button>
+      <el-button
+        icon="el-icon-arrow-left"
+        size="small"
+        plain
+        @click="returnBack"
+        >返回</el-button
+      >
     </button-fix>
-    <BudgetCheck :dialog-visible.sync="dialogVisible" @finish="handleFinish" :checkBudetId="form.budgetId">
+    <BudgetCheck
+      :dialog-visible.sync="dialogVisible"
+      @finish="handleFinish"
+      :checkBudetId="form.budgetId"
+    >
     </BudgetCheck>
   </div>
 </template>
@@ -158,7 +299,7 @@
 import TextTitle from "@/components/TextTitle.vue";
 import HistoryRecord from "./HistoryRecord.vue";
 import BudgetCheck from "./BudgetCheck.vue";
-import helpAssignInfo from './helpAssignInfo.vue';
+import helpAssignInfo from "./helpAssignInfo.vue";
 import { mapGetters } from "vuex";
 import { getTodayString, parseTime } from "@/utils/filters";
 import { uuid } from "@/utils";
@@ -172,7 +313,7 @@ export default {
     HistoryRecord,
     BudgetCheck,
     asgTableCard,
-    helpAssignInfo
+    helpAssignInfo,
   },
   props: {
     type: {
@@ -181,7 +322,7 @@ export default {
     },
     info: {
       type: Object,
-      default: () => { },
+      default: () => {},
     },
     bizTypeOptions: {
       type: Array,
@@ -340,13 +481,14 @@ export default {
       })
         .then(async () => {
           const { data, status } = await statusChange4(this.form.id);
-          if (status !== 200) throw new Error('服务端异常，请联系网站管理员');
-          if (data && data.code !== 200) throw new Error(data.message ?? '未知错误');
-          this.$message.success('终止成功！');
+          if (status !== 200) throw new Error("服务端异常，请联系网站管理员");
+          if (data && data.code !== 200)
+            throw new Error(data.message ?? "未知错误");
+          this.$message.success("终止成功！");
           this.$emit("toList");
         })
         .catch((error) => {
-          if (typeof error === 'string') return;
+          if (typeof error === "string") return;
           this.$message.error(error.message);
         });
     },
@@ -586,15 +728,19 @@ export default {
       }
 
       &.danger {
-        background: linear-gradient(141deg,
-            rgba(239, 146, 142, 0.96) 0%,
-            #ee281f 100%);
+        background: linear-gradient(
+          141deg,
+          rgba(239, 146, 142, 0.96) 0%,
+          #ee281f 100%
+        );
       }
 
       &.again {
-        background: linear-gradient(141deg,
-            rgba(235, 97, 0, 0.5) 0%,
-            #e8b048 100%);
+        background: linear-gradient(
+          141deg,
+          rgba(235, 97, 0, 0.5) 0%,
+          #e8b048 100%
+        );
       }
     }
   }
