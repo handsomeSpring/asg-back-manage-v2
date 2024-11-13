@@ -132,14 +132,8 @@ export default {
         flex-wrap: wrap;
         padding: 24px;
         gap: 24px;
-        margin-top: 24px;
         margin-left: 12px;
         box-shadow: 0 2px 4px rgba(0, 0, 0, .12), 0 0 6px rgba(0, 0, 0, .04);
-
-        &:hover {
-            box-shadow: 0 4px 8px rgba(0, 0, 0, .32), 0 2px 10px rgba(0, 0, 0, .43);
-        }
-
         .warning-text {
             color: rgb(255, 128, 0);
             font-size: 0.8rem;

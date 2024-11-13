@@ -1,6 +1,7 @@
 <template>
   <div class="grid__container">
     <el-card
+      class="left_tree-content"
       shadow="always"
       v-loading="loading"
       element-loading-text="系统加载中，请稍等"
@@ -131,8 +132,14 @@ export default {
   display: grid;
   gap: 24px;
   grid-template-columns: 20vw auto;
+  .left_tree-content{
+    height:80vh;
+    overflow: hidden scroll;
+  }
 }
-
+::-webkit-scrollbar {
+    display: none !important;
+}
 .info-container {
   background: linear-gradient( 150deg, #F7FCFF 0%, #F7FCFF 30%, #D6E8FE 100%);
   header {

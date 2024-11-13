@@ -20,7 +20,7 @@
                     </div>
 
                 </div>
-                <transition name="mybox">
+                <el-collapse-transition>
                   <div v-show="item.isFold" v-if="item.children && item.children.length > 0" class="children-list">
                     <li class="child-node" :class="activeId === child.id ? 'active' : ''" v-for="child in item.children"
                         :key="child.id">
@@ -31,7 +31,7 @@
                         </div>
                     </li>
                   </div>
-                </transition>
+                </el-collapse-transition>
             </div>
         </el-card>
         <div>
