@@ -1,19 +1,15 @@
 <template>
   <div class="drag__container">
     <div class="toAssigned--left">
-      <draggable
-        class="content"
-        v-model="layoutConfig.waitAssign"
-        :options="{
-          group: { name: 'orgPerson', put: true, pull: true },
-          sort: false,
-        }"
-      >
-        <li
-          class="drag__item"
-          v-for="item in layoutConfig.waitAssign"
-          :key="item.name"
-        >
+      <div class="operation__content">
+        <p>待分配人员</p>
+        <el-button size="small" type="primary" @click="addNew">新增成员</el-button>
+      </div>
+      <draggable class="content" v-model="waitAssign" :options="{
+        group: { name: 'orgPerson', put: true, pull: true },
+        sort: false,
+      }">
+        <li class="drag__item" v-for="item in waitAssign" :key="item.name">
           <header>
             <p>{{ item.name }}</p>
           </header>
@@ -27,30 +23,25 @@
       </draggable>
     </div>
     <div class="some_org">
-      <draggable
-        class="content"
-        v-model="layoutConfig.adminAssign"
-        :options="{
+      <div class="some__item--grid" v-for="item in layoutConfig" :key="item.code">
+        {{ item.label }}
+        <draggable class="content" v-model="item.data" :options="{
           group: { name: 'orgPerson', put: true, pull: true },
           sort: false,
-        }"
-      >
-      <li
-          class="drag__item"
-          v-for="item in layoutConfig.adminAssign"
-          :key="item.name"
-        >
-          <header>
-            <p>{{ item.name }}</p>
-          </header>
-          <main>
-            <div class="body">
-              <p class="sex">{{ item.sex === "1" ? "男" : "女" }}</p>
-              <div class="role">{{ item.role }}</div>
-            </div>
-          </main>
-        </li>
-      </draggable>
+        }">
+          <li class="drag__item" v-for="item in item.data" :key="item.name">
+            <header>
+              <p>{{ item.name }}</p>
+            </header>
+            <main>
+              <div class="body">
+                <p class="sex">{{ item.sex === "1" ? "男" : "女" }}</p>
+                <div class="role">{{ item.role }}</div>
+              </div>
+            </main>
+          </li>
+        </draggable>
+      </div>
     </div>
   </div>
 </template>
@@ -65,6 +56,7 @@ export default {
   },
   data() {
     return {
+      waitAssign:[],
       layoutConfig: {},
       groupOptions: {
         name: "orgPerson",
@@ -83,11 +75,23 @@ export default {
     this.initLayout();
   },
   methods: {
+    addNew() {
+      this.waitAssign.push(
+        {
+          name: '测试',
+          sex: '0',
+          role: '前端',
+          remark: ''
+        }
+      );
+    },
     async initLayout() {
       try {
         const { status, data } = await getByTitle("orgConfig");
         if (status !== 200) throw new Error("服务端异常");
         this.layoutConfig = data;
+        this.waitAssign = data.find(item => item.code === 'waitAssign')?.data ?? [];
+        this.layoutConfig = data.filter(item => item.code !== 'waitAssign');
       } catch (error) {
         this.$message.error("orgConfig未找到:" + error.message);
       }
@@ -103,23 +107,38 @@ export default {
   min-height: 70vh;
   border: 1px solid #e7e7e7;
   border-radius: 6px;
+
   .toAssigned--left {
     padding: 12px;
     border-right: 1px solid #e7e7e7;
   }
+
+  .operation__content {
+    height: 50px;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
   .some_org {
     padding: 12px;
-    .org-grid-item {
-      width: 200px;
-      height: 200px;
-      border-radius: 1px solid #bfa;
+
+    .some__item--grid {
+      width:300px;
+      height:300px;
+      border:1px solid #bfa;
+      overflow:auto
     }
+
   }
 }
+
 .content {
-  height: 100px;
-  width: 100px;
+  height: 100%;
+  width: 100%;
 }
+
 .drag__item {
   width: 213px;
   height: 79px;
@@ -128,11 +147,14 @@ export default {
   border-radius: 4px 4px 4px 4px;
   border: 1px solid #ffffff;
   cursor: move;
+  margin: 12px 0;
+
   header {
-    padding:12px;
+    padding: 12px;
     display: flex;
     justify-content: space-between;
     align-items: center;
+
     P {
       font-weight: 500;
       font-size: 13px;
@@ -140,20 +162,24 @@ export default {
       line-height: 15px;
     }
   }
+
   main {
     padding: 0 12px;
+
     .body {
       display: flex;
       justify-content: space-between;
       align-items: center;
       background: #fff;
       padding: 4px 6px;
+
       .sex {
         font-weight: 400;
         font-size: 12px;
         color: #8c8c8c;
         line-height: 14px;
       }
+
       .role {
         width: 66px;
         height: 18px;
