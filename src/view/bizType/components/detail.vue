@@ -41,7 +41,7 @@
                   style="width: 100%"
                   size="small"
                   v-model="form.bizType"
-                  :disabled="type !== 'add'"
+                  :disabled="type !== 'add' || needToRelative === '1'"
                 >
                   <el-option
                     v-for="(item, index) in bizTypeOptions"
@@ -73,28 +73,73 @@
               label="使用的预算"
               prop="budgetName"
             >
-              <div class="use--content">
-                <p v-if="disabledStartForm">
-                  {{ form.budgetName }}
-                  <span class="conver_money" style="margin-left:8px">{{ form.budgetMoney | moneyFormat }}</span>
-                  <span class="conver_money" style="margin-left:8px">{{ form.budgetMoney | convertMoney }}</span>
-                </p>
-                <template v-else>
-                  <el-input v-model="form.budgetName" readOnly>
+              <el-row v-if="disabledStartForm">
+                <el-col :span="12">
+                  <p>
+                    {{ form.budgetName }}
+                    <span class="conver_money" style="margin-left: 8px">{{
+                      form.budgetMoney | moneyFormat
+                    }}</span>
+                    <span class="conver_money" style="margin-left: 8px">{{
+                      form.budgetMoney | convertMoney
+                    }}</span>
+                  </p>
+                </el-col>
+              </el-row>
+              <el-row v-else>
+                <el-col :span="12">
+                  <el-input size="small" v-model="form.budgetName" readOnly>
                     <el-button
                       slot="append"
                       icon="el-icon-edit"
                       @click="checkBudget"
                     ></el-button>
                   </el-input>
+                </el-col>
+                <el-col :span="2" :offset="2">
                   <p class="conver_money">
                     {{ form.budgetMoney | moneyFormat }}
                   </p>
+                </el-col>
+                <el-col :span="2" :offset="2">
                   <p class="conver_money">
                     {{ form.budgetMoney | convertMoney }}
                   </p>
-                </template>
-              </div>
+                </el-col>
+              </el-row>
+            </el-form-item>
+            <el-form-item label="关联业务申请" prop="relativeId">
+              <el-row>
+                <el-col :span="12">
+                  <el-input
+                    v-show="needToRelative === '1'"
+                    placeholder="请选择关联的业务场景"
+                    v-model="relativeComplete"
+                    size="small"
+                    class="input-with-select"
+                    readOnly
+                  >
+                    <el-button
+                      slot="append"
+                      icon="el-icon-search"
+                      @click="openRelativeBase"
+                    ></el-button>
+                  </el-input>
+                  <p v-show="needToRelative === '0'" class="no-relative-text">选择不关联业务申请发起，自行发起业务申请</p>
+                </el-col>
+                <el-col :span="10" :offset="2">
+                  <el-switch
+                    v-model="needToRelative"
+                    active-text="关联"
+                    inactive-text="不关联"
+                    active-value="1"
+                    inactive-value="0"
+                    :disabled="disabledStartForm"
+                    @change="handleRelaSwitchChange"
+                  >
+                  </el-switch>
+                </el-col>
+              </el-row>
             </el-form-item>
             <el-form-item label="申请原因" prop="reason">
               <el-input
@@ -292,6 +337,12 @@
       :checkBudetId="form.budgetId"
     >
     </BudgetCheck>
+    <auditRequestBase
+      ref="auditRequestBase"
+      :checkId="form.relativeId"
+      :bizTypeOptions="bizTypeOptions"
+      @finishChoose="handleBizTypeChoose"
+    ></auditRequestBase>
   </div>
 </template>
 
@@ -300,6 +351,7 @@ import TextTitle from "@/components/TextTitle.vue";
 import HistoryRecord from "./HistoryRecord.vue";
 import BudgetCheck from "./BudgetCheck.vue";
 import helpAssignInfo from "./helpAssignInfo.vue";
+import auditRequestBase from "./auditRequestBase.vue";
 import { mapGetters } from "vuex";
 import { getTodayString, parseTime } from "@/utils/filters";
 import { uuid } from "@/utils";
@@ -314,6 +366,7 @@ export default {
     BudgetCheck,
     asgTableCard,
     helpAssignInfo,
+    auditRequestBase,
   },
   props: {
     type: {
@@ -330,6 +383,13 @@ export default {
     },
   },
   data() {
+    const validateRelaId = (rule, value, callback) => {
+      if (!value && this.needToRelative === "1") {
+        callback(new Error("请选择关联业务类型"));
+      } else {
+        callback();
+      }
+    };
     return {
       canReturn: false,
       form: {
@@ -346,7 +406,10 @@ export default {
         reason: "",
         description: "",
         status: "0",
+        relativeId: null, //关联业务申请id
       },
+      relativeComplete: "", //关联业务场景的项目信息
+      needToRelative: "0", //是否关联业务申请
       process: [],
 
       dialogVisible: false,
@@ -426,6 +489,12 @@ export default {
             trigger: "blur",
           },
         ],
+        relativeId: [
+          {
+            validator: validateRelaId,
+            trigger: "change",
+          },
+        ],
       },
       authRules: {
         opinion: [
@@ -472,6 +541,26 @@ export default {
     },
   },
   methods: {
+    handleBizTypeChoose(obj) {
+      const label =
+        this.bizTypeOptions.find((item) => item.bizType === obj.bizType)
+          ?.label ?? "未知业务类型";
+      this.relativeComplete = `${obj.chinaname}的${label}申请`;
+      this.form.relativeId = obj.id;
+      this.form.bizType = obj.bizType;
+    },
+    // 关联弹窗
+    openRelativeBase() {
+      this.$refs?.auditRequestBase?.openDialog();
+    },
+    // 是否关联切换
+    handleRelaSwitchChange(value) {
+      //变成不关联的时候清空数据
+      if (value === "0") {
+        this.form.relativeId = null;
+        this.relativeComplete = "";
+      }
+    },
     // 处理终止
     handleWitdraw() {
       this.$confirm("您确定终止这条业务申请吗?", "提示", {
@@ -652,17 +741,10 @@ export default {
         gap: 12px;
       }
 
-      .use--content {
-        display: grid;
-        grid-template-columns: 600px 100px 100px;
-        align-items: center;
-        gap: 12px;
-
-        .conver_money {
-          font-size: 14px;
-          font-weight: bold;
-          color: #4090ef;
-        }
+      .conver_money {
+        font-size: 14px;
+        font-weight: bold;
+        color: #4090ef;
       }
     }
   }
@@ -751,5 +833,10 @@ export default {
   align-items: center;
   justify-content: center;
   gap: 4px;
+}
+.no-relative-text{
+  color:#979797;
+  font-weight: 600;
+  font-size: 14px;
 }
 </style>
