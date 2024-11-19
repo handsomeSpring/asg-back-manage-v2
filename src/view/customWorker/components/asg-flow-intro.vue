@@ -90,7 +90,10 @@ export default {
     methods: {
         handleToIntro() {
             this.$router.push({
-                path: '/system/introduction'
+                path: '/system/introduction',
+                query:{
+                    tab:'second'
+                }
             })
         },
     }

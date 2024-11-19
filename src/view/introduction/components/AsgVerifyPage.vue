@@ -108,6 +108,33 @@ export default {
                         }
                     ],
                     authPerson:'任何管理员'
+                },
+                {
+                    flowName: '业务流程审核',
+                    hasWf: '1',
+                    personList: '所有管理员',
+                    process: [
+                        {
+                            nodeName: '配置审批流程',
+                            nodeType: '3', 
+                            path:'/system/ruleConfig', 
+                        },
+                        {
+                            nodeName: '关联/直接发起业务流程',
+                            nodeType: '2',
+                            path:'/publish/refereeemploy'
+                        },
+                        {
+                            nodeName: '流程审批',
+                            nodeType: '4',
+                            path:'/publish/refereeemploy'
+                        },
+                        {
+                            nodeName: '归档',
+                            nodeType: '5'
+                        }
+                    ],
+                    authPerson:'任何管理员'
                 }
             ]
         };
