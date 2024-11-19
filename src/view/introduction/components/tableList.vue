@@ -1,7 +1,7 @@
 <template>
     <table>
         <template v-for="(item,index) in tableData">
-            <thead :key="index">
+            <thead :key="`${index}-thead`">
                 <th colspan="3">
                     <div class="flex__table__header">
                         <p>流程名称：{{ item.flowName }}</p>
@@ -11,7 +11,7 @@
                     </div>
                 </th>
             </thead>
-            <tbody :key="index">
+            <tbody :key="`${index}-tbody`">
                 <tr>
                     <td class="has__border" width="20%">
                         <p class="custom__label" style="--text:'人员类型'"></p>
@@ -19,7 +19,7 @@
                     </td>
                     <td class="has__border" width="70%">
                         <template v-for="(el, i) in item.process">
-                        <div class="tag__common" :style="{'border-left-color':!!el.path ? '#fb0' : '#4090EF'}" :key="i" @click="routerTo(el.path)">
+                        <div class="tag__common" :style="{'border-left-color':!!el.path ? '#fb0' : '#4090EF'}" :key="`${i}-div`" @click="jumpTo(el.path)">
                             <span class="span__title">
                                 {{ el.nodeName }}
                                 <i v-if="el.nodeType === '1'" style="color:#97979F" class="el-icon-user-solid"></i>
@@ -29,7 +29,7 @@
                                 <i v-if="el.nodeType === '5'" style="color:#f40" class="el-icon-folder-checked"></i>
                             </span>
                         </div>
-                        <i v-if="i !== item.process.length - 1" class="el-icon-d-arrow-right margin--list" :key="i"></i>
+                        <i v-if="i !== item.process.length - 1" class="el-icon-d-arrow-right margin--list" :key="`${i}-i`"></i>
                     </template>
                     </td>
                     <td style="text-align: center;" width="10%">
@@ -56,13 +56,10 @@ export default {
         };
     },
     methods: {
-        routerTo(path){
+        jumpTo(path){
             if(!path) return;
             this.$router.push({path});
         }
-    },
-    created() {
-
     },
 }
 </script>

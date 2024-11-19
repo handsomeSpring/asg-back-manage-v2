@@ -199,13 +199,13 @@ export default {
 }
 .right_content {
   width: 100%;
-  padding: 12px;
+  padding: 0 12px;
   .right_header {
     display: flex;
     justify-content: flex-start;
     align-items: center;
     gap: 12px;
-    margin: 12px 0;
+    margin: 24px 0;
     .checkItem {
       cursor: pointer;
       width: 90px;
