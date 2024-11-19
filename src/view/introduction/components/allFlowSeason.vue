@@ -75,11 +75,11 @@ export default {
       activeChildren: [],
     };
   },
-  methods:{
-    handleCheck(item){
-        this.activeName = item.parentTitle;
-        this.activeChildren = item.children;
-    }
+  methods: {
+    handleCheck(item) {
+      this.activeName = item.parentTitle;
+      this.activeChildren = item.children;
+    },
   },
   created() {
     this.activeName = this.allFlowInfo[0].parentTitle;
@@ -161,10 +161,10 @@ export default {
       position: absolute;
       content: "";
       width: 2px;
-      height: 100%;
+      height: 90%;
       background: @b-color;
-      left: 17.5px;
-      top: 11px;
+      left: 18px;
+      top: 14px;
     }
     .circle {
       width: 9px;
@@ -245,10 +245,13 @@ export default {
       border-radius: 4px;
       border: 1px solid #ffffff;
       padding: 13px;
+      transition: .27s all;
       cursor: pointer;
-      &:hover{
-        .jump_header{
-            color:#0c80e5
+      &:hover {
+        background: linear-gradient(180deg, #eff7ff 0%, #fefeff 100%);
+        transform: perspective(600px) rotateY(30deg);
+        .jump_header {
+          color: #0c80e5;
         }
       }
       .jump_header {

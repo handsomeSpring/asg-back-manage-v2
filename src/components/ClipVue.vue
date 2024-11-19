@@ -1,15 +1,15 @@
  
 <template>
   <div class="wrapper">
-    <div class="model" v-show="model" @click="model = false">
-      <div class="model-show">
+    <div class="clipv1-model" v-show="model" @click="model = false">
+      <div class="clipv1-model-show">
         <img :src="modelSrc" alt="">
       </div>
     </div>
-    <div class="content">
+    <div class="clipv1-content">
  
-      <div class="show-info">
-        <div class="test">
+      <div class="clipv1-show-info">
+        <div class="clipv1-test">
           <vueCropper
               ref="cropper"
               :img="option.img"
@@ -33,10 +33,10 @@
               :mode="option.mode"
           ></vueCropper>
         </div>
-        <label class="btn" for="upload2">上传</label>
+        <label class="clipv1-btn" for="upload2">上传</label>
         <input type="file" id="upload2" style="position:absolute; clip:rect(0 0 0 0);"
                accept="image/png, image/jpeg, image/gif, image/jpg" @change="uploadImg($event,2)">
-        <button @click="finish()" class="btn">裁剪</button>
+        <button @click="finish()" class="clipv1-btn">裁剪</button>
         <!-- <button @click="downLoad()" class="btn">下载</button>
         <button @click="ok()" class="btn">确定</button> -->
       </div>
@@ -280,22 +280,12 @@ export default {
 }
 </script>
 <style>
-* {
-  margin: 0;
-  padding: 0;
-}
- 
-.content {
+.clipv1-content {
   margin: auto;
   max-width: 585px;
 }
  
-.test-button {
-  display: flex;
-  flex-wrap: wrap;
-}
- 
-.btn {
+.clipv1-btn {
   display: inline-block;
   line-height: 1;
   white-space: nowrap;
@@ -318,35 +308,20 @@ export default {
   user-select: none;
 }
  
-.des {
-  line-height: 30px;
-}
- 
-code.language-html {
-  padding: 10px 20px;
-  margin: 10px 0px;
-  display: block;
-  background-color: #333;
-  color: #fff;
-  overflow-x: auto;
-  font-family: Consolas, Monaco, Droid, Sans, Mono, Source, Code, Pro, Menlo, Lucida, Sans, Type, Writer, Ubuntu, Mono;
-  border-radius: 5px;
-  white-space: pre;
-}
- 
-.show-info {
+
+.clipv1-show-info {
   margin-bottom: 50px;
 }
  
-.show-info h2 {
+.clipv1-show-info h2 {
   line-height: 50px;
 }
  
-.test {
+.clipv1-test {
   height: 285px;
 }
  
-.model {
+.clipv1-model {
   position: fixed;
   z-index: 10;
   width: 100vw;
@@ -357,7 +332,7 @@ code.language-html {
   background: rgba(0, 0, 0, 0.8);
 }
  
-.model-show {
+.clipv1-model-show {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -365,7 +340,7 @@ code.language-html {
   height: 100vh;
 }
  
-.model img {
+.clipv1-model img {
   display: block;
   margin: auto;
   max-width: 80%;
@@ -373,12 +348,6 @@ code.language-html {
   background-position: 0px 0px, 10px 10px;
   background-size: 20px 20px;
   background-image: linear-gradient(45deg, #eee 25%, transparent 25%, transparent 75%, #eee 75%, #eee 100%), linear-gradient(45deg, #eee 25%, white 25%, white 75%, #eee 75%, #eee 100%);
-}
- 
-.c-item {
-  display: block;
-  padding: 10px 0;
-  user-select: none;
 }
  
 @keyframes slide {
@@ -392,19 +361,14 @@ code.language-html {
 }
  
 @media screen and (max-width: 1000px) {
-  .content {
+  .clipv1-content {
     max-width: 90%;
     margin: auto;
   }
  
-  .test {
+  .clipv1-test {
     height: 400px;
   }
-}
-.tupian{
-  width:100px;
-  height:100px;
-  border:1px solid #e7e7e7;
 }
 </style>
 
