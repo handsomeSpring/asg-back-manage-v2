@@ -10,7 +10,7 @@
     </div>
     <div class="grid-item">
       <div class="label">赛季结束</div>
-      <div class="circle" :class="status === '5' ? '' : 'wait'"></div>
+      <div class="circle" :class="status === '5' ? 'over' : 'wait'"></div>
     </div>
   </div>
 </template>
@@ -94,6 +94,9 @@ export default {
       }
       &.wait{
         background:#979797;
+      }
+      &.over{
+        background:#f40;
       }
     }
     .line {
