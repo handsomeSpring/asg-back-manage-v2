@@ -79,7 +79,7 @@
           </el-col>
         </el-row>
         <template>
-          <label>赛季规则<span style="color: #f40; font-weight: bold">（*一旦上传规则，将无法修改）</span></label>
+          <label><span style="color: #f40">*</span>赛季规则</label>
           <el-row style="margin-top: 12px">
             <v-md-editor v-model="rules" height="400px" width="800"></v-md-editor>
           </el-row>
