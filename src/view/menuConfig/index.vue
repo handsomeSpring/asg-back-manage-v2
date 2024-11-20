@@ -76,7 +76,7 @@
                         <el-col :span="11" :offset="2">
                             <el-form-item label="菜单图标（勿用彩色图标）">
                                 <div class="flex_icon">
-                                    <el-select size="small" v-model="settingInfo.iconClass" placeholder="请选择">
+                                    <el-select size="small" v-model="settingInfo.iconClass" :disabled="isForbid" placeholder="请选择">
                                         <el-option v-for="item in svgIcon" :key="item.value" :value="item.value">
                                             <div class="flex_icon">
                                                 <span>{{ item.label }}</span>

@@ -207,7 +207,7 @@ export default {
   },
   data() {
     return {
-      activeName: 3,
+      activeName: 1,
       nowTeam: "", //现在输入的队伍名
       teamList: [], //所有待抽签的队伍名
       url: "",
