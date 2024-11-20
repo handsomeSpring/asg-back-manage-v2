@@ -315,6 +315,7 @@ export default {
         teamName1: "",
         teamName2: "",
       },
+      total:null,
       commentaryOptions: [], //解说选项
       teamList: [], //战队选项
       winteam: "",

@@ -40,9 +40,9 @@ export default {
     }
   },
   mounted() {
-    (this.audioEle = this.$refs.audio),
-      (this.cvs = this.$refs.canvas),
-      (this.ctx = this.cvs.getContext("2d"));
+    this.audioEle = this.$refs.audio;
+    this.cvs = this.$refs.canvas;
+    this.ctx = this.cvs.getContext("2d");
     this.initAnalyser();
     this.initCvs();
     this.draw();
