@@ -1,23 +1,21 @@
 <template>
   <div>
     <el-container>
-      <el-header style="height: 40px">
-        <el-button type="primary" @click="drawer = true" size="mini"
-          >查看工作<i class="el-icon-menu"></i
-        ></el-button>
+      <el-header class="my_header">
+        <div class="left-box">办赛激励任务分配一览</div>
+        <el-button type="primary" @click="drawer = true" size="small"
+          >查看工作
+        </el-button>
       </el-header>
       <el-main>
-        <el-tag size="small"
-          ><i class="el-icon-share"></i>办赛流程（工作流）一键预览</el-tag
-        >
         <el-tabs tab-position="left" style="height: 200px">
           <el-tab-pane label="排班流程">
             <FirstCur></FirstCur>
           </el-tab-pane>
-          <el-tab-pane label="赛季发布流程">
+          <el-tab-pane label="业务审批流程">
             <SecondCur></SecondCur>
           </el-tab-pane>
-          <el-tab-pane label="赛事组决议">
+          <el-tab-pane label="赛事组众投">
             <ThirdCur></ThirdCur>
           </el-tab-pane>
           <el-tab-pane label="奖金分配">
@@ -34,7 +32,7 @@
       >
         <el-descriptions
           class="margin-top"
-          title="赛事组成员信息"
+          :title="item.label"
           :column="2"
           size="medium"
           border
@@ -66,7 +64,7 @@
               <i class="el-icon-tickets"></i>
               详细介绍
             </template>
-            {{ item.details }}
+            {{ item.remark || "暂无介绍" }}
           </el-descriptions-item>
         </el-descriptions>
       </el-drawer>
@@ -104,9 +102,18 @@ export default {
     },
   },
   mounted() {
-    getByTitle("userRole")
+    getByTitle("orgConfig")
       .then((res) => {
-        this.details = res.data;
+        const data = res.data.filter((item) => item.code !== "waitAssign");
+        this.details = [];
+        for (const parent of data) {
+          for (const child of parent.data) {
+            this.details.push({
+              label: parent.label,
+              ...child,
+            });
+          }
+        }
       })
       .catch((err) => {
         this.$message.error("获取云端配置失败！");
@@ -120,14 +127,20 @@ export default {
 }
 </style>
 <style scoped lang="less">
-.el-header {
-  background-color: #aec9eb;
-  color: #333;
-  text-align: right;
-  line-height: 40px;
-}
-.el-tag {
-  margin-bottom: 10px;
+.my_header {
+  background-color: #F2F6FD;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-radius: 4px;
+  .left-box {
+    background: linear-gradient(141deg, #44a3fd 0%, #0c80e5 100%);
+    border-radius: 6px;
+    padding:6px 12px;
+    color:#fff;
+    font-size: 14px;
+    font-weight: 500;
+  }
 }
 .margin-top {
   margin-bottom: 10px;

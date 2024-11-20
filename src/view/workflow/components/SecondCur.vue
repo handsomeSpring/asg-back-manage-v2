@@ -1,93 +1,80 @@
 <template>
   <div>
     <el-row>
-      <el-col :span=12>
+      <el-col :span="12">
         <el-row>
           <el-col :offset="10">
-           <Card roleLabel="主办方：星宇" curStep="发起高校赛主办"></Card>
-           <p class="line_P"><i class="el-icon-bottom"></i></p>
+            <Card roleLabel="申请者" curStep="官网/解说端发起业务申请"></Card>
+            <p class="line_P"><i class="el-icon-bottom"></i></p>
           </el-col>
         </el-row>
         <el-row>
           <el-col :span="6" :offset="4">
-           <Card roleLabel="导播" curStep="准备出席导播工作"></Card>
+            <Card
+              roleLabel="导播负责人"
+              curStep="关联业务申请发起业务流程审批"
+            ></Card>
           </el-col>
           <el-col :span="6">
-           <Card roleLabel="赛程安排者" curStep="安排赛程、通知报名"></Card>
-           <p class="line_P"><i class="el-icon-bottom"></i></p>
+            <Card
+              roleLabel="裁判负责人"
+              curStep="关联业务申请发起业务流程审批"
+            ></Card>
+            <p class="line_P"><i class="el-icon-bottom"></i></p>
           </el-col>
           <el-col :span="6">
             <el-row>
-              <Card roleLabel="裁判长" curStep="安排裁判、解说工作"></Card>
+              <Card
+                roleLabel="解说负责人"
+                curStep="关联发起业务流程审批"
+              ></Card>
               <p class="line_P"><i class="el-icon-bottom"></i></p>
-            </el-row>       
+            </el-row>
           </el-col>
         </el-row>
         <el-row>
           <el-col :span="6" :offset="10">
-           <Card roleLabel="解说" curStep="同意出席"></Card>
-           <p class="line_P"><i class="el-icon-bottom"></i></p>
+            <Card
+              roleLabel="业务流程节点"
+              curStep="各节点审批及时审批流程让流程进行"
+            ></Card>
+            <p class="line_P"><i class="el-icon-bottom"></i></p>
           </el-col>
           <el-col :span="6">
-           <Card roleLabel="裁判" curStep="同意出席"></Card>
+            <Card
+              roleLabel="解说负责人"
+              curStep="在解说审核模块，对新解说进行审批"
+            ></Card>
           </el-col>
         </el-row>
         <el-row>
           <el-col :offset="10">
-           <Card roleLabel="排班" curStep="排班赛程"></Card>
-           <p class="line_P"><i class="el-icon-bottom"></i></p>
+            <Card roleLabel="主办方" curStep="主办方最后确认是否入选"></Card>
+            <p class="line_P"><i class="el-icon-bottom"></i></p>
           </el-col>
         </el-row>
         <el-row>
           <el-col :offset="10">
-           <Card roleLabel="星宇" curStep="主办方发布奖励"></Card>
-           <p class="line_O">结束<i class="el-icon-error"></i></p>
+            <Card roleLabel="申请人" curStep="入选或者淘汰"></Card>
+            <p class="line_O">结束<i class="el-icon-error"></i></p>
           </el-col>
         </el-row>
       </el-col>
-      <el-col :span=12>
-        <el-row>
-          <el-col :offset="10">
-           <Card roleLabel="主办方：落梨" curStep="发起众创赛主办"></Card>
-           <p class="line_P"><i class="el-icon-bottom"></i></p>
-          </el-col>
-        </el-row>
-        <el-row>
-          <el-col :span="6" :offset="4">
-           <Card roleLabel="导播" curStep="准备出席导播工作"></Card>
-          </el-col>
-          <el-col :span="6">
-           <Card roleLabel="赛程安排者" curStep="安排赛程、通知报名"></Card>
-           <p class="line_P"><i class="el-icon-bottom"></i></p>
-          </el-col>
-          <el-col :span="6">
-            <el-row>
-              <Card roleLabel="裁判长" curStep="安排裁判、解说工作"></Card>
-              <p class="line_P"><i class="el-icon-bottom"></i></p>
-            </el-row>       
-          </el-col>
-        </el-row>
-        <el-row>
-          <el-col :span="6" :offset="10">
-           <Card roleLabel="解说" curStep="同意出席"></Card>
-           <p class="line_P"><i class="el-icon-bottom"></i></p>
-          </el-col>
-          <el-col :span="6">
-           <Card roleLabel="裁判" curStep="同意出席"></Card>
-          </el-col>
-        </el-row>
-        <el-row>
-          <el-col :offset="10">
-           <Card roleLabel="排班" curStep="排班赛程"></Card>
-           <p class="line_P"><i class="el-icon-bottom"></i></p>
-          </el-col>
-        </el-row>
-        <el-row>
-          <el-col :offset="10">
-           <Card roleLabel="落梨" curStep="主办方发布奖励"></Card>
-           <p class="line_O">结束<i class="el-icon-error"></i></p>
-          </el-col>
-        </el-row>
+      <el-col :span="6" :offset="6">
+        <Card roleLabel="超级管理员" curStep="创建业务审批流程"></Card>
+        <p class="line_P"><i class="el-icon-bottom"></i></p>
+        <Card
+          roleLabel="开发负责人"
+          curStep="确认该流程可以进行"
+        ></Card>
+        <p class="line_P"><i class="el-icon-bottom"></i></p>
+        <Card
+          roleLabel="超级管理员"
+          curStep="公布新业务审批流程给相应节点审批负责人"
+        ></Card>
+        <p class="line_P"><i class="el-icon-bottom"></i></p>
+        <Card roleLabel="审批负责人" curStep="关注审批节点进行情况"></Card>
+        <p class="line_O">结束<i class="el-icon-error"></i></p>
       </el-col>
     </el-row>
   </div>
@@ -110,7 +97,7 @@ export default {
   font-size: 25px;
   color: #67c23a;
 }
-.line_O{
+.line_O {
   width: 130px;
   text-align: center;
   font-size: 14px;
