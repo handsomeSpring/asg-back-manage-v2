@@ -2,18 +2,36 @@
   <div class="rule__config--grid">
     <div class="left_tabs">
       <li class="header__tabs items">流程规则</li>
-      <li class="items item-children" :class="bizType === item.bizType ? 'active' : ''" v-for="item in tabs"
-        :key="item.bizType" @click="handleChooseBizType(item)">
+      <li
+        class="items item-children"
+        :class="bizType === item.bizType ? 'active' : ''"
+        v-for="item in tabs"
+        :key="item.bizType"
+        @click="handleChooseBizType(item)"
+      >
         {{ item.label }}
       </li>
+      <li class="items addBtn" @click="addNewFlow">新增审批流程</li>
     </div>
     <el-card shadow="hover">
       <template #header>
         <div class="biz__header">
           <p>{{ bizName }}</p>
           <div class="operation--ops">
-            <el-button v-if="bizType" type="primary" size="small" @click="addNewNode">新增节点</el-button>
-            <el-button type="primary" size="small" :loading="loading" @click="handleSave">保存规则</el-button>
+            <el-button
+              v-if="bizType"
+              type="primary"
+              size="small"
+              @click="addNewNode"
+              >新增节点</el-button
+            >
+            <el-button
+              type="primary"
+              size="small"
+              :loading="loading"
+              @click="handleSave"
+              >保存规则</el-button
+            >
           </div>
         </div>
       </template>
@@ -22,9 +40,15 @@
           <p>开始</p>
           <div class="line"></div>
         </div>
-        <div class="process__item" v-for="(item, index) in processInfo" @click="openDialog(item, index)" :key="index">
+        <div
+          class="process__item"
+          v-for="(item, index) in processInfo"
+          @click="openDialog(item, index)"
+          :key="index"
+        >
           <div class="title">
-            <p> <i style="margin-right:3px" class="el-icon-s-custom"></i>
+            <p>
+              <i style="margin-right: 3px" class="el-icon-s-custom"></i>
               {{ item.chinaname || "未配置" }}
             </p>
             <i class="el-icon-close icon" @click.stop="closeNode(index)"></i>
@@ -42,19 +66,39 @@
       </div>
       <el-empty description="未选择业务" v-show="!bizType"></el-empty>
     </el-card>
-    <roleChooseDialog :dialogVisible.sync="dialogVisible" :personInfo="personInfo" @finish="handleChoose">
+    <roleChooseDialog
+      :dialogVisible.sync="dialogVisible"
+      :personInfo="personInfo"
+      @finish="handleChoose"
+    >
     </roleChooseDialog>
+    <el-dialog :visible.sync="newDialog" title="新增业务" width="30%">
+      <el-input
+        style="margin: 12px 0"
+        v-model="newForm.label"
+        size="small"
+        placeholder="请输入业务名称"
+      ></el-input>
+      <el-input
+        v-model="newForm.bizType"
+        size="small"
+        placeholder="请输入业务编码"
+      ></el-input>
+      <span slot="footer">
+        <el-button @click="addNewBizType" size="small" type="primary">新增业务</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
 <script>
 import { getByTitle, addConfig } from "@/api/config";
-import roleChooseDialog from './components/roleChooseDialog.vue';
+import roleChooseDialog from "./components/roleChooseDialog.vue";
 
 export default {
   name: "ruleConfig",
   components: {
-    roleChooseDialog
+    roleChooseDialog,
   },
   data() {
     return {
@@ -65,6 +109,12 @@ export default {
       personInfo: {},
       tableIndex: null,
       loading: false,
+      newDialog: false,
+      newForm: {
+        label: "",
+        bizType: "",
+        process: [],
+      },
     };
   },
   computed: {
@@ -77,33 +127,57 @@ export default {
   },
   watch: {
     bizType: {
-      handler(newVal) {
-
-      }
-    }
+      handler(newVal) {},
+    },
   },
   methods: {
-    async handleSave() {
+    async addNewBizType() {
       try {
-        this.loading = true;
-        const bizObj = this.tabs.find(item => item.bizType === this.bizType);
-        bizObj.process = this.processInfo;
-        const processId = this.processInfo.map(tab => tab.id);
-        const uniBeforeLength = processId.length;
-        const uniAfterLength = Array.from(new Set(processId)).length;
-        if(uniBeforeLength !== uniAfterLength) return this.$message.error('流程中不能出现相同的节点！');
-        if(this.processInfo.length === 0) return this.$message.error('至少配置一个节点！');
-        const flag = this.processInfo.every(item => !!item.id);
-        if(!flag) return this.$message.error('存在某个节点没有配置人员，请检查！');
+        if (!this.newForm.label || !this.newForm.bizType)
+          return this.$message.error("请完整填写表单！");
+        this.tabs.push(this.newForm);
         const req = {
           id: 327,
           msg: "审批规则配置",
           substance: JSON.stringify(this.tabs),
           title: "ruleConfig",
-        }
+        };
         const { status } = await addConfig(req);
-        if (status !== 200) throw new Error('服务端异常');
-        this.$message.success('保存成功！');
+        if (status !== 200) throw new Error("服务端异常");
+        this.$message.success("保存成功！");
+      } catch (error) {
+        this.$message.error(error.message);
+      } finally{
+        this.newDialog = false;
+      }
+    },
+    addNewFlow() {
+      this.newDialog = true;
+    },
+    async handleSave() {
+      try {
+        this.loading = true;
+        const bizObj = this.tabs.find((item) => item.bizType === this.bizType);
+        bizObj.process = this.processInfo;
+        const processId = this.processInfo.map((tab) => tab.id);
+        const uniBeforeLength = processId.length;
+        const uniAfterLength = Array.from(new Set(processId)).length;
+        if (uniBeforeLength !== uniAfterLength)
+          return this.$message.error("流程中不能出现相同的节点！");
+        if (this.processInfo.length === 0)
+          return this.$message.error("至少配置一个节点！");
+        const flag = this.processInfo.every((item) => !!item.id);
+        if (!flag)
+          return this.$message.error("存在某个节点没有配置人员，请检查！");
+        const req = {
+          id: 327,
+          msg: "审批规则配置",
+          substance: JSON.stringify(this.tabs),
+          title: "ruleConfig",
+        };
+        const { status } = await addConfig(req);
+        if (status !== 200) throw new Error("服务端异常");
+        this.$message.success("保存成功！");
       } catch (error) {
         this.$message.error(error.message);
       } finally {
@@ -130,15 +204,15 @@ export default {
         isAllowReturn: "0",
       });
     },
-    closeNode(index){
-      this.processInfo.splice(index,1)
-    }
+    closeNode(index) {
+      this.processInfo.splice(index, 1);
+    },
   },
   created() {
     getByTitle("ruleConfig").then((res) => {
       this.tabs = res.data;
     });
-  }
+  },
 };
 </script>
 
@@ -154,6 +228,13 @@ export default {
       align-items: center;
       height: 50px;
       padding-left: 25px;
+      &.addBtn {
+        border-radius: 10px;
+        margin:12px 0;
+        border: 1px dashed #e7e7e7;
+        cursor: pointer;
+        background: rgba(26, 107, 241, 0.08);
+      }
 
       &.item-children {
         color: #252527;
@@ -270,8 +351,24 @@ export default {
         transform: translate(0, -50%);
         background: #f40;
         position: absolute;
-        -webkit-clip-path: polygon(40% 0%, 40% 20%, 100% 20%, 100% 80%, 40% 80%, 40% 100%, 0% 50%);
-        clip-path: polygon(40% 0%, 40% 20%, 100% 20%, 100% 80%, 40% 80%, 40% 100%, 0% 50%);
+        -webkit-clip-path: polygon(
+          40% 0%,
+          40% 20%,
+          100% 20%,
+          100% 80%,
+          40% 80%,
+          40% 100%,
+          0% 50%
+        );
+        clip-path: polygon(
+          40% 0%,
+          40% 20%,
+          100% 20%,
+          100% 80%,
+          40% 80%,
+          40% 100%,
+          0% 50%
+        );
       }
 
       .title {
@@ -293,10 +390,10 @@ export default {
     }
   }
 }
-.icon{
-  color:#fff;
-  &:hover{
-    color:#f40;
+.icon {
+  color: #fff;
+  &:hover {
+    color: #f40;
   }
 }
 </style>
