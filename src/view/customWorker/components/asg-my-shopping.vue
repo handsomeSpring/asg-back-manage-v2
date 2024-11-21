@@ -10,7 +10,7 @@
                         <p :class="item.isVerification ? 'goods__success' : 'goods__error'">{{ item.isVerification ? '已核验' : '待核验' }}</p>
                     </header>
                     <main>
-                        <img src="@/assets/logo.png">
+                        <img src="@/assets/images/logo.png">
                         <div class="left__container">
                             <div class="first__line">
                                 <p class="des__title">{{ item.description }}</p>

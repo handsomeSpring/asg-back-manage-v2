@@ -11,7 +11,7 @@
     <div class="picture" ref="imageWrapper">
       <img ref="bg" class="background-wrap" :src="bgImg" />
       <div class="icon">
-        <img class="icon-img" src="@/assets/logo.png" />
+        <img class="icon-img" src="@/assets/images/logo.png" />
       </div>
       <div class="title-wrap" ref="titleWrap">
         <p ref="title">{{ eventname }}</p>
@@ -317,14 +317,6 @@ export default {
 </script>
 
 <style scoped lang="less">
-@font-face {
-  font-family: "hk";
-  src: url("../../assets/fontFamily/hk.TTF");
-}
-@font-face {
-  font-family: "ckt";
-  src: url("../../assets/fontFamily/ckt.OTF");
-}
 header {
   display: flex;
   justify-content: start;

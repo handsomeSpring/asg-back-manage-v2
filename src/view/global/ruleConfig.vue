@@ -43,7 +43,8 @@
       </template>
       <div class="main-body" id="efContainer" v-show="bizType">
         <div class="start__btn" id="start">
-          <p>开始</p>
+          <svg-icon iconClass="startPerson" width="25px" height="25px"></svg-icon>
+          <p>发起人</p>
           <div class="line"></div>
         </div>
         <div
@@ -67,7 +68,7 @@
         </div>
         <div class="end__btn" id="end">
           <div class="circle__list"></div>
-          <p>流程结束</p>
+          <p>流程结束（办结）</p>
         </div>
       </div>
       <el-empty description="未选择业务" v-show="!bizType"></el-empty>
@@ -317,6 +318,7 @@ export default {
     display: flex;
     align-items: center;
     justify-content: space-between;
+    font-family: 'hk';
   }
 
   .main-body {
@@ -326,15 +328,22 @@ export default {
     justify-content: center;
 
     .start__btn {
-      padding: 4px 12px;
+      padding: 6px 12px;
       width: 120px;
       background: #40a9ff;
       text-align: center;
       color: #fff;
-      border-radius: 4px;
+      border-radius: 6px;
       margin-bottom: 36px;
-      height: 20px;
       position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap:4px;
+      p{
+        font-size: 14px;
+        font-family: 'hk';
+      }
 
       .line {
         position: absolute;
@@ -363,6 +372,7 @@ export default {
       p {
         font-size: 12px;
         color: #cdcdcd;
+        font-family: 'hk';
       }
     }
 

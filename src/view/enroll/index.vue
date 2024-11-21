@@ -84,7 +84,7 @@ export default {
       },
       total: null,
       fullScreenLoading: null,
-      defaultImgUrl: require("../../assets/logo.png"),
+      defaultImgUrl: require("../../assets/images/logo.png"),
       dialogVisible: false,
       tableList: [],
       sortOptions: [

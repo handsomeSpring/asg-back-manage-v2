@@ -14,7 +14,7 @@
           <div slot="error">
             <img
               style="width: 50px; height: 50px"
-              src="@/assets/logo_black.png"
+              src="@/assets/images/logo_black.png"
             />
           </div>
         </el-image>
@@ -38,7 +38,7 @@
         </div>
       </div>
       <div class="right__container">
-        <img src="@/assets/person.png" />
+        <img src="@/assets/images/person.png" />
         <p>我经常发现，快乐几乎常常是辛勤工作的一种反应！</p>
       </div>
     </header>

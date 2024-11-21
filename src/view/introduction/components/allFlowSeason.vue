@@ -225,10 +225,10 @@ export default {
         }
       }
       p {
-        font-weight: 400;
         font-size: 14px;
         color: #000000;
         line-height: 16px;
+        font-family: 'hk';
       }
     }
   }

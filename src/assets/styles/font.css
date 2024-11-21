@@ -1,0 +1,12 @@
+@font-face {
+    font-family: 'hk';
+    src: url('../../assets/fontFamily/hk.TTF') format('truetype'); /* 引用字体，但非全局使用 */
+    font-weight: normal;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'ckt';
+    src: url('../../assets/fontFamily/ckt.OTF') format('truetype'); /* 全局字体 */
+    font-weight: normal;
+    font-style: normal;
+}

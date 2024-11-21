@@ -13,7 +13,7 @@
                     <div class="team">
                         <el-image :src="`${SIp}${item.team.belong}/${item.team.team1_name}.png`" style="width:70px;height:70px">
                             <div slot="error">
-                                <img style="width:68px;height:68px;border:1px dashed #4090EF" src="@/assets/logo.png">
+                                <img style="width:68px;height:68px;border:1px dashed #4090EF" src="@/assets/images/logo.png">
                             </div>
                         </el-image>
                         <p class="host game">{{ item.team.team1_name }}</p>
@@ -23,7 +23,7 @@
                     <div class="team">
                         <el-image :src="`${SIp}/${item.team.belong}/${item.team.team2_name}.png`" style="width:70px;height:70px">
                             <div slot="error">
-                                <img style="width:68px;height:68px;border:1px dashed #4090EF" src="@/assets/logo.png">
+                                <img style="width:68px;height:68px;border:1px dashed #4090EF" src="@/assets/images/logo.png">
                             </div>
                         </el-image>
                         <p class="custom game">{{ item.team.team2_name }}</p>

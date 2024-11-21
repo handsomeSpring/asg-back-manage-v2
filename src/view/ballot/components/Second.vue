@@ -1,14 +1,14 @@
 <template>
   <div class="clearfix">
     <div v-show="isCanvas" class="shuffle-wrap">
-      <img ref="img1" class="shuffle-img" src="@/assets/1.jpg" />
-      <img ref="img2" class="shuffle-img" src="@/assets/1.jpg" />
-      <img ref="img3" class="shuffle-img" src="@/assets/1.jpg" />
-      <img ref="img4" class="shuffle-img" src="@/assets/1.jpg" />
-      <img class="shuffle-img" src="@/assets/1.jpg" />
+      <img ref="img1" class="shuffle-img" src="@/assets/images/1.jpg" />
+      <img ref="img2" class="shuffle-img" src="@/assets/images/1.jpg" />
+      <img ref="img3" class="shuffle-img" src="@/assets/images/1.jpg" />
+      <img ref="img4" class="shuffle-img" src="@/assets/images/1.jpg" />
+      <img class="shuffle-img" src="@/assets/images/1.jpg" />
     </div>
     <div v-show="!isCanvas" class="card-wrap">
-      <img ref="card" class="card" src="@/assets/card.png" />
+      <img ref="card" class="card" src="@/assets/images/card.png" />
     </div>
     <canvas ref="canvas" class="canvas-wrap"></canvas>
     <audio ref="audio" :src="url"></audio>

@@ -17,7 +17,7 @@
                         height: 98px;
                         border: 1px dashed #4090ef;
                       "
-                      src="@/assets/logo.png"
+                      src="@/assets/images/logo.png"
                     />
                   </div>
                 </el-image>

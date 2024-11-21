@@ -2,11 +2,11 @@
   <div>
     <header class="clearfix">
       <el-image style="margin-left: 40px; display: block; width: 50px; height: 50px"
-        :src="require('@/assets/logo.png')"></el-image>
+        :src="require('@/assets/images/logo.png')"></el-image>
       <span class="title">ASG赛事后台管理系统</span>
     </header>
     <main>
-      <el-image class="img-wrap" :src="require('@/assets/manager.svg')">
+      <el-image class="img-wrap" :src="require('@/assets/images/manager.svg')">
       </el-image>
       <div class="loginwrap">
         <div class="header-form">
@@ -204,7 +204,7 @@ main {
   height: calc(100vh - 140px);
   position: relative;
   overflow: hidden;
-  background-image: url(../../assets/background.png);
+  background: url('../../assets/images/background.png');
   background-size: cover;
 
   .img-wrap {

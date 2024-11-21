@@ -26,7 +26,7 @@
                         <td class="one__td" width="15%">
                             <div
                                 style="width: calc(100% - 14px);padding:7px;display: flex;justify-content: center;align-items: center;">
-                                <img v-if="!item.base64" src="@/assets/logo.png">
+                                <img v-if="!item.base64" src="@/assets/images/logo.png">
                                 <img v-else :src="item.base64">
                             </div>
                         </td>

@@ -221,7 +221,7 @@ export default {
 .head-wrap {
   height: 80px;
   width: 100%;
-  background-image: url("../../assets/dataBackground.jpg");
+  background-image: url("../../assets/images/dataBackground.jpg");
   background-size: 101% 100%;
 }
 

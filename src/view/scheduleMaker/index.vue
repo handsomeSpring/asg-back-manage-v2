@@ -197,7 +197,7 @@ export default {
     .model__content--right {
         width: 100%;
         aspect-ratio: 16 / 9;
-        background: url('../.././assets/gamePic.jpg');
+        background: url('../.././assets/images/gamePic.jpg');
         background-repeat: no-repeat;
         background-size: contain;
         position: relative;

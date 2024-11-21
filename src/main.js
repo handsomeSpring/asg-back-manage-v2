@@ -2,14 +2,15 @@ import Vue from 'vue'
 import App from './App.vue'
 import VueRouter from  'vue-router'
 //引入路由器
-import router from './router'
+import router from '@/router'
 Vue.use(VueRouter)
 //引入store
-import store from './store/index'
+import store from '@/store/index'
 import ElementUI from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
-import "./assets/index";
-import "./assets/less/reset.css"
+import "@/assets/index";
+import "@/assets/styles/reset.css";
+import "@/assets/styles/font.css";
 // 导入编译器
 //导入v-md-edit 插件
 import VMdEditor from '@kangc/v-md-editor';

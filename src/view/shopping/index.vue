@@ -7,7 +7,7 @@
       <div class="main__left--grid">
         <li class="item__box--radius" :class="item.isCheck ? 'active' : ''" v-for="(item, index) in goodsData"
           :key="index">
-          <img src="../../assets/goodsImg.png">
+          <img src="../../assets/images/goodsImg.png">
           <h4 class="title">{{ item.name }}</h4>
           <p class="description"><el-tag size="small" type="danger">特价</el-tag>{{ item.description }}</p>
           <footer>

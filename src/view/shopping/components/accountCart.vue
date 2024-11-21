@@ -2,7 +2,7 @@
     <el-dialog title="采购清单" :visible="computedDialog" @close="computedDialog = false" width="60%">
         <div class="main-body" v-if="cartInfo.length > 0">
             <li v-for="item in cartInfo" :key="item.id">
-                <img src="@/assets/goodsImg.png">
+                <img src="@/assets/images/goodsImg.png">
                 <div class="left-container">
                     <p class="title">{{ item.name }}</p>
                     <p class="description">{{ item.description }}</p>

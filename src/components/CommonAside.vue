@@ -4,7 +4,7 @@
     <el-menu :collapse="isCollapse" :default-active="$route.path" class="el-menu-vertical-demo"
       background-color="#0089f3" text-color="#e3f2fd" active-text-color="#f7e157" router :unique-opened="true">
       <div class="aside__header">
-        <img src="@/assets/logo_black.png">
+        <img src="@/assets/images/logo_black.png">
         <p v-show="!isCollapse">最强民间赛事</p>
       </div>
       <template v-for="(menu, index) in menuOptions" >
@@ -74,9 +74,9 @@ export default {
   margin: 6px 12px;
 
   p {
-    font-weight: bold;
     color: #fff;
     margin-left: 24px;
+    font-family: 'ckt';
   }
 
   img {

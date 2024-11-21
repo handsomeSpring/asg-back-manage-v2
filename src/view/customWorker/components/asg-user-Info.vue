@@ -5,7 +5,7 @@
             <div class="flex__container">
                 <el-image :src="userInfo.base64" style="width:100%; height: 100%; border-radius: 10px;">
                     <div slot="error">
-                        <img style="width: 8em; height: 8em; border-radius: 10px;flex:1" src="@/assets/logo_black.png">
+                        <img style="width: 8em; height: 8em; border-radius: 10px;flex:1" src="@/assets/images/logo_black.png">
                     </div>
                 </el-image>
             </div>
