@@ -9,9 +9,15 @@
         :key="item.bizType"
         @click="handleChooseBizType(item)"
       >
-        {{ item.label }}
+        <p>{{ item.label }}</p>
+        <div @click.stop="handleDelete(item)">
+          <svg-icon iconClass="deleteBash" color="#f40"></svg-icon>
+        </div>
       </li>
-      <li class="items addBtn" @click="addNewFlow">新增审批流程</li>
+      <li class="items addBtn" @click="addNewFlow">
+        <p>新增审批流程</p>
+        <i class="el-icon-plus"></i>
+      </li>
     </div>
     <el-card shadow="hover">
       <template #header>
@@ -72,7 +78,12 @@
       @finish="handleChoose"
     >
     </roleChooseDialog>
-    <el-dialog :visible.sync="newDialog" title="新增业务" width="30%">
+    <el-dialog
+      :visible.sync="newDialog"
+      title="新增业务"
+      width="30%"
+      :close-on-click-modal="false"
+    >
       <el-input
         style="margin: 12px 0"
         v-model="newForm.label"
@@ -85,7 +96,9 @@
         placeholder="请输入业务编码"
       ></el-input>
       <span slot="footer">
-        <el-button @click="addNewBizType" size="small" type="primary">新增业务</el-button>
+        <el-button @click="addNewBizType" size="small" type="primary"
+          >新增业务</el-button
+        >
       </span>
     </el-dialog>
   </div>
@@ -125,16 +138,48 @@ export default {
       );
     },
   },
-  watch: {
-    bizType: {
-      handler(newVal) {},
-    },
-  },
   methods: {
+    // 删除业务流程
+    async handleDelete(item) {
+      try {
+        const result = await this.$confirm(
+          `您确定删除${item.label}业务流程吗？`,
+          "确定",
+          {
+            confirmButtonText: "确定",
+            cancelButtonText: "取消",
+            type: "warning",
+          }
+        );
+        if (result !== "confirm") return;
+        const index = this.tabs.findIndex(
+          (tab) => tab.bizType === item.bizType
+        );
+        if (index === -1) throw new Error("未找到下标");
+        this.tabs.splice(index, 1);
+        const req = {
+          id: 327,
+          msg: "审批规则配置",
+          substance: JSON.stringify(this.tabs),
+          title: "ruleConfig",
+        };
+        const { status } = await addConfig(req);
+        if (status !== 200) throw new Error("服务端异常");
+        this.$message.success("删除成功！");
+        this.bizType = "";
+        this.processInfo = [];
+      } catch (error) {
+        if (typeof error === "string" && error === "cancel") return;
+        this.$message.error(error.message);
+      }
+    },
     async addNewBizType() {
       try {
         if (!this.newForm.label || !this.newForm.bizType)
-          return this.$message.error("请完整填写表单！");
+          throw new Error("请完整填写表单！");
+        const bizTypes = this.tabs.map((item) => item.bizType);
+        if (bizTypes.includes(this.newForm.bizType))
+          throw new Error("业务编码重复！");
         this.tabs.push(this.newForm);
         const req = {
           id: 327,
@@ -144,11 +189,16 @@ export default {
         };
         const { status } = await addConfig(req);
         if (status !== 200) throw new Error("服务端异常");
-        this.$message.success("保存成功！");
+        this.$message.success("新增成功！");
       } catch (error) {
         this.$message.error(error.message);
-      } finally{
+      } finally {
         this.newDialog = false;
+        this.newForm = {
+          label: "",
+          bizType: "",
+          process: [],
+        };
       }
     },
     addNewFlow() {
@@ -226,13 +276,15 @@ export default {
     .items {
       display: flex;
       align-items: center;
+      justify-content: space-between;
       height: 50px;
-      padding-left: 25px;
+      padding: 0 25px;
       &.addBtn {
         border-radius: 10px;
-        margin:12px 0;
+        margin: 12px 0;
         border: 1px dashed #e7e7e7;
         cursor: pointer;
+        height: 40px;
         background: rgba(26, 107, 241, 0.08);
       }
 

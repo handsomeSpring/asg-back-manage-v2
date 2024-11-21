@@ -13,7 +13,7 @@
                             <div class="icon__div" :class="refereeVisible ? 'rotate__icon' : ''"
                                 @click="refereeVisible = !refereeVisible"><i class="el-icon-arrow-up"></i></div>
                         </li>
-                        <Transition name="slide-fade">
+                        <el-collapse-transition>
                             <div v-show="refereeVisible">
                                 <li v-for="(item, index) in refereeOptions" :key="`${index}-referee`">
                                     <el-checkbox v-model="item.isCheck"
@@ -21,13 +21,13 @@
                                     <p>{{ item.chinaname }}</p>
                                 </li>
                             </div>
-                        </Transition>
+                        </el-collapse-transition>
                         <li class="title">
                             <div>裁判列表</div>
                             <div class="icon__div" :class="judgeVisible ? 'rotate__icon' : ''"
                                 @click="judgeVisible = !judgeVisible"><i class="el-icon-arrow-up"></i></div>
                         </li>
-                        <Transition name="slide-fade">
+                        <el-collapse-transition>
                             <div v-show="judgeVisible">
                                 <li v-for="(item, index) in judgetOptions" :key="`${index}-judge`">
                                     <el-checkbox v-model="item.isCheck"
@@ -35,7 +35,7 @@
                                     <p>{{ item.chinaname }}</p>
                                 </li>
                             </div>
-                        </Transition>
+                        </el-collapse-transition>
                     </el-scrollbar>
                 </div>
                 <div class="choose__item">
@@ -49,6 +49,7 @@
             </template>
             <template v-else>
                 <el-input size="small" v-model="choosePerson.chinaname" placeholder="请输入人员中文名" clearable></el-input>
+                <el-input size="small" v-model="choosePerson.id" placeholder="用户id/不清楚可以输入0" ></el-input>
             </template>
         </div>
         <span slot="footer">
@@ -69,7 +70,7 @@ export default {
             personType: '1', // 人员形式
             choosePerson: {
                 chinaname: '',
-                id: ''
+                id: 0
             },
             refereeVisible: false,
             judgeVisible: false
@@ -111,7 +112,7 @@ export default {
                 role.isCheck = false;
             });
             this.choosePerson.chinaname = '';
-            this.choosePerson.id = '';
+            this.choosePerson.id = 0;
         },
         handleClose() {
             this.visible = false;
@@ -126,7 +127,7 @@ export default {
         },
         handleCheck(value, item) {
             this.choosePerson.chinaname = value ? item.chinaname : '';
-            this.choosePerson.id = value ? item.id : '';
+            this.choosePerson.id = value ? item.id : 0;
             this.refereeOptions.forEach(role => {
                 if (role.id === item.id && value) {
                     role.isCheck = true;

@@ -11,7 +11,7 @@
           v-for="item in options"
           :key="item.name"
           :label="item.name"
-          :value="item.id"
+          :value="item.name"
         >
         </el-option>
       </el-select>
@@ -35,36 +35,27 @@
       </div>
     </header>
     <!-- 表格 -->
-    <el-scrollbar style="height: 70vh">
-      <el-table
-        size="small"
-        border
-        v-loading="loading"
-        :span-method="mergeRowMethod"
-        :data="tableData"
-        style="width: 100%"
-      >
-        <el-table-column label="所属赛季" prop="赛季名" width="150">
-        </el-table-column>
-        <el-table-column label="战队名" prop="战队名" width="180">
-        </el-table-column>
-        <el-table-column label="联系方式" prop="联系方式" width="150">
-        </el-table-column>
-        <el-table-column label="报名时间" prop="报名时间" width="250">
-        </el-table-column>
-        <el-table-column label="票数" prop="票数" width="80"> </el-table-column>
-        <el-table-column
-          label="logo地址"
-          width="auto"
-          align="center"
-          prop="logo"
-        >
-          <template slot="header">
-            下载单个logo替换域名为{{ serveIp }}
-          </template>
-        </el-table-column>
-      </el-table>
-    </el-scrollbar>
+    <el-table
+      size="small"
+      border
+      v-loading="loading"
+      :span-method="mergeRowMethod"
+      :data="tableData"
+      height="60vh"
+    >
+      <el-table-column label="所属赛季" prop="赛季名" width="150" align="center">
+      </el-table-column>
+      <el-table-column label="战队名" prop="战队名" width="180" align="center">
+      </el-table-column>
+      <el-table-column label="联系方式" prop="联系方式" width="150" align="center">
+      </el-table-column>
+      <el-table-column label="报名时间" prop="报名时间" width="250" align="center">
+      </el-table-column>
+      <el-table-column label="票数" prop="票数" width="80" align="center"> </el-table-column>
+      <el-table-column label="logo地址" width="auto" align="center" prop="logo">
+        <template slot="header"> 战队LOGO地址 </template>
+      </el-table-column>
+    </el-table>
     <!-- <input type="file" accept=".xlsx, .xls" @change="handleClick" /> -->
   </div>
 </template>
@@ -81,11 +72,11 @@ export default {
       tableData: [],
       options: [],
       loading: false,
-      eventname: "第五届ASG众创赛",
+      eventname: "",
     };
   },
-  created() {
-    this.initSeason();
+  async created() {
+    await this.initSeason();
     this.getPlayerDetails();
   },
   computed: {
@@ -96,15 +87,22 @@ export default {
   methods: {
     // 下载所有信息表单
     async exportDetails() {
-      const { data } = await exportExcel(this.eventname);
-      const baseURL = `${window.SERVE_IP}/excel/`;
-      let a = document.createElement("a");
-      a.href = baseURL + data + ".xlsx";
-      a.download = `${this.eventname}所有战队详情`;
-      a.style.display = "none";
-      document.body.appendChild(a);
-      a.click();
-      a.remove();
+      try {
+        const { data, status } = await exportExcel(this.eventname);
+        if (status !== 200) throw new Error(data?.message ?? "服务端异常");
+        if (data && data.code && data.code !== 200)
+          throw new Error(data?.message ?? "未知错误");
+        const baseURL = `${window.SERVE_IP}/excel/`;
+        let a = document.createElement("a");
+        a.href = baseURL + data + ".xlsx";
+        a.download = `${this.eventname}所有战队详情`;
+        a.style.display = "none";
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+      } catch (error) {
+        this.$message.error(error.message);
+      }
     },
     mergeRowMethod({ row, rowIndex, columnIndex }) {
       // 合并行  产品名字相同合并、我是合并第三列，所以合判断columnIndex是否等于2
@@ -167,11 +165,15 @@ export default {
     // 获取赛季
     async initSeason() {
       try {
+        this.loading = true;
         const { status, data } = await getAllEvents();
         if (status !== 200) throw new Error("服务端异常，请联系网站管理员！");
         this.options = data;
+        const noOverData = data.filter((item) => !item.is_over);
         this.eventname =
-          data.filter((item) => !item.is_over).at(-1)?.name ?? "未知赛季";
+          noOverData.length === 0
+            ? data[0]?.name ?? ""
+            : noOverData.at(-1)?.name ?? "未知赛季";
       } catch (error) {
         this.$message.error(error.message);
       }
@@ -188,7 +190,9 @@ export default {
             联系方式: item.team_tel,
             报名时间: item.time,
             票数: item.piaoshu,
-            logo: item.logo_uri,
+            logo: item.logo_uri
+              ? item.logo_uri.replace("https://124.223.35.239", this.serveIp)
+              : "",
           };
         });
       } catch (error) {

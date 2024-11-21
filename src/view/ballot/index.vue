@@ -103,11 +103,15 @@
               :back="item"
             ></Card>
           </div>
+          <p class="text_info">
+            自动计算：一组最多{{ maxTeamNum }}支战队
+            <span class="warning">点击组容器选择该组，翻牌后战队会自动进入该组。</span>
+          </p>
           <div class="group-wrap">
             <div
               :class="{ active: groupIndex === index }"
               class="group"
-              v-for="(item, index) in groups"
+              v-for="(_, index) in groups"
               :key="index"
               @click="handleChooseGroup(index)"
             >
@@ -185,7 +189,7 @@
         </div>
         <div v-if="activeName === 3">
           <el-button size="small" type="primary" @click="inLastCur"
-            >进入翻拍环节</el-button
+            >进入翻牌环节</el-button
           >
         </div>
       </div>
@@ -428,5 +432,14 @@ export default {
   justify-content: center;
   align-items: center;
   gap: 12px;
+}
+.text_info{
+  color:#979797;
+  font-size: 14px;
+  font-weight: 500;
+  .warning{
+    color:rgb(179, 149, 72);
+    margin-left:24px;
+  }
 }
 </style>
