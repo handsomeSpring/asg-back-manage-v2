@@ -1,5 +1,5 @@
 <template>
-  <div class="introduction__container">
+  <div class="introduction__container asg-table-main">
     <AsgHighSearch showOperation>
       <template #top>
         <el-tabs v-model="activeName" type="card" size="small">

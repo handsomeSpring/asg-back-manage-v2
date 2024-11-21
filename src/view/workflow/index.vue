@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="asg-table-main">
     <el-container>
       <el-header class="my_header">
         <div class="left-box">办赛激励任务分配一览</div>

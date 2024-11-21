@@ -1,32 +1,18 @@
 <template>
   <div>
     <header>
-      <el-button
-        icon="el-icon-plus"
-        size="small"
-        type="primary"
-        @click="openDialog('add')"
-        >开启新赛季</el-button
-      >
+      <el-button icon="el-icon-plus" size="small" type="primary" @click="openDialog('add')">开启新赛季</el-button>
     </header>
-    <el-scrollbar
-      v-if="events.length > 0"
-      style="height: 70vh"
-      v-loading="loading"
-    >
+    <div class="asg-table-main" v-if="events.length > 0" v-loading="loading">
       <asg-table-card v-for="(item, index) in events" :key="index">
         <template #header>
           <div class="asg-header">
             <div class="header-left">
               <span class="fontWeight">{{ item.name }}</span>
               <span class="time-info">
-                {{ new Date(item.opentime) | parseTime("{y}-{m}-{d}") }}</span
-              >
-              <el-tag
-                size="small"
-                :type="item.is_over ? 'danger' : 'primary'"
-                >{{ item.is_over ? "已结束" : "进行中" }}</el-tag
-              >
+                {{ new Date(item.opentime) | parseTime("{y}-{m}-{d}") }}</span>
+              <el-tag size="small" :type="item.is_over ? 'danger' : 'primary'">{{ item.is_over ? "已结束" : "进行中"
+                }}</el-tag>
             </div>
             <div class="header-operation">
               <el-button type="text" @click="checkRuleInfo(item)">
@@ -35,11 +21,7 @@
               <el-button type="text" @click="handleUpdate(item)">
                 编辑赛季
               </el-button>
-              <el-button
-                style="color: #f40"
-                type="text"
-                @click="deleteItem(item.id)"
-              >
+              <el-button style="color: #f40" type="text" @click="deleteItem(item.id)">
                 删除赛季
               </el-button>
             </div>
@@ -51,52 +33,24 @@
           </div>
         </template>
       </asg-table-card>
-    </el-scrollbar>
+    </div>
     <div class="no-message" v-else>暂无赛季</div>
     <!-- 赛季详情 -->
-    <el-dialog
-      top="5vh"
-      :close-on-click-modal="false"
-      append-to-body
-      :title="title"
-      width="70%"
-      :visible.sync="dialogVisible"
-    >
-      <el-form
-        ref="seasonForm"
-        :model="seasonForm"
-        label-width="120px"
-        label-position="right"
-        :rules="formRules"
-      >
+    <el-dialog top="5vh" :close-on-click-modal="false" append-to-body :title="title" width="70%"
+      :visible.sync="dialogVisible">
+      <el-form ref="seasonForm" :model="seasonForm" label-width="120px" label-position="right" :rules="formRules">
         <el-row type="flex">
           <el-col :span="11">
             <el-form-item label="赛季名" prop="name">
-              <el-input
-                size="mini"
-                v-model="seasonForm.name"
-                placeholder="输入赛季名"
-              ></el-input>
+              <el-input size="mini" v-model="seasonForm.name" placeholder="输入赛季名"></el-input>
             </el-form-item>
           </el-col>
           <el-col :span="11" :offset="2">
             <el-form-item label="赛季开始时间" prop="opentime">
-              <el-date-picker
-                v-if="type === 'add'"
-                v-model="seasonForm.opentime"
-                size="small"
-                type="datetime"
-                placeholder="选择日期时间"
-                value-format="yyyy-MM-ddThh:mm:ss.656Z"
-                format="yyyy-MM-dd hh:mm:ss"
-              >
+              <el-date-picker v-if="type === 'add'" v-model="seasonForm.opentime" size="small" type="datetime"
+                placeholder="选择日期时间" value-format="yyyy-MM-ddThh:mm:ss.656Z" format="yyyy-MM-dd hh:mm:ss">
               </el-date-picker>
-              <el-input
-                v-else
-                v-model="seasonForm.opentime"
-                size="small"
-                placeholder="格式yyyy-MM-ddThh:mm:ss.656Z"
-              >
+              <el-input v-else v-model="seasonForm.opentime" size="small" placeholder="格式yyyy-MM-ddThh:mm:ss.656Z">
               </el-input>
             </el-form-item>
           </el-col>
@@ -126,44 +80,20 @@
         <template>
           <label><span style="color: #f40">*</span>赛季规则</label>
           <el-row style="margin-top: 12px">
-            <v-md-editor
-              v-model="rules"
-              height="400px"
-              width="800"
-            ></v-md-editor>
+            <v-md-editor v-model="rules" height="400px" width="800"></v-md-editor>
           </el-row>
         </template>
         <div style="text-align: right; margin-top: 12px">
-          <el-button
-            v-if="type === 'add'"
-            size="small"
-            type="primary"
-            @click="handleAddEvent"
-            >发布</el-button
-          >
-          <el-button v-else type="primary" size="small" @click="updateItem"
-            >更新</el-button
-          >
-          <el-button size="small" plain @click="dialogVisible = false"
-            >关 闭</el-button
-          >
+          <el-button v-if="type === 'add'" size="small" type="primary" @click="handleAddEvent">发布</el-button>
+          <el-button v-else type="primary" size="small" @click="updateItem">更新</el-button>
+          <el-button size="small" plain @click="dialogVisible = false">关 闭</el-button>
         </div>
       </el-form>
     </el-dialog>
     <!-- 赛季规则 -->
-    <el-dialog
-      top="5vh"
-      title="规则详情"
-      append-to-body
-      width="60%"
-      :visible.sync="checkDialogVisible"
-    >
+    <el-dialog top="5vh" title="规则详情" append-to-body width="60%" :visible.sync="checkDialogVisible">
       <el-scrollbar style="height: 55vh">
-        <v-md-preview
-          :text="checkRules"
-          height="400px"
-          width="800"
-        ></v-md-preview>
+        <v-md-preview :text="checkRules" height="400px" width="800"></v-md-preview>
       </el-scrollbar>
     </el-dialog>
   </div>
@@ -318,7 +248,7 @@ export default {
               this.$message.error("服务器异常，请联系管理员！");
             });
         })
-        .catch(() => {});
+        .catch(() => { });
     },
     async updateItem() {
       try {
@@ -343,23 +273,27 @@ export default {
 header {
   margin: 0 0 12px;
 }
+
 .asg-header {
   height: inherit;
   padding: 0 18px;
   display: flex;
   align-items: center;
   justify-content: space-between;
+
   .header-left {
     display: flex;
     align-items: center;
-    gap:12px;
+    gap: 12px;
+
     .fontWeight {
       font-weight: 600;
       color: #4f73eb;
     }
-    .time-info{
+
+    .time-info {
       font-size: 14px;
-      color:#333333;
+      color: #333333;
       font-weight: 400;
     }
   }
@@ -372,8 +306,9 @@ header {
     gap: 18px;
   }
 }
-.progress-content{
-  padding:24px;
+
+.progress-content {
+  padding: 24px;
   display: flex;
   align-items: center;
   justify-content: center;

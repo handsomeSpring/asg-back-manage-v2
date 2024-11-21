@@ -19,7 +19,7 @@
         <el-button size="small" @click="resetForm">重置</el-button>
       </div>
     </header>
-    <el-scrollbar class="icon-container">
+    <div class="asg-table-main">
       <el-table v-loading="loading" element-loading-text="拼命加载中" element-loading-spinner="el-icon-loading"
         :data="tableData" style="width:100%" :header-cell-style="{ background: '#f2f6fd', color: '#000' }">
         <el-table-column type="expand">
@@ -105,8 +105,8 @@
           </template>
         </el-table-column>
       </el-table>
-    </el-scrollbar>
-    <el-pagination @size-change="handleChange($event, 'limit')" @current-change="handleChange($event, 'page')"
+    </div>
+    <el-pagination style="text-align: right;" @size-change="handleChange($event, 'limit')" @current-change="handleChange($event, 'page')"
       :current-page="listQuery.page" :page-sizes="[10, 20, 30, 40, 50]" :page-size="listQuery.limit"
       layout="total, sizes, prev, pager, next, jumper" :total="total">
     </el-pagination>

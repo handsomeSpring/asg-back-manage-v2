@@ -1,15 +1,6 @@
 <template>
   <div>
-    <el-scrollbar
-      :native="false"
-      wrapStyle=""
-      wrapClass=""
-      viewClass=""
-      viewStyle=""
-      :noresize="false"
-      tag="section"
-      style="height: calc(77vh - 46px); margin-bottom: 10px"
-    >
+    <div class="asg-table-main">
       <baseTable :data="tableData" :column="tableProps">
         <template #projectHeader="{ data }">
           <div>
@@ -24,21 +15,13 @@
             </span>
           </div>
           <div>
-            <span
-              ><i
-                class="el-icon-edit"
-                style="
+            <span><i class="el-icon-edit" style="
                   color: rgb(91, 182, 242);
                   font-size: 16px;
                   cursor: pointer;
-                "
-                @click="addOrEdit(data)"
-              ></i></span>
-            <i
-              class="el-icon-delete"
-              style="color: red; font-size: 16px; cursor: pointer"
-              @click="handleDelete(data)"
-            ></i>
+                " @click="addOrEdit(data)"></i></span>
+            <i class="el-icon-delete" style="color: red; font-size: 16px; cursor: pointer"
+              @click="handleDelete(data)"></i>
           </div>
         </template>
         <template #LOGO="{ data }">
@@ -56,16 +39,10 @@
           <p>合作方社交账号：{{ data.account }}</p>
         </template>
       </baseTable>
-    </el-scrollbar>
-    <el-pagination
-      @size-change="handleSizeChange"
-      @current-change="handleCurrentChange"
-      :current-page="listQuery.page"
-      :page-sizes="[10, 20, 30, 100]"
-      :page-size="listQuery.page_long"
-      layout="total, sizes, prev, pager, next, jumper"
-      :total="total"
-    >
+    </div>
+    <el-pagination style="text-align: right;" @size-change="handleSizeChange" @current-change="handleCurrentChange"
+      :current-page="listQuery.page" :page-sizes="[10, 20, 30, 100]" :page-size="listQuery.page_long"
+      layout="total, sizes, prev, pager, next, jumper" :total="total">
     </el-pagination>
   </div>
 </template>
@@ -88,7 +65,7 @@ export default {
     },
     listQuery: {
       type: Object,
-      default: () => {},
+      default: () => { },
     },
   },
   data() {
@@ -147,7 +124,7 @@ export default {
       ],
     };
   },
-  computed:{
+  computed: {
 
   },
   methods: {
@@ -161,7 +138,7 @@ export default {
         .then(async () => {
           this.$emit("deleteWhite", data.id);
         })
-        .catch(() => {});
+        .catch(() => { });
     },
     handleSizeChange(val) {
       this.$emit("sizechange", val);
@@ -169,15 +146,15 @@ export default {
     handleCurrentChange(val) {
       this.$emit("pagechange", val);
     },
-    addOrEdit(row){
-       this.$emit('edit',row)
+    addOrEdit(row) {
+      this.$emit('edit', row)
     },
-    priority(degree){
-      if(degree<4){
+    priority(degree) {
+      if (degree < 4) {
         return 'normal'
-      }else if(degree>=4 && degree <8){
+      } else if (degree >= 4 && degree < 8) {
         return 'important'
-      }else{
+      } else {
         return 'super'
       }
     }
@@ -190,25 +167,31 @@ export default {
   font-size: 16px;
   font-weight: bold;
 }
+
 .img-wrap {
   height: 60px;
   width: 60px;
 }
+
 .orgName {
   font-size: 16px;
   font-weight: bold;
   color: #00ccff;
 }
-i{
+
+i {
   font-size: 16px;
 }
-.normal{
-  color:brown;
+
+.normal {
+  color: brown;
 }
-.important{
-  color:rgb(100, 246, 248);
+
+.important {
+  color: rgb(100, 246, 248);
 }
-.super{
-  color:rgb(251, 239, 134);
+
+.super {
+  color: rgb(251, 239, 134);
 }
 </style>

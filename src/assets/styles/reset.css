@@ -170,3 +170,7 @@
   text-align: initial;
   padding:16px 20px;
 }
+/* 统一min-height样式 */
+.asg-table-main{
+  min-height: 70vh;
+}

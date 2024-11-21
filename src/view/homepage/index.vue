@@ -6,13 +6,14 @@
     <el-container>
       <el-header><common-header /></el-header>
       <headerTabs ref="headerTabs" v-show="$route.fullPath !== '/index'"></headerTabs>
-      <el-scrollbar :style="{ height: $route.fullPath === '/index' ? 'auto' : actuallHeight }">
-        <el-main :style="{ 'min-height': minHeight }">
+      <el-scrollbar :style="{ height: actuallHeight }">
+        <el-main style="height:100%">
           <transition name="fade-transform" mode="out-in">
             <router-view></router-view>
           </transition>
+          <CommonFooter></CommonFooter>
         </el-main>
-        <CommonFooter></CommonFooter>
+
       </el-scrollbar>
     </el-container>
 
@@ -33,30 +34,28 @@ export default {
   data() {
     return {
       isCollapse: false,
-      actuallHeight: '80vh',
-      minHeight: ''
+      actuallHeight: 'calc(100vh - 100px)',
     };
   },
   mounted() {
-    if (this.actuallHeight !== '80vh') return;
     this.$nextTick(() => {
-      const tabHeight = this.$refs.headerTabs.$refs.containerGrid.clientHeight;
+      const tabHeight = this.$route.fullPath === '/index' ? 0 : this.$refs.headerTabs.$refs.containerGrid.clientHeight;
+      console.log(tabHeight, 'tabHeight');
       this.actuallHeight = `calc(100vh - 60px - ${tabHeight}px)`;
-      this.minHeight = `calc(100vh - 60px - 70px - ${tabHeight}px)`
     })
   },
   watch: {
     '$route.fullPath': {
-      handler(val) {
-        if (val === '/index' || this.actuallHeight !== '80vh') return;
+      handler(newValue) {
         this.$nextTick(() => {
-          const tabHeight = this.$refs.headerTabs.$refs.containerGrid.clientHeight;
+          console.log(this.$refs.headerTabs.$refs.containerGrid.clientHeight, newValue === '/index');
+          const tabHeight = newValue === '/index' ? 0 : this.$refs.headerTabs.$refs.containerGrid.clientHeight;
+          console.log(tabHeight, 'tabHeight');
           this.actuallHeight = `calc(100vh - 60px - ${tabHeight}px)`;
-          this.minHeight = `calc(100vh - 60px - 70px - ${tabHeight}px)`
         })
       }
-    },
-  },
+    }
+  }
 };
 </script>
 

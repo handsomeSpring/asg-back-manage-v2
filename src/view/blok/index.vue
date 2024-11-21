@@ -5,16 +5,7 @@
       :eventOptions="options"
     ></ChamplionPlubish>
     <!-- 展示 -->
-    <el-scrollbar
-      :native="false"
-      wrapStyle=""
-      wrapClass=""
-      viewClass=""
-      viewStyle=""
-      :noresize="false"
-      tag="section"
-      style="height: calc(80vh - 80px)"
-    >
+    <div class="asg-table-main">
       <baseTable :data="cham" :column="tableProps" v-loading="loading">
         <template #projectHeader="{ data }">
           <div class="header--rela">
@@ -69,7 +60,7 @@
           <span>{{ data.vote }}</span>
         </template>
       </baseTable>
-    </el-scrollbar>
+    </div>
     <el-dialog
       title="修改冠军"
       :close-on-click-modal="false"

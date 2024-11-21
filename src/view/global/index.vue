@@ -18,7 +18,8 @@
       </template>
     </AsgHighSearch>
     <main>
-      <el-table height="66vh" v-loading="loading" element-loading-text="数据加载中，请稍等"
+      <div class="asg-table-main">
+        <el-table v-loading="loading" element-loading-text="数据加载中，请稍等"
         element-loading-spinner="el-icon-loading" :header-cell-style="tableColor" :data="tableData" stript
         style="width: 100%">
         <el-table-column prop="id" label="序号" width="80"> </el-table-column>
@@ -32,7 +33,8 @@
             <el-button size="small" type="text" style="color: #f40" @click="deleteItem(row.id)">删除</el-button>
           </template>
         </el-table-column>
-      </el-table>
+        </el-table>
+      </div>
       <el-pagination background style="float: right; margin-top: 12px" @size-change="handleChange('limit', $event)"
         @current-change="handleChange('page', $event)" :current-page="listQuery.page" :page-sizes="[10, 20, 30, 50]"
         :page-size="listQuery.limit" layout="total, sizes, prev, pager, next, jumper" :total="total">
@@ -57,8 +59,8 @@
         </editor>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button size="small" @click="dialogVisible = false">取 消</el-button>
-        <el-button size="small" type="primary" @click="checkSubmit('ruleForm')">{{ title }}</el-button>
+        <el-button @click="dialogVisible = false">取 消</el-button>
+        <el-button type="primary" @click="checkSubmit('ruleForm')">{{ title }}</el-button>
       </div>
     </el-dialog>
   </div>

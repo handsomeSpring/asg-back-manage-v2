@@ -235,9 +235,7 @@ export default {
 }
 
 .main__container {
-  height: 65vh;
-  overflow: auto;
-
+  min-height:70vh;
   .schedule__box {
     margin-bottom: 24px;
 

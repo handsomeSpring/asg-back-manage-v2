@@ -80,18 +80,7 @@
       </template>
     </AsgHighSearch>
     <!-- 数据主体 -->
-    <el-scrollbar
-      :native="false"
-      wrapStyle=""
-      wrapClass=""
-      viewClass=""
-      viewStyle=""
-      :noresize="false"
-      tag="section"
-      v-loading="loading"
-      element-loading-text="正在加载中......"
-      style="height: calc(65vh - 50px); margin-bottom: 15px"
-    >
+    <div class="asg-table-main">
       <template v-if="scheduleData.length > 0">
         <asgTableCard v-for="(item, index) in scheduleData" :key="index">
           <template v-slot:header>
@@ -212,7 +201,7 @@
         </asgTableCard>
       </template>
       <el-empty v-else description="暂无赛程数据"></el-empty>
-    </el-scrollbar>
+    </div>
     <el-pagination
       style="float: right; margin-top: 12px"
       @current-change="handlePageChange($event, 'page')"

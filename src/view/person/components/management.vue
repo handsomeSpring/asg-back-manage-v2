@@ -1,5 +1,5 @@
 <template>
-  <div class="grid__container">
+  <div class="grid__container asg-table-main">
     <el-card
       class="left_tree-content"
       shadow="always"
@@ -133,7 +133,7 @@ export default {
   gap: 24px;
   grid-template-columns: 20vw auto;
   .left_tree-content{
-    height:80vh;
+    height:100%;
     overflow: hidden scroll;
   }
 }

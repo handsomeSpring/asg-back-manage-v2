@@ -9,8 +9,9 @@
       </div>
     </div>
     <!-- 表格开始 -->
+    <div class="asg-table-main">
       <el-table :header-cell-style="{ background: '#f2f6fd', color: '#000' }" v-loading="loading"
-        element-loading-text="数据加载中，请稍等" element-loading-spinner="el-icon-loading" height="67vh" :data="personList" border
+        element-loading-text="数据加载中，请稍等" element-loading-spinner="el-icon-loading" :data="personList" border
         style="width: 100%">
         <el-table-column prop="id" label="id" width="60" align="center">
         </el-table-column>
@@ -33,8 +34,8 @@
           </template>
         </el-table-column>
         <el-table-column label="菜单权限" width="auto" align="center">
-          <template #default="{row}">
-             <span>{{ row.roleListName  ? row.roleListName : '普通用户'}}</span>
+          <template #default="{ row }">
+            <span>{{ row.roleListName ? row.roleListName : '普通用户' }}</span>
           </template>
         </el-table-column>
         <el-table-column label="职位" width="220" align="center">
@@ -62,11 +63,13 @@
           </template>
         </el-table-column>
       </el-table>
+    </div>
     <el-pagination style="float: right;margin-top: 12px;" background @current-change="handleChange('pageindex', $event)"
       @size-change="handleChange('pagesize', $event)" :current-page.sync="listQuery.pageindex"
       :page-size="listQuery.pagesize" layout="total,prev, pager, next, jumper" :total="total">
     </el-pagination>
-    <AssignDialog :dialogVisible.sync="assignVisible" :tableItem="assignRow" :menuPermission="menuPermission" @refresh="initGetUsers"></AssignDialog>
+    <AssignDialog :dialogVisible.sync="assignVisible" :tableItem="assignRow" :menuPermission="menuPermission"
+      @refresh="initGetUsers"></AssignDialog>
   </div>
 </template>
 
@@ -78,7 +81,7 @@ import { mapGetters } from "vuex";
 import AssignDialog from "@/view/person/components/AssignDialog.vue";
 export default {
   name: "survivorPage",
-  components:{
+  components: {
     AssignDialog
   },
   data() {
@@ -97,9 +100,9 @@ export default {
       jobs: [],
       editIndex: null,
       // 分配权限
-      assignVisible:false,
-      assignRow:{},
-      menuPermission:[]
+      assignVisible: false,
+      assignRow: {},
+      menuPermission: []
     };
   },
   computed: {
@@ -110,7 +113,7 @@ export default {
     this.initRoles();
   },
   methods: {
-    handleAssign(row){
+    handleAssign(row) {
       this.assignVisible = true;
       this.assignRow = row;
     },
@@ -126,11 +129,11 @@ export default {
           this.listQuery.pageindex = 1;
         }
         this.loading = true;
-        if(this.adminList.length === 0){
-          const roleRes = await rolealluser('admin',{onlyId:'1'});
-          if(roleRes.status !== 200) throw new Error('获取管理权限失败！');
+        if (this.adminList.length === 0) {
+          const roleRes = await rolealluser('admin', { onlyId: '1' });
+          if (roleRes.status !== 200) throw new Error('获取管理权限失败！');
           const adminIds = (roleRes?.data?.data ?? []).map(item => item.id);
-          this.$store.commit('SET_ADMIN',adminIds);
+          this.$store.commit('SET_ADMIN', adminIds);
         }
         const postParams = {
           ...this.listQuery,
@@ -141,7 +144,7 @@ export default {
         this.personList = data.msg.map(item => {
           return {
             ...item,
-            isAdmin:this.adminList.includes(item.id)
+            isAdmin: this.adminList.includes(item.id)
           }
         });
       } catch (err) {
@@ -209,9 +212,9 @@ export default {
       getByTitle("menuPermission").then(res => {
         this.menuPermission = res.data;
       })
-      .catch(() => {
-        this.$message.error("获取云端配置失败！")
-      })
+        .catch(() => {
+          this.$message.error("获取云端配置失败！")
+        })
     }
   },
 };
@@ -255,5 +258,4 @@ export default {
     }
   }
 }
-
 </style>

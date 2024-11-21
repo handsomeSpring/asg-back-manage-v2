@@ -7,7 +7,8 @@
       </el-select>
       <el-button type="primary"  icon="el-icon-plus" size="small" @click="openDialog('add')">新增商品</el-button>
     </header>
-    <el-table v-loading="loading" border :data="tableData" style="width:100%" :header-cell-style="{ background: '#f2f6fd', color: '#000' }">
+    <div class="asg-table-main">
+      <el-table v-loading="loading" border :data="tableData" style="width:100%" :header-cell-style="{ background: '#f2f6fd', color: '#000' }">
       <el-table-column type="index" label="序号" width="80px" align="center"></el-table-column>
       <el-table-column label="商品名称" prop="name"></el-table-column>
       <el-table-column label="所需积分" prop="price" width="120px" align="center">
@@ -18,7 +19,7 @@
       <el-table-column label="商品描述" prop="description" min-width="240px"></el-table-column>
       <el-table-column label="商品介绍" prop="information" min-width="240px"></el-table-column>
       <el-table-column label="商品分类" prop="type" align="center">
-        <template #default={row}>
+        <template #default="{row}">
           <div class="table__container">
             <p class="my-task-auth margin-icon">
               <i class="el-icon-s-goods"></i> {{ keyMap[row.type] }}
@@ -39,8 +40,8 @@
             @click="deleteItem(row.id)"></i>
         </template>
       </el-table-column>
-    </el-table>
-
+      </el-table>
+    </div>
     <!-- 弹窗 -->
     <el-dialog :title="title" :visible.sync="dialogVisible" width="40%" :before-close="handleClose"
       :close-on-click-modal="false">

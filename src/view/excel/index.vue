@@ -41,7 +41,7 @@
       v-loading="loading"
       :span-method="mergeRowMethod"
       :data="tableData"
-      height="60vh"
+      height="100%"
     >
       <el-table-column label="所属赛季" prop="赛季名" width="150" align="center">
       </el-table-column>

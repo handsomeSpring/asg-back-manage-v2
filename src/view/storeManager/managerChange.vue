@@ -14,7 +14,8 @@
             </el-select>
             <el-button size="small" type="primary" @click="initChangeList">查询</el-button>
         </header>
-        <el-table v-loading="loading" style="width:100%" :data="tableData"
+        <div class="asg-table-main">
+          <el-table v-loading="loading" style="width:100%" :data="tableData"
             :header-cell-style="{ background: '#f2f6fd', color: '#000' }">
             <el-table-column label="序号" type="index" width="80px"></el-table-column>
             <el-table-column label="商品名称" prop="name"></el-table-column>
@@ -56,7 +57,8 @@
                     <el-button v-if="!row.isVerification" type="text" @click="verify(row)">核销</el-button>
                 </template>
             </el-table-column>
-        </el-table>
+          </el-table>
+        </div>
         <el-pagination style="float:right" @size-change="handleChange($event, 'pagesize')"
             @current-change="handleChange($event, 'pageindex')" :current-page="listQuery.pageindex"
             :page-sizes="[10, 20, 30, 50]" :page-size="listQuery.pagesize"

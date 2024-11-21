@@ -1,6 +1,6 @@
 <template>
-  <div class="rule__config--grid">
-    <div class="left_tabs">
+  <div class="rule__config--grid asg-table-main">
+    <div class="left_tabs" v-loading="leftLoading">
       <li class="header__tabs items">流程规则</li>
       <li
         class="items item-children"
@@ -129,6 +129,7 @@ export default {
         bizType: "",
         process: [],
       },
+      leftLoading:false
     };
   },
   computed: {
@@ -260,9 +261,12 @@ export default {
     },
   },
   created() {
+    this.leftLoading = true;
     getByTitle("ruleConfig").then((res) => {
       this.tabs = res.data;
-    });
+    }).finally(()=>{
+      this.leftLoading = false;
+    })
   },
 };
 </script>

@@ -1,5 +1,5 @@
 <template>
-  <div class="drag__container">
+  <div class="drag__container asg-table-main">
     <div class="toAssigned--left">
       <div class="operation__content">
         <p>待分配人员</p>
