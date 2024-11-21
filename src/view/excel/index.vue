@@ -1,62 +1,38 @@
 <template>
   <div>
     <header>
-      <el-select
-        v-model="eventname"
-        size="small"
-        placeholder="请选择赛季"
-        @change="handleChange"
-      >
-        <el-option
-          v-for="item in options"
-          :key="item.name"
-          :label="item.name"
-          :value="item.name"
-        >
+      <el-select v-model="eventname" size="small" placeholder="请选择赛季" @change="handleChange">
+        <el-option v-for="item in options" :key="item.name" :label="item.name" :value="item.name">
         </el-option>
       </el-select>
 
       <div>
-        <el-button size="small" type="warning" @click="downloadLogos"
-          >批量下载logo<i class="el-icon-download"></i
-        ></el-button>
-        <el-button size="small" type="success" @click="exportDetails"
-          >导出队伍所有信息<i class="el-icon-download"></i
-        ></el-button>
-        <el-button
-          size="small"
-          type="success"
-          @click="exportData(tableData, `${eventname}战队信息表`)"
-          >导出excel表格<i class="el-icon-download"></i
-        ></el-button>
-        <el-button size="small" type="danger" plain @click="handleClear"
-          >清除服务器文件<i class="el-icon-delete"></i
-        ></el-button>
+        <el-button size="small" type="warning" @click="downloadLogos">批量下载logo<i
+            class="el-icon-download"></i></el-button>
+        <el-button size="small" type="success" @click="exportDetails">导出队伍所有信息<i
+            class="el-icon-download"></i></el-button>
+        <el-button size="small" type="success" @click="exportData(tableData, `${eventname}战队信息表`)">导出excel表格<i
+            class="el-icon-download"></i></el-button>
+        <el-button size="small" type="danger" plain @click="handleClear">清除服务器文件<i
+            class="el-icon-delete"></i></el-button>
       </div>
     </header>
-    <!-- 表格 -->
-    <el-table
-      size="small"
-      border
-      v-loading="loading"
-      :span-method="mergeRowMethod"
-      :data="tableData"
-      height="100%"
-    >
-      <el-table-column label="所属赛季" prop="赛季名" width="150" align="center">
-      </el-table-column>
-      <el-table-column label="战队名" prop="战队名" width="180" align="center">
-      </el-table-column>
-      <el-table-column label="联系方式" prop="联系方式" width="150" align="center">
-      </el-table-column>
-      <el-table-column label="报名时间" prop="报名时间" width="250" align="center">
-      </el-table-column>
-      <el-table-column label="票数" prop="票数" width="80" align="center"> </el-table-column>
-      <el-table-column label="logo地址" width="auto" align="center" prop="logo">
-        <template slot="header"> 战队LOGO地址 </template>
-      </el-table-column>
-    </el-table>
-    <!-- <input type="file" accept=".xlsx, .xls" @change="handleClick" /> -->
+    <div class="asg-table-main">
+      <el-table size="small" border v-loading="loading" :span-method="mergeRowMethod" :data="tableData">
+        <el-table-column label="所属赛季" prop="赛季名" width="150" align="center">
+        </el-table-column>
+        <el-table-column label="战队名" prop="战队名" width="180" align="center">
+        </el-table-column>
+        <el-table-column label="联系方式" prop="联系方式" width="150" align="center">
+        </el-table-column>
+        <el-table-column label="报名时间" prop="报名时间" width="250" align="center">
+        </el-table-column>
+        <el-table-column label="票数" prop="票数" width="80" align="center"> </el-table-column>
+        <el-table-column label="logo地址" width="auto" align="center" prop="logo">
+          <template slot="header"> 战队LOGO地址 </template>
+        </el-table-column>
+      </el-table>
+    </div>
   </div>
 </template>
 
@@ -232,7 +208,7 @@ export default {
             message: "删除成功!",
           });
         })
-        .catch(() => {});
+        .catch(() => { });
     },
   },
 };
