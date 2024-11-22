@@ -89,8 +89,9 @@
 <script>
 import { getStoreInfo, verification } from "@/api/storeManager/index";
 import { getUserName } from "@/api/admin/index.js";
-import { getUserRoles } from "@/api/schedule/index";
+// import { getUserRoles } from "@/api/schedule/index";
 import { getUsersWithRole } from "@/api/schedule/index.js";
+import { filterRole } from "@/utils/filters";
 export default {
   name: "managerChange",
   data() {
@@ -107,6 +108,8 @@ export default {
       total: 0,
       userInfo: {},
       comList: [],
+      list:[],
+      isInit:false,
     };
   },
   created() {
@@ -122,7 +125,7 @@ export default {
     createdOptions(arr) {
       let result = [];
       for (const item of arr) {
-        const index = result.findIndex((el) => el.label === item.officium);
+        const index = result.findIndex((el) => el.code === item.officium);
         if (index !== -1) {
           result[index].options.push({
             label: item.chinaname,
@@ -130,7 +133,8 @@ export default {
           });
         } else {
           result.push({
-            label: item.officium,
+            code:item.officium,
+            label: filterRole(item.officium),
             options: [],
           });
         }
@@ -140,9 +144,11 @@ export default {
     async initChangeList() {
       this.loading = true;
       try {
-        const roleResult = await getUsersWithRole();
-        const list = (roleResult?.data ?? []).flat(Infinity);
-        this.createdOptions(list);
+        if(!this.isInit){
+          const roleResult = await getUsersWithRole();
+          this.list = (roleResult?.data ?? []).flat(Infinity);
+        }
+        this.createdOptions(this.list);
         const postParams = {
           ...this.listQuery,
           pageindex: this.listQuery.pageindex - 1,
@@ -158,20 +164,19 @@ export default {
           return {
             ...item,
             buyer:
-              list.find((list) => list.id === item.buyerid)?.chinaname ??
+              this.list.find((list) => list.id === item.buyerid)?.chinaname ??
               `未知购买者-购买者id:${item.buyerid}`,
           };
         });
         this.total = data.cout;
       } catch (error) {
-        console.log(error);
         if (error?.response?.data?.code === 400) {
           return this.$message.error(error.response.data.message);
         }
         this.$message.error("服务端异常");
-        // console.log(error);
       } finally {
         this.loading = false;
+        this.isInit = true;
       }
     },
     async verify(row) {
@@ -188,7 +193,7 @@ export default {
           this.initChangeList();
         }
       } catch (error) {
-        console.log(error);
+        this.$message.error(error.message);
       }
     },
     // 查看用户
