@@ -435,11 +435,19 @@ export default {
         display: flex;
         align-items: center;
         justify-content: space-between;
+        p{
+          font-family: 'hk';
+        }
       }
 
       .operation__box {
-        font-size: 14px;
+
         padding: 14px 12px;
+        p {
+          font-size: 13px;
+          font-weight: 400;
+          color:#5e5e5e;
+        }
       }
     }
   }
