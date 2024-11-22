@@ -30,21 +30,27 @@
         </li>
       </div>
       <div class="main__right--grid">
-        <el-steps direction="vertical" :active="4">
-          <el-step
-            title="选择商品"
-            description="选择心仪的商品加入购物车中"
-          ></el-step>
-          <el-step
-            title="结算"
-            description="用积分兑换奖励，结算商品"
-          ></el-step>
-          <el-step
-            title="等待管理员核销"
-            description="等待管理员对账审核，核销商品，即可获得。"
-          ></el-step>
-          <el-step title="完单" description="管理员已核销"></el-step>
-        </el-steps>
+        <div class="header">
+          <p class="integral">购物车信息</p>
+          <p class="integral">我的积分:{{ myMoney }}</p>
+        </div>
+        <div class="popover__container" v-if="cartData.length > 0">
+          <li v-for="(item, index) in cartData" :key="index">
+            <div class="title">
+              <div style="cursor: pointer" @click="handleDelete(item)">
+                <svg-icon
+                  iconClass="deleteBash"
+                  width="18px"
+                  height="18px"
+                  fill="#f40"
+                ></svg-icon>
+              </div>
+              <p>{{ item.name }}</p>
+            </div>
+            <p class="money">{{ item.price }}</p>
+          </li>
+        </div>
+        <p v-else>暂无购物信息</p>
       </div>
     </main>
     <button-fix :customHeight="50">
@@ -55,29 +61,6 @@
           @click="$router.back()"
           >返 回</el-button
         >
-        <el-popover
-          placement="top-start"
-          :title="`购物车信息(我的积分:${myMoney})`"
-          width="300"
-          trigger="click"
-        >
-          <div class="popover__container" v-if="cartData.length > 0">
-            <li v-for="(item, index) in cartData" :key="index">
-              <p class="title">
-                <i
-                  @click="handleDelete(item)"
-                  class="el-icon-delete-solid dash"
-                ></i
-                >{{ item.name }}
-              </p>
-              <p class="money">{{ item.price }}</p>
-            </li>
-          </div>
-          <p v-else>暂无购物信息</p>
-          <el-button slot="reference" size="small" type="warning">
-            <i class="el-icon-shopping-cart-full"></i>({{ cartData.length }})
-          </el-button>
-        </el-popover>
         <el-button size="small" type="primary" @click="showAccount"
           >结 账</el-button
         >
@@ -198,19 +181,19 @@ main {
   grid-template-columns: auto 25%;
   gap: 20px;
   margin-bottom: 20px;
-
+  background: linear-gradient(to right,rgba(255,255,255,0.8),rgba(243, 248, 252, 0.7));
   .main__left--grid {
-    background-color: #f7f7f7;
+
     display: grid;
     grid-template-columns: 21% 21% 21% 21%;
     gap: 12px;
+    align-items: self-start;
 
     .item__box--radius {
       border-radius: 8px;
       width: 100%;
       box-sizing: border-box;
       border: 1px solid #f7f7f7;
-
       &:hover {
         border: 1px solid #f76b38;
       }
@@ -262,8 +245,20 @@ main {
   }
 
   .main__right--grid {
-    background-color: #f7f7f7;
     padding: 12px;
+    min-height: 1920px;
+    border-radius: 4px;
+    border:1px solid #a8c9f7;
+    .header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      .integral {
+        font-size: 14px;
+        font-family: "hk";
+        color: #4090ef;
+      }
+    }
   }
 }
 
@@ -271,14 +266,29 @@ main {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin: 12px 0;
+  margin: 24px 0;
   border-bottom: 1px solid #e1e1e1;
-
+  padding-bottom: 6px;
   .title {
-    width: 220px;
-    text-overflow: ellipsis;
-    overflow: hidden;
-    white-space: nowrap;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 4px;
+    p {
+      width: 200px;
+      text-overflow: ellipsis;
+      overflow: hidden;
+      white-space: nowrap;
+      text-align: left;
+      font-size: 14px;
+      font-weight: 500;
+      color: #494949;
+    }
+  }
+  .money {
+    color: #f76b38;
+    font-size: 14px;
+    font-weight: bold;
   }
 }
 
@@ -290,10 +300,10 @@ main {
     color: #f76b38;
   }
 }
-.flex-btnList{
+.flex-btnList {
   display: flex;
   justify-content: center;
   align-items: center;
-  gap:12px;
+  gap: 12px;
 }
 </style>
