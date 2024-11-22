@@ -13,10 +13,8 @@
           </transition>
           <CommonFooter></CommonFooter>
         </el-main>
-
       </el-scrollbar>
     </el-container>
-
     <projOperation v-show="$route.path !== '/index'"></projOperation>
   </el-container>
 </template>
