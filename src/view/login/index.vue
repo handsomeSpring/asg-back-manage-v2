@@ -10,7 +10,7 @@
       </el-image>
       <div class="loginwrap">
         <div class="header-form">
-          <p>系统登录</p>
+          <p>系统登录(dell那台电脑修改的)</p>
         </div>
         <div class="info">
           <el-form ref="ruleForm" :model="userform" :rules="rules" class="demo-ruleForm">
