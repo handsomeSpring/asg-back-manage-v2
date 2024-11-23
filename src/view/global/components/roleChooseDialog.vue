@@ -23,7 +23,7 @@
       <el-table-column label="用户id" align="center" prop="id">
       </el-table-column>
     </el-table>
-    <p class="choose_name">您选择的用户是：{{ this.checkInfo.chinaname || '未选择' }}</p>
+    <p class="choose_name">该节点审批用户：{{ this.checkInfo.chinaname || '未选择' }}</p>
     <el-button size="small" type="primary" @click="handleConfirm">确 认</el-button>
     <el-button size="small" plain @click="closeDialog">关 闭</el-button>
   </el-dialog>
@@ -148,7 +148,8 @@ export default {
 .choose_name{
   color:#4090EF;
   font-weight: 400;
-  font-size: 18px;
+  font-size: 16px;
   margin:6px 0;
+  font-family: 'hk';
 }
 </style>

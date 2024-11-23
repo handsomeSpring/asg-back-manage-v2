@@ -1,17 +1,25 @@
 <template>
     <el-dialog title="采购清单" :visible="computedDialog" @close="computedDialog = false" width="60%">
-        <div class="main-body" v-if="cartInfo.length > 0">
-            <li v-for="item in cartInfo" :key="item.id">
-                <img src="@/assets/images/goodsImg.png">
-                <div class="left-container">
-                    <p class="title">{{ item.name }}</p>
-                    <p class="description">{{ item.description }}</p>
-                    <p class="introduction">{{ item.information }}</p>
-                    <p>{{ item.price }}</p>
-                </div>
-            </li>
-        </div>
-        <el-empty description="暂无商品"></el-empty>
+        <el-table :data="cartInfo">
+            <el-table-column label="序号" type="index" width="60" align="center"></el-table-column>
+            <el-table-column label="商品展示" width="120" align="center">
+              <template #default="{row}">
+                <img class="image_icon" src="@/assets/images/goodsImg.png">
+              </template>
+            </el-table-column>
+            <el-table-column label="商品名称" prop="name" width="120" align="center"></el-table-column>
+            <el-table-column label="商品描述/商品信息" prop="name" width="auto" align="center">
+                <template #default="{row}">
+                    <p class="description">{{ row.description }}</p>
+                    <p class="introduction">{{ row.information }}</p>
+                </template>
+            </el-table-column>
+            <el-table-column label="商品加个" prop="name" width="120" align="center">
+                <template #default="{row}">
+                 <p>￥{{ row.price }}</p>
+                </template>
+            </el-table-column>
+        </el-table>
         <div class="footer">
             <el-button size="small" @click="confirmItem" :disabled="cartInfo.length === 0">确认购买</el-button>
         </div>
@@ -57,24 +65,12 @@ export default {
 }
 </script>
 <style lang='less' scoped>
-.main-body{
-    li{
-        display:grid;
-        grid-template-columns: 150px auto;
-        gap:12px;
-        padding:12px 0;
-        border-bottom: 1px solid #e7e7e7;
-        img{
-            width: 100%;
-            background-size: contain;
-        }
-        .left-container{
-
-        }
-    }
-    margin-bottom: 12px;
+.image_icon{
+    width:90px;
+    height:90px;
 }
 .footer{
     text-align: center;
+    margin:12px 0;
 }
 </style>

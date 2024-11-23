@@ -4,7 +4,7 @@
             <i class="el-icon-s-unfold harIcon" :class="{ 'is-active': isActive }" @click="handleMenu"></i>
         </div>
         <el-tabs v-model="activeMenu" type="card" @tab-click="handleJump">
-            <el-tab-pane v-for="(item, index) in headerTabs" :key="index" :name="item.value" style="position: relative">
+            <el-tab-pane v-for="(item, index) in headerTabs" :key="item.value" :name="item.value" style="position: relative">
                 <template slot="label">
                     <div class="label__container">
                         <i v-show="item.value === '/guide'" class="el-icon-s-home" style="margin-right: 6px;"></i>

@@ -64,7 +64,13 @@
             <p>{{ item.isAllowReturn === "1" ? "允许退回" : "不允许退回" }}</p>
           </div>
           <div class="line"></div>
-          <div class="return--pointer" v-if="item.isAllowReturn === '1'"></div>
+          <div class="return--pointer" v-if="item.isAllowReturn === '1'">
+            <svg-icon
+              iconClass="auditReturn"
+              width="26px"
+              height="26px"
+            ></svg-icon>
+          </div>
         </div>
         <div class="end__btn" id="end">
           <div class="circle__list"></div>
@@ -400,7 +406,6 @@ export default {
 
       .line {
         position: absolute;
-        position: absolute;
         left: 50%;
         bottom: -36px;
         transform: translate(-50%);
@@ -410,31 +415,14 @@ export default {
       }
 
       .return--pointer {
-        left: -100px;
-        height: 50px;
-        width: 50px;
-        top: 50%;
-        transform: translate(0, -50%);
-        background: #f40;
         position: absolute;
-        -webkit-clip-path: polygon(
-          40% 0%,
-          40% 20%,
-          100% 20%,
-          100% 80%,
-          40% 80%,
-          40% 100%,
-          0% 50%
-        );
-        clip-path: polygon(
-          40% 0%,
-          40% 20%,
-          100% 20%,
-          100% 80%,
-          40% 80%,
-          40% 100%,
-          0% 50%
-        );
+        left: -100px;
+        height: 100%;
+        width: 50px;
+        top:0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
       }
 
       .title {
@@ -447,11 +435,19 @@ export default {
         display: flex;
         align-items: center;
         justify-content: space-between;
+        p{
+          font-family: 'hk';
+        }
       }
 
       .operation__box {
-        font-size: 14px;
+
         padding: 14px 12px;
+        p {
+          font-size: 13px;
+          font-weight: 400;
+          color:#5e5e5e;
+        }
       }
     }
   }
