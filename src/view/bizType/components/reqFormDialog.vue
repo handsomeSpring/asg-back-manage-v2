@@ -1,5 +1,5 @@
 <template>
-    <el-dialog title="申请表单" :visible.sync="dialogVisible" width="50%" @close="handleClose">
+    <el-dialog append-to-body title="申请表单" :visible.sync="dialogVisible" width="50%" @close="handleClose">
         <el-descriptions class="margin-top" :column="3" size="small" border>
             <el-descriptions-item>
                 <template slot="label">

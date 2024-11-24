@@ -3,6 +3,7 @@
     :visible.sync="dialogVisible"
     title="关联业务选择"
     @close="closeDialog"
+    append-to-body
     width="50%"
   >
     <header>

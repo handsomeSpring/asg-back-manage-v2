@@ -2,18 +2,18 @@
   <div>
     <AsgHighSearch>
       <template #top>
-        <el-button type="primary" size="small" @click="handleOpen">
+        <el-button type="primary" size="small" @click="handleOpen(null,$event)">
           <i class="el-icon-plus"></i>关联发起业务审核
         </el-button>
       </template>
       <template #search>
         <el-input v-model="listQuery.chinaname" size="small" clearable placeholder="请输入申请者中文名"></el-input>
         <el-select v-model="listQuery.status" size="small">
-            <el-option label="全部" value=""></el-option>
-            <el-option label="待审批" value="1"></el-option>
-            <el-option label="审批通过" value="2"></el-option>
-            <el-option label="审批不通过" value="3"></el-option>
-          </el-select>
+          <el-option label="全部" value=""></el-option>
+          <el-option label="待审批" value="1"></el-option>
+          <el-option label="审批通过" value="2"></el-option>
+          <el-option label="审批不通过" value="3"></el-option>
+        </el-select>
       </template>
       <template #btnList>
         <el-button type="primary" size="small" @click="initComFormList(1)">查询</el-button>
@@ -29,12 +29,30 @@
               <div class="tableCard__container">
                 <div class="left-container">
                   <el-form label-position="right" label-width="120px">
-                    <el-form-item label="游戏账号">
-                      <p>{{ props.row.game_id }}</p>
-                    </el-form-item>
-                    <el-form-item label="游戏段位">
-                      <p>{{ toChies(props.row.history_rank) }}</p>
-                    </el-form-item>
+                    <el-row>
+                      <el-col :span="12">
+                        <el-form-item label="游戏账号">
+                          <p>{{ props.row.game_id }}</p>
+                        </el-form-item>
+                      </el-col>
+                      <el-col :span="12">
+                        <el-form-item label="游戏段位">
+                          <p>{{ toChies(props.row.history_rank) }}</p>
+                        </el-form-item>
+                      </el-col>
+                    </el-row>
+                    <el-row>
+                      <el-col :span="12">
+                        <el-form-item label="申请时间">
+                          <p>{{ props.row.create_time }}</p>
+                        </el-form-item>
+                      </el-col>
+                      <el-col :span="12">
+                        <el-form-item label="申请职位">
+                          <p>{{ toChiesRole(props.row.req_role) }}</p>
+                        </el-form-item>
+                      </el-col>
+                    </el-row>
                     <el-form-item label="个人介绍">
                       <el-input style="width:80%" size="small" type="textarea" v-model="props.row.introduction" disabled
                         :rows="5"></el-input>
@@ -51,7 +69,13 @@
                         </el-card>
                       </template>
                     </el-step>
-                    <el-step title="审批结论" :status="computedStatus(props.row.status)">
+                    <el-step :status="computedStatus(props.row.status)">
+                      <template #title>
+                        <div class="step_icon">
+                          <p>审批结论</p>
+                          <el-button type="text" @click="handleOpen(props.row.id,$event)">发起关联业务审批</el-button>
+                        </div>
+                      </template>
                       <template #description>
                         <el-card class="box-card" v-if="props.row.status !== '1'">
                           <div
@@ -112,8 +136,9 @@
       @current-change="handleChange($event, 'page')" :current-page="listQuery.page" :page-sizes="[10, 20, 30, 40, 50]"
       :page-size="listQuery.limit" layout="total, sizes, prev, pager, next, jumper" :total="total">
     </el-pagination>
-    <el-dialog title="关联业务发起" :visible.sync="dialogVisible" width="75%" top="5vh">
-      <detail v-if="dialogVisible" type="add" :bizTypeOptions="rules" isDialog @returnBack="dialogVisible = false"></detail>
+    <el-dialog title="关联业务发起" :visible.sync="dialogVisible" width="75%" top="5vh" :close-on-click-modal="false">
+      <detail v-if="dialogVisible" type="add" :bizTypeOptions="rules" isDialog @returnBack="dialogVisible = false" :reqId="reqId">
+      </detail>
     </el-dialog>
   </div>
 
@@ -128,7 +153,7 @@ import { mapGetters } from "vuex";
 import detail from "@/view/bizType/components/detail.vue";
 export default {
   name: "exchange-page",
-  components:{
+  components: {
     AsgHighSearch,
     detail
   },
@@ -143,14 +168,19 @@ export default {
       },
       total: 0,
       options: [],
+      roleOptions:[],
       loading: false,
       rules: [],
-      dialogVisible:false
+      dialogVisible: false,
+      reqId:null
     };
   },
   created() {
     getByTitle('historyRank').then(res => {
       this.options = res.data;
+    })
+    getByTitle('roleList').then(res => {
+      this.roleOptions = res.data;
     })
     getByTitle('ruleConfig').then(res => {
       this.rules = res.data;
@@ -172,11 +202,15 @@ export default {
     }
   },
   methods: {
-    handleOpen(){
+    handleOpen(reqId) {
+      this.reqId = reqId;
       this.dialogVisible = true;
     },
     toChies(value) {
       return this.options.find(item => item.value === value)?.label ?? '未知段位';
+    },
+    toChiesRole(value){
+      return this.roleOptions.find(item => item.value === value)?.label ?? '未知职位';
     },
     resetForm() {
       this.listQuery = {
@@ -189,7 +223,7 @@ export default {
     },
     initComFormList(page) {
       this.loading = true;
-      if(page){
+      if (page) {
         this.listQuery.page = page;
       }
       conformList(this.listQuery)
@@ -237,7 +271,7 @@ export default {
         )
         if (userChoose === 'confirm') {
           const params = {
-            id:row.id,
+            id: row.id,
             approvalPerson: this.userInfo.chinaname || sessionStorage.getItem('chinaname'),
             status: type
           };
@@ -315,5 +349,10 @@ header {
   font-weight: bold;
   font-size: 1rem;
   margin-bottom: 6px;
+}
+.step_icon{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
 </style>

@@ -74,7 +74,7 @@
                 <el-col :span="12">
                   <el-input v-show="needToRelative === '1'" placeholder="请选择关联的业务场景" v-model="relativeComplete"
                     size="small" class="input-with-select" readOnly>
-                    <el-button slot="append" :icon="disabledStartForm ? 'el-icon-view' : 'el-icon-search'"
+                    <el-button slot="append" :icon="(disabledStartForm || this.reqId) ? 'el-icon-view' : 'el-icon-search'"
                       @click="openRelativeBase"></el-button>
                   </el-input>
                   <p v-show="needToRelative === '0'" class="no-relative-text">选择不关联业务申请发起，自行发起业务申请</p>
@@ -236,6 +236,10 @@ export default {
     reqFormDialog
   },
   props: {
+    reqId: {
+      type: Number,
+      default: null
+    },
     isDialog: {
       type: Boolean,
       default: false
@@ -425,7 +429,7 @@ export default {
     },
     // 关联弹窗
     openRelativeBase() {
-      if (this.disabledStartForm) {
+      if (this.disabledStartForm || this.reqId) {
         this.$refs?.reqForm?.openDialog();
       } else {
         this.$refs?.auditRequestBase?.openDialog();
@@ -564,6 +568,10 @@ export default {
         this.form.startTime = getTodayString();
         if (this.isDialog) {
           this.needToRelative = '1';
+          if (this.reqId) {
+            this.form.relativeId = this.reqId;
+            await this.getReqFormData();
+          }
         }
       } else {
         const { supplementaryInfo, ...form } = this.info;
@@ -580,7 +588,7 @@ export default {
     // 获取申请表单数据
     async getReqFormData() {
       try {
-        const { data, status } = await findFormById(this.info.relativeId);
+        const { data, status } = await findFormById(this.form.relativeId);
         if (status !== 200) throw new Error('服务端异常');
         if (data && data.code !== 200) throw new Error(data.message ?? '未知错误！');
         if (data.data) {
@@ -589,6 +597,7 @@ export default {
             this.bizTypeOptions.find((item) => item.bizType === data.data.biz_type)
               ?.label ?? "未知业务类型";
           this.relativeComplete = `${data?.data?.chinaname || '未知人员'}的${label}申请`;
+          this.form.bizType = data.data.biz_type;
         }
       } catch (error) {
         this.$message.error(error.message);
@@ -628,7 +637,7 @@ export default {
           confirmButtonText: "确定",
           cancelButtonText: "取消",
           type: "warning",
-        }).then(()=>{
+        }).then(() => {
           this.$emit("returnBack");
         })
       } else {
