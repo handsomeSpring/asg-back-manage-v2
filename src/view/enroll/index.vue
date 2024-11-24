@@ -60,7 +60,7 @@
 <script>
 import { getByTitle } from "@/api/config";
 import { getAllEvents } from "@/api/gameSeason/index";
-import { getEnrollTeam, delEnrollTeamV2 } from "@/api/enroll/index.js";
+import { getEnrollTeam, delEnrollTeam } from "@/api/enroll/index.js";
 import asgTableCard from "@/components/asg-table-card.vue";
 import dialoginfo from "./component/dialoginfo.vue";
 export default {
@@ -145,7 +145,7 @@ export default {
           cancelButtonText: "取消",
         });
         if (result === 'confirm') {
-          const { status } = await delEnrollTeamV2(item.id);
+          const { status } = await delEnrollTeam(item.id);
           if (status !== 200) throw new Error('服务端异常，请联系网站管理员。');
           this.$message.success('删除成功！');
           this.getList();
