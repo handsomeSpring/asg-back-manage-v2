@@ -213,6 +213,9 @@ export default {
             startTime: item.start_time,
             status: item.status,
             supplementaryInfo: item.supplementary_info,
+            relativeId:item.relative_id,
+            flowConfig:item.flow_config,
+            nodeIndex:item.node_index
           };
         });
         this.total = data?.data?.total ?? 0;

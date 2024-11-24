@@ -82,10 +82,7 @@ export default {
   },
   methods: {
     constructorTree() {
-      const process =
-        this.bizTypeArr.find((item) => item.bizType === this.info.bizType)
-          ?.process ?? [];
-      console.log(process, "process");
+      const process = JSON.parse(this.info.flowConfig)
       if (this.info.status === "0") {
         this.realTimeLine = [
           {
@@ -135,11 +132,8 @@ export default {
           }),
         ];
       } else {
-        const labelIndex = process.findIndex(
-          (item) => item.id === this.info.nowAuthPersonId
-        );
-
-        if (labelIndex !== -1) {
+        const labelIndex = this.info.nodeIndex;
+        if (labelIndex !== null || labelIndex !== undefined) {
           process.forEach((item, index) => {
             if (index < labelIndex) {
               item.status = "success";
@@ -153,7 +147,7 @@ export default {
             {
               name: this.info.startPerson,
               allowReturn: false,
-              status: "success",
+              status: labelIndex === -1 ? 'process' : 'success',
             },
             ...process.map((item) => {
               return {
@@ -180,7 +174,6 @@ export default {
           ];
         }
       }
-      console.log(this.realTimeLine, "realTimeLine");
     },
   },
   created() {

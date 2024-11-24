@@ -2,7 +2,7 @@
   <div>
     <AsgHighSearch>
       <template #top>
-        <el-button type="primary" size="small" @click="jumpToRouter">
+        <el-button type="primary" size="small" @click="handleOpen">
           <i class="el-icon-plus"></i>关联发起业务审核
         </el-button>
       </template>
@@ -101,8 +101,8 @@
         <el-table-column label="操作" align="center" width="150">
           <template #default="{ row }">
             <template v-if="row.status === '1'">
-              <el-button type="text" @click="handleSet('2', row.id, row.user_id)">通过</el-button>
-              <el-button style="color:#f40" type="text" @click="handleSet('3', row.id)">拒绝</el-button>
+              <el-button type="text" @click="handleSet('2', row)">通过</el-button>
+              <el-button style="color:#f40" type="text" @click="handleSet('3', row)">拒绝</el-button>
             </template>
           </template>
         </el-table-column>
@@ -112,6 +112,9 @@
       @current-change="handleChange($event, 'page')" :current-page="listQuery.page" :page-sizes="[10, 20, 30, 40, 50]"
       :page-size="listQuery.limit" layout="total, sizes, prev, pager, next, jumper" :total="total">
     </el-pagination>
+    <el-dialog title="关联业务发起" :visible.sync="dialogVisible" width="75%" top="5vh">
+      <detail v-if="dialogVisible" type="add" :bizTypeOptions="rules" isDialog @returnBack="dialogVisible = false"></detail>
+    </el-dialog>
   </div>
 
 </template>
@@ -122,10 +125,12 @@ import AsgHighSearch from "@/components/AsgHighSearch.vue";
 import { getByTitle } from "@/api/config";
 import { setRole } from "@/api/home";
 import { mapGetters } from "vuex";
+import detail from "@/view/bizType/components/detail.vue";
 export default {
   name: "exchange-page",
   components:{
-    AsgHighSearch
+    AsgHighSearch,
+    detail
   },
   data() {
     return {
@@ -139,7 +144,8 @@ export default {
       total: 0,
       options: [],
       loading: false,
-      rules: []
+      rules: [],
+      dialogVisible:false
     };
   },
   created() {
@@ -166,8 +172,8 @@ export default {
     }
   },
   methods: {
-    jumpToRouter(){
-      this.$router.push('/publish/refereeemploy');
+    handleOpen(){
+      this.dialogVisible = true;
     },
     toChies(value) {
       return this.options.find(item => item.value === value)?.label ?? '未知段位';
@@ -220,7 +226,7 @@ export default {
       }
       this.initComFormList();
     },
-    async handleSet(type, id, userId = null) {
+    async handleSet(type, row) {
       try {
         const userChoose = await this.$confirm(`您确定${type === '2' ? '通过' : '拒绝'}该解说的应聘申请吗?`, '确定',
           {
@@ -231,7 +237,7 @@ export default {
         )
         if (userChoose === 'confirm') {
           const params = {
-            id,
+            id:row.id,
             approvalPerson: this.userInfo.chinaname || sessionStorage.getItem('chinaname'),
             status: type
           };
@@ -239,7 +245,7 @@ export default {
           if (data.code !== 200) throw new Error(data.message);
           this.loading = true;
           if (type === '2') {
-            await setRole(userId, 'Commentator');
+            await setRole(row.user_id, row.req_role);
           }
           this.$message.success('操作成功!');
           this.initComFormList();

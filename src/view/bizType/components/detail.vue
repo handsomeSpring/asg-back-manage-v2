@@ -1,78 +1,43 @@
 <template>
   <div>
-    <el-row class="main-row-content">
+    <el-row class="main-row-content" :style="{
+      'min-height': isDialog ? 'auto' : '80vh'
+    }">
       <el-col :span="20">
         <div class="form_content--main">
           <TextTitle title-name="业务信息"></TextTitle>
-          <el-form
-            ref="startForm"
-            class="asg-form-main"
-            :model="form"
-            label-position="right"
-            label-width="150px"
-            :rules="startFormRules"
-          >
+          <el-form ref="startForm" class="asg-form-main" :model="form" label-position="right" label-width="150px"
+            :rules="startFormRules">
             <div class="grid--three">
               <el-form-item label="项目名称" prop="projName">
-                <el-input
-                  size="small"
-                  v-model="form.projName"
-                  :disabled="disabledStartForm"
-                ></el-input>
+                <el-input size="small" v-model="form.projName" :disabled="disabledStartForm"></el-input>
               </el-form-item>
               <el-form-item label="项目编号" prop="projNo">
-                <el-input
-                  size="small"
-                  v-model="form.projNo"
-                  disabled
-                ></el-input>
+                <el-input size="small" v-model="form.projNo" disabled></el-input>
               </el-form-item>
               <el-form-item label="发起人" prop="startPerson">
-                <el-input
-                  disabled
-                  size="small"
-                  v-model="form.startPerson"
-                ></el-input>
+                <el-input disabled size="small" v-model="form.startPerson"></el-input>
               </el-form-item>
             </div>
             <div class="grid--three">
               <el-form-item label="业务类型" prop="bizType">
-                <el-select
-                  style="width: 100%"
-                  size="small"
-                  v-model="form.bizType"
-                  :disabled="type !== 'add' || needToRelative === '1'"
-                >
-                  <el-option
-                    v-for="(item, index) in bizTypeOptions"
-                    :key="index"
-                    :value="item.bizType"
-                    :label="item.label"
-                  ></el-option>
+                <el-select style="width: 100%" size="small" v-model="form.bizType"
+                  :disabled="type !== 'add' || needToRelative === '1'">
+                  <el-option v-for="(item, index) in bizTypeOptions" :key="index" :value="item.bizType"
+                    :label="item.label"></el-option>
                 </el-select>
               </el-form-item>
               <el-form-item label="发起日期" prop="startTime">
-                <el-input
-                  size="small"
-                  v-model="form.startTime"
-                  disabled
-                ></el-input>
+                <el-input size="small" v-model="form.startTime" disabled></el-input>
               </el-form-item>
               <el-form-item label="是否需要使用预算" prop="budgetUse">
-                <el-radio-group
-                  v-model="form.budgetUse"
-                  :disabled="disabledStartForm"
-                >
+                <el-radio-group v-model="form.budgetUse" :disabled="disabledStartForm">
                   <el-radio label="1">是</el-radio>
                   <el-radio label="0">否</el-radio>
                 </el-radio-group>
               </el-form-item>
             </div>
-            <el-form-item
-              v-if="form.budgetUse === '1'"
-              label="使用的预算"
-              prop="budgetName"
-            >
+            <el-form-item v-if="form.budgetUse === '1'" label="使用的预算" prop="budgetName">
               <el-row v-if="disabledStartForm">
                 <el-col :span="12">
                   <p>
@@ -89,11 +54,7 @@
               <el-row v-else>
                 <el-col :span="12">
                   <el-input size="small" v-model="form.budgetName" readOnly>
-                    <el-button
-                      slot="append"
-                      icon="el-icon-edit"
-                      @click="checkBudget"
-                    ></el-button>
+                    <el-button slot="append" icon="el-icon-edit" @click="checkBudget"></el-button>
                   </el-input>
                 </el-col>
                 <el-col :span="2" :offset="2">
@@ -111,80 +72,40 @@
             <el-form-item label="关联业务申请" prop="relativeId">
               <el-row>
                 <el-col :span="12">
-                  <el-input
-                    v-show="needToRelative === '1'"
-                    placeholder="请选择关联的业务场景"
-                    v-model="relativeComplete"
-                    size="small"
-                    class="input-with-select"
-                    readOnly
-                  >
-                    <el-button
-                      slot="append"
-                      icon="el-icon-search"
-                      @click="openRelativeBase"
-                    ></el-button>
+                  <el-input v-show="needToRelative === '1'" placeholder="请选择关联的业务场景" v-model="relativeComplete"
+                    size="small" class="input-with-select" readOnly>
+                    <el-button slot="append" :icon="disabledStartForm ? 'el-icon-view' : 'el-icon-search'"
+                      @click="openRelativeBase"></el-button>
                   </el-input>
                   <p v-show="needToRelative === '0'" class="no-relative-text">选择不关联业务申请发起，自行发起业务申请</p>
                 </el-col>
                 <el-col :span="10" :offset="2">
-                  <el-switch
-                    v-model="needToRelative"
-                    active-text="关联"
-                    inactive-text="不关联"
-                    active-value="1"
-                    inactive-value="0"
-                    :disabled="disabledStartForm"
-                    @change="handleRelaSwitchChange"
-                  >
+                  <el-switch v-model="needToRelative" active-text="关联" inactive-text="不关联" active-value="1"
+                    inactive-value="0" :disabled="disabledStartForm || isDialog" @change="handleRelaSwitchChange">
                   </el-switch>
                 </el-col>
               </el-row>
             </el-form-item>
             <el-form-item label="申请原因" prop="reason">
-              <el-input
-                maxlength="100"
-                :disabled="disabledStartForm"
-                show-word-limit
-                style="width: 80%"
-                type="textarea"
-                :rows="4"
-                size="small"
-                v-model="form.reason"
-              ></el-input>
+              <el-input maxlength="100" :disabled="disabledStartForm" show-word-limit style="width: 80%" type="textarea"
+                :rows="4" size="small" v-model="form.reason"></el-input>
             </el-form-item>
             <el-form-item label="申请描述" prop="description">
-              <el-input
-                maxlength="100"
-                :disabled="disabledStartForm"
-                show-word-limit
-                style="width: 80%"
-                type="textarea"
-                :rows="4"
-                size="small"
-                v-model="form.description"
-              ></el-input>
+              <el-input maxlength="100" :disabled="disabledStartForm" show-word-limit style="width: 80%" type="textarea"
+                :rows="4" size="small" v-model="form.description"></el-input>
             </el-form-item>
           </el-form>
           <template v-if="supplementaryInfo.length > 0">
             <TextTitle title-name="历史意见"></TextTitle>
             <div class="p-r-20">
-              <asgTableCard
-                v-for="(item, index) in supplementaryInfo"
-                :key="index"
-              >
+              <asgTableCard v-for="(item, index) in supplementaryInfo" :key="index">
                 <template #header>
                   <div class="asg-table-header">
                     <div class="node_name_tag">
-                      <i
-                        :class="
-                          item.choose !== '0'
-                            ? 'el-icon-s-custom'
-                            : 'el-icon-user-solid'
-                        "
-                        style="margin-right: 4px"
-                      ></i
-                      >{{ item.authPerson }}
+                      <i :class="item.choose !== '0'
+                        ? 'el-icon-s-custom'
+                        : 'el-icon-user-solid'
+                        " style="margin-right: 4px"></i>{{ item.authPerson }}
                     </div>
                     <p class="time">{{ item.time }}</p>
                   </div>
@@ -205,10 +126,7 @@
                     </div>
                     <div class="asg-opinion-right">
                       <template v-if="item.choose !== '0'">
-                        <div
-                          class="tag"
-                          :class="item.choose === '1' ? 'success' : 'danger'"
-                        >
+                        <div class="tag" :class="item.choose === '1' ? 'success' : 'danger'">
                           {{
                             item.choose === "1" ? "审核已通过" : "申请被退回"
                           }}
@@ -223,73 +141,34 @@
           </template>
           <template v-if="disabledStartForm && type !== 'check'">
             <TextTitle title-name="审批意见"></TextTitle>
-            <el-form
-              ref="authForm"
-              class="asg-form-main"
-              :model="nowSupplementaryInfo"
-              :rules="authRules"
-              label-position="right"
-              label-width="150px"
-            >
+            <el-form ref="authForm" class="asg-form-main" :model="nowSupplementaryInfo" :rules="authRules"
+              label-position="right" label-width="150px">
               <el-form-item label="主要审批意见" prop="opinion">
-                <el-input
-                  style="width: 80%"
-                  v-model="nowSupplementaryInfo.opinion"
-                  maxlength="25"
-                  show-word-limit
-                ></el-input>
+                <el-input style="width: 80%" v-model="nowSupplementaryInfo.opinion" maxlength="25"
+                  show-word-limit></el-input>
               </el-form-item>
-              <el-form-item
-                label="修订意见"
-                v-if="form.status === '2'"
-                prop="reviseOpinion"
-              >
-                <el-input
-                  maxlength="50"
-                  show-word-limit
-                  style="width: 80%"
-                  type="textarea"
-                  :rows="4"
-                  size="small"
-                  v-model="nowSupplementaryInfo.reviseOpinion"
-                ></el-input>
+              <el-form-item label="修订意见" v-if="form.status === '2'" prop="reviseOpinion">
+                <el-input maxlength="50" show-word-limit style="width: 80%" type="textarea" :rows="4" size="small"
+                  v-model="nowSupplementaryInfo.reviseOpinion"></el-input>
               </el-form-item>
               <el-form-item label="补充意见" prop="otherOpinion">
-                <el-input
-                  maxlength="50"
-                  show-word-limit
-                  style="width: 80%"
-                  type="textarea"
-                  :rows="4"
-                  size="small"
-                  v-model="nowSupplementaryInfo.otherOpinion"
-                ></el-input>
+                <el-input maxlength="50" show-word-limit style="width: 80%" type="textarea" :rows="4" size="small"
+                  v-model="nowSupplementaryInfo.otherOpinion"></el-input>
               </el-form-item>
             </el-form>
           </template>
         </div>
       </el-col>
       <el-col :span="4">
-        <HistoryRecord
-          v-if="!isStartForm"
-          :info="info"
-          :type="type"
-          :bizTypeArr="bizTypeOptions"
-        ></HistoryRecord>
-        <helpAssignInfo
-          v-else
-          :bizTypeOptions="bizTypeOptions"
-        ></helpAssignInfo>
+        <HistoryRecord v-if="!isStartForm" :info="info" :type="type" :bizTypeArr="bizTypeOptions"></HistoryRecord>
+        <helpAssignInfo v-else :bizTypeOptions="bizTypeOptions"></helpAssignInfo>
       </el-col>
+
     </el-row>
-    <button-fix>
+
+    <button-fix v-if="!isDialog">
       <template v-if="type !== 'check' && form.status !== '4'">
-        <el-button
-          v-if="form.bizType"
-          size="small"
-          type="primary"
-          @click="handleValidForm"
-        >
+        <el-button v-if="form.bizType" size="small" type="primary" @click="handleValidForm">
           <template v-if="nextNodeInfo.chinaname">
             <i class="el-icon-s-custom i-r-6"></i>送{{
               nextNodeInfo.chinaname
@@ -299,50 +178,36 @@
             <i class="el-icon-circle-check i-r-6"></i>办结
           </template>
         </el-button>
-        <el-button
-          class="return-button"
-          v-if="canReturn"
-          size="small"
-          @click="handleReturn"
-        >
+        <el-button class="return-button" v-if="canReturn" size="small" @click="handleValidReturn">
           <div class="button__text-flex">
-            <svg-icon
-              iconClass="auditReturn"
-              width="13px"
-              height="13px"
-            ></svg-icon
-            >退回
+            <svg-icon iconClass="auditReturn" width="13px" height="13px"></svg-icon>退回
           </div>
         </el-button>
-        <el-button
-          v-if="form.status === '0' && !['add', 'check'].includes(type)"
-          class="return-button"
-          size="small"
-          @click="handleWitdraw"
-        >
+        <el-button v-if="form.status === '0' && !['add', 'check'].includes(type)" class="return-button" size="small"
+          @click="handleWitdraw">
           <i class="el-icon-circle-close i-r-6"></i>终止申请
         </el-button>
       </template>
-      <el-button
-        icon="el-icon-arrow-left"
-        size="small"
-        plain
-        @click="returnBack"
-        >返回</el-button
-      >
+      <el-button icon="el-icon-arrow-left" size="small" plain @click="returnBack">返回</el-button>
     </button-fix>
-    <BudgetCheck
-      :dialog-visible.sync="dialogVisible"
-      @finish="handleFinish"
-      :checkBudetId="form.budgetId"
-    >
+    <div class="dialog_btn_list" v-else>
+      <el-button v-if="form.bizType" size="small" type="primary" @click="handleValidForm">
+        <template v-if="nextNodeInfo.chinaname">
+          <i class="el-icon-s-custom i-r-6"></i>送{{
+            nextNodeInfo.chinaname
+          }}审批
+        </template>
+        <template v-else>
+          <i class="el-icon-circle-check i-r-6"></i>办结
+        </template>
+      </el-button>
+      <el-button icon="el-icon-circle-close" size="small" plain @click="returnBack">关闭弹窗</el-button>
+    </div>
+    <BudgetCheck :dialog-visible.sync="dialogVisible" @finish="handleFinish" :checkBudetId="form.budgetId">
     </BudgetCheck>
-    <auditRequestBase
-      ref="auditRequestBase"
-      :checkId="form.relativeId"
-      :bizTypeOptions="bizTypeOptions"
-      @finishChoose="handleBizTypeChoose"
-    ></auditRequestBase>
+    <auditRequestBase ref="auditRequestBase" :checkId="form.relativeId" :bizTypeOptions="bizTypeOptions"
+      @finishChoose="handleBizTypeChoose"></auditRequestBase>
+    <reqFormDialog ref="reqForm" :form="reqForm"></reqFormDialog>
   </div>
 </template>
 
@@ -356,8 +221,9 @@ import { mapGetters } from "vuex";
 import { getTodayString, parseTime } from "@/utils/filters";
 import { uuid } from "@/utils";
 import asgTableCard from "@/components/asg-table-card.vue";
+import reqFormDialog from "./reqFormDialog.vue";
 import { deepClone } from "@/utils";
-import { postAudit, statusChange4 } from "@/api/admin/index.js";
+import { postAudit, statusChange4, findFormById } from "@/api/admin/index.js";
 export default {
   name: "bizType-detail",
   components: {
@@ -367,15 +233,20 @@ export default {
     asgTableCard,
     helpAssignInfo,
     auditRequestBase,
+    reqFormDialog
   },
   props: {
+    isDialog: {
+      type: Boolean,
+      default: false
+    },
     type: {
       type: String,
       default: "",
     },
     info: {
       type: Object,
-      default: () => {},
+      default: () => { },
     },
     bizTypeOptions: {
       type: Array,
@@ -407,7 +278,10 @@ export default {
         description: "",
         status: "0",
         relativeId: null, //关联业务申请id
+        nodeIndex: -1, //审核节点下标
+        flowConfig: '', //流程配置json
       },
+      reqForm: {}, //关联申请表单
       relativeComplete: "", //关联业务场景的项目信息
       needToRelative: "0", //是否关联业务申请
       process: [],
@@ -543,15 +417,19 @@ export default {
   methods: {
     handleBizTypeChoose(obj) {
       const label =
-        this.bizTypeOptions.find((item) => item.bizType === obj.bizType)
+        this.bizTypeOptions.find((item) => item.bizType === obj.biz_type)
           ?.label ?? "未知业务类型";
       this.relativeComplete = `${obj.chinaname}的${label}申请`;
       this.form.relativeId = obj.id;
-      this.form.bizType = obj.bizType;
+      this.form.bizType = obj.biz_type;
     },
     // 关联弹窗
     openRelativeBase() {
-      this.$refs?.auditRequestBase?.openDialog();
+      if (this.disabledStartForm) {
+        this.$refs?.reqForm?.openDialog();
+      } else {
+        this.$refs?.auditRequestBase?.openDialog();
+      }
     },
     // 是否关联切换
     handleRelaSwitchChange(value) {
@@ -597,6 +475,7 @@ export default {
         nowAuthPersonId: this.laseNodeInfo.id ?? this.form.startPersonId,
         supplementaryInfo: JSON.stringify(arr),
         status: this.laseNodeInfo.chinaname ? "2" : "0", //上一个节点不存在，则退回到发起人，存在则变为退回状态
+        nodeIndex: this.form.nodeIndex - 1
       };
       try {
         const { data, status } = await postAudit(req);
@@ -608,6 +487,16 @@ export default {
       } catch (error) {
         this.$message.error(error.message);
       }
+    },
+    // 退回校验
+    handleValidReturn() {
+      this.$refs.authForm?.validate((valid) => {
+        if (valid) {
+          this.handleReturn();
+        } else {
+          this.$message.error("请完整填写表单内容！");
+        }
+      });
     },
     handleValidForm() {
       const formType = this.form.status === "0" ? "startForm" : "authForm";
@@ -632,6 +521,7 @@ export default {
           budgetId: this.form.budgetId ?? 0,
           budgetName: this.form.budgetName ?? "",
           status: "1",
+          nodeIndex: this.form.nodeIndex + 1
         };
       } else {
         const arr = deepClone(this.supplementaryInfo);
@@ -649,6 +539,7 @@ export default {
           budgetId: this.form.budgetId ?? 0,
           budgetName: this.form.budgetName ?? "",
           status: this.nextNodeInfo.chinaname ? "1" : "3", //下一个节点有的话则退回到1，没有的话则办结
+          nodeIndex: this.form.nodeIndex + 1
         };
       }
       try {
@@ -666,17 +557,41 @@ export default {
       if (this.disabledStartForm) return;
       this.dialogVisible = true;
     },
-    init() {
+    async init() {
       if (this.type === "add") {
         this.form.startPerson = this.userInfo.chinaname;
         this.form.startPersonId = this.userInfo.id;
         this.form.startTime = getTodayString();
+        if (this.isDialog) {
+          this.needToRelative = '1';
+        }
       } else {
         const { supplementaryInfo, ...form } = this.info;
+        this.needToRelative = !this.info.relativeId ? '0' : '1';
         this.form = form;
+        if (this.info.relativeId) {
+          await this.getReqFormData();
+        }
         this.supplementaryInfo = JSON.parse(supplementaryInfo);
         this.nowSupplementaryInfo.authPerson = this.userInfo.chinaname;
         this.nowSupplementaryInfo.userId = this.userInfo.id;
+      }
+    },
+    // 获取申请表单数据
+    async getReqFormData() {
+      try {
+        const { data, status } = await findFormById(this.info.relativeId);
+        if (status !== 200) throw new Error('服务端异常');
+        if (data && data.code !== 200) throw new Error(data.message ?? '未知错误！');
+        if (data.data) {
+          this.reqForm = data.data ?? {};
+          const label =
+            this.bizTypeOptions.find((item) => item.bizType === data.data.biz_type)
+              ?.label ?? "未知业务类型";
+          this.relativeComplete = `${data?.data?.chinaname || '未知人员'}的${label}申请`;
+        }
+      } catch (error) {
+        this.$message.error(error.message);
       }
     },
     handleFinish(value) {
@@ -685,35 +600,40 @@ export default {
       this.form.budgetMoney = value.money;
     },
     computedProcess(bizType) {
-      this.process =
-        this.bizTypeOptions.find((item) => item.bizType === bizType)?.process ??
-        [];
       if (this.type === "add" || this.form.status === "0") {
+        this.process =
+          this.bizTypeOptions.find((item) => item.bizType === bizType)?.process ??
+          [];
         this.nextNodeInfo = this.process[0] ?? {};
         this.form.projNo = bizType + uuid().slice(0, 8);
+        this.form.flowConfig = JSON.stringify(this.process);
       } else {
-        console.log(this.process, "this.process");
-        const processIndex = this.process.findIndex(
-          (item) => item.id === this.userInfo.id
-        );
-        console.log(processIndex, "processIndex");
+        this.process = JSON.parse(this.info.flowConfig);
         // 判断上一个节点
-        if (processIndex >= 1) {
-          this.laseNodeInfo = this.process[processIndex - 1] ?? {};
+        if (this.info.nodeIndex > 0) {
+          this.laseNodeInfo = this.process[this.info.nodeIndex - 1] ?? {};
         } else {
           this.laseNodeInfo = {};
         }
         // 判断下一个节点
-        if (processIndex !== -1) {
-          this.canReturn = this.process[processIndex]?.isAllowReturn === "1";
-          this.nextNodeInfo = this.process[processIndex + 1] ?? {};
-        } else {
-          this.nextNodeInfo = this.process[0] ?? {};
+        if (this.info.nodeIndex !== null || this.info.nodeIndex !== undefined) {
+          this.canReturn = this.process[this.info.nodeIndex]?.isAllowReturn === "1";
+          this.nextNodeInfo = this.process[this.info.nodeIndex + 1] ?? {};
         }
       }
     },
     returnBack() {
-      this.$emit("returnBack");
+      if (this.isDialog) {
+        this.$confirm("表单填写中，一旦关闭数据无法恢复，请确认是否离开关闭", "提示", {
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          type: "warning",
+        }).then(()=>{
+          this.$emit("returnBack");
+        })
+      } else {
+        this.$emit("returnBack");
+      }
     },
   },
   created() {
@@ -723,11 +643,10 @@ export default {
 </script>
 <style lang="less" scoped>
 .main-row-content {
-  min-height: 80vh;
   padding-bottom: 80px;
 
   .form_content--main {
-    min-height: 80vh;
+    min-height: 100%;
     border-right: 1px solid #e7e7e7;
 
     .asg-form-main {
@@ -810,19 +729,15 @@ export default {
       }
 
       &.danger {
-        background: linear-gradient(
-          141deg,
-          rgba(239, 146, 142, 0.96) 0%,
-          #ee281f 100%
-        );
+        background: linear-gradient(141deg,
+            rgba(239, 146, 142, 0.96) 0%,
+            #ee281f 100%);
       }
 
       &.again {
-        background: linear-gradient(
-          141deg,
-          rgba(235, 97, 0, 0.5) 0%,
-          #e8b048 100%
-        );
+        background: linear-gradient(141deg,
+            rgba(235, 97, 0, 0.5) 0%,
+            #e8b048 100%);
       }
     }
   }
@@ -834,9 +749,14 @@ export default {
   justify-content: center;
   gap: 4px;
 }
-.no-relative-text{
-  color:#979797;
+
+.no-relative-text {
+  color: #979797;
   font-weight: 600;
   font-size: 14px;
+}
+
+.dialog_btn_list {
+  text-align: center;
 }
 </style>

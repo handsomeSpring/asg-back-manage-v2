@@ -289,3 +289,14 @@ export function statusChange4(Id){
     }
   })
 }
+
+// 根据id获取申请表数据
+export function findFormById(Id){
+  return request({
+    url:'/api/v1/admin/findFormById',
+    method:'GET',
+    params:{
+      Id
+    }
+  })
+}

@@ -217,11 +217,6 @@ export default {
         this.loading = true;
         const bizObj = this.tabs.find((item) => item.bizType === this.bizType);
         bizObj.process = this.processInfo;
-        const processId = this.processInfo.map((tab) => tab.id);
-        const uniBeforeLength = processId.length;
-        const uniAfterLength = Array.from(new Set(processId)).length;
-        if (uniBeforeLength !== uniAfterLength)
-          return this.$message.error("流程中不能出现相同的节点！");
         if (this.processInfo.length === 0)
           return this.$message.error("至少配置一个节点！");
         const flag = this.processInfo.every((item) => !!item.id);
