@@ -78,7 +78,8 @@
             <el-tag size="small" :type="row.sex === 1 ? 'primary' : 'danger'">{{ row.sex === 1 ? '男' : '女' }}</el-tag>
           </template>
         </el-table-column>
-        <el-table-column label="状态" align="center">
+        <el-table-column label="业务类型" prop="bizType" align="center"></el-table-column>
+        <el-table-column label="状态" align="center" width="150">
           <template #default="{ row }">
             <div style="display: flex;justify-content: center;">
               <p class="my-task-auth margin-icon" v-if="row.status === '1'">
@@ -96,7 +97,7 @@
             </div>
           </template>
         </el-table-column>
-        <el-table-column label="操作" align="center">
+        <el-table-column label="操作" align="center" width="150">
           <template #default="{ row }">
             <template v-if="row.status === '1'">
               <el-button type="text" @click="handleSet('2', row.id, row.user_id)">通过</el-button>
@@ -106,9 +107,9 @@
         </el-table-column>
       </el-table>
     </div>
-    <el-pagination style="text-align: right;" @size-change="handleChange($event, 'limit')" @current-change="handleChange($event, 'page')"
-      :current-page="listQuery.page" :page-sizes="[10, 20, 30, 40, 50]" :page-size="listQuery.limit"
-      layout="total, sizes, prev, pager, next, jumper" :total="total">
+    <el-pagination style="text-align: right;" @size-change="handleChange($event, 'limit')"
+      @current-change="handleChange($event, 'page')" :current-page="listQuery.page" :page-sizes="[10, 20, 30, 40, 50]"
+      :page-size="listQuery.limit" layout="total, sizes, prev, pager, next, jumper" :total="total">
     </el-pagination>
   </div>
 
@@ -133,15 +134,21 @@ export default {
       total: 0,
       options: [],
       loading: false,
+      rules: []
     };
   },
   created() {
     getByTitle('historyRank').then(res => {
       this.options = res.data;
     })
-    this.initComFormList();
+    getByTitle('ruleConfig').then(res => {
+      this.rules = res.data;
+      console.log(this.rules, 'this.rules');
+      this.initComFormList();
+    })
+
   },
-  computed:{
+  computed: {
     ...mapGetters(['userInfo'])
   },
   filters: {
@@ -175,7 +182,12 @@ export default {
           if (data.code === 401) {
             return this.$message.error(data.message);
           }
-          this.tableData = data.rows;
+          this.tableData = data.rows.map(item => {
+            return {
+              ...item,
+              bizType: this.rules.find(el => el.bizType === item.biz_type)?.label ?? '未知业务'
+            }
+          });
           this.total = data.total;
         }).catch(err => {
           this.$message.error(err.message);
