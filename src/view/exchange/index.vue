@@ -1,24 +1,25 @@
 <template>
   <div>
-    <header>
-      <el-form :inline="true" :model="listQuery" class="demo-form-inline">
-        <el-form-item label="申请人">
-          <el-input v-model="listQuery.chinaname" size="small" clearable placeholder="请输入申请者中文名"></el-input>
-        </el-form-item>
-        <el-form-item label="审批状态">
-          <el-select v-model="listQuery.status" size="small">
+    <AsgHighSearch>
+      <template #top>
+        <el-button type="primary" size="small" @click="jumpToRouter">
+          <i class="el-icon-plus"></i>关联发起业务审核
+        </el-button>
+      </template>
+      <template #search>
+        <el-input v-model="listQuery.chinaname" size="small" clearable placeholder="请输入申请者中文名"></el-input>
+        <el-select v-model="listQuery.status" size="small">
             <el-option label="全部" value=""></el-option>
             <el-option label="待审批" value="1"></el-option>
             <el-option label="审批通过" value="2"></el-option>
             <el-option label="审批不通过" value="3"></el-option>
           </el-select>
-        </el-form-item>
-      </el-form>
-      <div>
-        <el-button type="primary" size="small" @click="initComFormList">查询</el-button>
+      </template>
+      <template #btnList>
+        <el-button type="primary" size="small" @click="initComFormList(1)">查询</el-button>
         <el-button size="small" @click="resetForm">重置</el-button>
-      </div>
-    </header>
+      </template>
+    </AsgHighSearch>
     <div class="asg-table-main">
       <el-table v-loading="loading" element-loading-text="拼命加载中" element-loading-spinner="el-icon-loading"
         :data="tableData" style="width:100%" :header-cell-style="{ background: '#f2f6fd', color: '#000' }">
@@ -117,11 +118,15 @@
 
 <script>
 import { conformList, approvalCommentary } from "@/api/admin/index.js";
+import AsgHighSearch from "@/components/AsgHighSearch.vue";
 import { getByTitle } from "@/api/config";
 import { setRole } from "@/api/home";
 import { mapGetters } from "vuex";
 export default {
   name: "exchange-page",
+  components:{
+    AsgHighSearch
+  },
   data() {
     return {
       tableData: [],
@@ -143,7 +148,6 @@ export default {
     })
     getByTitle('ruleConfig').then(res => {
       this.rules = res.data;
-      console.log(this.rules, 'this.rules');
       this.initComFormList();
     })
 
@@ -162,6 +166,9 @@ export default {
     }
   },
   methods: {
+    jumpToRouter(){
+      this.$router.push('/publish/refereeemploy');
+    },
     toChies(value) {
       return this.options.find(item => item.value === value)?.label ?? '未知段位';
     },
@@ -174,8 +181,11 @@ export default {
       }
       this.initComFormList();
     },
-    initComFormList() {
+    initComFormList(page) {
       this.loading = true;
+      if(page){
+        this.listQuery.page = page;
+      }
       conformList(this.listQuery)
         .then(res => {
           const { data } = res;

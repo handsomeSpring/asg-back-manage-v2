@@ -67,7 +67,7 @@
         prop="bizType"
       >
        <template #default="{row}">
-        {{ computedLabel(row.bizType) }}
+        {{ computedLabel(row.biz_type) }}
        </template>
       </el-table-column>
     </el-table>
@@ -174,7 +174,6 @@ export default {
           return {
             ...item,
             isCheck: this.checkId ? this.feedbackId === item.id : false,
-            bizType: "comAuth",
           };
         });
         this.total = data.total;

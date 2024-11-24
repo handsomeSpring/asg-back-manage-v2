@@ -193,6 +193,7 @@ export default {
           this.initChangeList();
         }
       } catch (error) {
+        if(typeof error === 'string' && error === 'cancel') return;
         this.$message.error(error.message);
       }
     },
