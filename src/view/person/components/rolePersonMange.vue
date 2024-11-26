@@ -1,7 +1,7 @@
 <template>
   <div>
     <el-table height="70vh" v-loading="loading" element-loading-text="拼命加载中" element-loading-spinner="el-icon-loading"
-      :data="commentator" :header-cell-style="{ background: '#f2f6fd', color: '#000' }">
+      :data="tableData" :header-cell-style="{ background: '#f2f6fd', color: '#000' }">
       <el-table-column prop="id" label="序号" width="80" align="center"> </el-table-column>
       <el-table-column label="头像" width="150" align="center">
         <template slot-scope="scope">
@@ -13,10 +13,10 @@
         <template slot-scope="scope">
           <div style="display: flex;align-items: center;justify-content: center;">
             <p class="my-task-auth margin-icon" v-if="scope.row.isadmin">
-              <i class="el-icon-s-custom"></i>解说管理员
+              <i class="el-icon-s-custom"></i>管理员
             </p>
             <p class="my-task-success margin-icon" v-else>
-              <i class="el-icon-user-solid"></i>常驻解说
+              <i class="el-icon-user-solid"></i>常驻用户
             </p>
           </div>
         </template>
@@ -35,7 +35,7 @@
       </el-table-column>
       <el-table-column label="操作" width="150" align="center">
         <template #default="{ row }">
-          <el-button style="color:#f40" type="text" @click="refuseUser(row)">辞退解说</el-button>
+          <el-button style="color:#f40" type="text" @click="refuseUser(row)">辞退</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -43,34 +43,20 @@
 </template>
 
 <script>
-import { getUserRoles } from "@/api/schedule/index";
 import { refuseCom } from "@/api/admin/index.js";
 export default {
   name: 'CommentaryManager',
-  mounted() {
-    this.initGetCommentary();
-  },
-  data() {
-    return {
-      commentator: [],
-      loading: false,
-    };
+  props: {
+    tableData: {
+      type: Array,
+      default: () => []
+    },
+    loading: {
+      type: Boolean,
+      default: false
+    }
   },
   methods: {
-    initGetCommentary() {
-      this.loading = true;
-      let params = {
-        opname: "Commentator",
-      };
-      getUserRoles(params)
-        .then((res) => {
-          this.commentator = res.data;
-          this.loading = false;
-        })
-        .catch((err) => {
-          this.loading = false;
-        });
-    },
     refuseUser(row) {
       this.$confirm(`您确定将解说${row.chinaname}劝退吗？, 一旦操作无法恢复，是否继续?`, '提示', {
         confirmButtonText: '确定',

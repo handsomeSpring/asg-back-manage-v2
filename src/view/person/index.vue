@@ -1,52 +1,110 @@
 <template>
   <div>
-    <el-tabs v-model="activeName" type="card">
-      <el-tab-pane name="1">
-        <span slot="label"><i class="el-icon-user-solid"></i> 官网用户管理</span>
-        <suvivors v-if="activeName === '1'"></suvivors>
-      </el-tab-pane>
-      <el-tab-pane name="2">
-        <span slot="label">
-          <i class="el-icon-video-camera-solid"></i> 解说人员管理<i @click="refreshList" style="margin-left:12px;cursor:pointer" class="el-icon-refresh-right"></i>
-        </span>
-        <commentator ref="commentator"></commentator>
-      </el-tab-pane>
-      <el-tab-pane name="3">
-        <span slot="label">
-          <i class="el-icon-message-solid"></i> 裁判人员管理
-        </span>
-        <judgetManage ref="judge"></judgetManage>
-      </el-tab-pane>
-      <el-tab-pane name="4">
-        <span slot="label">
-          <i class="el-icon-s-platform"></i> 导播人员管理
-        </span>
-        <anchorManage ref="Anchor"></anchorManage>
-      </el-tab-pane>
-    </el-tabs>
+    <AsgHighSearch isCustomRow>
+      <template #top>
+        <div>
+          <el-input style="width:370px" v-show="activeName === '1'" size="small" v-model="keyword" clearable placeholder="请输入用户名/中文名进行搜索">
+            <el-button size="small" slot="append" icon="el-icon-search" @click="initGetUsers"></el-button>
+          </el-input>
+        </div>
+      </template>
+      <template #search>
+        <div class="itemlist">
+          <div class="item-row" :class="activeName === '1' ? 'active' : ''" @click="handleClick('1')">官网用户管理</div>
+          <div class="item-row" :class="activeName === '2' ? 'active' : ''" @click="handleClick('2')">解说人员管理</div>
+          <div class="item-row" :class="activeName === '3' ? 'active' : ''" @click="handleClick('3')">裁判人员管理</div>
+          <div class="item-row" :class="activeName === '4' ? 'active' : ''" @click="handleClick('4')">导播人员管理</div>
+        </div>
+      </template>
+      <template #btnList>
+        <el-button size="small" @click="resetForm">重置</el-button>
+      </template>
+    </AsgHighSearch>
+    <Suvivors ref="survivors" v-if="activeName === '1'" :keyword="keyword"></Suvivors>
+    <rolePersonMange v-if="activeName !== '1'" :tableData="tableData"></rolePersonMange>
   </div>
 </template>
 
 <script>
+import AsgHighSearch from '@/components/AsgHighSearch.vue';
+import Suvivors from './components/suvivors.vue';
+import rolePersonMange from './components/rolePersonMange.vue';
+import { getUserRoles } from "@/api/schedule/index";
 export default {
-  name:'user-manager',
+  name: 'user-manager',
   components: {
-    commentator: () => import('./components/commentator.vue'),
-    suvivors: () => import('./components/suvivors.vue'),
-    judgetManage: () => import('./components/judgetManage.vue'),
-    anchorManage: ()=> import('./components/AnchorManage.vue')
+    AsgHighSearch,
+    Suvivors,
+    rolePersonMange
   },
   data() {
     return {
+      keyword: "",
+      tableData: [],
       activeName: '1'
     }
   },
-  methods:{
-    refreshList(){
-      this.$refs?.commentator && this.$refs.commentator.initGetCommentary();
+  methods: {
+    resetForm(){
+      this.keyword = '';
+      this.activeName = '1';
+    },
+    initGetUsers() {
+      this.$refs.survivors?.initGetUsers(true);
+    },
+    handleClick(active) {
+      this.activeName = active;
+      if (active !== '1') {
+        const mapList = {
+          '2': "Commentator",
+          '3': 'Judge',
+          '4': 'Anchor',
+        }
+        this.initData(mapList[active]);
+      }
+    },
+    async initData(role) {
+      try {
+        this.loading = true;
+        const { data, status } = await getUserRoles({ opname: role });
+        if (status !== 200) throw new Error('获取失败');
+        this.tableData = data;
+      } catch (error) {
+        this.$message.error(error.message);
+      } finally {
+        this.loading = false;
+      }
     }
   }
 }
 </script>
 
-<style scoped lang="less"></style>
+<style scoped lang="less">
+.itemlist {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 24px;
+
+  .item-row {
+    border-radius: 4px;
+    border: 1px solid #e7e7e7;
+    padding: 6px 12px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 400;
+    color: #494949;
+    font-family: 'hk';
+    transition: .27s all;
+    &:hover{
+      background: #ecf5ff;
+      border-color: #c6e2ff;
+    }
+
+    &.active {
+      background: #4090EF;
+      color: #fff;
+    }
+  }
+}
+</style>

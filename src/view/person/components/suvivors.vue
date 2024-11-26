@@ -1,13 +1,5 @@
 <template>
   <div>
-    <!-- 搜索 -->
-    <div class="operation_wrap">
-      <div style="width: 580px">
-        <el-input size="small" v-model="listQuery.keyword" clearable placeholder="请输入用户名/中文名进行搜索">
-          <el-button size="small" slot="append" icon="el-icon-search" @click="initGetUsers(true)"></el-button>
-        </el-input>
-      </div>
-    </div>
     <!-- 表格开始 -->
     <div class="asg-table-main">
       <el-table :header-cell-style="{ background: '#f2f6fd', color: '#000' }" v-loading="loading"
@@ -64,7 +56,7 @@
         </el-table-column>
       </el-table>
     </div>
-    <el-pagination style="float: right;margin-top: 12px;" background @current-change="handleChange('pageindex', $event)"
+    <el-pagination style="float: right;margin-top: 12px;" @current-change="handleChange('pageindex', $event)"
       @size-change="handleChange('pagesize', $event)" :current-page.sync="listQuery.pageindex"
       :page-size="listQuery.pagesize" layout="total,prev, pager, next, jumper" :total="total">
     </el-pagination>
@@ -81,6 +73,12 @@ import { mapGetters } from "vuex";
 import AssignDialog from "@/view/person/components/AssignDialog.vue";
 export default {
   name: "survivorPage",
+  props:{
+    keyword:{
+      type:String,
+      default:''
+    }
+  },
   components: {
     AssignDialog
   },
@@ -93,7 +91,6 @@ export default {
       listQuery: {
         pageindex: 1,
         pagesize: 10,
-        keyword: "",
       },
       total: 0,
       job: "",
@@ -138,6 +135,7 @@ export default {
         const postParams = {
           ...this.listQuery,
           pageindex: this.listQuery.pageindex - 1,
+          keyword:this.keyword
         }
         const { data } = await getUsers(postParams);
         this.total = data.cout;
@@ -223,12 +221,6 @@ export default {
 <style scoped lang="less">
 .el-row {
   margin-bottom: 20px;
-}
-
-.operation_wrap {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
 }
 
 .el-input {

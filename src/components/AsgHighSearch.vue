@@ -11,7 +11,7 @@
         <transition name="mybox">
             <div v-show="foldIcon" class="operation_list">
                 <div class="grid__container">
-                    <div class="search_content">
+                    <div :class="isCustomRow ? '' : 'search_content'">
                         <slot name="search"></slot>
                     </div>
                     <div class="button--right">
@@ -35,6 +35,11 @@ export default {
     props:{
         // 是否展示操作按钮
         showOperation:{
+            type:Boolean,
+            default:false
+        },
+        // 是否自定义搜索布局样式
+        isCustomRow:{
             type:Boolean,
             default:false
         }

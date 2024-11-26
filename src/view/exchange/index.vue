@@ -2,7 +2,7 @@
   <div>
     <AsgHighSearch>
       <template #top>
-        <el-button type="primary" size="small" @click="handleOpen(null,$event)">
+        <el-button type="primary" size="small" @click="handleOpen(null, $event)">
           <i class="el-icon-plus"></i>关联发起业务审核
         </el-button>
       </template>
@@ -73,7 +73,7 @@
                       <template #title>
                         <div class="step_icon">
                           <p>审批结论</p>
-                          <el-button type="text" @click="handleOpen(props.row.id,$event)">发起关联业务审批</el-button>
+                          <el-button type="text" @click="handleOpen(props.row.id, $event)">发起关联业务审批</el-button>
                         </div>
                       </template>
                       <template #description>
@@ -137,7 +137,15 @@
       :page-size="listQuery.limit" layout="total, sizes, prev, pager, next, jumper" :total="total">
     </el-pagination>
     <el-dialog title="关联业务发起" :visible.sync="dialogVisible" width="75%" top="5vh" :close-on-click-modal="false">
-      <detail v-if="dialogVisible" type="add" :bizTypeOptions="rules" isDialog @returnBack="dialogVisible = false" :reqId="reqId">
+      <detail 
+         v-if="dialogVisible"
+         type="add"
+         :bizTypeOptions="rules"
+         isDialog
+         :reqId="reqId"
+         @returnBack="dialogVisible = false"
+         @toList="dialogVisible = false"
+      >
       </detail>
     </el-dialog>
   </div>
@@ -168,11 +176,11 @@ export default {
       },
       total: 0,
       options: [],
-      roleOptions:[],
+      roleOptions: [],
       loading: false,
       rules: [],
       dialogVisible: false,
-      reqId:null
+      reqId: null
     };
   },
   created() {
@@ -209,7 +217,7 @@ export default {
     toChies(value) {
       return this.options.find(item => item.value === value)?.label ?? '未知段位';
     },
-    toChiesRole(value){
+    toChiesRole(value) {
       return this.roleOptions.find(item => item.value === value)?.label ?? '未知职位';
     },
     resetForm() {
@@ -350,7 +358,8 @@ header {
   font-size: 1rem;
   margin-bottom: 6px;
 }
-.step_icon{
+
+.step_icon {
   display: flex;
   align-items: center;
   justify-content: space-between;

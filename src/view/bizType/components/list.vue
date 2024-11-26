@@ -49,7 +49,7 @@
         </el-table-column>
         <el-table-column label="业务名称" align="center">
           <template #default="{ row }">
-            <p class="ellipsis__text">{{ row.bizType ? row.bizType : "/" }}</p>
+            <p class="ellipsis__text">{{ computedBizType(row.bizType) }}</p>
           </template>
         </el-table-column>
         <el-table-column label="金额/是否使用预算" align="center" width="180px">
@@ -140,6 +140,9 @@ export default {
     this.getList();
   },
   methods: {
+    computedBizType(bizType){
+      return this.bizTypeOptions.find(item => item.bizType === bizType)?.label ?? '未知业务类型';
+    },
     handleHistoryTrance(row) {
       let authTime = [];
       try {
