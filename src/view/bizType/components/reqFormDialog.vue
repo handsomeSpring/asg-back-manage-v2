@@ -1,6 +1,83 @@
 <template>
-    <el-dialog append-to-body title="申请表单" :visible.sync="dialogVisible" width="50%" @close="handleClose">
-        <el-descriptions class="margin-top" :column="3" size="small" border>
+    <div>
+        <el-dialog v-if="isDialog" append-to-body title="申请表单" :visible.sync="dialogVisible" width="50%"
+            @close="handleClose">
+            <el-descriptions class="margin-top" :column="3" size="small" border>
+                <el-descriptions-item>
+                    <template slot="label">
+                        <div class="des_label">
+                            <svg-icon iconClass="startPerson" width="18px" height="18px"></svg-icon>
+                            <p>申请人</p>
+                        </div>
+                    </template>
+                    {{ form.chinaname }}
+                </el-descriptions-item>
+                <el-descriptions-item>
+                    <template slot="label">
+                        <div class="des_label">
+                            <svg-icon iconClass="qq" width="18px" height="18px"></svg-icon>
+                            <p>联系方式</p>
+                        </div>
+                    </template>
+                    {{ form.contact_number }}
+                </el-descriptions-item>
+                <el-descriptions-item>
+                    <template slot="label">
+                        <div class="des_label">
+                            <svg-icon iconClass="clock" width="18px" height="18px"></svg-icon>
+                            <p>申请时间</p>
+                        </div>
+                    </template>
+                    {{ form.create_time }}
+                </el-descriptions-item>
+                <el-descriptions-item>
+                    <template slot="label">
+                        <div class="des_label">
+                            <svg-icon iconClass="gameAccount" width="18px" height="18px"></svg-icon>
+                            <p>游戏账号</p>
+                        </div>
+                    </template>
+                    {{ form.game_id }}
+                </el-descriptions-item>
+                <el-descriptions-item>
+                    <template slot="label">
+                        <div class="des_label">
+                            <svg-icon iconClass="rank" width="18px" height="18px"></svg-icon>
+                            <p>历史段位</p>
+                        </div>
+                    </template>
+                    {{ computedRanks(form.history_rank) }}
+                </el-descriptions-item>
+                <el-descriptions-item>
+                    <template slot="label">
+                        <div class="des_label">
+                            <svg-icon iconClass="sex" width="18px" height="18px"></svg-icon>
+                            <p>性别</p>
+                        </div>
+                    </template>
+                    {{ form.sex === 1 ? '男' : '女' }}
+                </el-descriptions-item>
+                <el-descriptions-item>
+                    <template slot="label">
+                        <div class="des_label">
+                            <svg-icon iconClass="reqRole" width="18px" height="18px"></svg-icon>
+                            <p>申请职位</p>
+                        </div>
+                    </template>
+                    {{ computedRole(form.req_role) }}
+                </el-descriptions-item>
+                <el-descriptions-item :span="2">
+                    <template slot="label">
+                        <div class="des_label">
+                            <svg-icon iconClass="introductionSelf" width="18px" height="18px"></svg-icon>
+                            <p>自我介绍</p>
+                        </div>
+                    </template>
+                    {{ form.introduction }}
+                </el-descriptions-item>
+            </el-descriptions>
+        </el-dialog>
+        <el-descriptions v-else class="margin-top" :column="3" size="small" border>
             <el-descriptions-item>
                 <template slot="label">
                     <div class="des_label">
@@ -74,7 +151,7 @@
                 {{ form.introduction }}
             </el-descriptions-item>
         </el-descriptions>
-    </el-dialog>
+    </div>
 </template>
 
 <script>
@@ -86,6 +163,10 @@ export default {
         form: {
             type: Object,
             default: () => { }
+        },
+        isDialog:{
+            type:Boolean,
+            default:true
         }
     },
     data() {

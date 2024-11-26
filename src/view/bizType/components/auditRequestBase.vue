@@ -4,6 +4,7 @@
     title="关联业务选择"
     @close="closeDialog"
     append-to-body
+    :close-on-click-modal="false"
     width="50%"
   >
     <header>
@@ -35,6 +36,7 @@
         <template #default="{ row, $index }">
           <el-checkbox
             v-model="row.isCheck"
+            :disabled="row.status !== '1'"
             @input="handleCheck($index, row, $event)"
           ></el-checkbox>
         </template>
@@ -195,5 +197,3 @@ export default {
   },
 };
 </script>
-
-<style scoped lang="scss"></style>

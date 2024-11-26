@@ -37,14 +37,18 @@
       <el-table :data="tableData" v-loading="loading" element-loading-text="拼命加载中"
         element-loading-spinner="el-icon-loading" :header-cell-style="{ background: '#f2f6fd', color: '#000' }">
         <el-table-column label="序号" type="index" align="center" width="60px"></el-table-column>
-        <el-table-column label="项目名称" prop="projName" align="center" min-width="220px">
+        <el-table-column label="项目名称" prop="projName" align="center" min-width="180px">
           <template #default="{ row }">
             <p class="ellipsis__text">{{ row.projName }}</p>
           </template>
         </el-table-column>
-        <el-table-column label="项目编号" prop="projNo" align="center" width="180px">
+        <el-table-column label="关联申请单" prop="projNo" align="center" width="220px">
           <template #default="{ row }">
-            <p class="ellipsis__text">{{ row.projNo }}</p>
+            <el-popover v-if="row.relativeId" width="800" placement="bottom" title="申请表" trigger="click" @show="getReqFormData(row)">
+              <reqFormDialog :is-dialog="false" :form="reqForm"></reqFormDialog>
+              <p class="ellipsis__text underline_data" slot="reference">{{ row.relativeId }}</p>
+            </el-popover>
+            <p v-else class="ellipsis__text none__data" slot="reference">/</p>
           </template>
         </el-table-column>
         <el-table-column label="业务名称" align="center">
@@ -102,12 +106,15 @@
 <script>
 import AsgHighSearch from "@/components/AsgHighSearch.vue";
 import AsgHistoryRecord from "@/components/AsgHistoryRecord.vue";
+import reqFormDialog from "./reqFormDialog.vue";
 import { findAudit } from "@/api/admin/index";
+import { findFormById } from "@/api/admin/index.js";
 export default {
   name: "bizType-list",
   components: {
     AsgHighSearch,
     AsgHistoryRecord,
+    reqFormDialog
   },
   props: {
     bizTypeOptions: {
@@ -132,6 +139,7 @@ export default {
       dialogVisible: false,
       historyLine: [],
       loading: false,
+      reqForm: {}
     };
   },
   created() {
@@ -140,7 +148,20 @@ export default {
     this.getList();
   },
   methods: {
-    computedBizType(bizType){
+    // 获取申请表单数据
+    async getReqFormData(row) {
+      try {
+        const { data, status } = await findFormById(row.relativeId);
+        if (status !== 200) throw new Error('服务端异常');
+        if (data && data.code !== 200) throw new Error(data.message ?? '未知错误！');
+        if (data.data) {
+          this.reqForm = data.data ?? {};
+        }
+      } catch (error) {
+        this.$message.error(error.message);
+      }
+    },
+    computedBizType(bizType) {
       return this.bizTypeOptions.find(item => item.bizType === bizType)?.label ?? '未知业务类型';
     },
     handleHistoryTrance(row) {
@@ -216,9 +237,9 @@ export default {
             startTime: item.start_time,
             status: item.status,
             supplementaryInfo: item.supplementary_info,
-            relativeId:item.relative_id,
-            flowConfig:item.flow_config,
-            nodeIndex:item.node_index
+            relativeId: item.relative_id,
+            flowConfig: item.flow_config,
+            nodeIndex: item.node_index
           };
         });
         this.total = data?.data?.total ?? 0;
@@ -300,6 +321,13 @@ export default {
     font-size: 14px;
     font-weight: 500;
     color: #d9d9d9;
+  }
+
+  &.underline_data {
+    text-decoration: underline;
+    color: #4090ef;
+    text-underline-offset: 0.2em;
+    cursor: pointer;
   }
 
   .green_tag {

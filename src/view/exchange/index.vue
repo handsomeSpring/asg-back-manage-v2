@@ -13,6 +13,7 @@
           <el-option label="待审批" value="1"></el-option>
           <el-option label="审批通过" value="2"></el-option>
           <el-option label="审批不通过" value="3"></el-option>
+          <el-option label="关联申请审批中" value="5"></el-option>
         </el-select>
       </template>
       <template #btnList>
@@ -73,11 +74,13 @@
                       <template #title>
                         <div class="step_icon">
                           <p>审批结论</p>
-                          <el-button type="text" @click="handleOpen(props.row.id, $event)">发起关联业务审批</el-button>
+                          <el-button v-if="props.row.status === '1'" type="text" @click="handleOpen(props.row.id, $event)">发起关联业务审批</el-button>
                         </div>
                       </template>
                       <template #description>
-                        <el-card class="box-card" v-if="props.row.status !== '1'">
+                        <el-alert v-if="props.row.status === '5'" style="height:70px" title="该申请单正在关联业务流程审批中，请跟踪流程审批情况。" type="warning" :closable="false">
+                        </el-alert>
+                        <el-card class="box-card" v-else-if="props.row.status !== '1'">
                           <div
                             style="display: flex;justify-content: space-between;align-items: center;font-size: 1rem;">
                             <p class="title__info"><i class="el-icon-s-custom"></i>{{ props.row.approval_person }}</p>
@@ -86,6 +89,7 @@
                           </div>
                           <p><i class="el-icon-time"></i>{{ props.row.approval_time }}</p>
                         </el-card>
+         
                         <el-alert v-else style="height:70px" title="待管理员审核" type="warning" :closable="false">
                         </el-alert>
                       </template>
@@ -118,6 +122,9 @@
               </p>
               <p class="my-task-info margin-icon" v-else-if="row.status === '4'">
                 <i class="el-icon-s-release"></i>已辞退
+              </p>
+              <p class="my-task-auth margin-icon" v-else-if="row.status === '5'">
+                <i class="el-icon-warning"></i>流程审批中
               </p>
             </div>
           </template>
@@ -306,7 +313,9 @@ export default {
         '0': 'wait',
         '1': 'process',
         '2': 'success',
-        '3': 'error'
+        '3': 'error',
+        '4': 'error',
+        '5': 'process'
       }
       return statusMap[status];
     }

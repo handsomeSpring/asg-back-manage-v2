@@ -519,8 +519,8 @@ export default {
         req = {
           ...this.form,
           id: uuid(),
-          nowAuthPerson: this.nextNodeInfo.chinaname,
-          nowAuthPersonId: this.nextNodeInfo.id,
+          nowAuthPerson: this.nextNodeInfo.chinaname ?? "archive",
+          nowAuthPersonId: this.nextNodeInfo.id ?? 0,
           supplementaryInfo: JSON.stringify(this.supplementaryInfo),
           budgetId: this.form.budgetId ?? 0,
           budgetName: this.form.budgetName ?? "",
