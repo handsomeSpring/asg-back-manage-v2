@@ -213,4 +213,7 @@ export default {
         font-family: 'hk';
     }
 }
+/deep/.el-descriptions--small.is-bordered .el-descriptions-item__cell{
+    width:120px
+}
 </style>

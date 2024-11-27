@@ -60,10 +60,13 @@ export default {
   filters: {
     filterChoose(val) {
       const mapList = {
-        0: "发起",
-        1: "同意",
-        2: "不同意/退回",
-        4: "终止申请"
+        '0': "发起",
+        '1': "同意",
+        '2': "不同意/退回",
+        '3': "办结",
+        '4': '办结-同意申请',
+        '5': '办结-驳回申请',
+        '6': "终止申请"
       };
       return mapList[val];
     },
@@ -74,10 +77,13 @@ export default {
     },
     computedText(choose) {
       const mapList = {
-        0: "#1E87E3",
-        1: "#429F46",
-        2: "#FF3C00",
-        4: "#FF3C00",
+        '0': "#1E87E3",
+        '1': "#429F46",
+        '2': "#FF3C00",
+        '3': "#1E87E3",
+        '4': "#429F46",
+        '5': "#FF3C00",
+        '6': "#FF3C00",
       };
       return mapList[choose];
     },

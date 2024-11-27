@@ -59,11 +59,11 @@ export default {
   filters: {
     filterNode(val) {
       const mapList = {
-        0: "发起",
-        1: "进行中",
-        2: "退回",
-        3: "流程结束",
-        4: "流程终止"
+        '0': "发起",
+        '1': "进行中",
+        '2': "退回",
+        '3': "已归档",
+        '4': "流程终止"
       };
       return mapList[val];
     },
@@ -94,7 +94,7 @@ export default {
           this.historyLine.push({
             time:'-',
             person:row.startPerson,
-            choose:'4'
+            choose:'6'
           })
         }
         this.dialogVisible = true;

@@ -44,7 +44,7 @@
         </el-table-column>
         <el-table-column label="关联申请单" prop="projNo" align="center" width="220px">
           <template #default="{ row }">
-            <el-popover v-if="row.relativeId" width="800" placement="bottom" title="申请表" trigger="click" @show="getReqFormData(row)">
+            <el-popover v-if="row.relativeId" width="800" placement="bottom" title="申请表-数据是最新的申请单" trigger="click" @show="getReqFormData(row)">
               <reqFormDialog :is-dialog="false" :form="reqForm"></reqFormDialog>
               <p class="ellipsis__text underline_data" slot="reference">{{ row.relativeId }}</p>
             </el-popover>
@@ -185,11 +185,12 @@ export default {
             };
           }),
         ];
+        // 1-同意 2-不同意退回 3-办结 4-办结-同意申请 5-办结-驳回申请 6代表终止
         if (row.status === "4") {
           this.historyLine.push({
             time: "-",
             person: row.startPerson,
-            choose: "4",
+            choose: "6",
           });
         }
         this.dialogVisible = true;

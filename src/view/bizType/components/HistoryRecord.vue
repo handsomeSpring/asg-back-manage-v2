@@ -31,6 +31,11 @@
               <span class="title-font">初始节点</span>
               <span class="content-font">发起人</span>
             </p>
+            <p v-if="index === realTimeLine.length - 1">
+              <span class="title-font">能否决策</span>
+              <span class="content-font" >{{ item.isCanDivide === '1' ? '允许' : '不允许'}}</span>
+            </p>
+
           </div>
         </div>
       </div>
@@ -255,6 +260,7 @@ export default {
             font-size: 13px;
             color: #000000;
             line-height: 15px;
+            font-family: 'hk';
           }
         }
       }

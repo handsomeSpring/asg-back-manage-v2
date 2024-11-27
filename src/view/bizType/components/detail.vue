@@ -127,9 +127,9 @@
                     </div>
                     <div class="asg-opinion-right">
                       <template v-if="item.choose !== '0'">
-                        <div class="tag" :class="item.choose === '1' ? 'success' : 'danger'">
+                        <div class="tag" :class="computedClass(item.choose)">
                           {{
-                            item.choose === "1" ? "审核已通过" : "申请被退回"
+                            item.choose | filterChoose
                           }}
                         </div>
                       </template>
@@ -270,6 +270,18 @@ export default {
       default: () => [],
     },
   },
+  filters: {
+    filterChoose(val) {
+      const mapList = {
+        '1': '审核已通过',
+        '2': '申请被退回',
+        '3': '办结',
+        '4': '办结-同意申请',
+        '5': '办结-不同意申请'
+      }
+      return mapList[val];
+    }
+  },
   data() {
     const validateRelaId = (rule, value, callback) => {
       if (!value && this.needToRelative === "1") {
@@ -313,9 +325,10 @@ export default {
         opinion: "",
         otherOpinion: "",
         reviseOpinion: "",
-        choose: "1", // choose : '1' 是同意  // choose '2' 退回不同意
+        choose: "1", // choose : '1' 是同意  // choose '2' 退回不同意 // choose '3是纯办结' //4 是办结同意  //5 是办结不同意
         time: null,
       },
+      nowLastNode: false, //是否是最后一个节点
       nextNodeInfo: {}, //下一个节点
       laseNodeInfo: {}, //上一个节点
       startFormRules: {
@@ -434,6 +447,16 @@ export default {
     },
   },
   methods: {
+    computedClass(choose) {
+      const mapList = {
+        '1': 'success',
+        '2': 'danger',
+        '3': 'primary',
+        '4': 'success',
+        '5': 'danger'
+      }
+      return mapList[choose]
+    },
     handleBizTypeChoose(obj) {
       const label =
         this.bizTypeOptions.find((item) => item.bizType === obj.biz_type)
@@ -532,7 +555,7 @@ export default {
       });
     },
     // 送审/办结
-    async handleAccept() {
+    async handleAccept(reqType) {
       let req = {};
       if (this.type === "add") {
         req = {
@@ -543,16 +566,19 @@ export default {
           supplementaryInfo: JSON.stringify(this.supplementaryInfo),
           budgetId: this.form.budgetId ?? 0,
           budgetName: this.form.budgetName ?? "",
-          status: "1",
+          status: this.nowLastNode ? '3' : '1',
           nodeIndex: this.form.nodeIndex + 1
         };
       } else {
         const arr = deepClone(this.supplementaryInfo);
         const nowSupplementaryInfo = {
           ...this.nowSupplementaryInfo,
-          choose: this.form.status === "0" ? "0" : "1",
+          choose: this.nowLastNode ? '3' : (this.form.status === "0" ? "0" : "1"),
           time: parseTime(new Date(), "{y}-{m}-{d} {h}:{i}:{s}"),
         };
+        if (reqType) {
+          nowSupplementaryInfo.choose = reqType === '2' ? '4' : '5';
+        }
         arr.push(nowSupplementaryInfo);
         req = {
           ...this.form,
@@ -635,9 +661,11 @@ export default {
         this.nextNodeInfo = this.process[0] ?? {};
         this.form.projNo = bizType + uuid().slice(0, 8);
         this.form.flowConfig = JSON.stringify(this.process);
+        this.nowLastNode = this.process.length - 1 === this.form.nodeIndex;
       } else {
         this.process = JSON.parse(this.info.flowConfig);
         //判断是否能够最终决定权
+        this.nowLastNode = this.process.length - 1 === this.info.nodeIndex; //是否是最后一个节点；
         this.canFinishResult = this.process.length - 1 === this.info.nodeIndex && this.process[this.info.nodeIndex]?.isCanDivide === '1';
         // 判断上一个节点
         if (this.info.nodeIndex > 0) {
@@ -685,10 +713,10 @@ export default {
         if (type === '2') {
           await setRole(this.reqForm.user_id, this.reqForm.req_role);
         }
-        await this.handleAccept();
+        await this.handleAccept(type);
       } catch (error) {
         this.$message.error(error.message);
-      } finally{
+      } finally {
         loading.close();
       }
     }
@@ -775,11 +803,13 @@ export default {
     justify-content: center;
 
     .tag {
-      padding: 4px 8px;
+      padding: 6px 8px;
       border-radius: 4px;
       color: #fff;
       width: fit-content;
       font-size: 14px;
+      font-family: 'hk';
+      font-weight: 500;
 
       &.success {
         background: linear-gradient(141deg, #3cda7a 0%, #32b16c 100%);
@@ -789,6 +819,10 @@ export default {
         background: linear-gradient(141deg,
             rgba(239, 146, 142, 0.96) 0%,
             #ee281f 100%);
+      }
+
+      &.primary {
+        background: linear-gradient(141deg, #44a3fd 0%, #0c80e5 100%);
       }
 
       &.again {
