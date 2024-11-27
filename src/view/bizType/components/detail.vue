@@ -458,6 +458,11 @@ export default {
       return mapList[choose]
     },
     handleBizTypeChoose(obj) {
+      if(!obj.id){
+        this.relativeComplete = '';
+        this.form.bizType = '';
+        return;
+      };
       const label =
         this.bizTypeOptions.find((item) => item.bizType === obj.biz_type)
           ?.label ?? "未知业务类型";
