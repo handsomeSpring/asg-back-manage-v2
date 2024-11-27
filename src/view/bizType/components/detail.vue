@@ -74,7 +74,8 @@
                 <el-col :span="12">
                   <el-input v-show="needToRelative === '1'" placeholder="请选择关联的业务场景" v-model="relativeComplete"
                     size="small" class="input-with-select" readOnly>
-                    <el-button slot="append" :icon="(disabledStartForm || this.reqId) ? 'el-icon-view' : 'el-icon-search'"
+                    <el-button slot="append"
+                      :icon="(disabledStartForm || this.reqId) ? 'el-icon-view' : 'el-icon-search'"
                       @click="openRelativeBase"></el-button>
                   </el-input>
                   <p v-show="needToRelative === '0'" class="no-relative-text">选择不关联业务申请发起，自行发起业务申请</p>
@@ -163,9 +164,7 @@
         <HistoryRecord v-if="!isStartForm" :info="info" :type="type" :bizTypeArr="bizTypeOptions"></HistoryRecord>
         <helpAssignInfo v-else :bizTypeOptions="bizTypeOptions"></helpAssignInfo>
       </el-col>
-
     </el-row>
-
     <button-fix v-if="!isDialog">
       <template v-if="type !== 'check' && form.status !== '4'">
         <el-button v-if="form.bizType" size="small" type="primary" @click="handleValidForm">
@@ -208,6 +207,18 @@
     <auditRequestBase ref="auditRequestBase" :checkId="form.relativeId" :bizTypeOptions="bizTypeOptions"
       @finishChoose="handleBizTypeChoose"></auditRequestBase>
     <reqFormDialog ref="reqForm" :form="reqForm"></reqFormDialog>
+    <el-dialog title="最终决策" :visible.sync="finalResultDialogVisible" width="30%" :close-on-click-modal="false">
+      <div class="tip_type">
+        <p>根据规则配置，您拥有对该申请业务流程的最终决策权。关于``<span class="weight-light">{{ relativeComplete }}</span>``的申请单，请选择您的决策。</p>
+      </div>
+      <span slot="footer" class="dialog_btn_list">
+        <el-button size="small" type="success" @click="handleSet('2')"><i style="margin-right: 6px"
+            class="el-icon-circle-check"></i>同意纳入</el-button>
+        <el-button size="small" type="danger" @click="handleSet('3')"><i style="margin-right: 6px"
+            class="el-icon-circle-close"></i>驳回申请</el-button>
+        <el-button size="small" plain @click="finalResultDialogVisible = false">再考虑下</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
@@ -224,6 +235,8 @@ import asgTableCard from "@/components/asg-table-card.vue";
 import reqFormDialog from "./reqFormDialog.vue";
 import { deepClone } from "@/utils";
 import { postAudit, statusChange4, findFormById } from "@/api/admin/index.js";
+import { approvalCommentary } from "@/api/admin/index.js";
+import { setRole } from "@/api/home";
 export default {
   name: "bizType-detail",
   components: {
@@ -267,6 +280,8 @@ export default {
     };
     return {
       canReturn: false,
+      canFinishResult: false, //是否拥有最终决定权
+      finalResultDialogVisible: false, //最终决定权弹窗
       form: {
         projName: "",
         projNo: "",
@@ -506,7 +521,11 @@ export default {
       const formType = this.form.status === "0" ? "startForm" : "authForm";
       this.$refs[formType]?.validate((valid) => {
         if (valid) {
-          this.handleAccept();
+          if (this.canFinishResult && this.form.relativeId) {
+            this.finalResultDialogVisible = true;
+          } else {
+            this.handleAccept();
+          }
         } else {
           this.$message.error("请完整填写表单内容！");
         }
@@ -618,6 +637,8 @@ export default {
         this.form.flowConfig = JSON.stringify(this.process);
       } else {
         this.process = JSON.parse(this.info.flowConfig);
+        //判断是否能够最终决定权
+        this.canFinishResult = this.process.length - 1 === this.info.nodeIndex && this.process[this.info.nodeIndex]?.isCanDivide === '1';
         // 判断上一个节点
         if (this.info.nodeIndex > 0) {
           this.laseNodeInfo = this.process[this.info.nodeIndex - 1] ?? {};
@@ -644,6 +665,33 @@ export default {
         this.$emit("returnBack");
       }
     },
+    // 最终决策权力
+    async handleSet(type) {
+      const loading = this.$loading({
+        lock: true,
+        text: "正在上传数据中，请稍等",
+        spinner: "el-icon-loading",
+        background: "rgba(0, 0, 0, 0.8)",
+      });
+      try {
+        this.finalResultDialogVisible = false;
+        const params = {
+          id: this.info.relativeId,
+          approvalPerson: this.userInfo.chinaname,
+          status: type
+        };
+        const { data } = await approvalCommentary(params);
+        if (data.code !== 200) throw new Error(data.message);
+        if (type === '2') {
+          await setRole(this.reqForm.user_id, this.reqForm.req_role);
+        }
+        await this.handleAccept();
+      } catch (error) {
+        this.$message.error(error.message);
+      } finally{
+        loading.close();
+      }
+    }
   },
   created() {
     this.init();
@@ -767,5 +815,25 @@ export default {
 
 .dialog_btn_list {
   text-align: center;
+}
+
+.tip_type {
+  padding: 8px 16px;
+  background-color: #ecf8ff;
+  border-radius: 4px;
+  border-left: 5px solid #50bfff;
+  margin: 20px 0;
+
+  p {
+    font-size: 14px;
+    color: #5e6d82;
+    line-height: 1.5em;
+
+    .weight-light {
+      color: #4090EF;
+      font-weight: 500;
+      font-family: 'hk';
+    }
+  }
 }
 </style>

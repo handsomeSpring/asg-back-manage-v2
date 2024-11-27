@@ -6,6 +6,10 @@
           :label="item.label"></el-option>
       </el-select>
       <div class="operation__btn">
+        <el-radio-group v-show="isLastNode" style="margin-right: 6px;" v-model="checkInfo.isCanDivide">
+          <el-radio label="1">允许最终决策</el-radio>
+          <el-radio label="0">不允许最终决策</el-radio>
+        </el-radio-group>
         <el-radio-group v-model="checkInfo.isAllowReturn">
           <el-radio label="1">该节点允许退回</el-radio>
           <el-radio label="0">不允许退回</el-radio>
@@ -44,6 +48,10 @@ export default {
       type: Object,
       default: () => { },
     },
+    isLastNode:{
+      type: Boolean,
+      default:false
+    }
   },
   data() {
     return {

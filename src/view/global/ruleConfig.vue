@@ -1,7 +1,7 @@
 <template>
   <div class="rule__config--grid asg-table-main">
     <div class="left_tabs" v-loading="leftLoading">
-      <li class="header__tabs items">流程规则</li>
+      <li class="header__tabs items">流程规则配置</li>
       <li
         class="items item-children"
         :class="bizType === item.bizType ? 'active' : ''"
@@ -62,6 +62,7 @@
           </div>
           <div class="operation__box">
             <p>{{ item.isAllowReturn === "1" ? "允许退回" : "不允许退回" }}</p>
+            <p v-if="index === processInfo.length - 1">{{ item.isCanDivide === '1' ? '允许最终决策' : '不允许该节点最终决策' }}</p>
           </div>
           <div class="line"></div>
           <div class="return--pointer" v-if="item.isAllowReturn === '1'">
@@ -82,6 +83,7 @@
     <roleChooseDialog
       :dialogVisible.sync="dialogVisible"
       :personInfo="personInfo"
+      :isLastNode="isLastNode"
       @finish="handleChoose"
     >
     </roleChooseDialog>
@@ -135,7 +137,8 @@ export default {
         bizType: "",
         process: [],
       },
-      leftLoading:false
+      leftLoading:false,
+      isLastNode:false, //是否是最后一个节点
     };
   },
   computed: {
@@ -245,6 +248,7 @@ export default {
       this.dialogVisible = true;
       this.personInfo = item;
       this.tableIndex = index;
+      this.isLastNode = index === this.processInfo.length - 1;
     },
     handleChooseBizType(item) {
       this.bizType = item.bizType;
@@ -255,6 +259,7 @@ export default {
         id: "",
         chinaname: "",
         isAllowReturn: "0",
+        isCanDivide: '0'
       });
     },
     closeNode(index) {
