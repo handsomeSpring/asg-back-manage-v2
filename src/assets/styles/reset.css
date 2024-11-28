@@ -174,3 +174,8 @@
 .asg-table-main{
   min-height: 70vh;
 }
+
+/* 移动端统一样式 */
+.mobile-el-confirm{
+  width:100% !important;
+}
