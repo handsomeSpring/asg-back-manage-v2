@@ -1,25 +1,37 @@
 <template>
-  <el-container>
-    <el-aside width="auto">
-      <common-aside />
-    </el-aside>
-    <el-container>
-      <el-header><common-header /></el-header>
-      <headerTabs
-        ref="headerTabs"
-        v-show="$route.fullPath !== '/index'"
-      ></headerTabs>
-      <el-scrollbar ref="queRef" :style="{ height: actuallHeight }">
-        <el-main style="height: 100%">
-          <transition name="fade-transform" mode="out-in">
-            <router-view></router-view>
-          </transition>
-          <CommonFooter></CommonFooter>
-        </el-main>
+  <div>
+    <el-container class="layout">
+      <el-aside width="auto">
+        <common-aside />
+      </el-aside>
+      <el-container>
+        <el-header><common-header /></el-header>
+        <headerTabs ref="headerTabs" v-show="$route.fullPath !== '/index'"></headerTabs>
+        <el-scrollbar ref="queRef" :style="{ height: actuallHeight }">
+          <el-main style="height: 100%">
+            <transition name="fade-transform" mode="out-in">
+              <router-view></router-view>
+            </transition>
+            <CommonFooter></CommonFooter>
+          </el-main>
+        </el-scrollbar>
+      </el-container>
+      <projOperation v-show="$route.path !== '/index'"></projOperation>
+    </el-container>
+    <el-container class="mobile-layout">
+      <el-header>
+        <router-link class="back" to="/mobileGuide">
+          <i class="el-icon-arrow-left"></i>返回首页
+        </router-link>
+        <div class="title">ASG后台管理系统</div>
+      </el-header>
+      <el-scrollbar ref="queRef" style="height: calc(100dvh - 60px)">
+        <transition name="fade-transform" mode="out-in">
+          <router-view></router-view>
+        </transition>
       </el-scrollbar>
     </el-container>
-    <projOperation v-show="$route.path !== '/index'"></projOperation>
-  </el-container>
+  </div>
 </template>
 
 <script>
@@ -79,6 +91,8 @@ export default {
 </script>
 
 <style scoped lang="less">
+@import url('../../assets/mobileStyles/homePage/index.less');
+
 .el-header {
   padding: 0;
 }
@@ -104,5 +118,9 @@ export default {
 
 .el-main {
   overflow-x: hidden;
+}
+
+.mobile-layout {
+  display: none;
 }
 </style>

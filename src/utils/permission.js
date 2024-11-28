@@ -3,6 +3,7 @@ import store from '@/store/index';
 import router from "@/router/index.js";
 const _import = require("@/router/_import.js");
 import { getMenu } from "@/api/home/index.js";
+import { isMobile } from '@/utils/index';
 import Err from '@/view/Err.vue';
 function importComponent(componentPath){
     try {
@@ -32,6 +33,10 @@ const createMenuComps = (menu) => {
     })
 }
 
+// 适配性 '1' pc '2' 移动端 '3' pc移动互通
+function getAdaptability(adaptability = '1'){
+    return isMobile() ? ['2','3'].includes(adaptability) : ['1','3'].includes(adaptability);
+};
 function filterMenu(auth) {
     const roles = store.state?.user?.userInfo?.roleListCode ?? '';
     const roleArray = !!roles ? roles.split(',') : [];
@@ -49,7 +54,7 @@ function filterMenu(auth) {
 }
 function generateMenu(menu = []) {
     return menu.filter(item => {
-        return filterMenu(item.auth) && item.show === '1'
+        return filterMenu(item.auth) && item.show === '1' && getAdaptability(item.adaptability)
     }).map(item => {
         return {
             ...item,

@@ -107,7 +107,6 @@ export default {
         await this.initRoles();
         await this.initGetInfo();
         const path = isMobile() ? '/mobileGuide' : '/guide';
-        console.log(path,'path');
         this.$router.push(path);
         this.$message.success("登录成功！");
       } catch (error) {

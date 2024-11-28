@@ -2,7 +2,7 @@
     <div class="home-content">
         <div class="content-parent" v-for="(menu, index) in adapterMenu" :key="index">
             <div class="menu_header">
-                <p>{{ menu.title }}</p>
+                <div class="menu-title"><svg-icon color="#4090EF" :iconClass="menu.iconClass"></svg-icon>{{ menu.title }}</div>
             </div>
             <div class="grid-parent">
                 <div class="grid-item" v-for="(child, childI) in menu.children" :key="`child-${childI}`"
@@ -30,6 +30,7 @@ export default {
     },
     methods: {
         handleJump(row) {
+            this.$router.push(row.path);
             this.$message.warning('待开发中...');
         },
         async logout() {
@@ -63,10 +64,10 @@ export default {
     margin-top: 12px;
     .content-parent {
         width: 90%;
-        margin: 0 auto 2em;
+        margin: 0 auto 1em;
         background: #FFF;
-        box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
-        border-radius: 8px;
+        border:1px solid #e7e7e7;
+        border-radius: 4px;
 
         .menu_header {
             padding: 0.8em;
@@ -74,6 +75,12 @@ export default {
             font-size: 0.8em;
             font-weight: bold;
             font-family: 'hk';
+            .menu-title{
+                display: flex;
+                align-items: center;
+                justify-content: flex-start;
+                gap:0.5em;
+            }
         }
 
         .grid-parent {
