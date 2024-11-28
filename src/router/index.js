@@ -12,6 +12,7 @@ import customWorker from "@/view/customWorker/index.vue";
 import { getPermission } from '@/utils/permission.js';
 import Layout from '@/view/homepage/index.vue';
 import userInfo from '@/view/userInfo/index.vue';
+import mobileGuide from '@/view/homepage/mobileGuide/index.vue';
 const originalPush = VueRouter.prototype.push;
 VueRouter.prototype.push = function push(location) {
   return originalPush.call(this, location).catch(err => err)
@@ -49,26 +50,22 @@ const router = new VueRouter({
       component: Err,
     },
     {
+      path: "/mobileGuide",
+      component: mobileGuide,
+      name: '用户中心',
+    },
+    {
       path: "/",
       component: Layout,
       name: 'home',
       children:[
         {
-          path: "/userInfo",
+          path: "userInfo",
           component: userInfo,
           name: '个人中心',
         }
       ]
     }
-    //   children: [
-    //     ...asyncRouteList,
-    //     {
-    //       path:'/shopping',
-    //       name:'购物中心',
-    //       component:Shopping
-    //     }
-    //   ]
-    // },
   ],
 });
 // 设置白名单：登录、404、临时抽签

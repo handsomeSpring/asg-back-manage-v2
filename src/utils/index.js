@@ -67,3 +67,7 @@ export function uuid() {
   const uuid = s.join('');
   return uuid;
 }
+// 是否是移动端
+export function isMobile(){
+  return window.innerWidth < 1024;
+}

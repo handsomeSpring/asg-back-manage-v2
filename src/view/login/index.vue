@@ -1,14 +1,37 @@
 <template>
   <div>
     <header class="clearfix">
-      <el-image style="margin-left: 40px; display: block; width: 50px; height: 50px"
-        :src="require('@/assets/images/logo.png')"></el-image>
+      <el-image class="pc-avatar" :src="require('@/assets/images/logo.png')"></el-image>
       <span class="title">ASG赛事后台管理系统</span>
     </header>
     <main>
       <el-image class="img-wrap" :src="require('@/assets/images/manager.svg')">
       </el-image>
       <div class="loginwrap">
+        <div class="header-form">
+          <p>系统登录</p>
+        </div>
+        <div class="info">
+          <el-form ref="ruleForm" :model="userform" :rules="rules" class="demo-ruleForm">
+            <el-form-item label="用户名" prop="username">
+              <el-input suffix-icon="el-icon-user-solid" v-model="userform.username" placeholder="请输入用户名"></el-input>
+            </el-form-item>
+            <el-form-item label="密码" prop="password">
+              <el-input v-model="userform.password" :type="inputtype" placeholder="请输入密码"
+                @keyup.enter.native="submit('ruleForm')">
+                <i @click="toggleEye" slot="suffix" :class="eye_status"></i>
+              </el-input>
+            </el-form-item>
+            <el-form-item>
+              <div class="login__btn--primary" :class="loading ? 'disabled' : ''" @click="submit('ruleForm')">
+                <p class="login__btn--text">登录</p>
+                <div v-show="loading" class="loader"></div>
+              </div>
+            </el-form-item>
+          </el-form>
+        </div>
+      </div>
+      <div class="mobile-loginwrap">
         <div class="header-form">
           <p>系统登录</p>
         </div>
@@ -45,6 +68,7 @@ import { getByTitle } from "@/api/config";
 import { getPermission } from "@/utils/permission.js";
 import { mapGetters } from "vuex";
 import { findTasks, getTask } from "@/api/admin/index.js";
+import { isMobile } from '@/utils/index';
 export default {
   name: "LoginComp",
   components: {
@@ -82,12 +106,14 @@ export default {
         this.$store.commit("setToken", data);
         await this.initRoles();
         await this.initGetInfo();
-        this.$router.push("/guide");
+        const path = isMobile() ? '/mobileGuide' : '/guide';
+        console.log(path,'path');
+        this.$router.push(path);
         this.$message.success("登录成功！");
       } catch (error) {
         if (error.response?.data?.message) {
           return this.$message.error(error.response.data.message);
-        } 
+        }
         return this.$message.error(error.message);
       } finally {
         this.loading = false;
@@ -170,6 +196,7 @@ export default {
 </script>
 
 <style scoped lang="less">
+@import url('../../assets/mobileStyles/login/index.less');
 @title-font: 1.5rem;
 
 // 头部
@@ -181,11 +208,11 @@ header {
   align-items: center;
   gap: 12px;
 
-  img {
+  .pc-avatar {
     margin-left: 40px;
     display: block;
     width: 50px;
-    height: 50px;
+    height: 50px
   }
 
   span {
@@ -201,7 +228,7 @@ header {
 // 中间部分
 main {
   width: 100%;
-  height: calc(100vh - 140px);
+  height: calc(100dvh - 140px);
   position: relative;
   overflow: hidden;
   background: url('../../assets/images/background.png');
@@ -222,10 +249,52 @@ main {
     background-color: white;
     position: absolute;
     right: -435px;
-    top: calc((100vh - 140px - 50vh - 40px) / 2);
+    box-sizing: border-box;
+    top: calc((100dvh - 140px - 50vh - 40px) / 2);
     border-radius: 8px;
     animation: forwards move 0.8s;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.12), 0 0 6px rgba(0, 0, 0, 0.04);
+
+    p {
+      text-align: center;
+      font-size: 22px;
+      margin: 10px 0;
+
+      i {
+        color: #ebb563;
+      }
+    }
+
+    .info {
+      width: 70%;
+      margin: 0 auto;
+      padding: 2%;
+
+      .el-form-item {
+        margin: 0;
+        padding: 0;
+        margin-bottom: 20px;
+
+        &:nth-child(2) {
+          margin-bottom: 30px;
+        }
+
+        .el-form-item__label {
+          line-height: 30px;
+        }
+
+        .el-input {
+          i {
+            line-height: 40px;
+            font-size: 22px;
+          }
+        }
+      }
+    }
+  }
+
+  .mobile-loginwrap {
+    display: none;
 
     p {
       text-align: center;
