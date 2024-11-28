@@ -7,6 +7,7 @@ Vue.use(VueRouter)
 //引入store
 import store from '@/store/index'
 import ElementUI from 'element-ui';
+import FullScreenLoading from '@/components/FullScreenLoading.vue';
 import 'element-ui/lib/theme-chalk/index.css';
 import "@/assets/index";
 import "@/assets/styles/reset.css";
@@ -30,7 +31,9 @@ import * as filters from './utils/filters'
 Object.keys(filters).forEach(key => {
   Vue.filter(key, filters[key])
 })
+
 Vue.component('editor', Editor);
+Vue.component('full-screen-loading', FullScreenLoading);
 //高亮代码行
 Vue.use(VMdEditor);
 Vue.use(VMdPreview);

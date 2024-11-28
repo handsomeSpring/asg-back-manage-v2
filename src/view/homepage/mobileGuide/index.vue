@@ -13,34 +13,46 @@
                         {{ officium | filterRole }}
                     </span>
                 </p>
-                <p class="role">{{ roles }}</p>
+                <p class="role">{{ roles || '普通人员' }}</p>
             </div>
         </header>
         <el-scrollbar class="scrollBar">
-            <div class="content-parent" v-for="(menu, index) in adapterMenu" :key="index">
-                <div class="menu_header">
-                    <p>{{ menu.title }}</p>
-                </div>
-                <div class="grid-parent">
-                    <div class="grid-item" v-for="(child, childI) in menu.children" :key="`child-${childI}`" @click="handleJump(child)">
-                        <svg-icon color="#979797" width="16px" height="16px" :iconClass="child.iconClass"></svg-icon>
-                        <p class="menu-text">{{ child.title }}</p>
-                    </div>
-                </div>
+            <div class="tab-list">
+                <div class="tab-item" :class="activeName === '1' ? 'active' : ''" @click="handleRun('1')">首页</div>
+                <div class="tab-item" :class="activeName === '2' ? 'active' : ''" @click="handleRun('2')">任务卡</div>
+                <div class="tab-item" :class="activeName === '3' ? 'active' : ''" @click="handleRun('3')">个人中心</div>
             </div>
-            <div class="btn-wrap">
-                <el-button class="el-my-button" type="danger" size="small" @click="logout">退出登录</el-button>
-            </div>
+            <homePage v-show="activeName === '1'"></homePage>
+            <mobileTask v-if="activeName === '2'"></mobileTask>
+            <userInfo v-if="activeName === '3'"></userInfo>
         </el-scrollbar>
     </div>
 </template>
 
 <script>
+import homePage from "./components/homePage.vue";
+import mobileTask from "./components/mobileTask.vue";
+import userInfo from "./components/userInfo.vue";
 import { mapGetters } from "vuex";
 export default {
     name: 'mobileGuide',
+    data() {
+        return {
+            activeName: '1'
+        }
+    },
+    components: {
+        homePage,
+        mobileTask,
+        userInfo
+    },
+    methods:{
+        handleRun(type){
+           this.activeName = type;
+        },
+    },
     computed: {
-        ...mapGetters(["userInfo", "roles", "menuOptions"]),
+        ...mapGetters(["userInfo", "roles"]),
         myUser() {
             return this.userInfo.chinaname;
         },
@@ -50,50 +62,24 @@ export default {
         officium() {
             return this.userInfo.officium;
         },
-        adapterMenu() {
-            return this.menuOptions.filter(item => item.children.length > 0);
-        }
     },
-    methods: {
-        handleJump(row){
-            this.$message.warning('待开发中...');
-        },
-        async logout() {
-            try {
-                const flag = await this.$confirm('您确定退出登录吗?', '提示', {
-                    customClass: 'mobile-el-confirm',
-                    confirmButtonText: '确定',
-                    cancelButtonText: '取消',
-                    type: 'warning'
-                })
-                if (flag === 'confirm') {
-                    this.$store.commit("removeToken");
-                    sessionStorage.removeItem('baseImg');
-                    this.$store.commit("SET_WAITDO_NUMBER", null);
-                    this.$store.commit("SET_WAITAUTH_NUMBER", null);
-                    this.$router.push("/login");
-                    this.$message.warning("您已退出登录！");
-                }
-            } catch (error) {
-                if (typeof error === 'string' && error === 'cancel') return;
-            }
-        },
-    }
+
 }
 </script>
 <style lang='less' scoped>
 .mobile-content {
     header {
-        border-bottom:1px solid #4090EF;
+        border-bottom: 1px solid #4090EF;
         background: linear-gradient(172deg, #B3D4FF 0%, rgba(255, 255, 255, 0) 93%);
         border-image: linear-gradient(169deg, rgba(167, 214, 237, 0.3), rgba(122, 183, 255, 0.3)) 1 1;
         padding: 1.3em 1em;
         display: flex;
         justify-content: flex-start;
-        align-items: flex-start;
+        align-items: center;
         gap: 1em;
         height: calc(100px - 2.6em);
         margin-bottom: 0.8em;
+
         .avatar {
             width: 50px;
             height: 50px;
@@ -129,62 +115,46 @@ export default {
             color: #979797;
         }
     }
+
     // 主体
     .scrollBar {
         width: 100%;
         height: calc(100dvh - 100px);
 
-        .content-parent {
+        // 导航栏
+        .tab-list {
             width: 90%;
-            margin: 2em auto;
-            background: #F6F7FA;
-            box-shadow: 0px 2px 7px 3px rgba(39, 115, 237, 0.2);
-            border-radius: 8px;
-
-            .menu_header {
-                padding: 0.8em;
-                border-bottom: 1px solid #e7e7e7;
-                font-size: 0.8em;
-                font-weight: bold;
+            margin: 0.5em auto;
+            border-radius: 6px;
+            border: 1px solid #e7e7e7;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            height: 2em;
+            overflow: hidden;
+            transition: 0.27s all;
+            .tab-item {
+                font-size: 13px;
+                font-weight: 600;
                 font-family: 'hk';
-            }
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                cursor: pointer;
 
-            .grid-parent {
-                width: 100%;
-                display: grid;
-                grid-template-columns: 25% 25% 25% 25%;
+                &:nth-child(1) {
+                    border-right: 1px solid #e7e7e7;
+                }
 
-                .grid-item {
-                    width: 80%;
-                    margin: 10%;
-                    display: flex;
-                    align-items: center;
-                    flex-direction: column;
-                    justify-content: center;
-                    gap: 0.5em;
+                &:nth-child(2) {
+                    border-right: 1px solid #e7e7e7;
+                }
 
-                    .menu-text {
-                        font-size: 11px;
-                        color: #303030;
-                        width: 100%;
-                        text-align: center;
-                        overflow: hidden;
-                        white-space: nowrap;
-                        text-overflow: ellipsis;
-                    }
+                &.active {
+                    background: #4090EF;
+                    color: #FFF;
                 }
             }
         }
-
-        .btn-wrap {
-            width: 90%;
-            margin: 2em auto;
-
-            .el-my-button {
-                width: 100%;
-            }
-        }
-
     }
 }
 </style>
