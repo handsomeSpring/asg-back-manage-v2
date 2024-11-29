@@ -227,6 +227,7 @@ export default {
 </script>
 
 <style scoped lang="less">
+@import url('../../assets/mobileStyles/refereeChoose/index.less');
 .header__content {
   margin-bottom: 12px;
   display: flex;
@@ -263,7 +264,7 @@ export default {
     }
 
     .sch__body {
-      width: calc(100% - 84px);
+      width:100%;
       padding: 18px 42px;
       border-left: 1px solid #dae2ec;
       box-sizing: border-box;
