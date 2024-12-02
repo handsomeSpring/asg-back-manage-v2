@@ -147,6 +147,15 @@
                                     v-model="settingInfo.sort"></el-input-number>
                             </el-form-item>
                         </el-col>
+                        <el-clo :span="11">
+                            <el-form-item label="适配情况" prop="adaptability">
+                                <el-radio-group size="small" v-model="settingInfo.adaptability">
+                                    <el-radio-button label="1">pc端</el-radio-button>
+                                    <el-radio-button label="2">移动端</el-radio-button>
+                                    <el-radio-button label="3">pc移动互通</el-radio-button>
+                                </el-radio-group>
+                            </el-form-item>
+                        </el-clo>
                     </el-row>
                     <el-row v-show="!isForbid">
                         <el-col :span="11" :offset="13">
@@ -200,6 +209,9 @@ export default {
                 ],
                 component: [
                     { required: true, message: '请填写前端组件路径', blur: 'blur' }
+                ],
+                adaptability:[
+                    { required: true, message: '请选择适配情况', trigger: 'blur'}
                 ]
             },
             loading: false,
