@@ -147,7 +147,9 @@
                                     v-model="settingInfo.sort"></el-input-number>
                             </el-form-item>
                         </el-col>
-                        <el-clol :span="11">
+                    </el-row>
+                    <el-row v-show="!isForbid">
+                        <el-col :span="11">
                             <el-form-item label="适配情况" prop="adaptability">
                                 <el-radio-group size="small" v-model="settingInfo.adaptability" :disabled="isForbid">
                                     <el-radio-button label="1">pc端</el-radio-button>
@@ -155,10 +157,8 @@
                                     <el-radio-button label="3">pc移动互通</el-radio-button>
                                 </el-radio-group>
                             </el-form-item>
-                        </el-clol>
-                    </el-row>
-                    <el-row v-show="!isForbid">
-                        <el-col :span="11" :offset="13">
+                        </el-col>
+                        <el-col :span="11" :offset="2">
                             <el-form-item>
                                 <el-button type="primary" size="small" @click="handleSaveMenu">{{ ['edit','parentEdit'].includes(type) ? '更新'
                                     :
@@ -291,6 +291,7 @@ export default {
                 auth: [],
                 allowOperate: '1',
                 sort: this.menuList.length + 1,
+                adaptability:'1',
             }
             this.isForbid = false;
             this.initFlag = false;
@@ -312,6 +313,7 @@ export default {
                 auth: [],
                 path: '',
                 sort: item.children.length + 1,
+                adaptability:'1'
             }
             this.isForbid = false;
             this.initFlag = false;

@@ -34,7 +34,7 @@ const createMenuComps = (menu) => {
 }
 
 // 适配性 '1' pc '2' 移动端 '3' pc移动互通
-function getAdaptability(adaptability = '1'){
+function getAdaptability(adaptability){
     return isMobile() ? ['2','3'].includes(adaptability) : ['1','3'].includes(adaptability);
 };
 function filterMenu(auth) {
