@@ -148,7 +148,7 @@
                             </el-form-item>
                         </el-col>
                     </el-row>
-                    <el-row v-show="!isForbid">
+                    <el-row>
                         <el-col :span="11">
                             <el-form-item label="适配情况" prop="adaptability">
                                 <el-radio-group size="small" v-model="settingInfo.adaptability" :disabled="isForbid">
@@ -158,7 +158,7 @@
                                 </el-radio-group>
                             </el-form-item>
                         </el-col>
-                        <el-col :span="11" :offset="2">
+                        <el-col v-show="!isForbid" :span="11" :offset="2">
                             <el-form-item>
                                 <el-button type="primary" size="small" @click="handleSaveMenu">{{ ['edit','parentEdit'].includes(type) ? '更新'
                                     :
