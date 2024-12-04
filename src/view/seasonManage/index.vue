@@ -67,11 +67,11 @@
           <el-col :span="18">
             <el-form-item label="赛季状态">
               <el-radio-group v-model="seasonForm.status" size="small">
-                <el-radio label="0">未开始</el-radio>
+                <el-radio label="0">筹备中</el-radio>
                 <el-radio label="1">报名中</el-radio>
-                <el-radio label="2">公开报名中</el-radio>
-                <el-radio label="3">表单修改期</el-radio>
-                <el-radio label="4">比赛中</el-radio>
+                <el-radio label="2">建联期</el-radio>
+                <el-radio label="3">公示中</el-radio>
+                <el-radio label="4">进行中</el-radio>
                 <el-radio label="5">赛季结束</el-radio>
               </el-radio-group>
             </el-form-item>

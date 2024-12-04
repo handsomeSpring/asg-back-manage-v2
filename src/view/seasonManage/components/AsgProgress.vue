@@ -9,8 +9,8 @@
       <div class="line" :class="item.status < Number(status) ? '' : item.status === Number(status) ? 'process' : 'wait'"></div>
     </div>
     <div class="grid-item">
-      <div class="label">赛季结束</div>
-      <div class="circle" :class="status === '5' ? 'over' : 'wait'"></div>
+      <div class="label">已结束</div>
+      <div class="circle" :class="status === '4' ? 'over' : 'wait'"></div>
     </div>
   </div>
 </template>
@@ -28,7 +28,7 @@ export default {
     return {
       list: [
         {
-          label: "赛季开始",
+          label: "筹备中",
           status: 0,
         },
         {
@@ -36,17 +36,17 @@ export default {
           status: 1,
         },
         {
-          label: "公开报名中",
+          label: "建联期",
           status: 2,
         },
         {
-          label: "表单修改期",
+          label: "公示中",
           status: 3,
         },
         {
-          label: "比赛中",
+          label: "进行中",
           status: 4,
-        },
+        }
       ],
     };
   },
