@@ -89,7 +89,7 @@ export default {
             } finally {
                 setTimeout(() => {
                     this.loading = false;
-                }, 800);
+                }, 400);
             }
         },
     },

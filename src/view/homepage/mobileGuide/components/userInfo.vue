@@ -1,14 +1,14 @@
 <template>
-    <el-result icon="warning" title="暂未研发" subTitle="暂未研发，请稍等！">
-        <template slot="extra">
-            <el-button type="primary" size="medium">返回</el-button>
-        </template>
-    </el-result>
+    <userInfoPc></userInfoPc>
 </template>
 
 <script>
+import userInfoPc from '@/view/userInfo/index.vue';
 export default {
     name: 'userInfo',
+    components:{
+        userInfoPc
+    },
     data() {
         return {
 

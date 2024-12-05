@@ -1,13 +1,13 @@
 <template>
   <div>
-    <div class="menu_title">
+    <div class="menu_title" v-show="!isMobile">
       <TextTitle titleName="个人中心"></TextTitle>
     </div>
     <div class="form__content">
-      <el-form :model="form" label-position="right" label-width="120px">
+      <el-form :model="form" :label-position="isMobile? 'top' : 'right'" label-width="120px">
         <el-row>
-          <el-col :span="12">
-            <el-form-item label="头像：">
+          <el-col :span="isMobile ? 24 : 12">
+            <el-form-item :label="isMobile ? '':'头像：'">
               <div class="image__container">
                 <el-image :src="avatar" style="width: 100px; height: 100px">
                   <div slot="error">
@@ -138,7 +138,7 @@ import { uploadImg } from "@/api/home/index.js";
 import { mapGetters } from "vuex";
 import { updateQQ } from "@/api/login";
 import TextTitle from "@/components/TextTitle.vue";
-import { filterRoles } from "@/utils/filters";
+import { isMobile } from "@/utils";
 export default {
   name: "userInfo",
   components: {
@@ -152,6 +152,7 @@ export default {
       },
       chinaEdit: false,
       qqEdit: false,
+      isMobile:false,
     };
   },
   computed: {
@@ -222,6 +223,7 @@ export default {
     },
   },
   created() {
+    this.isMobile = isMobile();
     this.form.chinaname = this.userInfo.chinaname;
     this.form.qqnumber = this.userInfo.qqnumber;
   },
@@ -273,6 +275,13 @@ export default {
     .mask__content {
       display: flex;
     }
+  }
+}
+@media (max-width: 1024px) {
+  .form__content{
+    width:95%;
+    margin:1em auto;
+    border:none;
   }
 }
 </style>
