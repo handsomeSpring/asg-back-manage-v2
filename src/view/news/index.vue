@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="news-content">
     <header>
       <el-select size="small" v-model="search_Type" @change="initNews">
         <el-option label="全部公告" value=""></el-option>
@@ -8,8 +8,8 @@
       <el-button icon="el-icon-plus" style="margin-bottom:12px" type="primary" size="small"
         @click="openDialog">发布公告</el-button>
     </header>
-    <el-dialog :visible.sync="isShowBox" :title="dialogName" width="40%" :close-on-click-modal="false">
-      <el-form :model="form" :rules="rules" ref="ruleForm" label-position="left" label-width="80px">
+    <el-dialog :visible.sync="isShowBox" :title="dialogName" :width="isMobile ? '100%' : '40%'" :close-on-click-modal="false">
+      <el-form :model="form" :rules="rules" ref="ruleForm" :label-position="isMobile ? 'top' : 'left'" label-width="80px">
         <el-form-item label="公告标题" prop="title">
           <el-input size="small" v-model="form.title" placeholder="请输入标题"></el-input>
         </el-form-item>
@@ -58,6 +58,7 @@
 <script>
 import { pushNews, getNews, delNews, updateNews } from "@/api/news/index";
 import { getByTitle } from "@/api/config";
+import { isMobile } from "@/utils";
 export default {
   name: "News-publish",
   data() {
@@ -82,6 +83,7 @@ export default {
           { required: true, message: '请输入公告内容', trigger: 'change' }
         ],
       },
+      isMobile:false,
       noticeType: []
     };
   },
@@ -91,6 +93,7 @@ export default {
     }
   },
   async created() {
+    this.isMobile = isMobile();
     const { data } = await getByTitle('noticeType');
     this.noticeType = data;
     this.initNews();
@@ -188,6 +191,7 @@ export default {
 </script>
 
 <style scoped lang="less">
+@import url('../../assets/mobileStyles/news/index.less');
 #icon-show {
   margin-left: 20px;
   font-size: 16px;

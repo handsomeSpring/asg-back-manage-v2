@@ -31,12 +31,10 @@ export default {
     methods: {
         handleJump(row) {
             this.$router.push(row.path);
-            this.$message.warning('待开发中...');
         },
         async logout() {
             try {
                 const flag = await this.$confirm('您确定退出登录吗?', '提示', {
-                    customClass: 'mobile-el-confirm',
                     confirmButtonText: '确定',
                     cancelButtonText: '取消',
                     type: 'warning'
