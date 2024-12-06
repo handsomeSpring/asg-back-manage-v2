@@ -38,6 +38,16 @@
     <!-- 赛季详情 -->
     <el-dialog top="5vh" :close-on-click-modal="false" append-to-body :title="title" width="70%"
       :visible.sync="dialogVisible">
+      <el-alert type="warning" title="赛季状态提示">
+        <el-steps :active="6" align-center>
+          <el-step title="筹备中" description="用户不可以报名、不可以修改表单、不可以查看报名队伍"></el-step>
+          <el-step title="报名中" description="用户可以报名、不可以修改表单、不可以查看报名队伍"></el-step>
+          <el-step title="建联期" description="用户不可以报名、已经报名的队伍可以修改表单、不可以查看报名队伍"></el-step>
+          <el-step title="公示期" description="报名、修改表单停止、用户可以查看所有报名的队伍并进行关注"></el-step>
+          <el-step title="进行中" description="报名、修改表单停止、用户关注停止"></el-step>
+          <el-step title="已结束" description="报名、修改表单停止、用户关注停止"></el-step>
+        </el-steps>
+      </el-alert>
       <el-form ref="seasonForm" :model="seasonForm" label-width="120px" label-position="right" :rules="formRules">
         <el-row type="flex">
           <el-col :span="11">
@@ -143,6 +153,24 @@ export default {
     serveIp() {
       return window.SERVE_IP;
     },
+  },
+  watch: {
+    'seasonForm.is_over': {
+      handler(newVal) {
+        if (newVal) {
+          this.seasonForm.status = '5'
+        } else {
+          this.seasonForm.status = '4'
+        }
+      }
+    },
+    'seasonForm.status': {
+      handler(newVal) {
+        if (newVal === '5') {
+          this.seasonForm.is_over = true
+        }
+      }
+    }
   },
   created() {
     this.initEvents();

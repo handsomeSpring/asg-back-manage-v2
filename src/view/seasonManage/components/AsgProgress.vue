@@ -10,7 +10,9 @@
     </div>
     <div class="grid-item">
       <div class="label">已结束</div>
-      <div class="circle" :class="status === '4' ? 'over' : 'wait'"></div>
+      <div class="circle" :class="status === '5' ? 'over' : 'wait'">
+        <i class="el-icon-finished"></i>
+      </div>
     </div>
   </div>
 </template>
