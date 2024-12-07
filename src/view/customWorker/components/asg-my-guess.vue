@@ -62,7 +62,7 @@ export default {
         initMyLog() {
             mylog()
                 .then(res => {
-                    this.myLogs = res.data;
+                    this.myLogs = res.data.data;
                 }).catch(err => {
                     this.$message.error(err.message);
                 })
