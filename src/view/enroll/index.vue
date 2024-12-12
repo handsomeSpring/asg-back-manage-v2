@@ -10,45 +10,42 @@
         <el-option v-for="item in sortOptions" :key="item.value" :value="item.value" :label="item.label"></el-option>
       </el-select>
     </header>
-    <el-scrollbar :native="false" wrapStyle="" wrapClass="" viewClass="" viewStyle="" :noresize="false" tag="section"
-      v-loading="loading" element-loading-text="正在加载中......" style="height: calc(65vh - 50px); margin-bottom: 15px">
-      <template v-if="tableData.length > 0">
-        <asgTableCard v-for="(item, index) in tableData" :key="index">
-          <template v-slot:header>
-            <div class="header__wrap">
-              <div class="flex--align">
-                <p class="team__name">{{ item.teamName }}</p>
-              </div>
-              <div>
-                <el-button style="margin:0 12px" type="text" size="small" @click="handleView(item)">
-                  查看成员
-                </el-button>
-                <el-button style="color:#f40" type="text" size="small" @click="handleDeleteTeam(item)">删除战队</el-button>
-              </div>
+    <template v-if="tableData.length > 0">
+      <asgTableCard v-for="(item, index) in tableData" :key="index">
+        <template v-slot:header>
+          <div class="header__wrap">
+            <div class="flex--align">
+              <p class="team__name">{{ item.teamName }}</p>
             </div>
-          </template>
-          <template v-slot:content>
-            <div class="content__wrap">
-              <div style="display: flex;
+            <div>
+              <el-button style="margin:0 12px" type="text" size="small" @click="handleView(item)">
+                查看成员
+              </el-button>
+              <el-button style="color:#f40" type="text" size="small" @click="handleDeleteTeam(item)">删除战队</el-button>
+            </div>
+          </div>
+        </template>
+        <template v-slot:content>
+          <div class="content__wrap">
+            <div style="display: flex;
               align-items: center;justify-content: center;">
-                <img class="logo" :src="`${prefix}${eventName}/${item.teamName}.png`" @error="imgErrorHandler" />
-              </div>
-              <div>
-                <p class="flex--align"><span class="table-title">队长联系方式</span>{{ item.tel }}</p>
-                <p class="flex--align"><span class="table-title">获赞数</span>{{ item.vote }}</p>
-                <p class="flex--align"><span class="table-title">报名时间</span>{{ new Date(item.registerTime) |
-                  parseTime("{y}-{m}-{d} {h}:{i}:{s}") }}</p>
-              </div>
-              <div class="team__roles">
-                <el-tag size="small" v-for="(role, index) in item.roles" :key="index"
-                  :type="role.isSur ? 'primary' : 'danger'">{{ role.name }}</el-tag>
-              </div>
+              <img class="logo" :src="`${prefix}${item.logo}`" @error="imgErrorHandler" />
             </div>
-          </template>
-        </asgTableCard>
-      </template>
-      <el-empty v-else description="无报名信息"></el-empty>
-    </el-scrollbar>
+            <div>
+              <p class="flex--align"><span class="table-title">队长联系方式</span>{{ item.tel }}</p>
+              <p class="flex--align"><span class="table-title">获赞数</span>{{ item.vote }}</p>
+              <p class="flex--align"><span class="table-title">报名时间</span>{{ new Date(item.registerTime) |
+                parseTime("{y}-{m}-{d} {h}:{i}:{s}") }}</p>
+            </div>
+            <div class="team__roles">
+              <el-tag size="small" v-for="(role, index) in item.roles" :key="index"
+                :type="role.isSur ? 'primary' : 'danger'">{{ role.name }}</el-tag>
+            </div>
+          </div>
+        </template>
+      </asgTableCard>
+    </template>
+    <el-empty v-else description="无报名信息"></el-empty>
     <el-pagination style="float: right; margin-top: 12px" @size-change="handlePageChange('limit', $event)"
       @current-change="handlePageChange('page', $event)" :current-page="listQuery.page" :page-sizes="[10, 20, 30, 100]"
       :page-size="listQuery.limit" layout="total, sizes, prev, pager, next, jumper" :total="total">
@@ -125,7 +122,7 @@ export default {
   },
   computed: {
     prefix() {
-      return window.SERVE_IP + "/loge/";
+      return window.SERVE_IP;
     },
   },
   methods: {
