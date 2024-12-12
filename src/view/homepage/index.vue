@@ -69,10 +69,6 @@ export default {
     "$route.fullPath": {
       handler(newValue) {
         this.$nextTick(() => {
-          console.log(
-            this.$refs.headerTabs.$refs.containerGrid.clientHeight,
-            newValue === "/index"
-          );
           const tabHeight =
             newValue === "/index"
               ? 0

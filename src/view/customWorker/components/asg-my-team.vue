@@ -82,7 +82,7 @@ export default {
         } catch (error) {
            if(error.response?.data?.code === 400){
             this.hasTeam = false;
-            this.$message.error(data.message ?? '未知错误');
+            this.$message.error(error.response?.data?.message ?? '未知错误');
             return;
            }
            this.$message.error(error.message);

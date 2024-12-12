@@ -1,53 +1,33 @@
 <template>
   <div ref="container" class="online_container">
     <div class="online_icon" @click="showPhone">
-      <el-badge :value="noCompleteNumber" class="item">
-        <svg-icon
-          iconClass="project-collection"
-          width="22px"
-          height="22px"
-          color="#e7e7e7"
-        ></svg-icon>
-      </el-badge>
+      <div class="count-wrap">{{ noCompleteNumber }}</div>
       任务卡
     </div>
     <div class="online_windows">
-      <h3 class="h3__flex">
-        <p><i class="el-icon-s-claim"></i>我的任务清单</p>
-        <el-button
-          icon="el-icon-refresh-right"
-          size="small"
-          type="primary"
-          @click="initAssign"
-          >刷新</el-button
-        >
-      </h3>
+      <div class="task_picture">
+        <div>
+          <h3>当前有<span class="count-info">{{ noCompleteNumber }}</span>个未完成任务</h3>
+          <p class="info">任务卡任务完成情况</p>
+        </div>
+        <el-button icon="el-icon-refresh-right" size="small" type="primary" @click="initAssign">刷新</el-button>
+      </div>
       <el-scrollbar class="list">
         <ul v-if="list.length > 0">
           <li class="box__li" v-for="(item, index) in list" :key="index">
             <header>
-              <p class="task__title">
-                {{ item.taskName }}
-                <span :class="`level-${item.priority}`">{{
-                  item.priority | filterPriority
-                }}</span>
-              </p>
-              <el-button
-                v-if="['0', '3'].includes(item.status)"
-                icon="el-icon-circle-check"
-                size="small"
-                type="primary"
-                @click="taskComplete(item.id)"
-                >完成</el-button
-              >
-              <el-button
-                v-else
-                icon="el-icon-view"
-                size="small"
-                type="primary"
-                @click="viewTask(item)"
-                >查看</el-button
-              >
+              <span :class="`level-${item.priority}`">{{
+                item.priority | filterPriority
+              }}</span>
+              <el-tooltip class="item" effect="dark" :content="item.taskName" placement="top">
+                <p class="task__title">
+                  {{ item.taskName }}
+
+                </p>
+              </el-tooltip>
+              <el-button v-if="['0', '3'].includes(item.status)" icon="el-icon-circle-check" size="small" plain
+                @click="taskComplete(item.id)">完成</el-button>
+              <el-button v-else icon="el-icon-view" size="small" plain @click="viewTask(item)">查看</el-button>
             </header>
             <main>
               <p>{{ item.taskDescription }}</p>
@@ -55,10 +35,7 @@
                 <p class="money__icon">
                   {{ item.money }}<span class="chies__icon">积分</span>
                 </p>
-                <p
-                  class="status__icon"
-                  :style="{ color: textColor(item.status) }"
-                >
+                <p class="status__icon" :style="{ color: textColor(item.status) }">
                   {{ item.status | filterComplete }}
                 </p>
               </div>
@@ -67,20 +44,9 @@
         </ul>
         <el-empty v-else description="暂时没有被分配的任务"></el-empty>
       </el-scrollbar>
-      <h3><i class="el-icon-shopping-cart-1"></i>购物信息</h3>
-      <p>
-        我的积分：<span style="color: rgb(255, 133, 46); font-weight: bold">{{
-          money || 0
-        }}</span>
-      </p>
       <footer @click="toShopping">
         前往购物中心
-        <svg-icon
-          iconClass="router"
-          width="16px"
-          height="16px"
-          color="#000"
-        ></svg-icon>
+        <svg-icon iconClass="router" width="16px" height="16px" color="#000"></svg-icon>
       </footer>
     </div>
     <taskHistory ref="taskHistory" :row="row"></taskHistory>
@@ -115,7 +81,11 @@ export default {
           number++;
         }
       });
-      return number;
+      if (number > 9) {
+        return number + '+';
+      } else {
+        return number;
+      }
     },
   },
   filters: {
@@ -217,10 +187,10 @@ export default {
 .online_icon {
   width: 46px;
   background: rgba(235, 235, 235, 0.8);
-  border-radius: 10px 0 0 10px;
-  height: 120px;
+  border-radius: 20px;
+  height: fit-content;
   cursor: pointer;
-  padding: 10px 0 20px 0;
+  padding: 5px 0 15px;
   font-weight: bold;
   font-size: 20px;
   text-align: center;
@@ -228,10 +198,27 @@ export default {
   width: 30px;
   color: #000000;
   word-break: break-all;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 6px;
+  background: #FFFFFF;
+  box-shadow: 0px 4px 20px 0px rgba(146, 146, 146, 0.25);
 
-  svg {
-    font-size: 28px;
-    margin-bottom: 10px;
+
+  .count-wrap {
+    width: 23px;
+    height: 23px;
+    border-radius: 20px;
+    background: #4090ef;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: bold;
+    font-family: 'hk';
+    color: #fff;
   }
 }
 
@@ -239,30 +226,54 @@ export default {
   position: relative;
   width: 420px;
   height: 500px;
+  background: #FFFFFF;
+  box-shadow: 0px 4px 20px 0px rgba(146, 146, 146, 0.25);
   transform: translateY(-20vh);
-  background: #f2f2f2;
-  border: 1px solid #e7e7e7;
-  background-color: rgba(225, 225, 225, 0.8);
-  box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
   padding: 10px;
+  border-radius: 6px;
 
-  .h3__flex {
+  .task_picture {
+    margin-bottom: 12px;
+    width: calc(100% - 24px);
+    height: 20%;
+    background: linear-gradient(84deg, #F7F9FC 0%, #E0EDFF 100%);
     display: flex;
-    justify-content: space-between;
     align-items: center;
+    padding: 12px;
+    justify-content: space-between;
+    gap: 24px;
+
+    h3 {
+      font-family: 'hk';
+      font-weight: 500;
+      font-size: 20px;
+      color: #000000;
+
+      .count-info {
+        margin: 0 6px;
+        color: #f40;
+      }
+    }
+
+    .info {
+      font-weight: 400;
+      font-size: 14px;
+      color: #82868C;
+      text-align: left;
+      font-style: normal;
+      text-transform: none;
+    }
+
   }
 
   footer {
     cursor: pointer;
     margin-top: 12px;
+
     &:hover {
       color: #4090ef;
     }
   }
-}
-
-h3 {
-  margin-bottom: 24px;
 }
 
 .list {
@@ -272,15 +283,13 @@ h3 {
 
   .box__li {
     width: 100%;
-    padding: 5px 5%;
-    border: 1px solid #e7e7e7;
+    padding: 17px 12px;
+    border-bottom: 1px dashed #E2E3E5;
     background: #fff;
     box-sizing: border-box;
-    margin: 12px 0;
-    border-radius: 7px;
-    box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
+
     &:hover {
-      background: #e9f1fb;
+      background: linear-gradient(270deg, #F8FAFD 0%, #EFF2FD 100%);
     }
 
     header {
@@ -288,16 +297,16 @@ h3 {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      border-bottom: 2px solid #e7e7e7;
+      border-bottom: 2px solid #E2E3E5;
 
       .task__title {
         width: 70%;
         text-overflow: ellipsis;
         overflow: hidden;
         white-space: nowrap;
-        color: rgb(81, 85, 207);
-        font-weight: bold;
         font-size: 1rem;
+        font-weight: 500;
+        font-size: 14px;
       }
     }
 
@@ -305,8 +314,9 @@ h3 {
       padding: 18px 6px;
 
       p {
-        font-size: 0.7rem;
-        color: #6a6a6a;
+        font-weight: 400;
+        font-size: 14px;
+        color: #82868C;
       }
 
       .footer__container {
@@ -356,22 +366,27 @@ h3 {
 /deep/.el-badge__content.is-fixed {
   z-index: 999;
 }
+
 .level-0 {
   color: #cddc39;
   font-size: 12px;
 }
+
 .level-1 {
   color: #8bc34a;
   font-size: 12px;
 }
+
 .level-2 {
   color: #fdd835;
   font-size: 12px;
 }
+
 .level-3 {
   color: #ff8f00;
   font-size: 12px;
 }
+
 .level-4 {
   color: #c62828;
   font-size: 12px;
