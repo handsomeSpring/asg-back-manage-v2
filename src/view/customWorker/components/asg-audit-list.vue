@@ -1,5 +1,5 @@
 <template>
-  <div v-loading="loading">
+  <div class="scrollbar" v-loading="loading">
     <header>
       <el-radio-group v-model="listQuery.archive" size="mini" @input="getList">
         <el-radio label="" border>我的待办</el-radio>
@@ -137,6 +137,10 @@ export default {
 </script>
 
 <style scoped lang="less">
+.scrollbar{
+  height:95%;
+  overflow: auto;
+}
 header {
   margin: 6px 0;
 }

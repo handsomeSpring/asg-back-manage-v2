@@ -106,7 +106,7 @@ export default {
       } else if (this.info.status === "3") {
         this.realTimeLine = [
           {
-            name: this.userInfo.chinaname,
+            name: this.info.startPerson,
             allowReturn: false,
             status: "success",
           },
@@ -179,6 +179,7 @@ export default {
           ];
         }
       }
+      console.log(this.realTimeLine,'realTimeLine');
     },
   },
   created() {
