@@ -5,13 +5,14 @@
     title="流程跟踪"
     width="50%"
     append-to-body
+    :fullscreen="isMobile"
     @close="handleClose"
   >
     <el-table :data="tableData" border>
       <el-table-column
         label="人员信息"
         prop="person"
-        min-width="180px"
+        :width="isMobile ? '120px' : '180px'"
         align="center"
       ></el-table-column>
       <el-table-column label="节点动态" align="center" >
@@ -28,13 +29,14 @@
         label="操作时间"
         prop="time"
         align="center"
-        min-width="180px"
+        width="auto"
       ></el-table-column>
     </el-table>
   </el-dialog>
 </template>
 
 <script>
+import { isMobile } from '@/utils';
 export default {
   name: "AsgHistoryRecord",
   props: {
@@ -46,6 +48,14 @@ export default {
       type: Array,
       default: () => [],
     },
+  },
+  data(){
+    return {
+      isMobile:false,
+    }
+  },
+  created(){
+    this.isMobile = isMobile();
   },
   computed: {
     visible: {

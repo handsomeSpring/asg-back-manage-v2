@@ -71,7 +71,7 @@
             </el-form-item>
             <el-form-item label="关联业务申请" prop="relativeId">
               <el-row>
-                <el-col :span="12">
+                <el-col :span="isMobile ? 24 : 12">
                   <el-input v-show="needToRelative === '1'" placeholder="请选择关联的业务场景" v-model="relativeComplete"
                     size="small" class="input-with-select" readOnly>
                     <el-button slot="append"
@@ -80,7 +80,7 @@
                   </el-input>
                   <p v-show="needToRelative === '0'" class="no-relative-text">选择不关联业务申请发起，自行发起业务申请</p>
                 </el-col>
-                <el-col :span="10" :offset="2">
+                <el-col :span="isMobile ? 24 : 12" :offset="isMobile ? 0 : 2">
                   <el-switch v-model="needToRelative" active-text="关联" inactive-text="不关联" active-value="1"
                     inactive-value="0" :disabled="disabledStartForm || isDialog" @change="handleRelaSwitchChange">
                   </el-switch>
