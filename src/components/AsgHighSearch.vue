@@ -52,6 +52,7 @@ export default {
 }
 </script>
 <style lang='less' scoped>
+@import url('../assets/mobileStyles/common/asghighSeach.less');
 .wrap-flex {
     .flex__content--between {
         display: flex;

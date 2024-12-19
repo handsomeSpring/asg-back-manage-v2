@@ -6,6 +6,7 @@
     append-to-body
     :close-on-click-modal="false"
     width="50%"
+    :fullscreen="isMobile"
   >
     <header>
       <el-form :inline="true" :model="listQuery" class="demo-form-inline">
@@ -95,6 +96,7 @@
 
 <script>
 import { conformList } from "@/api/admin/index.js";
+import { isMobile } from "@/utils";
 export default {
   name: "auditRequestBase",
   props: {
@@ -106,6 +108,9 @@ export default {
       type: Array,
       default: () => [],
     },
+  },
+  created(){
+    this.isMobile = isMobile();
   },
   data() {
     return {
@@ -121,6 +126,7 @@ export default {
       loading: false,
       feedbackId: null,
       checkData: {},
+      isMobile:false,
     };
   },
   filters: {

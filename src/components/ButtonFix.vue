@@ -33,6 +33,12 @@ export default {
 </script>
 
 <style scoped lang="less">
+@media (max-width: 1024px) {
+  .footer-wrap{
+    width: 100% !important;
+    margin-left:0 !important;
+  }
+}
 .footer-wrap{
   position:fixed;
   bottom: 0px;

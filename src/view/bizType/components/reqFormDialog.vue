@@ -1,8 +1,8 @@
 <template>
     <div>
-        <el-dialog v-if="isDialog" append-to-body title="申请表单" :visible.sync="dialogVisible" width="50%"
-            @close="handleClose">
-            <el-descriptions class="margin-top" :column="3" size="small" border>
+        <el-dialog v-if="isDialog" append-to-body title="申请表单" :visible.sync="dialogVisible" :fullscreen="isMobile"
+            width="50%" @close="handleClose">
+            <el-descriptions class="margin-top" :column="isMobile ? 1 : 3" size="small" border>
                 <el-descriptions-item>
                     <template slot="label">
                         <div class="des_label">
@@ -77,7 +77,7 @@
                 </el-descriptions-item>
             </el-descriptions>
         </el-dialog>
-        <el-descriptions v-else class="margin-top" :column="3" size="small" border>
+        <el-descriptions v-else class="margin-top" :column="isMobile ? 1 : 3" size="small" border>
             <el-descriptions-item>
                 <template slot="label">
                     <div class="des_label">
@@ -156,6 +156,7 @@
 
 <script>
 import { getByTitle } from '@/api/config';
+import { isMobile } from '@/utils';
 
 export default {
     name: 'reqFormDialog',
@@ -164,16 +165,17 @@ export default {
             type: Object,
             default: () => { }
         },
-        isDialog:{
-            type:Boolean,
-            default:true
+        isDialog: {
+            type: Boolean,
+            default: true
         }
     },
     data() {
         return {
             dialogVisible: false,
             roleOptions: [],
-            rankOptions: []
+            rankOptions: [],
+            isMobile: false
         };
     },
     methods: {
@@ -191,6 +193,7 @@ export default {
         }
     },
     created() {
+        this.isMobile = isMobile();
         getByTitle('roleList').then(res => {
             this.roleOptions = res.data;
         });
@@ -213,7 +216,8 @@ export default {
         font-family: 'hk';
     }
 }
-/deep/.el-descriptions--small.is-bordered .el-descriptions-item__cell{
-    width:120px
+
+/deep/.el-descriptions--small.is-bordered .el-descriptions-item__cell {
+    width: 120px
 }
 </style>

@@ -3,10 +3,10 @@
     <el-row class="main-row-content" :style="{
       'min-height': isDialog ? 'auto' : '80vh'
     }">
-      <el-col :span="20">
+      <el-col :span="isMobile ? 24 : 20">
         <div class="form_content--main">
           <TextTitle title-name="业务信息"></TextTitle>
-          <el-form ref="startForm" class="asg-form-main" :model="form" label-position="right" label-width="150px"
+          <el-form ref="startForm" class="asg-form-main" :model="form" :label-position="isMobile ? 'top' : 'right'" label-width="150px"
             :rules="startFormRules">
             <div class="grid--three">
               <el-form-item label="项目名称" prop="projName">
@@ -160,7 +160,7 @@
           </template>
         </div>
       </el-col>
-      <el-col :span="4">
+      <el-col :span="isMobile ? 24 : 4">
         <HistoryRecord v-if="!isStartForm" :info="info" :type="type" :bizTypeArr="bizTypeOptions"></HistoryRecord>
         <helpAssignInfo v-else :bizTypeOptions="bizTypeOptions"></helpAssignInfo>
       </el-col>
@@ -237,6 +237,7 @@ import { deepClone } from "@/utils";
 import { postAudit, statusChange4, findFormById } from "@/api/admin/index.js";
 import { approvalCommentary } from "@/api/admin/index.js";
 import { setRole } from "@/api/home";
+import { isMobile } from "@/utils";
 export default {
   name: "bizType-detail",
   components: {
@@ -291,6 +292,7 @@ export default {
       }
     };
     return {
+      isMobile:false,//是否是手机
       canReturn: false,
       canFinishResult: false, //是否拥有最终决定权
       finalResultDialogVisible: false, //最终决定权弹窗
@@ -727,11 +729,13 @@ export default {
     }
   },
   created() {
+    this.isMobile = isMobile();
     this.init();
   },
 };
 </script>
 <style lang="less" scoped>
+@import url('../../../assets/mobileStyles/common/asghighSeach.less');
 .main-row-content {
   padding-bottom: 80px;
 
