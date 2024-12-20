@@ -30,11 +30,11 @@ export default {
   },
   methods: {
     goLast(){
-        const total = this.page + 1;
+        const total = this.page - 1;
         this.$emit('current-change',total);
     },
     goNext(){
-        const total = this.page - 1;
+        const total = this.page + 1;
         this.$emit('current-change',total);
     }
   },

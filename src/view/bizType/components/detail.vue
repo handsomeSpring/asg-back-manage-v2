@@ -145,17 +145,17 @@
           <template v-if="disabledStartForm && type !== 'check'">
             <TextTitle title-name="审批意见"></TextTitle>
             <el-form ref="authForm" class="asg-form-main" :model="nowSupplementaryInfo" :rules="authRules"
-              label-position="right" label-width="150px">
+              :label-position="isMobile ? 'top' : 'right'" label-width="150px">
               <el-form-item label="主要审批意见" prop="opinion">
-                <el-input style="width: 80%" v-model="nowSupplementaryInfo.opinion" maxlength="25"
+                <el-input :style="{ width: isMobile ? '100%' : '80%' }" v-model="nowSupplementaryInfo.opinion" maxlength="25"
                   show-word-limit></el-input>
               </el-form-item>
               <el-form-item label="修订意见" v-if="form.status === '2'" prop="reviseOpinion">
-                <el-input maxlength="50" show-word-limit style="width: 80%" type="textarea" :rows="4" size="small"
+                <el-input maxlength="50" show-word-limit :style="{ width: isMobile ? '100%' : '80%' }" type="textarea" :rows="4" size="small"
                   v-model="nowSupplementaryInfo.reviseOpinion"></el-input>
               </el-form-item>
               <el-form-item label="补充意见" prop="otherOpinion">
-                <el-input maxlength="50" show-word-limit style="width: 80%" type="textarea" :rows="4" size="small"
+                <el-input maxlength="50" show-word-limit :style="{ width: isMobile ? '100%' : '80%' }" type="textarea" :rows="4" size="small"
                   v-model="nowSupplementaryInfo.otherOpinion"></el-input>
               </el-form-item>
             </el-form>
@@ -209,7 +209,7 @@
     <auditRequestBase ref="auditRequestBase" :checkId="form.relativeId" :bizTypeOptions="bizTypeOptions"
       @finishChoose="handleBizTypeChoose"></auditRequestBase>
     <reqFormDialog ref="reqForm" :form="reqForm"></reqFormDialog>
-    <el-dialog title="最终决策" :visible.sync="finalResultDialogVisible" width="30%" :close-on-click-modal="false">
+    <el-dialog title="最终决策" :fullscreen="isMobile" :visible.sync="finalResultDialogVisible" width="30%" :close-on-click-modal="false">
       <div class="tip_type">
         <p>根据规则配置，您拥有对该申请业务流程的最终决策权。关于``<span class="weight-light">{{ relativeComplete }}</span>``的申请单，请选择您的决策。</p>
       </div>
