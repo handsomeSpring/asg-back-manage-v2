@@ -1,5 +1,5 @@
 <template>
-    <el-dialog append-to-body :visible="visible" title="选择预算" width="60%" @close="closeDialog" @open="handleOpen">
+    <el-dialog append-to-body :fullscreen="isMobile" :visible="visible" title="选择预算" width="60%" @close="closeDialog" @open="handleOpen">
         <header>
             <el-select size="small" v-model="event" @change="initBudget">
                 <el-option v-for="item in events" :key="item.id" :value="item.id" :label="item.name"></el-option>
@@ -29,6 +29,7 @@
 <script>
 import { getAllEvents } from "@/api/gameSeason/index";
 import { getBudget } from '@/api/budget/index.js';
+import { isMobile } from "@/utils";
 
 export default {
     name: 'budgetCheck',
@@ -58,7 +59,8 @@ export default {
             event: '',
             budgetList: [],
             checkInfo: {},
-            budgetId:null
+            budgetId:null,
+            isMobile:false
         };
     },
     methods: {
@@ -117,6 +119,7 @@ export default {
         }
     },
     created() {
+        this.isMobile = isMobile();
         this.initEvents();
     },
 }

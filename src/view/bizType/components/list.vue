@@ -33,72 +33,110 @@
         <el-button size="small" type="primary" @click="jumpToBudget">新增预算</el-button>
       </template>
     </AsgHighSearch>
-    <div class="asg-table-main">
-      <el-table :data="tableData" v-loading="loading" element-loading-text="拼命加载中"
-        element-loading-spinner="el-icon-loading" :header-cell-style="{ background: '#f2f6fd', color: '#000' }">
-        <el-table-column label="序号" type="index" align="center" width="60px"></el-table-column>
-        <el-table-column label="项目名称" prop="projName" align="center" min-width="180px">
-          <template #default="{ row }">
-            <p class="ellipsis__text">{{ row.projName }}</p>
-          </template>
-        </el-table-column>
-        <el-table-column label="关联申请单" prop="projNo" align="center" width="220px">
-          <template #default="{ row }">
-            <el-popover v-if="row.relativeId" width="800" placement="bottom" title="申请表-数据是最新的申请单" trigger="click" @show="getReqFormData(row)">
-              <reqFormDialog :is-dialog="false" :form="reqForm"></reqFormDialog>
-              <p class="ellipsis__text underline_data" slot="reference">{{ row.relativeId }}</p>
-            </el-popover>
-            <p v-else class="ellipsis__text none__data" slot="reference">/</p>
-          </template>
-        </el-table-column>
-        <el-table-column label="业务名称" align="center">
-          <template #default="{ row }">
-            <p class="ellipsis__text">{{ computedBizType(row.bizType) }}</p>
-          </template>
-        </el-table-column>
-        <el-table-column label="金额/是否使用预算" align="center" width="180px">
-          <template #default="{ row }">
-            <p v-if="row.budgetUse === '1'" class="ellipsis__text money__text">
-              {{ row.budgetMoney | moneyFormat }} /
-              <span class="green_tag">是</span>
-            </p>
-            <p v-else class="ellipsis__text none__data">
-              {{ 0 | moneyFormat }} /
-              <span class="red_tag">否</span>
-            </p>
-          </template>
-        </el-table-column>
-        <el-table-column prop="startPerson" label="发起人" align="center" width="120px">
-          <template #default="{ row }">
-            <p class="ellipsis__text emphysis">{{ row.startPerson }}</p>
-          </template>
-        </el-table-column>
-        <el-table-column label="当前节点" prop="nowAuthPerson" align="center" width="120px">
-          <template #default="{ row }">
-            <p v-if="row.status === '4'" class="ellipsis__text stop">已终止</p>
-            <p v-else-if="row.status !== '3'" class="ellipsis__text emphysis">
-              {{ row.nowAuthPerson }}
-            </p>
-            <p v-else class="ellipsis__text emphysis">已归档</p>
-          </template>
-        </el-table-column>
-        <el-table-column label="操作" align="center" width="120px">
-          <template #default="{ row }">
-            <el-button v-if="!['3', '4'].includes(row.status) && listQuery.archive !== '1'" type="text"
-              @click="handleToDetail('auth', row)">
-              {{ row.status === "0" ? "编辑" : "审批" }}
-            </el-button>
-            <el-button v-else type="text" @click="handleToDetail('check', row)">查看</el-button>
-            <el-button type="text" @click="handleHistoryTrance(row)">跟踪</el-button>
-          </template>
-        </el-table-column>
-      </el-table>
-    </div>
-
-    <el-pagination style="float: right; margin-top: 12px" @size-change="handlePageChange('limit', $event)"
-      @current-change="handlePageChange('page', $event)" :current-page="listQuery.page" :page-sizes="[10, 20, 30, 100]"
-      :page-size="listQuery.limit" layout="total, sizes, prev, pager, next, jumper" :total="total">
-    </el-pagination>
+    <template v-if="!isMobile">
+      <div class="asg-table-main">
+        <el-table :data="tableData" v-loading="loading" element-loading-text="拼命加载中"
+          element-loading-spinner="el-icon-loading" :header-cell-style="{ background: '#f2f6fd', color: '#000' }">
+          <el-table-column label="序号" type="index" align="center" width="60px"></el-table-column>
+          <el-table-column label="项目名称" prop="projName" align="center" min-width="180px">
+            <template #default="{ row }">
+              <p class="ellipsis__text">{{ row.projName }}</p>
+            </template>
+          </el-table-column>
+          <el-table-column label="关联申请单" prop="projNo" align="center" width="220px">
+            <template #default="{ row }">
+              <el-popover v-if="row.relativeId" width="800" placement="bottom" title="申请表-数据是最新的申请单" trigger="click"
+                @show="getReqFormData(row)">
+                <reqFormDialog :is-dialog="false" :form="reqForm"></reqFormDialog>
+                <p class="ellipsis__text underline_data" slot="reference">{{ row.relativeId }}</p>
+              </el-popover>
+              <p v-else class="ellipsis__text none__data" slot="reference">/</p>
+            </template>
+          </el-table-column>
+          <el-table-column label="业务名称" align="center">
+            <template #default="{ row }">
+              <p class="ellipsis__text">{{ computedBizType(row.bizType) }}</p>
+            </template>
+          </el-table-column>
+          <el-table-column label="金额/是否使用预算" align="center" width="180px">
+            <template #default="{ row }">
+              <p v-if="row.budgetUse === '1'" class="ellipsis__text money__text">
+                {{ row.budgetMoney | moneyFormat }} /
+                <span class="green_tag">是</span>
+              </p>
+              <p v-else class="ellipsis__text none__data">
+                {{ 0 | moneyFormat }} /
+                <span class="red_tag">否</span>
+              </p>
+            </template>
+          </el-table-column>
+          <el-table-column prop="startPerson" label="发起人" align="center" width="120px">
+            <template #default="{ row }">
+              <p class="ellipsis__text emphysis">{{ row.startPerson }}</p>
+            </template>
+          </el-table-column>
+          <el-table-column label="当前节点" prop="nowAuthPerson" align="center" width="120px">
+            <template #default="{ row }">
+              <p v-if="row.status === '4'" class="ellipsis__text stop">已终止</p>
+              <p v-else-if="row.status !== '3'" class="ellipsis__text emphysis">
+                {{ row.nowAuthPerson }}
+              </p>
+              <p v-else class="ellipsis__text emphysis">已归档</p>
+            </template>
+          </el-table-column>
+          <el-table-column label="操作" align="center" width="120px">
+            <template #default="{ row }">
+              <el-button v-if="!['3', '4'].includes(row.status) && listQuery.archive !== '1'" type="text"
+                @click="handleToDetail('auth', row)">
+                {{ row.status === "0" ? "编辑" : "审批" }}
+              </el-button>
+              <el-button v-else type="text" @click="handleToDetail('check', row)">查看</el-button>
+              <el-button type="text" @click="handleHistoryTrance(row)">跟踪</el-button>
+            </template>
+          </el-table-column>
+        </el-table>
+      </div>
+      <el-pagination style="float: right; margin-top: 12px" @size-change="handlePageChange('limit', $event)"
+        @current-change="handlePageChange('page', $event)" :current-page="listQuery.page"
+        :page-sizes="[10, 20, 30, 100]" :page-size="listQuery.limit" layout="total, sizes, prev, pager, next, jumper"
+        :total="total">
+      </el-pagination>
+    </template>
+    <template v-else>
+      <mobileTable :table-data="tableData" :table-props="tableProps">
+        <template #budgetMoney="{ row }">
+          <p v-if="row.budgetUse === '1'" class="ellipsis__text money__text">
+            {{ row.budgetMoney | moneyFormat }} /
+            <span class="green_tag">是</span>
+          </p>
+          <p v-else class="ellipsis__text none__data">
+            {{ 0 | moneyFormat }} /
+            <span class="red_tag">否</span>
+          </p>
+        </template>
+        <template #nowAuthPerson="{ row }">
+          <p v-if="row.status === '4'" class="ellipsis__text stop">已终止</p>
+          <p v-else-if="row.status !== '3'" class="ellipsis__text emphysis">
+            {{ row.nowAuthPerson }}
+          </p>
+          <p v-else class="ellipsis__text emphysis">已归档</p>
+        </template>
+        <template #bizType="{ row }">
+          <p class="ellipsis__text">{{ computedBizType(row.bizType) }}</p>
+        </template>
+        <template #operation="{ row }">
+          <el-button v-if="!['3', '4'].includes(row.status) && listQuery.archive !== '1'" type="text"
+            @click="handleToDetail('auth', row)">
+            {{ row.status === "0" ? "编辑" : "审批" }}
+          </el-button>
+          <el-button v-else type="text" @click="handleToDetail('check', row)">查看</el-button>
+          <el-button type="text" @click="handleHistoryTrance(row)">跟踪</el-button>
+        </template>
+      </mobileTable>
+      <div class="container-page-mobile-footer">
+        <mobilePage :page="listQuery.page" :total="total" :limit="listQuery.limit"  @current-change="handlePageChange('page', $event)"></mobilePage>
+      </div>
+    </template>
     <AsgHistoryRecord :dialog-visible.sync="dialogVisible" :tableData="historyLine"></AsgHistoryRecord>
   </div>
 </template>
@@ -109,12 +147,17 @@ import AsgHistoryRecord from "@/components/AsgHistoryRecord.vue";
 import reqFormDialog from "./reqFormDialog.vue";
 import { findAudit } from "@/api/admin/index";
 import { findFormById } from "@/api/admin/index.js";
+import { isMobile } from "@/utils";
+import mobileTable from "@/components/mobile/mobileTable.vue";
+import mobilePage from "@/components/mobile/mobilePage.vue";
 export default {
   name: "bizType-list",
   components: {
     AsgHighSearch,
     AsgHistoryRecord,
-    reqFormDialog
+    reqFormDialog,
+    mobileTable,
+    mobilePage
   },
   props: {
     bizTypeOptions: {
@@ -139,10 +182,53 @@ export default {
       dialogVisible: false,
       historyLine: [],
       loading: false,
-      reqForm: {}
+      reqForm: {},
+      isMobile: false,
+      tableProps: [
+        {
+          label: '序号',
+          type: 'index'
+        },
+        {
+          label: '关联申请单',
+          prop: 'relativeId',
+          type: 'prop'
+        },
+        {
+          label: '项目名称',
+          prop: 'projName',
+          type: 'prop'
+        },
+        {
+          label: '业务名称',
+          prop: 'bizType',
+          type: 'slot'
+        },
+        {
+          label: '金额/是否使用预算',
+          prop: 'budgetMoney',
+          type: 'slot'
+        },
+        {
+          label: '发起人',
+          prop: 'startPerson',
+          type: 'prop'
+        },
+        {
+          label: '当前节点',
+          prop: 'nowAuthPerson',
+          type: 'slot'
+        },
+        {
+          label: '操作',
+          prop: 'operation',
+          type: 'slot'
+        },
+      ]
     };
   },
   created() {
+    this.isMobile = isMobile();
     const { querySearchMap } = this.$store.state?.cacheQuery ?? {};
     this.listQuery = querySearchMap?.bizType || this.listQuery;
     this.getList();
@@ -338,5 +424,9 @@ export default {
   .red_tag {
     color: #f40;
   }
+}
+.container-page-mobile-footer{
+  width:95%;
+  margin:0 auto;
 }
 </style>

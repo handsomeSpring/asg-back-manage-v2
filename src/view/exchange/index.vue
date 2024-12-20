@@ -74,7 +74,7 @@
                       <template #title>
                         <div class="step_icon">
                           <p>审批结论</p>
-                          <div v-if="['1','5'].includes(props.row.status)">
+                          <div v-if="props.row.status === '1'">
                             <el-button type="text" @click="handleSet('2', props.row)">通过</el-button>
                             <el-button style="color:#f40" type="text" @click="handleSet('3', props.row)">拒绝</el-button>
                           </div>
@@ -134,8 +134,8 @@
         </el-table-column>
         <el-table-column label="操作" align="center" width="150">
           <template #default="{ row }">
-            <template v-if="row.status === '1'">
-              <el-button type="text" @click="handleOpen(row.id, $event)">发起关联业务审批</el-button>
+            <template v-if="['1','3'].includes(row.status)">
+              <el-button type="text" @click="handleOpen(row.id, $event)">{{ row.status === '3' ? '重新发起关联业务流程' : '发起关联业务审批'}}</el-button>
             </template>
           </template>
         </el-table-column>

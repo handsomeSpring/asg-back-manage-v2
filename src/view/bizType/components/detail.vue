@@ -6,8 +6,8 @@
       <el-col :span="isMobile ? 24 : 20">
         <div class="form_content--main">
           <TextTitle title-name="业务信息"></TextTitle>
-          <el-form ref="startForm" class="asg-form-main" :model="form" :label-position="isMobile ? 'top' : 'right'" label-width="150px"
-            :rules="startFormRules">
+          <el-form ref="startForm" class="asg-form-main" :model="form" :label-position="isMobile ? 'top' : 'right'"
+            label-width="150px" :rules="startFormRules">
             <div class="grid--three">
               <el-form-item label="项目名称" prop="projName">
                 <el-input size="small" v-model="form.projName" :disabled="disabledStartForm"></el-input>
@@ -39,7 +39,7 @@
             </div>
             <el-form-item v-if="form.budgetUse === '1'" label="使用的预算" prop="budgetName">
               <el-row v-if="disabledStartForm">
-                <el-col :span="12">
+                <el-col :span="isMobile ? 24 : 12">
                   <p>
                     {{ form.budgetName }}
                     <span class="conver_money" style="margin-left: 8px">{{
@@ -52,17 +52,17 @@
                 </el-col>
               </el-row>
               <el-row v-else>
-                <el-col :span="12">
+                <el-col :span="isMobile ? 24 : 12">
                   <el-input size="small" v-model="form.budgetName" readOnly>
                     <el-button slot="append" icon="el-icon-edit" @click="checkBudget"></el-button>
                   </el-input>
                 </el-col>
-                <el-col :span="2" :offset="2">
+                <el-col :span="isMobile ? 6 : 2" :offset="isMobile ? 0 : 2">
                   <p class="conver_money">
                     {{ form.budgetMoney | moneyFormat }}
                   </p>
                 </el-col>
-                <el-col :span="2" :offset="2">
+                <el-col :span="isMobile ? 6 : 2" :offset="isMobile ? 0 : 2">
                   <p class="conver_money">
                     {{ form.budgetMoney | convertMoney }}
                   </p>
@@ -88,12 +88,14 @@
               </el-row>
             </el-form-item>
             <el-form-item label="申请原因" prop="reason">
-              <el-input maxlength="100" :disabled="disabledStartForm" show-word-limit style="width: 80%" type="textarea"
-                :rows="4" size="small" v-model="form.reason"></el-input>
+              <el-input maxlength="100" :disabled="disabledStartForm" show-word-limit
+                :style="{ width: isMobile ? '100%' : '80%' }" type="textarea" :rows="4" size="small"
+                v-model="form.reason"></el-input>
             </el-form-item>
             <el-form-item label="申请描述" prop="description">
-              <el-input maxlength="100" :disabled="disabledStartForm" show-word-limit style="width: 80%" type="textarea"
-                :rows="4" size="small" v-model="form.description"></el-input>
+              <el-input maxlength="100" :disabled="disabledStartForm" show-word-limit
+                :style="{ width: isMobile ? '100%' : '80%' }" type="textarea" :rows="4" size="small"
+                v-model="form.description"></el-input>
             </el-form-item>
           </el-form>
           <template v-if="supplementaryInfo.length > 0">
@@ -292,7 +294,7 @@ export default {
       }
     };
     return {
-      isMobile:false,//是否是手机
+      isMobile: false,//是否是手机
       canReturn: false,
       canFinishResult: false, //是否拥有最终决定权
       finalResultDialogVisible: false, //最终决定权弹窗
@@ -460,7 +462,7 @@ export default {
       return mapList[choose]
     },
     handleBizTypeChoose(obj) {
-      if(!obj.id){
+      if (!obj.id) {
         this.relativeComplete = '';
         this.form.bizType = '';
         return;
@@ -736,6 +738,7 @@ export default {
 </script>
 <style lang="less" scoped>
 @import url('../../../assets/mobileStyles/common/asghighSeach.less');
+
 .main-row-content {
   padding-bottom: 80px;
 
