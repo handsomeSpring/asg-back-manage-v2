@@ -73,11 +73,15 @@ import { mapGetters } from "vuex";
 import AssignDialog from "@/view/person/components/AssignDialog.vue";
 export default {
   name: "survivorPage",
-  props:{
-    keyword:{
-      type:String,
-      default:''
-    }
+  props: {
+    keyword: {
+      type: String,
+      default: ''
+    },
+    officium: {
+      type: String,
+      default: ''
+    },
   },
   components: {
     AssignDialog
@@ -135,7 +139,8 @@ export default {
         const postParams = {
           ...this.listQuery,
           pageindex: this.listQuery.pageindex - 1,
-          keyword:this.keyword
+          keyword: this.keyword,
+          officium:this.officium
         }
         const { data } = await getUsers(postParams);
         this.total = data.cout;

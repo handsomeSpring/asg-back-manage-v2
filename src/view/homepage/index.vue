@@ -1,6 +1,6 @@
 <template>
   <div>
-    <el-container class="layout">
+    <el-container v-if="!isMobile" class="layout">
       <el-aside width="auto">
         <common-aside />
       </el-aside>
@@ -18,7 +18,7 @@
       </el-container>
       <projOperation v-show="$route.path !== '/index'"></projOperation>
     </el-container>
-    <el-container class="mobile-layout">
+    <el-container v-else class="mobile-layout">
       <el-header>
         <router-link class="back" to="/mobileGuide">
           <i class="el-icon-arrow-left"></i>返回首页
@@ -40,6 +40,7 @@ import CommonHeader from "@/components/CommonHeader.vue";
 import CommonFooter from "@/components/CommonFooter.vue";
 import projOperation from "@/components/projOperation.vue";
 import headerTabs from "@/components/headerTabs.vue";
+import { isMobile } from "@/utils";
 
 export default {
   name: "HomePage",
@@ -54,7 +55,11 @@ export default {
     return {
       isCollapse: false,
       actuallHeight: "calc(100vh - 100px)",
+      isMobile:false,
     };
+  },
+  created(){
+    this.isMobile = isMobile();
   },
   mounted() {
     this.$nextTick(() => {
@@ -116,7 +121,4 @@ export default {
   overflow-x: hidden;
 }
 
-.mobile-layout {
-  display: none;
-}
 </style>

@@ -138,6 +138,7 @@ export default {
     };
   },
   async mounted() {
+    console.log('初始化了两次？？？');
     try {
       const { data } = await getStatic();
       this.static = data;
