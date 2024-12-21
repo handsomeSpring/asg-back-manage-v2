@@ -32,8 +32,8 @@
               <span class="content-font">发起人</span>
             </p>
             <p v-if="index === realTimeLine.length - 1">
-              <span class="title-font">能否决策</span>
-              <span class="content-font" >{{ item.isCanDivide === '1' ? '允许' : '不允许'}}</span>
+              <span class="title-font">最终节点</span>
+              <span class="content-font" >最终决策权</span>
             </p>
 
           </div>

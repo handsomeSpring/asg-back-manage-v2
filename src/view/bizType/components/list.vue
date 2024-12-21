@@ -22,14 +22,14 @@
         </el-select>
         <el-radio-group size="small" v-model="listQuery.archive">
           <el-radio label="" border>我的待办</el-radio>
-          <el-radio label="1" border>归档</el-radio>
+          <el-radio label="1" border>业务待办历史记录</el-radio>
         </el-radio-group>
       </template>
       <template #btnList>
         <el-button size="small" type="primary" @click="originGetList">查询</el-button>
         <el-button plain size="small" @click="resetSearch">重置</el-button>
       </template>
-      <template #operation>
+      <template v-if="!isMobile" #operation>
         <el-button size="small" type="primary" @click="jumpToBudget">新增预算</el-button>
       </template>
     </AsgHighSearch>

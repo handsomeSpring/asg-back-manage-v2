@@ -80,7 +80,7 @@
                   </el-input>
                   <p v-show="needToRelative === '0'" class="no-relative-text">选择不关联业务申请发起，自行发起业务申请</p>
                 </el-col>
-                <el-col :span="isMobile ? 24 : 12" :offset="isMobile ? 0 : 2">
+                <el-col :span="isMobile ? 24 : 10" :offset="isMobile ? 0 : 2">
                   <el-switch v-model="needToRelative" active-text="关联" inactive-text="不关联" active-value="1"
                     inactive-value="0" :disabled="disabledStartForm || isDialog" @change="handleRelaSwitchChange">
                   </el-switch>
@@ -211,7 +211,7 @@
     <reqFormDialog ref="reqForm" :form="reqForm"></reqFormDialog>
     <el-dialog title="最终决策" :fullscreen="isMobile" :visible.sync="finalResultDialogVisible" width="30%" :close-on-click-modal="false">
       <div class="tip_type">
-        <p>根据规则配置，您拥有对该申请业务流程的最终决策权。关于``<span class="weight-light">{{ relativeComplete }}</span>``的申请单，请选择您的决策。</p>
+        <p>根据规则配置，您属于最后一个几点，拥有对该申请业务流程的最终决策权。关于``<span class="weight-light">{{ relativeComplete }}</span>``的申请单，请选择您的决策。</p>
       </div>
       <span slot="footer" class="dialog_btn_list">
         <el-button size="small" type="success" @click="handleSet('2')"><i style="margin-right: 6px"
@@ -675,7 +675,7 @@ export default {
         this.process = JSON.parse(this.info.flowConfig);
         //判断是否能够最终决定权
         this.nowLastNode = this.process.length - 1 === this.info.nodeIndex; //是否是最后一个节点；
-        this.canFinishResult = this.process.length - 1 === this.info.nodeIndex && this.process[this.info.nodeIndex]?.isCanDivide === '1';
+        this.canFinishResult = this.process.length - 1 === this.info.nodeIndex; //是最后一个节点就能决策
         // 判断上一个节点
         if (this.info.nodeIndex > 0) {
           this.laseNodeInfo = this.process[this.info.nodeIndex - 1] ?? {};
