@@ -3,7 +3,8 @@
     <AsgHighSearch isCustomRow>
       <template #top>
         <div>
-          <el-input style="width:370px" v-show="activeName === '1'" size="small" v-model="keyword" clearable placeholder="请输入用户名/中文名进行搜索">
+          <el-input style="width:370px" v-show="activeName === '1'" size="small" v-model="keyword" clearable
+            placeholder="请输入用户名/中文名进行搜索">
             <el-button size="small" slot="append" icon="el-icon-search" @click="initGetUsers"></el-button>
           </el-input>
         </div>
@@ -16,9 +17,10 @@
           <div class="item-row" :class="activeName === '4' ? 'active' : ''" @click="handleClick('4')">导播人员管理</div>
         </div>
         <div class="search-content">
-          <el-select v-model="officium">
+          <el-select v-model="officium" size="small" placeholder="请选择职位进行检索">
             <el-option value="" label="全部"></el-option>
-            <el-option v-for="(role, index) in roleOptions" :key="index" :label="role.label" :value="role.value"></el-option>
+            <el-option v-for="(role, index) in roleOptions" :key="index" :label="role.label"
+              :value="role.value"></el-option>
           </el-select>
         </div>
       </template>
@@ -26,7 +28,7 @@
         <el-button size="small" @click="resetForm">重置</el-button>
       </template>
     </AsgHighSearch>
-    <Suvivors ref="survivors" v-if="activeName === '1'" :keyword="keyword" :officumn="officumn"></Suvivors>
+    <Suvivors ref="survivors" v-if="activeName === '1'" :keyword="keyword" :officium="officium"></Suvivors>
     <rolePersonMange v-if="activeName !== '1'" :tableData="tableData"></rolePersonMange>
   </div>
 </template>
@@ -47,14 +49,18 @@ export default {
   data() {
     return {
       keyword: "",
-      officium:"",
-      roleOptions:[],
+      officium: "",
+      roleOptions: [],
       tableData: [],
       activeName: '1'
     }
   },
+  async created() {
+    const result = await getByTitle('roleList');
+    this.roleOptions = result.data.filter(item => Boolean(item.value));
+  },
   methods: {
-    resetForm(){
+    resetForm() {
       this.keyword = '';
       this.officium = '';
       this.activeName = '1';
@@ -76,8 +82,6 @@ export default {
     async initData(role) {
       try {
         this.loading = true;
-        const result = getByTitle('roleList');
-        this.roleOptions = result.data;
         const { data, status } = await getUserRoles({ opname: role });
         if (status !== 200) throw new Error('获取失败');
         this.tableData = data;
@@ -97,6 +101,7 @@ export default {
   align-items: center;
   justify-content: flex-start;
   gap: 24px;
+  margin: 1em 0;
 
   .item-row {
     border-radius: 4px;
@@ -108,7 +113,8 @@ export default {
     color: #494949;
     font-family: 'hk';
     transition: .27s all;
-    &:hover{
+
+    &:hover {
       background: #ecf5ff;
       border-color: #c6e2ff;
     }
