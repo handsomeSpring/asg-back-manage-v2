@@ -1,8 +1,12 @@
 <template>
     <div class="page-container-mobile">
-        <el-button size="small" :disabled="page === 1" @click="goLast">上一页</el-button>
+        <el-button size="small" type="primary" :disabled="page === 1" @click="goLast">
+            <i class="el-icon-caret-left"></i>上一页
+        </el-button>
         <p class="center">{{ page }}</p>
-        <el-button size="small" :disabled="disabledNext" @click="goNext">下一页</el-button>
+        <el-button size="small" type="primary" :disabled="disabledNext" @click="goNext">
+            下一页<i class="el-icon-caret-right"></i>
+        </el-button>
     </div>
 </template>
 
@@ -50,6 +54,7 @@ export default {
     grid-template-columns: repeat(3,1fr);
     gap:2em;
     margin:1em 0;
+    align-items: center;
     .center{
         text-align: center;
         color:#4090EF;

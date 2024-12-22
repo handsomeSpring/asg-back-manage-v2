@@ -305,6 +305,9 @@ export default {
         this.loading = true;
         const { data, status } = await findAudit(this.listQuery);
         if (status !== 200) throw new Error("后端服务器异常！");
+        if(data.code && data.code === 401){
+          throw new Error('您不是管理员，没有权限访问数据！')
+        }
         this.tableData = (data?.data?.rows ?? []).map((item) => {
           return {
             bizType: item.biz_type,
