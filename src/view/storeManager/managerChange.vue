@@ -135,7 +135,10 @@ export default {
           result.push({
             code:item.officium,
             label: filterRole(item.officium),
-            options: [],
+            options: [{
+              label: item.chinaname,
+              value: item.id,
+            }],
           });
         }
       }

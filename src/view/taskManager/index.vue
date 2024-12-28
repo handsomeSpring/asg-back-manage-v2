@@ -145,14 +145,24 @@
       </div>
     </template>
 
-    <el-dialog :fullscreen="isMobile" class="blue-text" title="编辑任务" :visible.sync="dialogVisible" width="50%" @close="resetForm">
-      <el-form :model="editForm" :rules="rules" ref="editFormRef" :label-position="isMobile ? 'top' : 'right'" label-width="100px">
+    <el-dialog :fullscreen="isMobile" class="blue-text" title="编辑任务" :visible.sync="dialogVisible" width="50%"
+      @close="resetForm">
+      <el-form :model="editForm" :rules="rules" ref="editFormRef" :label-position="isMobile ? 'top' : 'right'"
+        label-width="150px">
         <el-form-item class="blue-text" label="任务标题" prop="taskName">
           <el-input size="small" v-model="editForm.taskName"></el-input>
         </el-form-item>
         <el-form-item class="blue-text" label="任务描述" prop="taskDescription">
           <el-input size="small" type="textarea" v-model="editForm.taskDescription" :rows="5" placeholder="请输入任务描述"
             maxlength="200" show-word-limit clearable></el-input>
+        </el-form-item>
+        <el-form-item class="blue-text" label="任务执行人员" prop="money">
+          <el-select size="small" v-model="editForm.userId" placeholder="选择人员" @change="handleSelectChange">
+            <el-option-group v-for="group in personList" :key="group.label" :label="group.label">
+              <el-option v-for="item in group.options" :key="item.value" :label="item.label" :value="item.value">
+              </el-option>
+            </el-option-group>
+          </el-select>
         </el-form-item>
         <el-form-item class="blue-text" label="任务积分" prop="money">
           <el-input-number size="small" v-model="editForm.money" :min="0" :max="5"></el-input-number>
@@ -256,6 +266,8 @@ export default {
         taskName: "",
         taskDescription: "",
         money: null,
+        userId: '',
+        chinaname: '',
       },
       rules: {
         taskName: [
@@ -266,7 +278,8 @@ export default {
         ],
         money: [{ required: true, message: "请输入任务积分", trigger: "blur" }],
       },
-      personList: []
+      personList: [],
+      list:[],
     };
   },
   filters: {
@@ -297,11 +310,14 @@ export default {
   async created() {
     this.isMobile = isMobile();
     const roleResult = await getUsersWithRole();
-    const list = (roleResult?.data ?? []).flat(Infinity);
-    this.createdOptions(list);
+    this.list = (roleResult?.data ?? []).flat(Infinity);
+    this.createdOptions(this.list);
     this.initTask();
   },
   methods: {
+    handleSelectChange(value){
+      this.editForm.chinaname = this.list.find(item => item.id === value)?.chinaname ?? '';
+    },
     createdOptions(arr) {
       let result = [];
       for (const item of arr) {
@@ -315,7 +331,10 @@ export default {
           result.push({
             code: item.officium,
             label: filterRole(item.officium),
-            options: [],
+            options: [{
+              label: item.chinaname,
+              value: item.id,
+            }],
           });
         }
       }
@@ -442,6 +461,8 @@ export default {
         taskDescription: item.taskDescription,
         money: item.money,
         priority: item.priority ?? "0",
+        userId: item.userId,
+        chinaname: item.chinaname
       };
       this.dialogVisible = true;
     },
