@@ -1,10 +1,7 @@
 <template>
   <div>
-    <header>
-      <div class="search__container">
-        <p class="label">任务委托人</p>
-        <el-input size="small" v-model="listQuery.chinaname" placeholder="请输入中文名" clearable></el-input>
-        <p style="margin-left: 12px" class="label">完成情况</p>
+    <AsgHighSearch>
+      <template #top>
         <el-select size="small" v-model="listQuery.status" placeholder="请选择是否完成" clearable>
           <el-option label="全部" value=""></el-option>
           <el-option label="进行中" value="0"></el-option>
@@ -12,13 +9,30 @@
           <el-option label="已通过" value="2"></el-option>
           <el-option label="已驳回" value="3"></el-option>
         </el-select>
-      </div>
-      <div>
+      </template>
+      <template #btnList>
         <el-button size="small" type="primary" @click="initTask('check')">查询</el-button>
         <el-button size="small" @click="initTask('reset')">重置</el-button>
-      </div>
-    </header>
-    <main>
+      </template>
+      <template #search>
+        <el-select size="small" v-model="listQuery.userId" placeholder="选择人员">
+          <el-option label="全部" value=""></el-option>
+          <el-option-group v-for="group in personList" :key="group.label" :label="group.label">
+            <el-option v-for="item in group.options" :key="item.value" :label="item.label" :value="item.value">
+            </el-option>
+          </el-option-group>
+        </el-select>
+        <el-select size="small" v-model="listQuery.priority" placeholder="任务优先级" clearable>
+          <el-option label="全部" value=""></el-option>
+          <el-option label="不急" value="0"></el-option>
+          <el-option label="轻微" value="1"></el-option>
+          <el-option label="一般" value="2"></el-option>
+          <el-option label="紧需" value="3"></el-option>
+          <el-option label="致命" value="4"></el-option>
+        </el-select>
+      </template>
+    </AsgHighSearch>
+    <main v-if="!isMobile">
       <div class="asg-table-main">
         <table v-loading="loading" element-loading-text="系统加载中，请稍等" element-loading-spinner="el-icon-loading">
           <thead>
@@ -90,8 +104,49 @@
         :page-size="pageQuery.limit" layout="total, sizes, prev, pager, next, jumper" :total="total">
       </el-pagination>
     </main>
-    <el-dialog class="blue-text" title="编辑任务" :visible.sync="dialogVisible" width="50%" @close="resetForm">
-      <el-form :model="editForm" :rules="rules" ref="editFormRef" label-position="right" label-width="100px">
+    <template v-else>
+      <mobileTable :loading="loading" :table-data="tableData" :table-props="tableProps">
+        <template #priority="{ row }">
+          <p :class="`level-${row.priority}`">
+            {{ row.priority | filterPriority }}
+          </p>
+        </template>
+        <template #status="{ row }">
+          <p class="my-task-info margin-icon" v-if="row.status === '0'">
+            <i class="el-icon-time"></i>进行中
+          </p>
+          <p class="my-task-auth margin-icon" v-else-if="row.status === '1'">
+            <i class="el-icon-warning"></i>待审核
+          </p>
+          <p class="my-task-success margin-icon" v-else-if="row.status === '2'">
+            <i class="el-icon-success"></i>已完成
+          </p>
+          <p class="my-task-error margin-icon" v-else-if="row.status === '3'">
+            <i class="el-icon-error"></i>已驳回
+          </p>
+        </template>
+        <template #operation="{ row }">
+          <template v-if="['0', '3'].includes(row.status)">
+            <el-button type="text" @click="handleEdit(row)">编辑</el-button>
+            <el-button type="text" @click="handleNotice(item)">通知</el-button>
+          </template>
+          <template v-if="row.status === '1'">
+            <el-button type="text" @click="handleTaskDone('通过', row, '2')">通过</el-button>
+            <el-button style="color: #f40" type="text" @click="handleTaskDone('驳回', row, '3')">驳回</el-button>
+          </template>
+          <el-button type="text" @click="viewTask(row)">查看</el-button>
+          <el-button v-if="!['1', '2'].includes(row.status)" style="color: #f40" type="text"
+            @click="deleteTaskItem(row.id, row.createUserId)">删除</el-button>
+        </template>
+      </mobileTable>
+      <div class="container-page">
+        <mobilePage :page="pageQuery.page" :total="total" :limit="pageQuery.limit"
+          @current-change="handleChange($event, 'page')"></mobilePage>
+      </div>
+    </template>
+
+    <el-dialog :fullscreen="isMobile" class="blue-text" title="编辑任务" :visible.sync="dialogVisible" width="50%" @close="resetForm">
+      <el-form :model="editForm" :rules="rules" ref="editFormRef" :label-position="isMobile ? 'top' : 'right'" label-width="100px">
         <el-form-item class="blue-text" label="任务标题" prop="taskName">
           <el-input size="small" v-model="editForm.taskName"></el-input>
         </el-form-item>
@@ -112,7 +167,7 @@
       </span>
     </el-dialog>
     <!-- 查看弹窗 -->
-    <taskHistory ref="taskHistory" :row="row"></taskHistory>
+    <taskHistory ref="taskHistory" :row="row" :isMobile="isMobile"></taskHistory>
   </div>
 </template>
 
@@ -127,19 +182,30 @@ import {
 import taskHistory from "./components/taskHistory.vue";
 import AsgPriorityComp from "@/components/AsgPriorityComp.vue";
 import { mapGetters } from "vuex";
+import AsgHighSearch from "@/components/AsgHighSearch.vue";
+import { getUsersWithRole } from "@/api/schedule/index.js";
+import { filterRole } from "@/utils/filters";
+import { isMobile } from "@/utils";
+import mobileTable from "@/components/mobile/mobileTable.vue";
+import mobilePage from "@/components/mobile/mobilePage.vue";
 
 export default {
   name: "taskManager",
   components: {
     taskHistory,
     AsgPriorityComp,
+    AsgHighSearch,
+    mobileTable,
+    mobilePage
   },
   data() {
     return {
       listQuery: {
-        chinaname: "",
+        userId: "",
+        priority: "",
         status: "",
       },
+      isMobile: false,
       tableData: [],
       loading: false,
       pageQuery: {
@@ -147,6 +213,42 @@ export default {
         limit: 10,
       },
       total: null,
+      tableProps: [
+        {
+          label: '序号',
+          type: 'index'
+        },
+        {
+          label: '任务标题',
+          prop: 'taskName',
+          type: 'prop'
+        },
+        {
+          label: '任务描述',
+          prop: 'taskDescription',
+          type: 'prop'
+        },
+        {
+          label: '任务执行者',
+          prop: 'chinaname',
+          type: 'prop'
+        },
+        {
+          label: '优先级',
+          prop: 'priority',
+          type: 'slot'
+        },
+        {
+          label: '任务状态',
+          prop: 'status',
+          type: 'slot'
+        },
+        {
+          label: '操作',
+          prop: 'operation',
+          type: 'slot'
+        }
+      ],
       row: {},
       dialogVisible: false,
       editForm: {
@@ -164,6 +266,7 @@ export default {
         ],
         money: [{ required: true, message: "请输入任务积分", trigger: "blur" }],
       },
+      personList: []
     };
   },
   filters: {
@@ -191,10 +294,33 @@ export default {
       return this.userInfo?.id || sessionStorage.getItem("id");
     },
   },
-  created() {
+  async created() {
+    this.isMobile = isMobile();
+    const roleResult = await getUsersWithRole();
+    const list = (roleResult?.data ?? []).flat(Infinity);
+    this.createdOptions(list);
     this.initTask();
   },
   methods: {
+    createdOptions(arr) {
+      let result = [];
+      for (const item of arr) {
+        const index = result.findIndex((el) => el.code === item.officium);
+        if (index !== -1) {
+          result[index].options.push({
+            label: item.chinaname,
+            value: item.id,
+          });
+        } else {
+          result.push({
+            code: item.officium,
+            label: filterRole(item.officium),
+            options: [],
+          });
+        }
+      }
+      this.personList = result.filter(item => item.options && item.options.length > 0);
+    },
     async handleNotice(item) {
       // const qqNum = this.qqMap.find(el => el.userId === item.userId)?.qq;
       // if (!qqNum) return this.$message.error('该用户的qq没有绑定到全局参数<qqMap里>，请检查！');
@@ -280,7 +406,8 @@ export default {
       try {
         if (!!type && type === "reset") {
           this.listQuery = {
-            chinaname: "",
+            priority: "",
+            userId: '',
             status: "",
           };
         }
@@ -381,7 +508,6 @@ header {
 }
 
 main {
-  padding: 16px;
   border-radius: 5px;
 
   table {
@@ -445,6 +571,11 @@ main {
 .blue-text ::v-deep .el-dialog__title,
 .blue-text ::v-deep .el-form-item__label {
   color: @textBlueColor !important;
+}
+
+.container-page {
+  margin: 0 auto;
+  width: 95%;
 }
 
 ::v-deep .el-form-item__content {

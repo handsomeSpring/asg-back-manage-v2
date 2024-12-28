@@ -1,6 +1,6 @@
 <template>
     <div>
-      <el-dialog v-if="isDialog" :visible.sync="dialogVisible" title="查看任务流程" width="40%" append-to-body>
+      <el-dialog :fullscreen="isMobile" v-if="isDialog" :visible.sync="dialogVisible" title="查看任务流程" width="40%" append-to-body>
         <el-steps direction="vertical">
             <el-step title="新建任务" icon="el-icon-s-order" status="process">
                 <template #description>
@@ -102,6 +102,10 @@ export default {
         isDialog:{
             type:Boolean,
             default:true
+        },
+        isMobile:{
+            type:Boolean,
+            default:false,
         }
     },
     filters:{
