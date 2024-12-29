@@ -128,7 +128,7 @@
         <template #operation="{ row }">
           <template v-if="['0', '3'].includes(row.status)">
             <el-button type="text" @click="handleEdit(row)">编辑</el-button>
-            <el-button type="text" @click="handleNotice(item)">通知</el-button>
+            <el-button type="text" @click="handleNotice(row)">通知</el-button>
           </template>
           <template v-if="row.status === '1'">
             <el-button type="text" @click="handleTaskDone('通过', row, '2')">通过</el-button>
