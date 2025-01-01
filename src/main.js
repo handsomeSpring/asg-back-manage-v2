@@ -12,6 +12,7 @@ import 'element-ui/lib/theme-chalk/index.css';
 import "@/assets/index";
 import "@/assets/styles/reset.css";
 import "@/assets/styles/font.css";
+import '@/assets/styles/theme.css';
 // 导入编译器
 //导入v-md-edit 插件
 import VMdEditor from '@kangc/v-md-editor';

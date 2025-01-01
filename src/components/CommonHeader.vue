@@ -29,6 +29,11 @@
             <i class="el-icon-s-tools"></i>
           </li>
         </el-tooltip>
+        <el-tooltip class="item" effect="dark" content="切换主题" placement="bottom">
+          <li @click="handleCommand('5',$event)">
+            <i class="el-icon-bangzhu"></i>
+          </li>
+        </el-tooltip>
         <el-tooltip class="item" effect="dark" content="自定义工作台" placement="bottom">
           <li @click="handleCommand('2')">
             <i class="el-icon-crop"></i>
@@ -56,7 +61,7 @@ export default {
       version: ''
     };
   },
-  computed:{
+  computed: {
     ...mapGetters(['waitDoNumber', 'waitAuthNumber'])
   },
   created() {
@@ -68,7 +73,7 @@ export default {
     routerToGw() {
       window.location.href = `https://idvasg.cn/#/?${encodeURIComponent(getToken())}`;
     },
-    handleCommand(command) {
+    handleCommand(command,$event) {
       if (command === '1') {
         this.goManager();
       } else if (command === '2') {
@@ -77,7 +82,31 @@ export default {
         this.logout();
       } else if (command === '4') {
         this.$router.push({ path: '/userInfo' })
+      } else if (command === '5') {
+        this.changeColor($event)
       }
+    },
+    changeColor(e) {
+      const transition = document.startViewTransition(() => {
+        document.documentElement.classList.toggle('dark');
+      });
+      const x = e.clientX;
+      const y = e.clientY;
+      const tragetRadius = Math.hypot(
+        Math.max(x, window.innerWidth - x),
+        Math.max(y, window.innerHeight - y)
+      )
+      transition.ready.then(() => {
+        document.documentElement.animate(
+          {
+           clipPath: [`circle(0% at ${x}px ${y}px)`, `circle(${tragetRadius}px at ${x}px ${y}px)`],
+          },
+          {
+           duration:450,
+           pseudoElement: '::view-transition-new(root)'
+          }
+        )
+      })
     },
     goManager() {
       this.$router.push({ path: '/guide' });
@@ -132,7 +161,8 @@ export default {
 
 .header-container {
   padding: 0 20px;
-  background-color: #0D47A1;
+  // background-color: #0D47A1;
+  background-color:var(--background-color);
   height: 60px;
   display: flex;
   justify-content: space-between;

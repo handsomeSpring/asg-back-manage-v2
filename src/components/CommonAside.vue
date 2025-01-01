@@ -1,8 +1,8 @@
-<!-- eslint-disable vue/no-use-v-if-with-v-for -->
+<!-- eslint-disable vue/no-use-v-if-with-v-for  background-color="#0089f3" -->
 <template>
   <div>
     <el-menu :collapse="isCollapse" :default-active="$route.path" class="el-menu-vertical-demo"
-      background-color="#0089f3" text-color="#e3f2fd" active-text-color="#f7e157" router :unique-opened="true">
+      text-color="#e3f2fd" active-text-color="#f7e157" router :unique-opened="true">
       <div class="aside__header">
         <img src="@/assets/images/logo_black.png">
         <p v-show="!isCollapse">最强民间赛事</p>
@@ -45,11 +45,16 @@ export default {
   width: 200px;
   min-height: 400px;
 }
-
 .el-menu {
   height: 100vh;
   border-right: none;
-
+  background-color: var(--aside-background-color);
+  .el-menu-item-group{
+    background-color: var(--aside-background-color);
+  }
+  .el-menu-item:focus, .el-menu-item:hover{
+    background-color: rgb(0,110,194)
+  }
   h4 {
     color: #fff;
     text-align: center;
@@ -60,7 +65,9 @@ export default {
     padding: 0 6px;
   }
 }
-
+/deep/.el-submenu__title:hover{
+  background-color: rgb(0,110,194) !important;
+}
 /deep/.el-submenu__title i {
   color: #f9f9f9;
 }
@@ -76,7 +83,7 @@ export default {
   p {
     color: #fff;
     margin-left: 24px;
-    font-family: 'ckt';
+    font-family: 'hk';
   }
 
   img {
@@ -84,9 +91,5 @@ export default {
     height: 25px;
     border-radius: 4px;
   }
-}
-
-/deep/.el-radio-button__orig-radio:checked+.el-radio-button__inner {
-  background: #0D47A1 !important;
 }
 </style>
