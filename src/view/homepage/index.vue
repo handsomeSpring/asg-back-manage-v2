@@ -1,7 +1,7 @@
 <template>
   <div>
     <el-container v-if="!isMobile" class="layout">
-      <el-aside width="auto">
+      <el-aside width="auto" class="asg-common-aside">
         <common-aside />
       </el-aside>
       <el-container>
@@ -94,6 +94,9 @@ export default {
 <style scoped lang="less">
 @import url('../../assets/mobileStyles/homePage/index.less');
 
+.asg-common-aside{
+  background-color: var(--aside-background-color);
+}
 .el-header {
   padding: 0;
 }

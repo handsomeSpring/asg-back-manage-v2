@@ -1,11 +1,9 @@
 :root {
-    --main-bg-color:#fff;
     --background-color:#0D47A1;
     --aside-background-color:#0089f3;
-    background-color: var(--main-bg-color);
+  
 }
 :root.dark{
-    --main-bg-color:#d7d7d7;
     --background-color:#000;
     --aside-background-color:#000;
 }
