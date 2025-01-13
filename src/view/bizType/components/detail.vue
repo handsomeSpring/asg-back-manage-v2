@@ -712,6 +712,7 @@ export default {
       });
       try {
         this.finalResultDialogVisible = false;
+        await this.handleAccept(type);
         const params = {
           id: this.info.relativeId,
           approvalPerson: this.userInfo.chinaname,
@@ -722,7 +723,6 @@ export default {
         if (type === '2') {
           await setRole(this.reqForm.user_id, this.reqForm.req_role);
         }
-        await this.handleAccept(type);
       } catch (error) {
         this.$message.error(error.message);
       } finally {
