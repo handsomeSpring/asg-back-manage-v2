@@ -366,7 +366,7 @@ export default {
           throw new Error(data.message ?? "未知错误，请联系网站管理员！");
         this.onSuccess();
       } catch (error) {
-        if (error instanceof Object && !"message" in error) {
+        if (error instanceof Object && !error.message) {
           return this.$message.error("请完整填写表单");
         }
         if (error?.response?.data?.code === 400) {

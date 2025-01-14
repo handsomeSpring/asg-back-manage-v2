@@ -1,17 +1,19 @@
 <template>
-    <el-dialog title="选择人员" top="5vh" :visible="visible" width="40%" @close="handleClose" @open="initRoles">
+    <el-dialog title="选择人员" top="5vh" :visible="visible" :close-on-click-modal="false" width="40%" @close="handleClose"
+        @open="initRoles">
         <el-radio-group style="margin-bottom: 12px;" size="small" v-model="personType">
             <el-radio-button label="1">职位库选择</el-radio-button>
             <el-radio-button label="2">自定义名称</el-radio-button>
         </el-radio-group>
-        <div class="dialog__main--grid">
+        <div class="dialog__main--grid" v-loading="loading" element-loading-text="拼命加载中"
+            element-loading-spinner="el-icon-loading" element-loading-background="rgba(0, 0, 0, 0.8)">
             <template v-if="personType === '1'">
                 <div class="person__chose">
                     <el-scrollbar style="height:400px">
-                        <li class="title">
+                        <li class="title" @click="refereeVisible = !refereeVisible">
                             <div>导播列表</div>
-                            <div class="icon__div" :class="refereeVisible ? 'rotate__icon' : ''"
-                                @click="refereeVisible = !refereeVisible"><i class="el-icon-arrow-up"></i></div>
+                            <div class="icon__div" :class="refereeVisible ? 'rotate__icon' : ''"><i
+                                    class="el-icon-arrow-up"></i></div>
                         </li>
                         <el-collapse-transition>
                             <div v-show="refereeVisible">
@@ -22,10 +24,10 @@
                                 </li>
                             </div>
                         </el-collapse-transition>
-                        <li class="title">
+                        <li class="title" @click="judgeVisible = !judgeVisible">
                             <div>裁判列表</div>
-                            <div class="icon__div" :class="judgeVisible ? 'rotate__icon' : ''"
-                                @click="judgeVisible = !judgeVisible"><i class="el-icon-arrow-up"></i></div>
+                            <div class="icon__div" :class="judgeVisible ? 'rotate__icon' : ''"><i
+                                    class="el-icon-arrow-up"></i></div>
                         </li>
                         <el-collapse-transition>
                             <div v-show="judgeVisible">
@@ -49,7 +51,7 @@
             </template>
             <template v-else>
                 <el-input size="small" v-model="choosePerson.chinaname" placeholder="请输入人员中文名" clearable></el-input>
-                <el-input size="small" v-model="choosePerson.id" placeholder="用户id/不清楚可以输入0" ></el-input>
+                <el-input size="small" v-model="choosePerson.id" placeholder="用户id/不清楚可以输入0"></el-input>
             </template>
         </div>
         <span slot="footer">
@@ -73,7 +75,8 @@ export default {
                 id: 0
             },
             refereeVisible: false,
-            judgeVisible: false
+            judgeVisible: false,
+            loading: false,
         };
     },
     watch: {
@@ -145,11 +148,12 @@ export default {
         },
         async initRoles() {
             try {
+                this.loading = true;
                 const { data } = await getUserRoles({ opname: 'Anchor' });
                 this.refereeOptions = data.map(item => {
-                    if(item.id === this.checkId){
-                       this.choosePerson.id = item.id;
-                       this.choosePerson.chinaname = item.chinaname
+                    if (item.id === this.checkId) {
+                        this.choosePerson.id = item.id;
+                        this.choosePerson.chinaname = item.chinaname
                     }
                     return {
                         ...item,
@@ -158,9 +162,9 @@ export default {
                 });
                 const { data: judge } = await getUserRoles({ opname: 'Judge' });
                 this.judgetOptions = judge.map(item => {
-                    if(item.id === this.checkId){
-                       this.choosePerson.id = item.id;
-                       this.choosePerson.chinaname = item.chinaname
+                    if (item.id === this.checkId) {
+                        this.choosePerson.id = item.id;
+                        this.choosePerson.chinaname = item.chinaname
                     }
                     return {
                         ...item,
@@ -169,6 +173,8 @@ export default {
                 });
             } catch (error) {
                 this.$message.error(error.message);
+            } finally {
+                this.loading = false;
             }
         }
     }
@@ -181,6 +187,7 @@ export default {
     gap: 24px;
 
     .person__chose {
+        cursor: pointer;
         border: 1px solid #e7e7e7;
         height: 400px;
         border-radius: 3px;
@@ -196,7 +203,13 @@ export default {
             &.title {
                 background: #f2f6fd;
             }
+
+            &:hover {
+                background: #f2f6fd;
+                ;
+            }
         }
+
     }
 
     .choose__item {

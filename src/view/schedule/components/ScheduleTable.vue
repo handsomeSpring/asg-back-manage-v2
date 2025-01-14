@@ -3,80 +3,32 @@
   <div>
     <AsgHighSearch showOperation>
       <template #top>
-        <el-select
-          v-model="belong"
-          placeholder="请选择赛程"
-          size="small"
-          @change="handleChange"
-        >
+        <el-select v-model="belong" placeholder="请选择赛程" size="small" @change="handleChange">
           <el-option label="全部" value=""></el-option>
-          <el-option
-            v-for="item in options"
-            :key="item.name"
-            :label="item.name"
-            :value="item.name"
-          >
+          <el-option v-for="item in options" :key="item.name" :label="item.name" :value="item.name">
             <span>{{ item.name }}</span>
-            <i
-              v-if="item.is_over"
-              style="color: red; margin-left: 20px"
-              class="el-icon-warning"
-            ></i>
-            <i
-              v-else
-              style="color: green; margin-left: 20px"
-              class="el-icon-success"
-            ></i>
+            <i v-if="item.is_over" style="color: red; margin-left: 20px" class="el-icon-warning"></i>
+            <i v-else style="color: green; margin-left: 20px" class="el-icon-success"></i>
           </el-option>
         </el-select>
       </template>
       <template #search>
-        <el-input
-          v-model="listQuery.teamName1"
-          size="small"
-          clearable
-          placeholder="输入主场战队名检索"
-        ></el-input>
-        <el-input
-          v-model="listQuery.teamName2"
-          size="small"
-          clearable
-          placeholder="输入客场战队名检索"
-        ></el-input>
+        <el-input v-model="listQuery.teamName1" size="small" clearable placeholder="输入主场战队名检索"></el-input>
+        <el-input v-model="listQuery.teamName2" size="small" clearable placeholder="输入客场战队名检索"></el-input>
       </template>
       <template #btnList>
-        <el-button size="small" type="primary" @click="handlePageOneSearch"
-          >查询</el-button
-        >
-        <el-button plain size="small" @click="handleResetSearch"
-          >重置</el-button
-        >
+        <el-button size="small" type="primary" @click="handlePageOneSearch">查询</el-button>
+        <el-button plain size="small" @click="handleResetSearch">重置</el-button>
       </template>
       <template #operation>
         <exportDia :belong="belong"></exportDia>
-        <el-button
-          style="margin: 0 12px"
-          size="mini"
-          type="primary"
-          @click="openDialog"
-          >新增赛程<i class="el-icon-plus"></i
-        ></el-button>
+        <el-button style="margin: 0 12px" size="mini" type="primary" @click="openDialog">新增赛程<i
+            class="el-icon-plus"></i></el-button>
         <div class="import_btn" @click="handleInput">
           批量导入
-          <svg-icon
-            style="margin-left: 3px"
-            iconClass="import"
-            width="14px"
-            height="14px"
-            color="#fff"
-          ></svg-icon>
+          <svg-icon style="margin-left: 3px" iconClass="import" width="14px" height="14px" color="#fff"></svg-icon>
         </div>
-        <input
-          type="file"
-          id="ipt"
-          style="display: none"
-          @change="handleFileChange"
-        />
+        <input type="file" id="ipt" style="display: none" @change="handleFileChange" />
       </template>
     </AsgHighSearch>
     <!-- 数据主体 -->
@@ -84,14 +36,12 @@
       <template v-if="scheduleData.length > 0">
         <asgTableCard v-for="(item, index) in scheduleData" :key="index">
           <template v-slot:header>
-            <div
-              style="
+            <div style="
                 display: flex;
                 justify-content: space-between;
                 align-items: center;
                 height: 100%;
-              "
-            >
+              ">
               <div style="display: flex">
                 <el-tag size="small" type="primary" style="margin: 0 12px">{{
                   item.tag || "未设置赛标"
@@ -106,44 +56,16 @@
                 </p>
               </div>
               <div>
-                <el-button
-                  style="margin: 0 12px"
-                  type="text"
-                  size="small"
-                  @click="noticeGame(item)"
-                >
+                <el-button style="margin: 0 12px" type="text" size="small" @click="noticeGame(item)">
                   {{ item.winteam ? "赛果通知" : "赛程通知" }}
                 </el-button>
-                <el-button
-                  v-if="!item.winteam"
-                  style="margin: 0 12px"
-                  type="text"
-                  size="small"
-                  @click="fillGameResult(item)"
-                  >赛果登记</el-button
-                >
-                <el-button
-                  v-else
-                  style="margin: 0 12px"
-                  type="text"
-                  size="small"
-                  @click="viewGameResult(item)"
-                  >查看赛果</el-button
-                >
-                <el-button
-                  style="margin: 0 12px"
-                  type="text"
-                  size="small"
-                  @click="updateGame(item)"
-                  >编辑赛程</el-button
-                >
-                <el-button
-                  style="margin: 0 12px; color: #f40"
-                  type="text"
-                  size="small"
-                  @click="delGame(item)"
-                  >删除赛程</el-button
-                >
+                <el-button v-if="!item.winteam" style="margin: 0 12px" type="text" size="small"
+                  @click="fillGameResult(item)">赛果登记</el-button>
+                <el-button v-else style="margin: 0 12px" type="text" size="small"
+                  @click="viewGameResult(item)">查看赛果</el-button>
+                <el-button style="margin: 0 12px" type="text" size="small" @click="updateGame(item)">编辑赛程</el-button>
+                <el-button style="margin: 0 12px; color: #f40" type="text" size="small"
+                  @click="delGame(item)">删除赛程</el-button>
               </div>
             </div>
           </template>
@@ -165,34 +87,18 @@
               }}</el-descriptions-item>
               <el-descriptions-item label="解说">
                 {{ handleCommentary(item.commentary)
-                }}<span style="color: #4090ef"
-                  >(最大数量：{{ item.com_limit }})</span
-                >
+                }}<span style="color: #4090ef">(最大数量：{{ item.com_limit }})</span>
               </el-descriptions-item>
               <el-descriptions-item label="导播">{{
                 item.referee
               }}</el-descriptions-item>
-              <el-descriptions-item label="回放链接"
-                ><el-link
-                  v-if="item.bilibiliuri !== 'lose' && item.bilibiliuri"
-                  :href="item.bilibiliuri"
-                  target="_blank"
-                  type="success"
-                  >点击前往</el-link
-                >
-                <el-link v-else-if="item.bilibiliuri === 'lose'" type="info"
-                  >回放丢失</el-link
-                >
-                <el-link v-else type="danger"
-                  >回放尚未上传</el-link
-                ></el-descriptions-item
-              >
-              <el-descriptions-item label="获胜队伍"
-                ><span v-if="item.winteam === null">比赛进行中</span>
-                <span class="winner" v-else
-                  ><i class="el-icon-trophy"></i>{{ item.winteam }}</span
-                ></el-descriptions-item
-              >
+              <el-descriptions-item label="回放链接"><el-link v-if="item.bilibiliuri !== 'lose' && item.bilibiliuri"
+                  :href="item.bilibiliuri" target="_blank" type="success">点击前往</el-link>
+                <el-link v-else-if="item.bilibiliuri === 'lose'" type="info">回放丢失</el-link>
+                <el-link v-else type="danger">回放尚未上传</el-link></el-descriptions-item>
+              <el-descriptions-item label="获胜队伍"><span v-if="item.winteam === null">比赛进行中</span>
+                <span class="winner" v-else><i class="el-icon-trophy"></i>{{ item.winteam
+                  }}</span></el-descriptions-item>
               <el-descriptions-item label="人员构成">
                 <p>{{ item.personTypeName }}</p>
               </el-descriptions-item>
@@ -202,246 +108,134 @@
       </template>
       <el-empty v-else description="暂无赛程数据"></el-empty>
     </div>
-    <el-pagination
-      style="float: right; margin-top: 12px"
-      @current-change="handlePageChange($event, 'page')"
-      @size-change="handlePageChange($event, 'limit')"
-      :current-page.sync="listQuery.page"
-      :page-size="listQuery.limit"
-      layout="total, sizes, prev, pager, next, jumper"
-      :total="total"
-    >
+    <el-pagination style="float: right; margin-top: 12px" @current-change="handlePageChange($event, 'page')"
+      @size-change="handlePageChange($event, 'limit')" :current-page.sync="listQuery.page" :page-size="listQuery.limit"
+      layout="total, sizes, prev, pager, next, jumper" :total="total">
     </el-pagination>
     <!-- 表单 -->
-    <el-dialog
-      title="赛程信息"
-      width="60%"
-      top="5vh"
-      :visible.sync="dialogFormVisible"
-      :close-on-click-modal="false"
-    >
-      <el-form :model="diaData" label-position="right" label-width="100px">
+    <el-dialog title="赛程信息" width="60%" top="5vh" :visible.sync="dialogFormVisible" :close-on-click-modal="false">
+      <el-form ref="editForm" :rules="rules" :model="diaData" label-position="right" label-width="100px">
         <el-row>
           <el-col :span="24">
-            <el-form-item label="人员构成">
+            <el-form-item label="人员构成" prop="personType">
               <el-radio-group v-model="diaData.personType">
-                <el-radio
-                  v-for="(item, index) in personGroup"
-                  :label="item.value"
-                  :key="index"
-                  >{{ item.label }}</el-radio
-                >
+                <el-radio v-for="(item, index) in personGroup" :label="item.value" :key="index">{{ item.label
+                  }}</el-radio>
               </el-radio-group>
             </el-form-item>
           </el-col>
         </el-row>
         <el-row>
-          <el-col :span="7">
-            <el-form-item label="赛程分类">
-              <el-input
-                size="small"
-                v-model="diaData.belong"
-                disabled
-                autocomplete="off"
-              ></el-input>
+          <el-col :span="8">
+            <el-form-item label="赛程分类" prop="belong">
+              <el-input size="small" v-model="diaData.belong" disabled autocomplete="off"></el-input>
             </el-form-item>
           </el-col>
-          <el-col :span="7">
-            <el-form-item label="主场战队">
-              <el-autocomplete
-                v-model="diaData.team1_name"
-                size="small"
-                :fetch-suggestions="searchTeam"
-                placeholder="请选择/输入主场战队"
-                @select="handleChooseAuto"
-              ></el-autocomplete>
+          <el-col :span="8">
+            <el-form-item label="主场战队" prop="team1_name">
+              <el-autocomplete v-model="diaData.team1_name" size="small" :fetch-suggestions="searchTeam"
+                placeholder="请选择/输入主场战队" @select="handleChooseAuto"></el-autocomplete>
             </el-form-item>
           </el-col>
-          <el-col :span="7">
-            <el-form-item label="客场战队">
-              <el-autocomplete
-                v-model="diaData.team2_name"
-                size="small"
-                :fetch-suggestions="searchTeam"
-                placeholder="请选择/输入客场战队"
-                @select="handleChooseAuto"
-              ></el-autocomplete>
+          <el-col :span="8">
+            <el-form-item label="客场战队" prop="team2_name">
+              <el-autocomplete v-model="diaData.team2_name" size="small" :fetch-suggestions="searchTeam"
+                placeholder="请选择/输入客场战队" @select="handleChooseAuto"></el-autocomplete>
             </el-form-item>
           </el-col>
         </el-row>
         <el-row>
-          <el-col :span="7">
-            <el-form-item
-              label="导播"
-              v-show="diaData.personType.includes('referee')"
-            >
+          <el-col :span="8">
+            <el-form-item label="导播" v-show="diaData.personType.includes('referee')">
               <el-input v-model="diaData.referee" readonly size="small">
                 <template #append>
-                  <p
-                    style="cursor: pointer"
-                    @click="handlePersonChoose('referee')"
-                  >
+                  <p style="cursor: pointer" @click="handlePersonChoose('referee')">
                     <i class="el-icon-plus"></i>
                   </p>
                 </template>
               </el-input>
             </el-form-item>
           </el-col>
-          <el-col :span="7" v-show="diaData.personType.includes('judge')">
+          <el-col :span="8" v-show="diaData.personType.includes('judge')">
             <el-form-item label="裁判">
               <el-input v-model="diaData.judge" readonly size="small">
                 <template #append>
-                  <p
-                    style="cursor: pointer"
-                    @click="handlePersonChoose('judge')"
-                  >
+                  <p style="cursor: pointer" @click="handlePersonChoose('judge')">
                     <i class="el-icon-plus"></i>
                   </p>
                 </template>
               </el-input>
             </el-form-item>
           </el-col>
-          <el-col :span="7" v-show="hasCom">
+          <el-col :span="8" v-show="hasCom">
             <el-form-item label="解说数量" prop="comLimit">
-              <el-input-number
-                size="small"
-                v-model="diaData.comLimit"
-                :min="1"
-                :max="3"
-                @change="handleComNumberChange($event)"
-                label="解说数量"
-              ></el-input-number>
+              <el-input-number size="small" v-model="diaData.comLimit" :min="1" :max="3"
+                @change="handleComNumberChange($event)" label="解说数量"></el-input-number>
             </el-form-item>
           </el-col>
         </el-row>
         <el-row v-show="hasCom">
-          <el-col
-            :span="7"
-            v-for="(com, comIndex) in diaData.comLimit"
-            :key="comIndex"
-          >
+          <el-col :span="8" v-for="(com, comIndex) in diaData.comLimit" :key="comIndex">
             <el-form-item :label="`解说${comIndex + 1}`">
-              <el-select
-                size="small"
-                filterable
-                clearable
-                value-key="id"
-                v-model="diaData.comList[comIndex]"
-                placeholder="请选择解说1"
-              >
-                <el-option
-                  v-for="item in commentaryOptions"
-                  :key="item.chinaname"
-                  :label="item.chinaname"
-                  :value="item"
-                >
+              <el-select size="small" filterable clearable value-key="id" v-model="diaData.comList[comIndex]"
+                :placeholder="`请选择解说${comIndex + 1}`">
+                <el-option v-for="item in commentaryOptions" :key="item.chinaname" :label="item.chinaname"
+                  :value="item">
                 </el-option>
               </el-select>
             </el-form-item>
           </el-col>
         </el-row>
         <el-row>
-          <el-col :span="7">
-            <el-form-item label="赛季标识">
-              <el-select
-                filterable
-                size="small"
-                style="margin-bottom: 10px"
-                v-model="diaData.tag"
-                placeholder="请输入赛程标签"
-              >
-                <el-option
-                  v-for="(item, index) in tagOptions"
-                  :key="index"
-                  :label="item.name"
-                  :value="item.name"
-                >
+          <el-col :span="8">
+            <el-form-item label="赛季标识" prop="tag">
+              <el-select filterable size="small" style="margin-bottom: 10px" v-model="diaData.tag"
+                placeholder="请输入赛程标签">
+                <el-option v-for="(item, index) in tagOptions" :key="index" :label="item.name" :value="item.name">
                 </el-option>
               </el-select>
             </el-form-item>
           </el-col>
-          <el-col :span="7">
-            <el-form-item label="开始时间">
-              <el-date-picker
-                style="width: 100%"
-                v-model="diaData.opentime"
-                size="small"
-                type="datetime"
-                placeholder="选择日期时间"
-                value-format="yyyy-MM-dd HH:mm:ss"
-                format="yyyy-MM-dd HH:mm:ss"
-              >
+          <el-col :span="8">
+            <el-form-item label="开始时间" prop="opentime">
+              <el-date-picker style="width: 100%" v-model="diaData.opentime" size="small" type="datetime"
+                placeholder="选择日期时间" value-format="yyyy-MM-dd HH:mm:ss" format="yyyy-MM-dd HH:mm:ss">
               </el-date-picker>
             </el-form-item>
           </el-col>
         </el-row>
         <el-row>
-          <el-col :span="18">
+          <el-col :span="24">
             <el-form-item label="B站回放地址">
-              <el-input
-                size="small"
-                v-model="diaData.bilibiliuri"
-                autocomplete="off"
-              >
+              <el-input size="small" v-model="diaData.bilibiliuri" autocomplete="off">
                 <template slot="append">
-                  <span style="cursor: pointer" @click="setLose"
-                    >设置为回放丢失</span
-                  >
+                  <span style="cursor: pointer" @click="setLose">设置为回放丢失</span>
                 </template>
               </el-input>
             </el-form-item>
           </el-col>
         </el-row>
         <el-row>
-          <el-col :span="18">
+          <el-col :span="24">
             <el-form-item label="备注">
-              <el-input
-                size="small"
-                type="textarea"
-                v-model="diaData.remarks"
-                :rows="3"
-                maxlength="150"
-                show-word-limit
-              ></el-input>
+              <el-input size="small" type="textarea" v-model="diaData.remarks" :rows="3" maxlength="150"
+                show-word-limit></el-input>
             </el-form-item>
           </el-col>
         </el-row>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button size="small" @click="dialogFormVisible = false"
-          >取 消</el-button
-        >
-        <el-button size="small" type="primary" @click="updateSchedule"
-          >更 新</el-button
-        >
+        <el-button size="small" @click="dialogFormVisible = false">取 消</el-button>
+        <el-button size="small" type="primary" @click="updateSchedule">更 新</el-button>
       </div>
     </el-dialog>
     <!-- 弹出框 -->
-    <dialog-choose
-      :eventName="belong"
-      :showChoose.sync="showChoose"
-      @refresh="initSchedule"
-      :tagOptions="tagOptions"
-    ></dialog-choose>
-    <GameResult
-      :dialogVisible.sync="gameResultDialog"
-      :gameResult="gameResult"
-      @updateLoad="initSchedule"
-    ></GameResult>
-    <MatchDialog
-      :dialogVisible.sync="matchDialogVisible"
-      :rowItem="rowItem"
-      :groupOptions="groupOptions"
-    ></MatchDialog>
-    <viewResultDialog
-      :dialogVisible.sync="viewGameResultDialog"
-      :gameResult="gameResult"
-    ></viewResultDialog>
-    <personChooseDialog
-      :dialogVisible.sync="choosePersonDialog"
-      @finish="handleChoose"
-      :checkId="checkId"
-    >
+    <dialog-choose :eventName="belong" :showChoose.sync="showChoose" @refresh="initSchedule"
+      :tagOptions="tagOptions"></dialog-choose>
+    <GameResult :dialogVisible.sync="gameResultDialog" :gameResult="gameResult" @updateLoad="initSchedule"></GameResult>
+    <MatchDialog :dialogVisible.sync="matchDialogVisible" :rowItem="rowItem" :groupOptions="groupOptions"></MatchDialog>
+    <viewResultDialog :dialogVisible.sync="viewGameResultDialog" :gameResult="gameResult"></viewResultDialog>
+    <personChooseDialog :dialogVisible.sync="choosePersonDialog" @finish="handleChoose" :checkId="checkId">
     </personChooseDialog>
   </div>
 </template>
@@ -522,11 +316,33 @@ export default {
       // 人员选择器
       diaDataKey: null,
       checkId: -1,
+      // 更新表单rules
+      rules: {
+        belong: [{ required: true, message: "请选择赛季", trigger: "change" }],
+        tag: [{ required: true, message: "请选择赛程标签", trigger: "change" }],
+        personType: [
+          { required: true, message: "请选择人员构成", trigger: "change" },
+        ],
+        opentime: [
+          { required: true, message: "请选择比赛开始时间", trigger: "change" },
+        ],
+        team1_name: [
+          { required: true, message: "请输入主场战队", trigger: "change" },
+        ],
+        team2_name: [
+          { required: true, message: "请输入客场战队", trigger: "change" },
+        ],
+        referee: [{ required: false, message: "请选择", trigger: "change" }],
+        comLimit: [{ required: true, message: "请选择", trigger: "change" }],
+        judge: [
+          { required: false, message: "请输入裁判名称", trigger: "change" },
+        ],
+      },
     };
   },
   methods: {
-    handleChooseAuto(row){
-      console.log(row,'row===');
+    handleChooseAuto(row) {
+      console.log(row, 'row===');
     },
     // 查询战队
     async searchTeam(queryString, cb) {
@@ -711,6 +527,8 @@ export default {
     },
     async updateSchedule() {
       try {
+        const valid = await this.$refs.editForm.validate();
+        if (!valid) return;
         const commentary = this.diaData.comList.map((item) => ({
           id: item.id,
           chinaname: item.chinaname,
@@ -740,9 +558,11 @@ export default {
         this.dialogFormVisible = false;
         this.initSchedule();
       } catch (error) {
-        console.log(error, "error===");
-        if (error?.response?.data?.code === 400) {
-          return this.$message.error("操作失败，无权访问");
+        if (error instanceof Object && !error.message) {
+          return this.$message.error("请完整填写表单");
+        }
+        if(error.message){
+          return this.$message.error(error.message);
         }
         this.$message.error("操作失败，后端服务器异常");
       }
@@ -905,10 +725,6 @@ export default {
 <style scoped lang="less">
 .winner {
   color: #cccc00;
-}
-
-.el-col {
-  margin: 0 10px;
 }
 
 .fontWeight {
