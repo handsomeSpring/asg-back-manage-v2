@@ -66,7 +66,7 @@ export default {
       const tabHeight =
         this.$route.fullPath === "/index"
           ? 0
-          : this.$refs.headerTabs.$refs.containerGrid.clientHeight;
+          : (this.$refs.headerTabs?.$refs?.containerGrid?.clientHeight ?? 0);
       this.actuallHeight = `calc(100vh - 60px - ${tabHeight}px)`;
     });
   },
@@ -77,7 +77,7 @@ export default {
           const tabHeight =
             newValue === "/index"
               ? 0
-              : this.$refs.headerTabs.$refs.containerGrid.clientHeight;
+              : (this.$refs.headerTabs?.$refs?.containerGrid?.clientHeight ?? 0);
           this.actuallHeight = `calc(100vh - 60px - ${tabHeight}px)`;
           const scrollbarEl = this.$refs.queRef.wrap;
           scrollbarEl.scrollTo({

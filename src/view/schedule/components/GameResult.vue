@@ -58,7 +58,7 @@
         </div>
         <el-divider>选择获胜队伍</el-divider>
         <el-row>
-            <el-button style="margin-left: 20px" :loading="loading" type="primary" size="small"
+            <el-button style="margin:0 20px" :loading="loading" type="primary" size="small"
                 @click="handleSaveResult">{{ showResult ? '更新' : '保存' }}赛果</el-button>
             <template v-if="showResult">
                 <el-select size="small" v-model="winteam" clearable>
