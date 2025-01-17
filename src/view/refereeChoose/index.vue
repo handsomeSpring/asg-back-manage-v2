@@ -12,8 +12,10 @@
         <template v-slot:header>
           <div class="table-header">
             <el-checkbox v-if="new Date() < new Date(item.opentime)" v-model="item.isCheck"
-              @input="handleCheck($event, item)" :disabled="item.referee_Id === userInfo.id"></el-checkbox>
-            <p>{{ item.team1_name }} vs {{ item.team2_name }}</p>
+              @input="handleCheck($event, item)"
+              :disabled="item.referee_Id === userInfo.id || !!item.referee_Id"></el-checkbox>
+            <p>{{ item.team1_name }} vs {{ item.team2_name }}<span style="color:#f40;margin-left: 1em;"
+                v-if="new Date() > new Date(item.opentime)">(赛程已结束)</span></p>
           </div>
         </template>
         <template v-slot:content>
