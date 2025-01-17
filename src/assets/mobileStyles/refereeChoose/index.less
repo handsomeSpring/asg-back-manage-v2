@@ -1,34 +1,31 @@
 @media (max-width: 1024px) {
     .header__content {
-        padding: 1em;
+        width: 95%;
         display: flex;
         align-items: center;
         justify-content: center;
-        margin: 0 !important;
+        margin: 1em auto !important;
     }
-    .sch__body{
-        padding: 1em 2em !important;
-    }
-    .main__container{
-        padding:0 1em !important;
-    }
-    .grid--three {
-        display: grid;
-        grid-template-columns: repeat(1, 1fr) !important;
-        align-items: center;
-        gap: 0 !important;
-        margin: 0 !important;
 
-        .text {
-            font-weight: 500;
-            margin-bottom: 12px;
-            font-size: 14px;
-            color: #505050;
+    .main__container {
+        width: 95%;
+        margin: 0 auto;
+
+        .table-content {
+            display: flex !important;
+            flex-direction: column !important;
+            justify-content: center;
+            gap:1em;
+            .left-content {
+                display: grid;
+                grid-template-columns: repeat(1, 1fr) !important;
+                gap: 1em;
+            }
+            .right-content{
+                border-left: none !important;
+                border-top:1px solid #dddd;
+                padding:0.5em 0;
+            }
         }
-    }
-
-    .main__container .schedule__box .sch__header .flex-group p {
-        font-size: 0.9em !important;
-        font-family: 'hk';
     }
 }

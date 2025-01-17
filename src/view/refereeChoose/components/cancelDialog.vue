@@ -1,8 +1,9 @@
 <template>
-  <el-dialog :visible="visible" title="取消选班理由" width="30%" @close="handleClose">
-    <el-input size="small" v-model="reason" placeholder="请输入理由"></el-input>
+  <el-dialog :visible="visible" :close-on-click-modal="false" title="取消选班理由" width="30%" @close="handleClose">
+    <el-input type="textarea" :rows="3" placeholder="请输入理由" v-model="reason" maxlength="20" show-word-limit>
+    </el-input>
     <span slot="footer">
-      <el-button type="primary" size="small" @click="cancelGame">取消选班</el-button>
+      <el-button type="primary" size="small" @click="cancelGame">确定取消选班</el-button>
     </span>
   </el-dialog>
 </template>
@@ -18,7 +19,7 @@ export default {
     },
     scheduleItem: {
       type: Object,
-      default: () => {},
+      default: () => { },
     },
   },
   data() {
@@ -38,21 +39,30 @@ export default {
   },
   methods: {
     async cancelGame() {
+      if (!this.reason) {
+        return this.$message.error("请输入取消选班理由！");
+      }
+      const loading = this.$loading({
+        lock: true,
+        text: "取消选班中......",
+        spinner: "el-icon-loading",
+        background: "rgba(0, 0, 0, 0.8)",
+      });
       try {
-        if (!this.reason) {
-          return this.$message.error("请输入取消选班理由！");
-        }
-        const { status } = await cancelGame(this.scheduleItem.id,this.reason);
+        const { status } = await cancelGame(this.scheduleItem.id, this.reason);
         if (status !== 200) throw new Error('服务端异常！');
-        this.handleClose();
         this.$emit("finish");
       } catch (error) {
         this.$message.error(error.message);
+      } finally {
+        loading.close();
+        this.handleClose();
       }
 
     },
     handleClose() {
       this.visible = false;
+      this.reason = '';
     },
   },
 };

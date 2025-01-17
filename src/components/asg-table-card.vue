@@ -18,22 +18,28 @@ export default {
 <style scoped lang="less">
 .asg-table-card {
   margin: 12px 0;
-  border: 1px solid #ddd;
+  border: 1px solid #b3d4ff;
   border-radius: 6px;
   overflow: hidden;
+  box-sizing: border-box;
+  &:hover>.asg-table-card_content {
+      background: linear-gradient(180deg, #e5f0ff 0%, #ffffff 30%);
+  }
 }
+
 .asg-table-card_header {
   cursor: pointer;
   height: 40px;
-  background: #F1F2F6;
-  border: 1px solid rgba(255, 255, 255, 0.7);
+  border-radius: 6px 6px 0 0 ;
+  background: linear-gradient(172deg,
+      #b3d4ff 0%,
+      rgba(255, 255, 255, 0) 93%);
+  border-bottom: 1px solid;
+  border-image: linear-gradient(172deg,
+      #b3d4ff 0%,
+      rgba(255, 255, 255, 0) 93%);
   border-bottom: 1px solid #ddd;
   width: 100%;
-  &:hover {
-    background-color: #f2f6fd;
-  }
 }
-.asg-table-card_content {
-  background: linear-gradient(180deg, #e5f0ff 0%, #ffffff 30%);
-}
+
 </style>
