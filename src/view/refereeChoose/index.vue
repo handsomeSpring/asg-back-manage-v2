@@ -8,53 +8,56 @@
       <el-button size="small" type="primary" @click="handleSave">确定选班</el-button>
     </div>
     <div class="main__container" v-loading="loading">
-      <asgTableCard v-for="(item, index) in tableData" :key="index">
-        <template v-slot:header>
-          <div class="table-header">
-            <el-checkbox v-if="new Date() < new Date(item.opentime)" v-model="item.isCheck"
-              @input="handleCheck($event, item)"
-              :disabled="item.referee_Id === userInfo.id || !!item.referee_Id"></el-checkbox>
-            <p>{{ item.team1_name }} vs {{ item.team2_name }}<span style="color:#f40;margin-left: 1em;"
-                v-if="new Date() > new Date(item.opentime)">(赛程已结束)</span></p>
-          </div>
-        </template>
-        <template v-slot:content>
-          <div class="table-content">
-            <div class="left-content">
-              <p class="text">比赛时间：
-                <span style="color: #4090ef">{{ item.opentime }}</span>
-              </p>
-              <p class="text">
-                解说：<span style="color: #4090ef">{{
-                  item.commentary || "无解说报名"
-                }}</span>
-              </p>
-              <p class="text">
-                裁判：<span style="color: #4090ef">{{
-                  item.judge || "无裁判报名"
-                }}</span>
-              </p>
-              <p class="text">
-                赛程类别：
-                <span style="color: #4090ef">{{ item.tag || "未定义" }}</span>
-              </p>
-              <p class="text">
-                导播：<span class="referee-comp" :class="item.referee ? 'success' : 'primary'">{{
-                  item.referee || "虚位以待"
-                }}</span>
-              </p>
+      <template v-if="tableData.length > 0">
+        <asgTableCard v-for="(item, index) in tableData" :key="index">
+          <template v-slot:header>
+            <div class="table-header">
+              <el-checkbox v-if="new Date() < new Date(item.opentime)" v-model="item.isCheck"
+                @input="handleCheck($event, item)"
+                :disabled="item.referee_Id === userInfo.id || !!item.referee_Id"></el-checkbox>
+              <p>{{ item.team1_name }} vs {{ item.team2_name }}<span style="color:#f40;margin-left: 1em;"
+                  v-if="new Date() > new Date(item.opentime)">(赛程已结束)</span></p>
             </div>
-            <div class="right-content">
-              <p v-if="!item.referee_Id" style="color:#0c80e5">虚位以待</p>
-              <p v-else style="color:#32B16C ">已有导播选班</p>
-              <el-button size="mini" v-if="
-                item.referee_Id === userInfo.id &&
-                new Date() < new Date(item.opentime)
-              " type="danger" @click="handleCancel(item)">取消选班</el-button>
+          </template>
+          <template v-slot:content>
+            <div class="table-content">
+              <div class="left-content">
+                <p class="text">比赛时间：
+                  <span style="color: #4090ef">{{ item.opentime }}</span>
+                </p>
+                <p class="text">
+                  解说：<span style="color: #4090ef">{{
+                    item.commentary || "无解说报名"
+                    }}</span>
+                </p>
+                <p class="text">
+                  裁判：<span style="color: #4090ef">{{
+                    item.judge || "无裁判报名"
+                    }}</span>
+                </p>
+                <p class="text">
+                  赛程类别：
+                  <span style="color: #4090ef">{{ item.tag || "未定义" }}</span>
+                </p>
+                <p class="text">
+                  导播：<span class="referee-comp" :class="item.referee ? 'success' : 'primary'">{{
+                    item.referee || "虚位以待"
+                    }}</span>
+                </p>
+              </div>
+              <div class="right-content">
+                <p v-if="!item.referee_Id" style="color:#0c80e5">虚位以待</p>
+                <p v-else style="color:#32B16C ">已有导播选班</p>
+                <el-button size="mini" v-if="
+                  item.referee_Id === userInfo.id &&
+                  new Date() < new Date(item.opentime)
+                " type="danger" @click="handleCancel(item)">取消选班</el-button>
+              </div>
             </div>
-          </div>
-        </template>
-      </asgTableCard>
+          </template>
+        </asgTableCard>
+      </template>
+      <el-empty v-else description="暂无赛程"></el-empty>
     </div>
     <div class="noMore">
       <el-button v-if="hasMore" :loading="loading" size="small" type="primary" @click="getList(false)">加载更多</el-button>
@@ -217,7 +220,6 @@ export default {
 
 .main__container {
   min-height: 70vh;
-
   .table-header {
     display: flex;
     align-items: center;
