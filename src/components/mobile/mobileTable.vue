@@ -9,7 +9,7 @@
                         <p>{{ prop.label }}</p>
                     </template>
                     <p v-if="prop.type === 'index'">{{ i + 1 }}</p>
-                    <slot v-else-if="prop.type === 'slot'" :name="prop.prop" :row="row"></slot>
+                    <slot v-else-if="prop.type === 'slot'" :name="prop.prop" :row="row" :index="index"></slot>
                     <p v-else>{{ row[prop.prop] || '/' }}</p>
                 </el-descriptions-item>
             </el-descriptions>

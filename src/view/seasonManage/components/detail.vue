@@ -64,6 +64,10 @@
         <div class="asgProcess-content">
             <AsgProgress :status="seasonForm.status"></AsgProgress>
         </div>
+        <TextTitle titleName="赛季信息配置"></TextTitle>
+        <div class="my-1">
+            <personTable :tableData.sync="config.personConfig"></personTable>
+        </div>
         <div class="footer-btn-list">
             <el-button size="small" icon="el-icon-arrow-left" plain @click="toList">返 回</el-button>
             <el-button v-if="type === 'add'" size="small" type="primary" @click="handleAddEvent">发布新赛季</el-button>
@@ -80,11 +84,13 @@ import {
 import TextTitle from '@/components/TextTitle.vue';
 import { deepClone } from '@/utils';
 import AsgProgress from './AsgProgress.vue';
+import personTable from "./personTable.vue";
 export default {
     name: 'season-detail',
     components: {
         TextTitle,
-        AsgProgress
+        AsgProgress,
+        personTable
     },
     computed: {
         serveIp() {
@@ -126,6 +132,10 @@ export default {
                 name: "",
                 is_over: false,
                 opentime: new Date(),
+            },
+            config:{
+                personConfig:[],
+                formConfig:[]
             },
             rules: '',
             formRules: {
@@ -202,10 +212,13 @@ export default {
         },
         async initInfo() {
             if (this.type !== 'add') {
-                this.seasonForm = deepClone(this.info);
+                const {config ,...info } = this.info; 
+                this.seasonForm = deepClone(info);
                 const result = await fetch(`${this.serveIp}/doc/rule/${this.info.name}.md`);
                 const res = await result.text();
                 this.rules = res || "未设置规则";
+                if(!config) return;
+                this.config = deepClone(config);
             }
 
         },
