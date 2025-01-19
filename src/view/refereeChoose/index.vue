@@ -46,8 +46,11 @@
                 </p>
               </div>
               <div class="right-content">
-                <p v-if="!item.referee_Id" style="color:#0c80e5">虚位以待</p>
-                <p v-else style="color:#32B16C ">已有导播选班</p>
+                <p v-if="!item.referee_Id && !item.referee" style="color:#0c80e5">虚位以待</p>
+                <p v-else style="color:#32B16C ">
+                  已有导播
+                  <span v-if="item.referee_Id === userInfo.id">（您的班次）</span>
+                </p>
                 <el-button size="mini" v-if="
                   item.referee_Id === userInfo.id &&
                   new Date() < new Date(item.opentime)

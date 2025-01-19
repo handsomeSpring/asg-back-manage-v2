@@ -16,6 +16,12 @@
                     {{ row.contribution }}%
                 </template>
             </el-table-column>
+            <el-table-column label="绩效评价" align="center">
+                <template #default="{ row }">
+                    <el-rate v-model="row.performance" show-text :texts="texts">
+                    </el-rate>
+                </template>
+            </el-table-column>
             <el-table-column label="操作" align="center">
                 <template #default="{ row, $index }">
                     <el-button type="text" @click="openDialog('edit', $index, row)">更新</el-button>
@@ -26,7 +32,8 @@
         <el-dialog :visible.sync="dialogVisible" :title="title" :close-on-click-modal="false" width="30%">
             <el-form ref="form" :model="form" label-position="right" label-width="100px" :rules="rules">
                 <el-form-item label="人员名称" prop="name">
-                    <el-input size="small" v-model="form.name" placeholder="请输入成员名称"></el-input>
+                    <el-input size="small" v-model="form.name" placeholder="请输入成员名称"
+                        @focus="openPersonDialog"></el-input>
                 </el-form-item>
                 <el-form-item label="人员职责" prop="role">
                     <el-input size="small" v-model="form.role" placeholder="请输入角色职位"></el-input>
@@ -42,13 +49,18 @@
                 <el-button size="small" plain @click="dialogVisible = false">关闭</el-button>
             </span>
         </el-dialog>
+        <AsgPersonChoose ref="asgPersonChoose" @finish="finishChoosePerson"></AsgPersonChoose>
     </div>
 </template>
 
 <script>
+import AsgPersonChoose from '@/components/AsgPersonChoose.vue';
 import { deepClone } from '@/utils';
 export default {
     name: 'person-table',
+    components: {
+        AsgPersonChoose
+    },
     props: {
         tableData: {
             type: Array,
@@ -64,9 +76,11 @@ export default {
                 name: '',
                 role: '',
                 contribution: 1,
+                performance:0
             },
+            texts:['毫无作为','不太负责','表现一般','付出很多','全程付出'],
             rules: {
-                name: [{ required: true, message: "请输入人员名称", trigger: "blur" }],
+                name: [{ required: true, message: "请输入人员名称", trigger: "change" }],
                 role: [{ required: true, message: "请输入人员职责", trigger: "blur" }],
                 contribution: [
                     { required: true, message: "请输入人员贡献率", trigger: "change" },
@@ -75,8 +89,9 @@ export default {
         }
     },
     computed: {
-        contributionCount(){
-            return this.propTableData.reduce((pre, next)=> pre + Number(next.contribution),0)
+
+        contributionCount() {
+            return this.propTableData.reduce((pre, next) => pre + Number(next.contribution), 0)
         },
         propTableData: {
             get() {
@@ -89,6 +104,14 @@ export default {
         }
     },
     methods: {
+        finishChoosePerson(node) {
+            if (!node) return;
+            const { label, officium } = node;
+            this.form.name = officium + '-' + label;
+        },
+        openPersonDialog() {
+            this.$refs.asgPersonChoose?.openDialog();
+        },
         openDialog(type, index, row) {
             this.title = type === 'add' ? '新增人员信息' : '更新人员信息';
             this.editIndex = index;
@@ -100,9 +123,9 @@ export default {
         updateTable() {
             this.$refs.form.validate(valid => {
                 if (valid) {
-                    const remainCount = this.propTableData.reduce((pre, next)=> pre + Number(next.contribution),0);
+                    const remainCount = this.propTableData.reduce((pre, next) => pre + Number(next.contribution), 0);
                     const count = this.editIndex === -1 ? remainCount + Number(this.form.contribution) : remainCount;
-                    if(count > 100) return this.$message.error('贡献率合计超过了一百，请重新赋值！');
+                    if (count > 100) return this.$message.error('贡献率合计超过了一百，请重新赋值！');
                     this.dialogVisible = false;
                     if (this.editIndex === -1) {
                         this.propTableData.push(this.form)

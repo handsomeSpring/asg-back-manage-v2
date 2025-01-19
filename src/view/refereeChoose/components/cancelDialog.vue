@@ -1,5 +1,5 @@
 <template>
-  <el-dialog :visible="visible" :close-on-click-modal="false" title="取消选班理由" width="30%" @close="handleClose">
+  <el-dialog :visible="visible" :close-on-click-modal="false" title="取消选班理由" :width="isMobile ? '100%' : '30%'" @close="handleClose">
     <el-input type="textarea" :rows="3" placeholder="请输入理由" v-model="reason" maxlength="20" show-word-limit>
     </el-input>
     <span slot="footer">
@@ -10,6 +10,7 @@
 
 <script>
 import { cancelGame } from '@/api/schedule/referee.js';
+import { isMobile } from '@/utils';
 export default {
   name: "cancelDialog",
   props: {
@@ -25,7 +26,11 @@ export default {
   data() {
     return {
       reason: "",
+      isMobile:false
     };
+  },
+  created(){
+    this.isMobile = isMobile();
   },
   computed: {
     visible: {
