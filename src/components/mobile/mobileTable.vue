@@ -58,7 +58,7 @@ export default {
 .mobile-table-list {
     width: 95%;
     margin: 1em auto;
-    min-height: 70vh;
+    min-height: 70dvh;
 
     .no-empty {
         width: 100%;

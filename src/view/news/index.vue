@@ -8,7 +8,7 @@
       <el-button icon="el-icon-plus" style="margin-bottom:12px" type="primary" size="small"
         @click="openDialog">发布公告</el-button>
     </header>
-    <el-dialog :visible.sync="isShowBox" :title="dialogName" :width="isMobile ? '100%' : '40%'" :close-on-click-modal="false">
+    <el-dialog :visible.sync="isShowBox" :title="dialogName" :fullscreen="isMobile" width="40%" :close-on-click-modal="false">
       <el-form :model="form" :rules="rules" ref="ruleForm" :label-position="isMobile ? 'top' : 'left'" label-width="80px">
         <el-form-item label="公告标题" prop="title">
           <el-input size="small" v-model="form.title" placeholder="请输入标题"></el-input>
@@ -20,7 +20,7 @@
           </el-select>
         </el-form-item>
         <el-form-item label="公告内容" prop="msg">
-          <el-input type="textarea" :rows="5" v-model="form.msg" placeholder="请输入标题"></el-input>
+          <el-input type="textarea" :rows="isMobile ? 10 : 5" v-model="form.msg" placeholder="请输入标题"></el-input>
         </el-form-item>
         <el-form-item>
           <el-button style="width:100%" size="small" type="primary" @click="handleSubmit('ruleForm')">{{ dialogName
