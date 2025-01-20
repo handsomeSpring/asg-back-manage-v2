@@ -1,5 +1,5 @@
 <template>
-    <el-dialog title="人员选择" width="30%" :visible.sync="dialogVisible">
+    <el-dialog :fullscreen="isMobile" title="人员选择" width="30%" :visible.sync="dialogVisible">
         <el-scrollbar style="height:50vh">
             <el-input style="margin:1em 0" size="small" v-model="filterText" placeholder="请输入中文名搜索"
                 clearable></el-input>
@@ -12,6 +12,7 @@
 <script>
 import { getUsersWithRole } from "@/api/schedule/index";
 import { filterRole } from "@/utils/filters.js";
+import { isMobile } from "@/utils";
 export default {
     name: 'asg-person-choose',
     data() {
@@ -23,6 +24,7 @@ export default {
             filterText: "",
             allRoles: [],
             dialogVisible: false,
+            isMobile:false,
         };
     },
     watch: {
@@ -75,6 +77,7 @@ export default {
         },
     },
     created() {
+        this.isMobile = isMobile();
         this.init();
     },
 }

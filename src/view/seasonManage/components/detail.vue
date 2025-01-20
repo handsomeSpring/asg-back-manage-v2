@@ -12,7 +12,8 @@
             </el-steps>
         </el-alert>
         <TextTitle titleName="基本信息"></TextTitle>
-        <el-form class="my-1" ref="seasonForm" :model="seasonForm" label-width="120px" label-position="right" :rules="formRules">
+        <el-form class="my-1" ref="seasonForm" :model="seasonForm" label-width="120px" label-position="right"
+            :rules="formRules">
             <el-row type="flex">
                 <el-col :span="8">
                     <el-form-item label="赛季名称" prop="name">
@@ -67,6 +68,14 @@
         <TextTitle titleName="赛季信息配置"></TextTitle>
         <div class="my-1">
             <personTable :tableData.sync="config.personConfig"></personTable>
+        </div>
+        <TextTitle titleName="报名字段配置"></TextTitle>
+        <div class="my-1 flex-content">
+            <div class="item" :class="config.formConfig.includes(item.fieldCode) ? 'active' : ''" v-for="(item,index) in filedConfig" :key="index" @click="handleClick(item)">
+                <p>{{ item.fieldName }}</p>
+                <p>{{ item.fieldCode }}</p>
+                <p>{{ item.type }}</p>
+            </div>
         </div>
         <div class="footer-btn-list">
             <el-button size="small" icon="el-icon-arrow-left" plain @click="toList">返 回</el-button>
@@ -127,15 +136,58 @@ export default {
     },
     data() {
         return {
+            filedConfig: [
+                {
+                    fieldName:'选手阵营',
+                    fieldCode:'camp',
+                    type:'boolean',
+
+                },
+                {
+                    fieldName:'参赛名称',
+                    fieldCode:'gamerName',
+                    type:'string',
+                },
+                {
+                    fieldName:'游戏名称',
+                    fieldCode:'playerName',
+                    type:'string',
+                },
+                {
+                    fieldName:'游戏id',
+                    fieldCode:'idNumber',
+                    type:'string',
+                },
+                {
+                    fieldName:'身份证',
+                    fieldCode:'identifier',
+                    type:'string',
+                },
+                {
+                    fieldName:'电话号码',
+                    fieldCode:'phoneNumber',
+                    type:'string',
+                },
+                {
+                    fieldName:'真实姓名',
+                    fieldCode:'realName',
+                    type:'string',
+                },
+                {
+                    fieldName:'常用角色',
+                    fieldCode:'role',
+                    type:'string',
+                },
+            ],
             seasonForm: {
                 status: "0",
                 name: "",
                 is_over: false,
                 opentime: new Date(),
             },
-            config:{
-                personConfig:[],
-                formConfig:[]
+            config: {
+                personConfig: [],
+                formConfig: []
             },
             rules: '',
             formRules: {
@@ -153,6 +205,14 @@ export default {
         };
     },
     methods: {
+        handleClick(item){
+            const index = this.config.formConfig.findIndex(el => el === item.fieldCode);
+            if(index === -1){
+                this.config.formConfig.push(item.fieldCode);
+            }else{
+                this.config.formConfig.splice(index ,1);
+            }
+        },
         async updateItem() {
             const loading = this.$loading({
                 lock: true,
@@ -164,6 +224,7 @@ export default {
                 const req = {
                     ...this.seasonForm,
                     rule_markdown: this.rules,
+                    config:JSON.stringify(this.config)
                 };
                 const { status } = await updateEvents(req);
                 if (status !== 200) throw new Error("服务端异常，请联系网站管理员！");
@@ -191,6 +252,7 @@ export default {
                     const reqDTO = {
                         ...this.seasonForm,
                         rule_markdown: this.rules,
+                        config:JSON.stringify(this.config)
                     };
                     pushNewEvents(reqDTO)
                         .then(({ status }) => {
@@ -212,13 +274,14 @@ export default {
         },
         async initInfo() {
             if (this.type !== 'add') {
-                const {config ,...info } = this.info; 
+                const { config, ...info } = this.info;
                 this.seasonForm = deepClone(info);
                 const result = await fetch(`${this.serveIp}/doc/rule/${this.info.name}.md`);
                 const res = await result.text();
                 this.rules = res || "未设置规则";
-                if(!config) return;
-                this.config = deepClone(config);
+                if (!config) return;
+                const parseConfig = JSON.parse(config);
+                this.config = deepClone(parseConfig);
             }
 
         },
@@ -231,6 +294,32 @@ export default {
 <style lang='less' scoped>
 .my-1 {
     margin: 1em 0;
+}
+.flex-content{
+    display: flex;
+    align-items: center;
+    gap:1em;
+    width: 100%;
+    flex-wrap: wrap;
+    .item{
+        flex-shrink: 0;
+        flex-grow: 0;
+        border-radius: 1em;
+        box-sizing: border-box;
+        border:1px solid #ddd;
+        background: #f7f7f7;
+        display: flex;
+        align-items: center;
+        flex-direction: column;
+        justify-content: center;
+        padding:1em;
+        width:300px;
+        cursor: pointer;
+        &.active{
+            background: #cbf1e2;
+            border-color:#134196
+        }
+    }
 }
 
 .asgProcess-content {

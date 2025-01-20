@@ -145,7 +145,7 @@
       </div>
     </template>
 
-    <el-dialog :fullscreen="isMobile" class="blue-text" title="编辑任务" :visible.sync="dialogVisible" width="50%"
+    <el-dialog :fullscreen="isMobile" class="blue-text" title="编辑任务" :visible.sync="dialogVisible" width="40%"
       @close="resetForm">
       <el-form :model="editForm" :rules="rules" ref="editFormRef" :label-position="isMobile ? 'top' : 'right'"
         label-width="150px">
@@ -157,12 +157,14 @@
             maxlength="200" show-word-limit clearable></el-input>
         </el-form-item>
         <el-form-item class="blue-text" label="任务执行人员" prop="money">
-          <el-select size="small" v-model="editForm.userId" placeholder="选择人员" @change="handleSelectChange">
+          <!-- <el-select size="small" v-model="editForm.userId" placeholder="选择人员" @change="handleSelectChange">
             <el-option-group v-for="group in personList" :key="group.label" :label="group.label">
               <el-option v-for="item in group.options" :key="item.value" :label="item.label" :value="item.value">
               </el-option>
             </el-option-group>
-          </el-select>
+          </el-select> -->
+          <el-input v-model="editForm.chinaname" size="small" @focus="openPersonChoose">
+          </el-input>
         </el-form-item>
         <el-form-item class="blue-text" label="任务积分" prop="money">
           <el-input-number size="small" v-model="editForm.money" :min="0" :max="5"></el-input-number>
@@ -178,6 +180,7 @@
     </el-dialog>
     <!-- 查看弹窗 -->
     <taskHistory ref="taskHistory" :row="row" :isMobile="isMobile"></taskHistory>
+    <AsgPersonChoose ref="asgPersonChoose" @finish="finishChoosePerson"></AsgPersonChoose>
   </div>
 </template>
 
@@ -198,6 +201,7 @@ import { filterRole } from "@/utils/filters";
 import { isMobile } from "@/utils";
 import mobileTable from "@/components/mobile/mobileTable.vue";
 import mobilePage from "@/components/mobile/mobilePage.vue";
+import AsgPersonChoose from "@/components/AsgPersonChoose.vue";
 
 export default {
   name: "taskManager",
@@ -206,7 +210,8 @@ export default {
     AsgPriorityComp,
     AsgHighSearch,
     mobileTable,
-    mobilePage
+    mobilePage,
+    AsgPersonChoose
   },
   data() {
     return {
@@ -279,7 +284,7 @@ export default {
         money: [{ required: true, message: "请输入任务积分", trigger: "blur" }],
       },
       personList: [],
-      list:[],
+      list: [],
     };
   },
   filters: {
@@ -315,8 +320,16 @@ export default {
     this.initTask();
   },
   methods: {
-    handleSelectChange(value){
-      this.editForm.chinaname = this.list.find(item => item.id === value)?.chinaname ?? '';
+    finishChoosePerson(node){
+      console.log(node, 'node===');
+      this.editForm.userId = node.id;
+      this.editForm.chinaname = node.label;
+    },
+    // handleSelectChange(value){
+    //   this.editForm.chinaname = this.list.find(item => item.id === value)?.chinaname ?? '';
+    // },
+    openPersonChoose(){
+      this.$refs.asgPersonChoose?.openDialog();
     },
     createdOptions(arr) {
       let result = [];
