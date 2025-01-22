@@ -22,7 +22,7 @@
       </template>
       <template #operation>
         <exportDia :belong="belong"></exportDia>
-        <el-button style="margin: 0 12px" size="mini" type="primary" @click="openDialog">新增赛程<i
+        <el-button style="margin: 0 12px" size="mini" type="primary" @click="toDetail('add')">新增赛程<i
             class="el-icon-plus"></i></el-button>
         <div class="import_btn" @click="handleInput">
           批量导入
@@ -32,7 +32,7 @@
       </template>
     </AsgHighSearch>
     <!-- 数据主体 -->
-    <div class="asg-table-main">
+    <div class="asg-table-main" v-loading="loading">
       <template v-if="scheduleData.length > 0">
         <asgTableCard v-for="(item, index) in scheduleData" :key="index">
           <template v-slot:header>
@@ -63,7 +63,8 @@
                   @click="fillGameResult(item)">赛果登记</el-button>
                 <el-button v-else style="margin: 0 12px" type="text" size="small"
                   @click="viewGameResult(item)">查看赛果</el-button>
-                <el-button style="margin: 0 12px" type="text" size="small" @click="updateGame(item)">编辑赛程</el-button>
+                <el-button style="margin: 0 12px" type="text" size="small"
+                  @click="toDetail('edit', item)">编辑赛程</el-button>
                 <el-button style="margin: 0 12px; color: #f40" type="text" size="small"
                   @click="delGame(item)">删除赛程</el-button>
               </div>
@@ -112,144 +113,17 @@
       @size-change="handlePageChange($event, 'limit')" :current-page.sync="listQuery.page" :page-size="listQuery.limit"
       layout="total, sizes, prev, pager, next, jumper" :total="total">
     </el-pagination>
-    <!-- 表单 -->
-    <el-dialog title="赛程信息" width="60%" top="5vh" :visible.sync="dialogFormVisible" :close-on-click-modal="false">
-      <el-form ref="editForm" :rules="rules" :model="diaData" label-position="right" label-width="100px">
-        <el-row>
-          <el-col :span="24">
-            <el-form-item label="人员构成" prop="personType">
-              <el-radio-group v-model="diaData.personType">
-                <el-radio v-for="(item, index) in personGroup" :label="item.value" :key="index">{{ item.label
-                  }}</el-radio>
-              </el-radio-group>
-            </el-form-item>
-          </el-col>
-        </el-row>
-        <el-row>
-          <el-col :span="8">
-            <el-form-item label="赛程分类" prop="belong">
-              <el-input size="small" v-model="diaData.belong" disabled autocomplete="off"></el-input>
-            </el-form-item>
-          </el-col>
-          <el-col :span="8">
-            <el-form-item label="主场战队" prop="team1_name">
-              <el-autocomplete v-model="diaData.team1_name" size="small" :fetch-suggestions="searchTeam"
-                placeholder="请选择/输入主场战队" @select="handleChooseAuto"></el-autocomplete>
-            </el-form-item>
-          </el-col>
-          <el-col :span="8">
-            <el-form-item label="客场战队" prop="team2_name">
-              <el-autocomplete v-model="diaData.team2_name" size="small" :fetch-suggestions="searchTeam"
-                placeholder="请选择/输入客场战队" @select="handleChooseAuto"></el-autocomplete>
-            </el-form-item>
-          </el-col>
-        </el-row>
-        <el-row>
-          <el-col :span="8">
-            <el-form-item label="导播" v-show="diaData.personType.includes('referee')">
-              <el-input v-model="diaData.referee" readonly size="small">
-                <template #append>
-                  <p style="cursor: pointer" @click="handlePersonChoose('referee')">
-                    <i class="el-icon-plus"></i>
-                  </p>
-                </template>
-              </el-input>
-            </el-form-item>
-          </el-col>
-          <el-col :span="8" v-show="diaData.personType.includes('judge')">
-            <el-form-item label="裁判">
-              <el-input v-model="diaData.judge" readonly size="small">
-                <template #append>
-                  <p style="cursor: pointer" @click="handlePersonChoose('judge')">
-                    <i class="el-icon-plus"></i>
-                  </p>
-                </template>
-              </el-input>
-            </el-form-item>
-          </el-col>
-          <el-col :span="8" v-show="hasCom">
-            <el-form-item label="解说数量" prop="comLimit">
-              <el-input-number size="small" v-model="diaData.comLimit" :min="1" :max="3"
-                @change="handleComNumberChange($event)" label="解说数量"></el-input-number>
-            </el-form-item>
-          </el-col>
-        </el-row>
-        <el-row v-show="hasCom">
-          <el-col :span="8" v-for="(com, comIndex) in diaData.comLimit" :key="comIndex">
-            <el-form-item :label="`解说${comIndex + 1}`">
-              <el-select size="small" filterable clearable value-key="id" v-model="diaData.comList[comIndex]"
-                :placeholder="`请选择解说${comIndex + 1}`">
-                <el-option v-for="item in commentaryOptions" :key="item.chinaname" :label="item.chinaname"
-                  :value="item">
-                </el-option>
-              </el-select>
-            </el-form-item>
-          </el-col>
-        </el-row>
-        <el-row>
-          <el-col :span="8">
-            <el-form-item label="赛季标识" prop="tag">
-              <el-select filterable size="small" style="margin-bottom: 10px" v-model="diaData.tag"
-                placeholder="请输入赛程标签">
-                <el-option v-for="(item, index) in tagOptions" :key="index" :label="item.name" :value="item.name">
-                </el-option>
-              </el-select>
-            </el-form-item>
-          </el-col>
-          <el-col :span="8">
-            <el-form-item label="开始时间" prop="opentime">
-              <el-date-picker style="width: 100%" v-model="diaData.opentime" size="small" type="datetime"
-                placeholder="选择日期时间" value-format="yyyy-MM-dd HH:mm:ss" format="yyyy-MM-dd HH:mm:ss">
-              </el-date-picker>
-            </el-form-item>
-          </el-col>
-          <el-col :span="8">
-            <el-form-item label="是否允许选班">
-              <el-radio-group v-model="diaData.isAllowChoose" size="small">
-                 <el-radio-button :label="1">允许</el-radio-button>
-                 <el-radio-button :label="0">不允许</el-radio-button>
-              </el-radio-group>
-            </el-form-item>
-          </el-col>
-        </el-row>
-        <el-row>
-          <el-col :span="24">
-            <el-form-item label="B站回放地址">
-              <el-input size="small" v-model="diaData.bilibiliuri" autocomplete="off">
-                <template slot="append">
-                  <span style="cursor: pointer" @click="setLose">设置为回放丢失</span>
-                </template>
-              </el-input>
-            </el-form-item>
-          </el-col>
-        </el-row>
-        <el-row>
-          <el-col :span="24">
-            <el-form-item label="备注">
-              <el-input size="small" type="textarea" v-model="diaData.remarks" :rows="3" maxlength="150"
-                show-word-limit></el-input>
-            </el-form-item>
-          </el-col>
-        </el-row>
-      </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button size="small" @click="dialogFormVisible = false">取 消</el-button>
-        <el-button size="small" type="primary" @click="updateSchedule">更 新</el-button>
-      </div>
-    </el-dialog>
     <!-- 弹出框 -->
     <dialog-choose :eventName="belong" :showChoose.sync="showChoose" @refresh="initSchedule"
       :tagOptions="tagOptions"></dialog-choose>
     <GameResult :dialogVisible.sync="gameResultDialog" :gameResult="gameResult" @updateLoad="initSchedule"></GameResult>
     <MatchDialog :dialogVisible.sync="matchDialogVisible" :rowItem="rowItem" :groupOptions="groupOptions"></MatchDialog>
     <viewResultDialog :dialogVisible.sync="viewGameResultDialog" :gameResult="gameResult"></viewResultDialog>
-    <personChooseDialog :dialogVisible.sync="choosePersonDialog" @finish="handleChoose" :checkId="checkId">
-    </personChooseDialog>
   </div>
 </template>
 
 <script>
-import { delSchedule, updateSchedule, importExcel } from "@/api/schedule/index";
+import { delSchedule, importExcel } from "@/api/schedule/index";
 import { getAllEvents } from "@/api/gameSeason/index";
 import exportDia from "./exportDia.vue";
 import DialogChoose from "./DialogChoose.vue";
@@ -258,12 +132,8 @@ import GameResult from "./GameResult.vue";
 import MatchDialog from "./MatchDialog.vue";
 import viewResultDialog from "./viewResultDialog.vue";
 import { getUserRoles, getAllScheduleV2 } from "@/api/schedule/index";
-import { getEnrollList } from "@/api/enroll/index.js";
 import * as XLSX from "xlsx";
-import { getByTitle } from "@/api/config";
-import personChooseDialog from "./personChooseDialog.vue";
 import AsgHighSearch from "@/components/AsgHighSearch.vue";
-import { getPlayerDetails } from "@/api/gameSeason/index";
 export default {
   name: "ScheduleTable",
   props: {
@@ -271,6 +141,14 @@ export default {
       type: Array,
       default: () => [],
     },
+    personGroup:{
+      type:Array,
+      default:()=>[]
+    },
+    groupOptions:{
+      type:Array,
+      default:()=>[]
+    }
   },
   components: {
     GameResult,
@@ -279,26 +157,12 @@ export default {
     asgTableCard,
     MatchDialog,
     viewResultDialog,
-    personChooseDialog,
     AsgHighSearch,
   },
   data() {
     return {
       scheduleData: [],
       loading: false,
-      dialogFormVisible: false,
-      formLabelWidth: "200",
-      diaData: {
-        comList: [],
-        comLimit: 0,
-        referee_Id: "",
-        referee: "",
-        judge: "",
-        judge_Id: "",
-        personType: "",
-        remarks: "",
-        isAllowChoose:1,
-      },
       listQuery: {
         page: 1,
         limit: 10,
@@ -310,8 +174,7 @@ export default {
       teamList: [], //战队选项
       winteam: "",
       belong: "",
-      options: [],
-      personGroup: [],
+      options: [],//赛季列表
       showChoose: false, //选择参赛队伍弹出框
       // gameResult部分
       gameResult: {},
@@ -319,66 +182,10 @@ export default {
       // 通知弹窗
       matchDialogVisible: false,
       viewGameResultDialog: false,
-      choosePersonDialog: false,
       rowItem: {},
-      groupOptions: [],
-      // 人员选择器
-      diaDataKey: null,
-      checkId: -1,
-      // 更新表单rules
-      rules: {
-        belong: [{ required: true, message: "请选择赛季", trigger: "change" }],
-        tag: [{ required: true, message: "请选择赛程标签", trigger: "change" }],
-        personType: [
-          { required: true, message: "请选择人员构成", trigger: "change" },
-        ],
-        opentime: [
-          { required: true, message: "请选择比赛开始时间", trigger: "change" },
-        ],
-        team1_name: [
-          { required: true, message: "请输入主场战队", trigger: "change" },
-        ],
-        team2_name: [
-          { required: true, message: "请输入客场战队", trigger: "change" },
-        ],
-        referee: [{ required: false, message: "请选择", trigger: "change" }],
-        comLimit: [{ required: true, message: "请选择", trigger: "change" }],
-        judge: [
-          { required: false, message: "请输入裁判名称", trigger: "change" },
-        ],
-      },
     };
   },
   methods: {
-    handleChooseAuto(row) {
-      console.log(row, 'row===');
-    },
-    // 查询战队
-    async searchTeam(queryString, cb) {
-      let result = [];
-      if (this.diaData.belong) {
-        const { data, status } = await getPlayerDetails(this.diaData.belong);
-        if (status !== 200) result = [];
-        result = data.map((item) => {
-          return {
-            id: item.id,
-            value: item.team_name,
-          };
-        });
-        result = queryString
-          ? result.filter(this.createFilter(queryString))
-          : result;
-        cb(result);
-      }
-    },
-    createFilter(queryString) {
-      return (restaurant) => {
-        return (
-          restaurant.value.toLowerCase().indexOf(queryString.toLowerCase()) ===
-          0
-        );
-      };
-    },
     noticeGame(item) {
       this.rowItem = item;
       this.matchDialogVisible = true;
@@ -399,8 +206,8 @@ export default {
         this.diaData.comList.push({ id: 0, chinaname: "待定" });
       }
     },
-    openDialog() {
-      this.$emit("operation");
+    toDetail(type, item = {}) {
+      this.$emit("toDetail", type, item);
     },
     handlePageOneSearch() {
       this.listQuery = {
@@ -424,13 +231,13 @@ export default {
     async initSchedule() {
       try {
         this.loading = true;
+        window.sessionStorage.setItem('asg-season-belong', this.belong)
         const req = {
           belong: this.belong,
           ...this.listQuery,
         };
         const { data, status } = await getAllScheduleV2(req);
         if (status !== 200) throw new Error("服务端异常，请联系网站管理员");
-        console.log(data, "====data");
         this.scheduleData = (data?.data?.rows ?? []).map((item) => {
           return {
             ...item,
@@ -453,27 +260,18 @@ export default {
         const { data, status, message } = await getAllEvents();
         if (status !== 200) throw new Error(message);
         this.options = data;
-        const filterData =
-          data.filter((item) => !item.is_over).length === 0
-            ? data.at(-1)
-            : data.filter((item) => !item.is_over).at(-1);
-        this.belong = filterData.name;
-        const result = await getByTitle("gameComposition");
-        this.personGroup = result.data;
-        const group = await getByTitle("qqGroup");
-        this.groupOptions = group.data;
+        if (window.sessionStorage.getItem('asg-season-belong', this.belong)) {
+          this.belong = window.sessionStorage.getItem('asg-season-belong', this.belong)
+        } else {
+          const filterData =
+            data.filter((item) => !item.is_over).length === 0
+              ? data.at(-1)
+              : data.filter((item) => !item.is_over).at(-1);
+          this.belong = filterData.name;
+        }
       } catch (error) {
         this.$message.error(error.message);
       }
-    },
-    handleChoose(userObj) {
-      this.diaData[this.diaDataKey] = userObj.chinaname ?? "";
-      this.diaData[`${this.diaDataKey}_Id`] = userObj.id ?? "";
-    },
-    handlePersonChoose(key) {
-      this.diaDataKey = key;
-      this.checkId = this.diaData[`${key}_Id`] ?? -1;
-      this.choosePersonDialog = true;
     },
     handleSelect() {
       if (this.belong === "all" || !this.belong) {
@@ -512,68 +310,6 @@ export default {
           });
       });
     },
-    updateGame(row) {
-      console.log(row, "row");
-      this.dialogFormVisible = true;
-      const arr = JSON.parse(row.commentary);
-      this.diaData = {
-        ...row,
-        comLimit: row.com_limit,
-        personType: row.person_type ?? "referee,commentary",
-      };
-      let comList = [];
-      for (let i = 0; i < this.diaData.comLimit; i++) {
-        if (!arr[i]) {
-          comList.push({ id: 0, chinaname: "待定" });
-        } else {
-          comList.push(arr[i]);
-        }
-      }
-      this.$set(this.diaData, "comList", comList);
-    },
-    async updateSchedule() {
-      try {
-        const valid = await this.$refs.editForm.validate();
-        if (!valid) return;
-        const commentary = this.diaData.comList.map((item) => ({
-          id: item.id,
-          chinaname: item.chinaname,
-        }));
-        const filterArr = commentary.filter((v) => v.id && v.id !== 0);
-        const info = {
-          team1_name: this.diaData.team1_name,
-          team2_name: this.diaData.team2_name,
-          belong: this.diaData.belong,
-          opentime: this.diaData.opentime,
-          commentary: JSON.stringify(filterArr),
-          bilibiliuri: this.diaData.bilibiliuri,
-          referee: this.diaData.referee,
-          tag: this.diaData.tag,
-          comLimit: this.diaData.comLimit,
-          judge: this.diaData.judge,
-          judge_Id: this.diaData.judge_Id || 0,
-          referee_Id: this.diaData.referee_Id || 0,
-          remarks: this.diaData.remarks,
-          personType: this.diaData.personType,
-          isAllowChoose:this.diaData.isAllowChoose
-        };
-        const { data, status } = await updateSchedule(this.diaData.id, info);
-        if (status !== 200) throw new Error("服务端异常");
-        if (data && data.code && data.code !== 200)
-          throw new Error(data.message ?? "未知错误");
-        this.$message.success("更新成功！");
-        this.dialogFormVisible = false;
-        this.initSchedule();
-      } catch (error) {
-        if (error instanceof Object && !error.message) {
-          return this.$message.error("请完整填写表单");
-        }
-        if(error.message){
-          return this.$message.error(error.message);
-        }
-        this.$message.error("操作失败，后端服务器异常");
-      }
-    },
     handlePageChange(value, prop) {
       this.listQuery = {
         ...this.listQuery,
@@ -584,14 +320,6 @@ export default {
     handleChange() {
       this.listQuery.page = 1;
       this.initSchedule();
-    },
-    async initEnrollList() {
-      try {
-        const { data } = await getEnrollList(1, 128, "time", this.belong);
-        this.teamList = data;
-      } catch (error) {
-        console.log(error);
-      }
     },
     handleFileChange(e) {
       let file = e.target.files[0]; // 文件信息
@@ -707,13 +435,6 @@ export default {
     // 回放丢失
     setLose() {
       this.diaData.bilibiliuri = "lose";
-    },
-  },
-  watch: {
-    belong: {
-      handler() {
-        this.initEnrollList();
-      },
     },
   },
   computed: {

@@ -92,7 +92,7 @@ export default {
             default: false
         },
         checkId: {
-            type: Number,
+            type: Number | null,
             default: -1
         }
     },

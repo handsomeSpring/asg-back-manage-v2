@@ -1,130 +1,44 @@
 <template>
   <div>
-    <schedule-table ref="schedule" @operation="changeOperation" :tagOptions=tagOptions />
-    <add-schedule
-      :operationVisible.sync="operationVisible"
-      :tagOptions="tagOptions"
-      :eventOptions="eventOptions"
-      :instructor="instructor"
-      :commentary="commentary"
-      @onSuccess="onRefresh"
-    ></add-schedule>
+    <schedule-table v-if="isIndexPage" ref="schedule" @toDetail="toDetail" :tagOptions="tagOptions"
+      :personGroup="personOptions" :groupOptions="groupOptions" />
+    <detailSchedule v-else :personGroups="personOptions" :formType="formType" :formRow="formRow" :tagOptions="tagOptions"
+      :eventOptions="eventOptions" @onSuccess="onRefresh"></detailSchedule>
   </div>
 </template>
 
 <script>
-import { getUserRoles } from "@/api/schedule/index";
-import { getPlayerDetails } from "@/api/gameSeason/index.js"
 import { getAllEvents } from "@/api/gameSeason/index";
-import addSchedule from "@/view/schedule/components/addSchedule.vue";
+import detailSchedule from "@/view/schedule/components/detailSchedule.vue";
 import { getByTitle } from "@/api/config";
-import  ScheduleTable from"./components/ScheduleTable.vue";
+import ScheduleTable from "./components/ScheduleTable.vue";
 export default {
   name: "scheduleList",
-  data() {
-    return {
-      active: 1,
-      allTeam: [],
-      team1_name: "",
-      team2_name: "",
-      belong: "",
-      tag: "", //赛程标签
-      gameList: [],
-      startTime: "",
-      btnloading: false,
-      scheduleData: [],
-      referee: [], //裁判
-      referee_value: "",
-      commentary: [], //解说1
-      commentary_value: [],
-      instructor: [], //导播
-      instructor_value: "",
-      bilibiliuri: "",
-      operationVisible: false,
-      // 选项卡
-      activeName: "first",
-      eventOptions: [],
-      tagOptions: [],
-    };
-  },
   components: {
     ScheduleTable,
-    addSchedule,
+    detailSchedule,
   },
-  watch: {
-    belong(newValue) {
-      if (!newValue) {
-        this.gameList = [];
-        return;
-      }
-      getPlayerDetails(newValue)
-        .then(res => {
-          this.gameList = [];
-          this.gameList = res.data.map(item => ({ name: item.team_name, id: item.id }));
-          this.gameList.unshift({ name: "TBD", id: new Date().getTime() })
-        })
-        .catch((err) => {
-          this.$message.error(err)
-        })
-    }
+  data() {
+    return {
+      isIndexPage: true,
+      // 选项卡
+      eventOptions: [],
+      tagOptions: [],
+      formType: 'add',
+      formRow: {},
+      // 传参
+      groupOptions: [],
+      personOptions: [],
+    };
   },
   methods: {
-    onRefresh(belong) {
-      this.operationVisible = false;
-      this.$refs.schedule.belong = belong;
-      this.$refs.schedule?.initSchedule(1, 10, belong);
+    onRefresh() {
+      this.isIndexPage = true;
     },
-    changeOperation() {
-      this.operationVisible = true;
-    },
-    //获取解说列表
-    initGetCommentary() {
-      let params = {
-        opname: "Commentator",
-      };
-      getUserRoles(params)
-        .then((res) => {
-          this.commentary = [];
-          this.commentary.push({ chinaname: "待定", id: 0 });
-          this.commentary = this.commentary.concat(res.data);
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    },
-    //获取裁判列表
-    initGetReferee() {
-      let params = {
-        opname: "referees",
-      };
-      getUserRoles(params)
-        .then((res) => {
-          this.referee = [];
-          this.referee.push({ chinaname: "待公布" });
-          this.referee = this.referee.concat(res.data);
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    },
-    //获取导播列表
-    initGetAnchor() {
-      let params = {
-        opname: "Anchor",
-      };
-      getUserRoles(params)
-        .then((res) => {
-          this.instructor = [];
-          this.instructor.push({ chinaname: "待定" });
-          this.instructor = this.instructor.concat(res.data);
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    },
-    // handleClick
-    handleClick(tab) {
-      this.activeName = tab.name;
+    toDetail(type, row) {
+      this.formType = type;
+      this.formRow = row;
+      this.isIndexPage = false;
     },
     // 获取赛季
     initSeason() {
@@ -140,13 +54,17 @@ export default {
   },
   //METHOD结束
   created() {
-    getByTitle('scheduleType').then(res=>{
+    getByTitle('scheduleType').then(res => {
       this.tagOptions = res.data;
     })
-    this.initGetCommentary();
-    this.initGetAnchor();
-    this.initGetReferee();
+    getByTitle("gameComposition").then(res => {
+      this.personOptions = res.data;
+    })
+    getByTitle("qqGroup").then(res => {
+      this.groupOptions = res.data;
+    })
     this.initSeason();
+
   },
 };
 </script>

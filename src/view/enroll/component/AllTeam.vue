@@ -63,7 +63,7 @@
 </template>
 
 <script>
-import { getEnrollList, delEnrollTeam } from "@/api/enroll/index";
+import { delEnrollTeam } from "@/api/enroll/index";
 import { getAllEvents,getPlayerDetails } from "@/api/gameSeason/index";
 import baseTable from "@/components/baseTable.vue";
 export default {
