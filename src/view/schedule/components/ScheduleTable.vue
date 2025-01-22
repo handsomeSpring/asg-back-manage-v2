@@ -203,6 +203,14 @@
               </el-date-picker>
             </el-form-item>
           </el-col>
+          <el-col :span="8">
+            <el-form-item label="是否允许选班">
+              <el-radio-group v-model="diaData.isAllowChoose" size="small">
+                 <el-radio-button :label="1">允许</el-radio-button>
+                 <el-radio-button :label="0">不允许</el-radio-button>
+              </el-radio-group>
+            </el-form-item>
+          </el-col>
         </el-row>
         <el-row>
           <el-col :span="24">
@@ -289,6 +297,7 @@ export default {
         judge_Id: "",
         personType: "",
         remarks: "",
+        isAllowChoose:1,
       },
       listQuery: {
         page: 1,
@@ -473,9 +482,6 @@ export default {
         this.showChoose = true;
       }
     },
-    handleReset() {
-      this.$set(this.diaData, "opentime", "1970-01-01T00:00:00.656Z");
-    },
     initGetCommentary() {
       let params = {
         opname: "Commentator",
@@ -549,6 +555,7 @@ export default {
           referee_Id: this.diaData.referee_Id || 0,
           remarks: this.diaData.remarks,
           personType: this.diaData.personType,
+          isAllowChoose:this.diaData.isAllowChoose
         };
         const { data, status } = await updateSchedule(this.diaData.id, info);
         if (status !== 200) throw new Error("服务端异常");

@@ -185,6 +185,14 @@
             </el-form-item>
           </el-col>
         </el-row>
+        <el-row>
+          <el-form-item label="是否允许选班">
+              <el-radio-group v-model="form.isAllowChoose" size="small">
+                 <el-radio-button :label="1">允许</el-radio-button>
+                 <el-radio-button :label="0">不允许</el-radio-button>
+              </el-radio-group>
+            </el-form-item>
+        </el-row>
         <footer>
           <el-button
             type="primary"
@@ -264,6 +272,7 @@ export default {
         judgeId: "",
         refereeId: "",
         comLimit: 2,
+        isAllowChoose:1,
         personType: "",
       },
       commentary_value: [
@@ -379,7 +388,7 @@ export default {
     },
     onSuccess() {
       let successBelong = this.form.belong;
-      (this.form = {
+      this.form = {
         belong: "",
         tag: "",
         opentime: "",
@@ -389,13 +398,13 @@ export default {
         comLimit: 2,
         judge: "",
         personType: "",
-      }),
-        (this.commentary_value = [
-          { id: 0, chinaname: "待定" },
-          { id: 0, chinanme: "待定" },
-        ]),
-        this.$message.success("操作成功!");
-      console.log(successBelong, "successBelong");
+        isAllowChoose:1,
+      },
+      this.commentary_value = [
+        { id: 0, chinaname: "待定" },
+        { id: 0, chinanme: "待定" },
+      ],
+      this.$message.success("操作成功!");
       this.$emit("onSuccess", successBelong);
     },
   },
