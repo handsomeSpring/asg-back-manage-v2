@@ -45,7 +45,7 @@
               <el-button size="small" slot="reference" @click="handleRefresh">刷新</el-button>
             </el-popover>
           </div>
-          <checkBox :value.sync="readOnly" active-text="查看" inactive-text="编辑"></checkBox>
+          <AsgCheckBox :value.sync="readOnly" active-text="查看" inactive-text="编辑"></AsgCheckBox>
           <p>{{ readOnly ? '查阅模式' : '编辑模式' }}</p>
           <div class="warning-text">
             <span style="margin-right: 12px">全屏打开</span>
@@ -71,7 +71,7 @@ import groupTeam from "./components/groupTeam.vue";
 import championTem from "./components/championTem.vue";
 import eightTem from "./components/eightTem.vue";
 import screenfull from "screenfull";
-import checkBox from '@/components/checkBox.vue'
+import AsgCheckBox from '@/components/AsgCheckBox.vue'
 import html2canvas from 'html2canvas';
 
 export default {
@@ -81,7 +81,7 @@ export default {
     groupTeam,
     championTem,
     eightTem,
-    checkBox
+    AsgCheckBox
   },
   data() {
     return {

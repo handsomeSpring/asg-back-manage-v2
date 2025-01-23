@@ -8,7 +8,7 @@
 
 <script>
 export default {
-    name: 'CheckBox',
+    name: 'AsgCheckBox',
     data() {
         return {
             activeIndex:true
