@@ -14,7 +14,7 @@
             <div class="table-header">
               <el-checkbox v-if="new Date() < new Date(item.opentime)" v-model="item.isCheck"
                 @input="handleCheck($event, item)"
-                :disabled="item.referee_Id === userInfo.id || !!item.referee_Id"></el-checkbox>
+                :disabled="item.judeg_Id === userInfo.id || !!item.judge_Id"></el-checkbox>
               <p>{{ item.team1_name }} vs {{ item.team2_name }}<span style="color:#f40;margin-left: 1em;"
                   v-if="new Date() > new Date(item.opentime)">(赛程已结束)</span></p>
             </div>
@@ -31,8 +31,8 @@
                     }}</span>
                 </p>
                 <p class="text">
-                  裁判：<span style="color: #4090ef">{{
-                    item.judge || "无裁判报名"
+                  导播：<span style="color: #4090ef">{{
+                    item.referee || "无导播报名"
                     }}</span>
                 </p>
                 <p class="text">
@@ -40,19 +40,19 @@
                   <span style="color: #4090ef">{{ item.tag || "未定义" }}</span>
                 </p>
                 <p class="text">
-                  导播：<span class="referee-comp" :class="item.referee ? 'success' : 'primary'">{{
-                    item.referee || "虚位以待"
+                  裁判：<span class="referee-comp" :class="item.judge ? 'success' : 'primary'">{{
+                    item.judge || "虚位以待"
                     }}</span>
                 </p>
               </div>
               <div class="right-content">
-                <p v-if="!item.referee_Id && !item.referee" style="color:#0c80e5">虚位以待</p>
+                <p v-if="!item.judge_Id && !item.judge" style="color:#0c80e5">虚位以待</p>
                 <p v-else style="color:#32B16C ">
-                  已有导播
-                  <span v-if="item.referee_Id === userInfo.id">（您的班次）</span>
+                  已有裁判
+                  <span v-if="item.judge_Id === userInfo.id">（您的班次）</span>
                 </p>
                 <el-button size="mini" v-if="
-                  item.referee_Id === userInfo.id &&
+                  item.judge_Id === userInfo.id &&
                   new Date() < new Date(item.opentime)
                 " type="danger" @click="handleCancel(item)">取消选班</el-button>
               </div>
@@ -141,7 +141,7 @@ export default {
           ...data.map((item) => {
             return {
               ...item,
-              isCheck: item.referee_Id === this.userInfo.id,
+              isCheck: item.judge_Id === this.userInfo.id,
               commentary: !!item.commentary
                 ? JSON.parse(item.commentary)
                   .map((role) => role.chinaname)
