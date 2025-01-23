@@ -1,7 +1,13 @@
 <template>
   <div class="detail-schedule-content">
+    <AsgTipComponent style="width:85%">
+      <p class="asg-tip-content">
+        <i
+          class="el-icon-warning"></i>以下内容是赛程的所有信息，如果需要新增字段，请联系开发人员。注意：自定义赛程人员选班模式下，解说无法选班；当前时间若超出比赛开始时间也无法选班；如果想邀请外援嘉宾来充当裁判或者导播，请选择自定义人员；如果想邀请嘉宾来参与解说，请在备注栏备注。
+      </p>
+    </AsgTipComponent>
     <TextTitle title-name="基本信息"></TextTitle>
-    <el-form ref="form" :model="form" label-position="right" label-width="120px" :rules="rules">
+    <el-form class="my-1" ref="form" :model="form" label-position="right" label-width="120px" :rules="rules">
       <el-row>
         <el-col :span="12">
           <el-form-item label="所属赛季" prop="belong">
@@ -22,13 +28,13 @@
       </el-row>
       <el-row>
         <el-col :span="12">
-          <el-form-item label="主场战队名" prop="team1_name">
+          <el-form-item label="主场战队" prop="team1_name">
             <el-autocomplete style="width: 80%" v-model="form.team1_name" size="small" :fetch-suggestions="searchTeam"
               placeholder="请选择/输入主场战队" :disabled="!form.belong" @select="handleChooseAuto"></el-autocomplete>
           </el-form-item>
         </el-col>
         <el-col :span="12">
-          <el-form-item label="客场战队名" prop="team2_name">
+          <el-form-item label="客场战队" prop="team2_name">
             <el-autocomplete style="width: 80%" v-model="form.team2_name" size="small" :fetch-suggestions="searchTeam"
               placeholder="请选择/输入客场战队" :disabled="!form.belong" @select="handleChooseAuto"></el-autocomplete>
           </el-form-item>
@@ -36,22 +42,22 @@
       </el-row>
       <el-row>
         <el-col :span="12">
-          <el-form-item label="比赛开始时间" prop="opentime">
+          <el-form-item label="比赛时间" prop="opentime">
             <el-date-picker style="width: 80%" v-model="form.opentime" size="small" type="datetime" placeholder="选择日期时间"
               value-format="yyyy-MM-dd HH:mm:ss" format="yyyy-MM-dd HH:mm:ss">
             </el-date-picker>
           </el-form-item>
         </el-col>
         <el-col :span="12">
-          <el-form-item label="是否允许选班">
+          <el-form-item label="选班模式" prop="isAllowChoose">
             <el-radio-group v-model="form.isAllowChoose" size="small">
-              <el-radio-button :label="1">允许</el-radio-button>
-              <el-radio-button :label="0">不允许</el-radio-button>
+              <el-radio-button :label="1">允许解说选班</el-radio-button>
+              <el-radio-button :label="0">自定义赛程人员</el-radio-button>
             </el-radio-group>
           </el-form-item>
         </el-col>
         <el-col :span="12">
-          <el-form-item label="人员构成模式" prop="personType">
+          <el-form-item label="人员构成" prop="personType">
             <el-radio-group v-model="form.personType">
               <el-radio v-for="(item, index) in personGroups" :label="item.value" :key="index">{{ item.label
                 }}</el-radio>
@@ -59,19 +65,14 @@
           </el-form-item>
         </el-col>
         <el-col :span="12">
-          <el-form-item label="解说最大数量" prop="comLimit">
-              <el-input-number
-                size="small"
-                v-model="form.comLimit"
-                :min="1"
-                :max="3"
-                label="解说数量"
-              ></el-input-number>
-            </el-form-item>
+          <el-form-item label="最大解说数量" prop="comLimit">
+            <el-input-number size="small" v-model="form.comLimit" :min="1" :max="3" label="解说数量"></el-input-number>
+          </el-form-item>
         </el-col>
         <el-col :span="12" v-if="requiredJudge">
           <el-form-item label="裁判" prop="judge">
-            <el-input style="width: 80%" v-model="form.judge" readonly size="small" @focus="handlePersonChoose('judge')">
+            <el-input style="width: 80%" v-model="form.judge" readonly size="small"
+              @focus="handlePersonChoose('judge')">
               <template #append>
                 <p style="cursor: pointer" @click="handlePersonChoose('judge')">
                   <i class="el-icon-plus"></i>
@@ -82,7 +83,8 @@
         </el-col>
         <el-col :span="12" v-if="requiredReferee">
           <el-form-item label="导播" prop="referee">
-            <el-input style="width: 80%" v-model="form.referee" readonly size="small" @focus="handlePersonChoose('referee')">
+            <el-input style="width: 80%" v-model="form.referee" readonly size="small"
+              @focus="handlePersonChoose('referee')">
               <template #append>
                 <p style="cursor: pointer" @click="handlePersonChoose('referee')">
                   <i class="el-icon-plus"></i>
@@ -94,17 +96,17 @@
       </el-row>
       <el-row>
         <el-col :span="12">
-            <el-form-item label="B站回放地址">
-              <el-input style="width: 80%" size="small" v-model="form.bilibiliuri" placeholder="如果录像丢失，请输入lose" clearable>
-              </el-input>
-            </el-form-item>
-          </el-col>
-          <el-col :span="12">
-            <el-form-item label="备注">
-              <el-input style="width:80%" size="small" type="textarea" v-model="form.remarks" :rows="5" maxlength="150"
-                show-word-limit></el-input>
-            </el-form-item>
-          </el-col>
+          <el-form-item label="B站回放地址">
+            <el-input style="width: 80%" size="small" v-model="form.bilibiliuri" placeholder="如果录像丢失，请输入lose" clearable>
+            </el-input>
+          </el-form-item>
+        </el-col>
+        <el-col :span="12">
+          <el-form-item label="赛程相关备注">
+            <el-input style="width:80%" size="small" type="textarea" v-model="form.remarks" :rows="5" maxlength="150"
+              show-word-limit></el-input>
+          </el-form-item>
+        </el-col>
       </el-row>
     </el-form>
     <!-- 解说 -->
@@ -112,9 +114,11 @@
     <div class="com_table--warp" v-show="requireComs">
       <header>
         <p>目前已添加:<span class="light-text">{{ comTableList.length }}</span>个解说</p>
-        <el-button type="primary" size="small" @click="openPerson(-1)" :disabled="form.comLimit === comTableList.length">新增解说</el-button>
+        <el-button type="primary" size="small" @click="openPerson(-1)"
+          :disabled="form.comLimit === comTableList.length">新增解说</el-button>
       </header>
-      <el-table :data="comTableList" border :key="JSON.stringify(comTableList)" :header-cell-style="{ background: '#f2f6fd', color: '#000' }">
+      <el-table :data="comTableList" border :key="JSON.stringify(comTableList)"
+        :header-cell-style="{ background: '#f2f6fd', color: '#000' }">
         <el-table-column label="序号" type="index" width="80px" align="center"></el-table-column>
         <el-table-column label="解说序号" prop="id" align="center"></el-table-column>
         <el-table-column label="解说名称" prop="chinaname" align="center"></el-table-column>
@@ -128,39 +132,45 @@
     </div>
     <div class="btn-list">
       <el-button plain icon="el-icon-arrow-left" @click="onSuccess">返回</el-button>
-      <el-button v-if="formType === 'add'" icon="el-icon-folder-checked" type="primary" :loading="btnloading" element-loading-spinner="el-icon-loading"
-        element-loading-background="rgba(0, 0, 0, 0.8)" @click.native="submit">
+      <el-button v-if="formType === 'add'" icon="el-icon-folder-checked" type="primary" :loading="btnloading"
+        element-loading-spinner="el-icon-loading" element-loading-background="rgba(0, 0, 0, 0.8)"
+        @click.native="submit">
         发 布
       </el-button>
-      <el-button v-else type="primary" icon="el-icon-folder-checked" :loading="btnloading" element-loading-spinner="el-icon-loading"
-      element-loading-background="rgba(0, 0, 0, 0.8)" @click.native="updateForm">更 新</el-button>
+      <el-button v-else type="primary" icon="el-icon-folder-checked" :loading="btnloading"
+        element-loading-spinner="el-icon-loading" element-loading-background="rgba(0, 0, 0, 0.8)"
+        @click.native="updateForm">更 新</el-button>
     </div>
     <AsgPersonChoose ref="asgPersonChoose" @finish="handleChoosePerson"></AsgPersonChoose>
-    <personChooseDialog :dialogVisible.sync="choosePersonDialog" @finish="getPerson" :checkId="form[`${this.tagKey}_Id`]"></personChooseDialog>
+    <personChooseDialog :dialogVisible.sync="choosePersonDialog" @finish="getPerson"
+      :checkId="form[`${this.tagKey}_Id`]">
+    </personChooseDialog>
   </div>
 </template>
 
 <script>
-import { pushSchedule,updateSchedule } from "@/api/schedule/index.js";
+import { pushSchedule, updateSchedule } from "@/api/schedule/index.js";
 import personChooseDialog from "./personChooseDialog.vue";
 import { getPlayerDetails } from "@/api/gameSeason/index";
 import AsgPersonChoose from "@/components/AsgPersonChoose.vue";
 import TextTitle from "@/components/TextTitle.vue";
+import AsgTipComponent from "@/components/AsgTipComponent.vue";
 export default {
   name: "detailSchedule",
   components: {
     personChooseDialog,
     TextTitle,
-    AsgPersonChoose
+    AsgPersonChoose,
+    AsgTipComponent
   },
   props: {
-    formType:{
-      type:String,
-      default:'add'
+    formType: {
+      type: String,
+      default: 'add'
     },
-    formRow:{
+    formRow: {
       type: Object,
-      default: () => {},
+      default: () => { },
     },
     eventOptions: {
       type: Array,
@@ -188,7 +198,7 @@ export default {
   },
   data() {
     return {
-      updateFormId:null,
+      updateFormId: null,
       form: {
         belong: "",
         tag: "",
@@ -199,11 +209,11 @@ export default {
         judge: "",
         judge_Id: "",
         referee_Id: "",
-        comLimit:2,
+        comLimit: 2,
         isAllowChoose: 1,
         personType: "",
-        remarks:'',
-        bilibiliuri:'',
+        remarks: '',
+        bilibiliuri: '',
       },
       comIndex: -1,
       comTableList: [],
@@ -213,6 +223,9 @@ export default {
         tag: [{ required: true, message: "请选择赛程标签", trigger: "change" }],
         personType: [
           { required: true, message: "请选择人员构成", trigger: "change" },
+        ],
+        isAllowChoose: [
+          { required: true, message: "请选择是否允许解说选班", trigger: "change" },
         ],
         opentime: [
           { required: true, message: "请选择比赛开始时间", trigger: "change" },
@@ -296,13 +309,13 @@ export default {
       try {
         const valid = await this.$refs.form.validate();
         if (!valid) return;
-        if(this.requireComs && this.comTableList.length > this.form.comLimit){
+        if (this.requireComs && this.comTableList.length > this.form.comLimit) {
           throw new Error('登记解说数量超过最大解说数量！');
         }
         this.btnloading = true;
         const requestParams = {
           ...this.form,
-          commentary:JSON.stringify(this.comTableList),
+          commentary: JSON.stringify(this.comTableList),
         };
         const { data, status } = await pushSchedule(requestParams);
         if (status !== 200) throw new Error(data.message);
@@ -322,17 +335,17 @@ export default {
         this.btnloading = false;
       }
     },
-    async updateForm(){
+    async updateForm() {
       try {
         const valid = await this.$refs.form.validate();
         if (!valid) return;
-        if(this.requireComs && this.comTableList.length > this.form.comLimit){
+        if (this.requireComs && this.comTableList.length > this.form.comLimit) {
           throw new Error('登记解说数量超过最大解说数量！');
         }
         this.btnloading = true;
         const info = {
           ...this.form,
-          commentary:JSON.stringify(this.comTableList),
+          commentary: JSON.stringify(this.comTableList),
         };
         const { data, status } = await updateSchedule(this.updateFormId, info);
         if (status !== 200) throw new Error("服务端异常");
@@ -357,10 +370,10 @@ export default {
     },
   },
   created() {
-    console.log(this.formRow,'this.formRow');
-    if(this.formType !== 'add'){
-      const { com_limit,final_score,winteam,logs,person_type,commentary,id,...form } = this.formRow;
-      Object.assign(this.form,form)
+    console.log(this.formRow, 'this.formRow');
+    if (this.formType !== 'add') {
+      const { com_limit, final_score, winteam, logs, person_type, commentary, id, ...form } = this.formRow;
+      Object.assign(this.form, form)
       this.updateFormId = id;
       this.comTableList = commentary ? JSON.parse(commentary) : [];
       this.form.comLimit = com_limit;
@@ -373,6 +386,25 @@ export default {
 .detail-schedule-content {
   padding: 2em;
   min-height: 100vh;
+
+  .asg-tip-content {
+    font-size: 14px;
+    color: #5e6d82;
+    font-weight: 600;
+    line-height: 2em;
+    font-size:1em;
+
+    i {
+      text-indent: 2em;
+      margin-right: 1em;
+      color: #f40;
+    }
+  }
+
+  .my-1 {
+    margin: 1em 0;
+  }
+
   .com_table--warp {
     width: 95%;
     margin: 1em auto;
@@ -387,18 +419,19 @@ export default {
         color: #4090EF;
         font-size: 1.1em;
         font-weight: bold;
-        margin:0 0.5em;
+        margin: 0 0.5em;
       }
     }
 
   }
-  .btn-list{
+
+  .btn-list {
     display: flex;
     align-items: center;
     justify-content: center;
-    gap:1em;
-    margin:1em;
-    padding:1em;
+    gap: 1em;
+    margin: 1em;
+    padding: 1em;
     border-top: 1px solid #e7e7e7;
   }
 }
