@@ -63,9 +63,10 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        refuseCom(row.id).then(() => {
+        refuseCom(row.id).then((res) => {
+          if(res.data && res.data.code && res.data.code !== 200) throw new Error(res.data.message);
           this.$message.success("劝退成功！");
-          this.initGetCommentary();
+          this.$emit('refresh');
         })
           .catch((err) => {
             this.$message.error(err.message);

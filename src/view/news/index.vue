@@ -8,8 +8,10 @@
       <el-button icon="el-icon-plus" style="margin-bottom:12px" type="primary" size="small"
         @click="openDialog">发布公告</el-button>
     </header>
-    <el-dialog :visible.sync="isShowBox" :title="dialogName" :fullscreen="isMobile" width="40%" :close-on-click-modal="false">
-      <el-form :model="form" :rules="rules" ref="ruleForm" :label-position="isMobile ? 'top' : 'left'" label-width="80px">
+    <el-dialog :visible.sync="isShowBox" :title="dialogName" :fullscreen="isMobile" width="40%"
+      :close-on-click-modal="false">
+      <el-form :model="form" :rules="rules" ref="ruleForm" :label-position="isMobile ? 'top' : 'left'"
+        label-width="80px">
         <el-form-item label="公告标题" prop="title">
           <el-input size="small" v-model="form.title" placeholder="请输入标题"></el-input>
         </el-form-item>
@@ -83,7 +85,7 @@ export default {
           { required: true, message: '请输入公告内容', trigger: 'change' }
         ],
       },
-      isMobile:false,
+      isMobile: false,
       noticeType: []
     };
   },
@@ -145,14 +147,21 @@ export default {
     },
     //获取news
     async initNews() {
+      const loading = this.$loading({
+        lock: true,
+        text: "正在加载中......",
+        spinner: "el-icon-loading",
+        background: "rgba(0, 0, 0, 0.8)",
+      });
       try {
         const { data, status } = await getNews(this.search_Type);
         if (status !== 200) throw new Error('后端服务器异常，请联系后端人员修复！');
         this.newsData = data;
       } catch (error) {
-        console.log(error, '===进入catch了吗');
         this.newsData = [];
         this.$message.error(error.message);
+      } finally {
+        loading.close();
       }
     },
     //删除公告
@@ -192,6 +201,7 @@ export default {
 
 <style scoped lang="less">
 @import url('../../assets/mobileStyles/news/index.less');
+
 #icon-show {
   margin-left: 20px;
   font-size: 16px;

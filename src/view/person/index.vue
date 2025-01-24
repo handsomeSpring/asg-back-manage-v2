@@ -29,7 +29,7 @@
       </template>
     </AsgHighSearch>
     <Suvivors ref="survivors" v-if="activeName === '1'" :keyword="keyword" :officium="officium"></Suvivors>
-    <rolePersonMange v-if="activeName !== '1'" :tableData="tableData"></rolePersonMange>
+    <rolePersonMange v-if="activeName !== '1'" :tableData="tableData" @refresh="handleClick(this.active,$event)"></rolePersonMange>
   </div>
 </template>
 
