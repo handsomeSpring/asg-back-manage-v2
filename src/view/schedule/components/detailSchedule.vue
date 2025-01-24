@@ -130,6 +130,23 @@
         </el-table-column>
       </el-table>
     </div>
+    <TextTitle v-show="requireComs" title-name="赛程信息发布管理"></TextTitle>
+    <el-card style="width:95%;margin:1em auto">
+      <el-form ref="groupForm" :model="groupForm" label-position="right" label-width="120px" :rules="groupRules">
+        <el-form-item label="QQ群" prop="group">
+          <el-select size="small" v-model="groupForm.group" @change="handleChange">
+            <el-option v-for="(item, index) in groupOptions" :key="index" :label="item.label"
+              :value="item.value"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="消息" prop="message">
+          <el-input type="textarea" v-model="groupForm.message" :rows="5" maxlength="120" show-word-limit></el-input>
+        </el-form-item>
+        <el-form-item>
+          <el-button type="primary" :loading="groupLoading" @click="handleSendQQ">发 布 公 告</el-button>
+        </el-form-item>
+      </el-form>
+    </el-card>
     <div class="btn-list">
       <el-button plain icon="el-icon-arrow-left" @click="onSuccess">返回</el-button>
       <el-button v-if="formType === 'add'" icon="el-icon-folder-checked" type="primary" :loading="btnloading"
@@ -152,6 +169,7 @@
 import { pushSchedule, updateSchedule } from "@/api/schedule/index.js";
 import personChooseDialog from "./personChooseDialog.vue";
 import { getPlayerDetails } from "@/api/gameSeason/index";
+import { sendAdminMsg } from '@/api/admin/index.js';
 import AsgPersonChoose from "@/components/AsgPersonChoose.vue";
 import TextTitle from "@/components/TextTitle.vue";
 import AsgTipComponent from "@/components/AsgTipComponent.vue";
@@ -183,7 +201,12 @@ export default {
     personGroups: {
       type: Array,
       default: () => [],
-    }
+    },
+    // qq群
+    groupOptions: {
+      type: Array,
+      default: () => [],
+    },
   },
   computed: {
     requiredJudge() {
@@ -215,9 +238,19 @@ export default {
         remarks: '',
         bilibiliuri: '',
       },
+      groupForm: {
+        group: '',
+        qq: '',
+        message: ''
+      },
       comIndex: -1,
       comTableList: [],
       btnloading: false,
+      groupLoading: false,
+      groupRules: {
+        group: [{ required: true, message: '请选择群', trigger: 'change' }],
+        message: [{ required: true, message: '请输入消息', trigger: 'blur' }],
+      },
       rules: {
         belong: [{ required: true, message: "请选择赛季", trigger: "change" }],
         tag: [{ required: true, message: "请选择赛程标签", trigger: "change" }],
@@ -247,6 +280,22 @@ export default {
     };
   },
   methods: {
+    handleSendQQ() {
+      this.$refs.groupForm.validate(async valie => {
+        if (valie) {
+          this.groupLoading = true;
+          const { status } = await sendAdminMsg(this.groupForm.group, this.groupForm.qq, this.groupForm.message);
+          if (status !== 200) return this.$message.error('服务端异常，发送失败！');
+          this.groupLoading = false;
+          this.$message.success('发送成功');
+        } else {
+          this.$message.error('请完整填写表单！');
+        }
+      })
+    },
+    handleChange() {
+      this.groupForm.qq = this.groupOptions.find(item => item.value === this.groupForm.group)?.qq ?? '';
+    },
     // 打开人员选择
     openPerson(index) {
       this.comIndex = index;
@@ -368,6 +417,17 @@ export default {
       this.$refs.form?.resetFields();
       this.$emit("onSuccess");
     },
+    initQQForm() {
+      const { belong, tag, team1_name, team2_name, opentime, referee, winteam, judge } = this.formRow;
+      const comList = this.comTableList.map(item => item.chinaname).join(',') ?? '待定';
+      let message = '';
+      if (!winteam) {
+        message = `<ASG赛程通知>各位侦探：${belong}-${tag}:${team1_name} vs ${team2_name}的比赛将于${opentime}开赛，解说：${comList}、导播:${referee || '待定'}、裁判${judge || '待定'},敬请期待！`;
+      } else {
+        message = `<ASG赛程通知>各位侦探：${belong}-${tag}:${team1_name} vs ${team2_name}的比赛获胜战队是${winteam},恭喜${winteam}战队获得了该场比赛的胜利！`;
+      }
+      this.$set(this.groupForm, 'message', message);
+    }
   },
   created() {
     console.log(this.formRow, 'this.formRow');
@@ -379,6 +439,7 @@ export default {
       this.form.comLimit = com_limit;
       this.form.personType = person_type;
     }
+    this.initQQForm();
   },
 };
 </script>
@@ -392,7 +453,7 @@ export default {
     color: #5e6d82;
     font-weight: 600;
     line-height: 2em;
-    font-size:1em;
+    font-size: 1em;
 
     i {
       text-indent: 2em;

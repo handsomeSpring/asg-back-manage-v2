@@ -29,6 +29,8 @@ import hljs from 'highlight.js';
 import Editor from 'vue2-ace-editor'
 // 全局注册filters 
 import * as filters from './utils/filters'
+import Highlight from '@/utils/directive.js'; // 这里是你项目highlight.js所在路径
+
 Object.keys(filters).forEach(key => {
   Vue.filter(key, filters[key])
 })
@@ -38,6 +40,7 @@ Vue.component('full-screen-loading', FullScreenLoading);
 //高亮代码行
 Vue.use(VMdEditor);
 Vue.use(VMdPreview);
+Vue.use(Highlight);
 import MoneyInput from './components/MoneyInput'
 Vue.use(MoneyInput)
 

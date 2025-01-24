@@ -188,6 +188,10 @@
 .asg-popper.el-popper[x-placement^=bottom] .popper__arrow::after{
   border-bottom-color:#000000;
 }
+/* 统一边距样式 */
+.custom-my-1{
+  margin:1em 0;
+}
 /* 统一min-height样式 */
 .asg-table-main {
   min-height: 70vh;
@@ -197,7 +201,10 @@
 .mobile-el-confirm {
   width: 100% !important;
 }
-
+/* 代码区域 */
+pre code {
+  font-size: 18px;
+}
 /* 移动端统一样式 */
 @media (max-width:1024px) {
   .el-message-box {

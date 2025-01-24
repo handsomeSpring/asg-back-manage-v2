@@ -3,7 +3,7 @@
     <schedule-table v-if="isIndexPage" ref="schedule" @toDetail="toDetail" :tagOptions="tagOptions"
       :personGroup="personOptions" :groupOptions="groupOptions" />
     <detailSchedule v-else :personGroups="personOptions" :formType="formType" :formRow="formRow" :tagOptions="tagOptions"
-      :eventOptions="eventOptions" @onSuccess="onRefresh"></detailSchedule>
+      :eventOptions="eventOptions" @onSuccess="onRefresh" :groupOptions="groupOptions"></detailSchedule>
   </div>
 </template>
 
