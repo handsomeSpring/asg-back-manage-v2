@@ -22,9 +22,6 @@ export default {
   border-radius: 6px;
   overflow: hidden;
   box-sizing: border-box;
-  &:hover>.asg-table-card_content {
-      background: linear-gradient(180deg, #e5f0ff 0%, #ffffff 30%);
-  }
 }
 
 .asg-table-card_header {

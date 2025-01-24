@@ -59,10 +59,6 @@
                 <el-button style="margin: 0 12px" type="text" size="small" @click="noticeGame(item)">
                   {{ item.winteam ? "赛果通知" : "赛程通知" }}
                 </el-button>
-                <el-button v-if="!item.winteam" style="margin: 0 12px" type="text" size="small"
-                  @click="fillGameResult(item)">赛果登记</el-button>
-                <el-button v-else style="margin: 0 12px" type="text" size="small"
-                  @click="viewGameResult(item)">查看赛果</el-button>
                 <el-button style="margin: 0 12px" type="text" size="small"
                   @click="toDetail('edit', item)">编辑赛程</el-button>
                 <el-button style="margin: 0 12px; color: #f40" type="text" size="small"
@@ -71,39 +67,56 @@
             </div>
           </template>
           <template v-slot:content>
-            <el-descriptions>
-              <el-descriptions-item label="主场战队" :span="1">
-                {{ item.team1_name }}
-                <span class="like__icon"> {{ item.team1_piaoshu }}人支持 </span>
-              </el-descriptions-item>
-              <el-descriptions-item label="客场战队" :span="1">
-                {{ item.team2_name }}
-                <span class="like__icon"> {{ item.team2_piaoshu }}人支持 </span>
-              </el-descriptions-item>
-              <el-descriptions-item label="裁判" :span="1">{{
-                item.judge || "无裁判"
-              }}</el-descriptions-item>
-              <el-descriptions-item label="比赛时间">{{
-                new Date(item.opentime) | parseTime("{y}-{m}-{d} {h}:{i}:{s}")
-              }}</el-descriptions-item>
-              <el-descriptions-item label="解说">
-                {{ handleCommentary(item.commentary)
-                }}<span style="color: #4090ef">(最大数量：{{ item.com_limit }})</span>
-              </el-descriptions-item>
-              <el-descriptions-item label="导播">{{
-                item.referee
-              }}</el-descriptions-item>
-              <el-descriptions-item label="回放链接"><el-link v-if="item.bilibiliuri !== 'lose' && item.bilibiliuri"
-                  :href="item.bilibiliuri" target="_blank" type="success">点击前往</el-link>
-                <el-link v-else-if="item.bilibiliuri === 'lose'" type="info">回放丢失</el-link>
-                <el-link v-else type="danger">回放尚未上传</el-link></el-descriptions-item>
-              <el-descriptions-item label="获胜队伍"><span v-if="item.winteam === null">比赛进行中</span>
-                <span class="winner" v-else><i class="el-icon-trophy"></i>{{ item.winteam
-                  }}</span></el-descriptions-item>
-              <el-descriptions-item label="人员构成">
-                <p>{{ item.personTypeName }}</p>
-              </el-descriptions-item>
-            </el-descriptions>
+            <div class="content-grid-wrap">
+              <el-descriptions>
+                <el-descriptions-item label="主场战队" :span="1">
+                  {{ item.team1_name }}
+                  <span class="like__icon"> {{ item.team1_piaoshu }}人支持 </span>
+                </el-descriptions-item>
+                <el-descriptions-item label="客场战队" :span="1">
+                  {{ item.team2_name }}
+                  <span class="like__icon"> {{ item.team2_piaoshu }}人支持 </span>
+                </el-descriptions-item>
+                <el-descriptions-item label="裁判" :span="1">{{
+                  item.judge || "无裁判"
+                }}</el-descriptions-item>
+                <el-descriptions-item label="比赛时间">{{
+                  new Date(item.opentime) | parseTime("{y}-{m}-{d} {h}:{i}:{s}")
+                }}</el-descriptions-item>
+                <el-descriptions-item label="解说">
+                  {{ handleCommentary(item.commentary)
+                  }}<span style="color: #4090ef">(最大数量：{{ item.com_limit }})</span>
+                </el-descriptions-item>
+                <el-descriptions-item label="导播">{{
+                  item.referee || '无导播'
+                }}</el-descriptions-item>
+                <el-descriptions-item label="回放链接"><el-link v-if="item.bilibiliuri !== 'lose' && item.bilibiliuri"
+                    :href="item.bilibiliuri" target="_blank" type="success">点击前往</el-link>
+                  <el-link v-else-if="item.bilibiliuri === 'lose'" type="info">回放丢失</el-link>
+                  <el-link v-else type="danger">回放尚未上传</el-link></el-descriptions-item>
+                <el-descriptions-item label="是否允许选班">
+                  <span>{{ item.isAllowChoose === 1  ? '允许' : '不允许'}}</span>
+                </el-descriptions-item>
+                <el-descriptions-item label="人员构成">
+                  <p>{{ item.personTypeName }}</p>
+                </el-descriptions-item>
+              </el-descriptions>
+              <div class="winner-wrap">
+                <el-popover popper-class="asg-popper" placement="bottom" width="200" trigger="click">
+                  <li class="list-asg-content">获胜战队：
+                    <span class="winteam-text" :class="item.winteam ? 'confirm' : 'unconfirm'">{{ item.winteam || '赛程进行中' }}</span>
+                  </li>
+                  <li class="list-asg-content">赛后结果：
+                    <span class="view-pointer" v-if="!item.winteam" @click="fillGameResult(item)">待登记</span>
+                    <span class="view-pointer" v-else @click="viewGameResult(item)">查看赛果</span>
+                  </li>
+                  <div slot="reference" class="box-content" :class="item.winteam ? 'success-do' : 'wait-do'">
+                    <i style="font-size: 1.5em;" :class="item.winteam ? 'el-icon-s-claim' : 'el-icon-edit-outline'"></i>
+                    <p>{{ item.winteam ? '已登记' : '待登记' }}</p>
+                  </div>
+                </el-popover>
+              </div>
+            </div>
           </template>
         </asgTableCard>
       </template>
@@ -141,13 +154,13 @@ export default {
       type: Array,
       default: () => [],
     },
-    personGroup:{
-      type:Array,
-      default:()=>[]
+    personGroup: {
+      type: Array,
+      default: () => []
     },
-    groupOptions:{
-      type:Array,
-      default:()=>[]
+    groupOptions: {
+      type: Array,
+      default: () => []
     }
   },
   components: {
@@ -455,6 +468,30 @@ export default {
   color: #cccc00;
 }
 
+.list-asg-content {
+  margin:0.8em 0;
+  display: flex;
+  align-items: center;
+  color:#fff;
+  .winteam-text{
+    font-size: 0.9em;
+    &.confirm{
+      color: #cccc00;
+    }
+    &.unconfirm{
+      color:#c0c0c0;
+    }
+  }
+  .view-pointer{
+    font-size: 0.9em;
+    color:#95bdee;
+    cursor:pointer;
+    text-decoration: underline;
+    text-decoration-color: #7eb1ef;
+    text-underline-offset: 0.4em;
+  }
+}
+
 .fontWeight {
   font-weight: bold;
   font-size: 16px;
@@ -491,5 +528,37 @@ export default {
 
 /deep/.el-form-item__content .el-input-group {
   vertical-align: middle;
+}
+
+.content-grid-wrap {
+  display: grid;
+  grid-template-columns: 80% 20%;
+
+  .winner-wrap {
+    width: 100%;
+    border-left: 1px solid #4090EF;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor:pointer;
+
+    .box-content {
+      display: flex;
+      align-items: center;
+      flex-direction: column;
+      justify-content: center;
+      border-radius: 10px;
+      color:#fff;
+      gap: 0.5em;
+      font-size: 0.8em;
+      padding: 1em;
+      &.wait-do{
+        background: #0c80e5;
+      }
+      &.success-do{
+        background: #0bc473;
+      }
+    }
+  }
 }
 </style>

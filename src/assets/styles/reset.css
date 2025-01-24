@@ -177,7 +177,17 @@
   text-align: initial;
   padding: 16px 20px;
 }
+/* popover样式覆盖 */
+.asg-popper{
+  margin: 0 !important;
+  padding:0 1em !important;
+  background: #000000;
+  border-radius: 10px;
 
+}
+.asg-popper.el-popper[x-placement^=bottom] .popper__arrow::after{
+  border-bottom-color:#000000;
+}
 /* 统一min-height样式 */
 .asg-table-main {
   min-height: 70vh;
