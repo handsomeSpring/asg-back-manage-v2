@@ -8,7 +8,8 @@
             </p>
         </AsgTipComponent>
         <main>
-            <el-menu default-active="AsgHighSearchDoc" class="el-menu-vertical-demo" active-text-color="#fff" text-color="#000" @select="handleSelect">
+            <el-menu default-active="AsgHighSearchDoc" class="el-menu-vertical-demo" active-text-color="#fff"
+                text-color="#000" @select="handleSelect">
                 <el-submenu index="1">
                     <template slot="title">
                         <i class="el-icon-location"></i>
@@ -70,6 +71,5 @@ main {
     display: grid;
     grid-template-columns: 20% calc(80% - 1em);
     gap: 1em;
-    min-height: 100vh;
 }
 </style>

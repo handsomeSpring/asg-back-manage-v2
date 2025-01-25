@@ -29,13 +29,15 @@
 </template>
 
 <script>
+import TextTitle from '@/components/TextTitle.vue';
 import AsgCheckBox from '@/components/AsgCheckBox.vue';
 import propTable from '../components/propTable.vue';
 export default {
   name:'AsgCheckBoxDoc',
   components:{
     AsgCheckBox,
-    propTable
+    propTable,
+    TextTitle
   },
   text:'开关选择器',
     data() {

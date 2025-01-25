@@ -16,12 +16,20 @@ export default {
 </script>
 
 <style scoped lang="less">
+@media (max-width: 1024px) {
+  .asg-table-card:hover{
+    box-shadow:none !important;
+  }
+}
 .asg-table-card {
   margin: 12px 0;
   border: 1px solid #b3d4ff;
   border-radius: 6px;
   overflow: hidden;
   box-sizing: border-box;
+  &:hover{
+    box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
+  }
 }
 
 .asg-table-card_header {
