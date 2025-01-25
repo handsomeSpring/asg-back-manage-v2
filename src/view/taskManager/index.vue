@@ -32,9 +32,9 @@
         </el-select>
       </template>
     </AsgHighSearch>
-    <main v-if="!isMobile">
+    <main v-if="!isMobile" v-loading="loading" element-loading-text="系统加载中，请稍等" element-loading-spinner="el-icon-loading">
       <div class="asg-table-main">
-        <table v-loading="loading" element-loading-text="系统加载中，请稍等" element-loading-spinner="el-icon-loading">
+        <table>
           <thead>
             <th width="10%">任务标题</th>
             <th width="42%">任务描述</th>
@@ -93,7 +93,7 @@
             </template>
             <template v-else>
               <tr align="center">
-                <td width="20%" class="no__task" colspan="5">暂无任务</td>
+                <td width="20%" class="no__task" colspan="6">暂无任务</td>
               </tr>
             </template>
           </tbody>

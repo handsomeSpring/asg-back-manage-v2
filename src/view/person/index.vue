@@ -107,7 +107,7 @@ export default {
   .item-row {
     border-radius: 4px;
     border: 1px solid #e7e7e7;
-    padding: 6px 12px;
+    padding: 9px 14px;
     cursor: pointer;
     font-size: 14px;
     font-weight: 400;

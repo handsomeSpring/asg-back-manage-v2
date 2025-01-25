@@ -70,6 +70,9 @@
             <personTable :tableData.sync="config.personConfig"></personTable>
         </div>
         <TextTitle titleName="报名字段配置"></TextTitle>
+        <AsgTipComponent type="danger" style="width:85%">
+            点击想要的字段，若为<span style="color:#134196;margin:0 0.4em">蓝色激活</span>状态即表示是该赛季的报名必填字段。注意：像选手名称、选手id和选手参赛名称字段，必填比较合适，不然会影响后面裁判、导播判断选手名称。
+        </AsgTipComponent>
         <div class="my-1 flex-content">
             <div class="item" :class="config.formConfig.includes(item.fieldCode) ? 'active' : ''" v-for="(item,index) in filedConfig" :key="index" @click="handleClick(item)">
                 <p>{{ item.fieldName }}</p>
@@ -94,12 +97,14 @@ import TextTitle from '@/components/TextTitle.vue';
 import { deepClone } from '@/utils';
 import AsgProgress from './AsgProgress.vue';
 import personTable from "./personTable.vue";
+import AsgTipComponent from "@/components/AsgTipComponent.vue";
 export default {
     name: 'season-detail',
     components: {
         TextTitle,
         AsgProgress,
-        personTable
+        personTable,
+        AsgTipComponent
     },
     computed: {
         serveIp() {
@@ -316,7 +321,7 @@ export default {
         width:300px;
         cursor: pointer;
         &.active{
-            background: #cbf1e2;
+            background: #ecf8ff;
             border-color:#134196
         }
     }

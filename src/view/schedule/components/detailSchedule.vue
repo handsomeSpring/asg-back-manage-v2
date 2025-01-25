@@ -210,13 +210,13 @@ export default {
   },
   computed: {
     requiredJudge() {
-      return this.form.personType.includes("judge");
+      return this.form.personType ? this.form.personType.includes("judge") : false;
     },
     requiredReferee() {
-      return this.form.personType.includes("referee");
+      return this.form.personType ? this.form.personType.includes("referee") : true;
     },
     requireComs() {
-      return this.form.personType.includes("commentary");
+      return this.form.personType ?  this.form.personType.includes("commentary") : true;
     },
   },
   data() {

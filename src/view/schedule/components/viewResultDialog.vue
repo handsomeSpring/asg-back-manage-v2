@@ -1,7 +1,9 @@
 <template>
-    <el-dialog title="查看赛果" width="50%" :visible="visible" @close="closeDialog" @open="handleOpen">
+    <el-dialog title="查看 获胜队伍-赛事结果" width="50%" :visible="visible" @close="closeDialog" @open="handleOpen">
       <div class="dialog__body--header">
-        <p>本场比赛获胜队伍是<span class="fontWeight">{{ gameResult.winteam }}</span></p>
+        <img class="winteam-picture" :src="`https://api.idvasg.cn/loge/${this.gameResult.belong}/${this.gameResult.winteam}.png`">
+        <span class="fontWeight">{{ gameResult.winteam }}</span>
+        <svg-icon iconClass="gold" width="30px" height="30px"></svg-icon>
       </div>
       <div class="dialog__body--score">
         <template v-if="!gameScoreInfo">
@@ -73,7 +75,7 @@
     methods: {
       handleOpen() {
         this.gameScoreInfo = !!this.gameResult.final_score ? JSON.parse(this.gameResult?.final_score ?? '[]') : void 0;
-        console.log(this.gameScoreInfo, 'this.gameScoreInfo');
+        console.log(this.gameScoreInfo,this.gameResult, 'this.gameScoreInfo');
       },
       closeDialog() {
         this.visible = false;
@@ -84,10 +86,15 @@
   
   <style lang='less' scoped>
   .dialog__body--header {
-    margin: 20px 0;
-    padding-bottom: 12px;
-    border-bottom: 1px solid #e7e7e7;
-  
+    padding-bottom: 2em 0;
+    display: flex;
+    align-items: center;
+    gap:1em;
+    .winteam-picture{
+      height:80px;
+      width:80px;
+      border-radius: 50%;
+    }
     .fontWeight {
       color: #4090EF;
       font-weight: bold;

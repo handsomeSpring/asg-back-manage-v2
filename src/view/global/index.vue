@@ -29,8 +29,8 @@
         <el-table-column prop="substance" label="值"> </el-table-column>
         <el-table-column label="操作" width="180" align="center">
           <template #default="{ row }">
-            <el-button size="small" type="text" @click="openDialog('edit', row)">编辑</el-button>
-            <el-button size="small" type="text" style="color: #f40" @click="deleteItem(row.id)">删除</el-button>
+            <el-button type="text" @click="openDialog('edit', row)">编辑</el-button>
+            <el-button type="text" style="color: #f40" @click="deleteItem(row.id)">删除</el-button>
           </template>
         </el-table-column>
         </el-table>

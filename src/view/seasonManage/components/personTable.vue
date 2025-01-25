@@ -18,7 +18,7 @@
             </el-table-column>
             <el-table-column label="绩效评价" align="center">
                 <template #default="{ row }">
-                    <el-rate v-model="row.performance" show-text :texts="texts">
+                    <el-rate v-model="row.performance">
                     </el-rate>
                 </template>
             </el-table-column>
@@ -78,7 +78,6 @@ export default {
                 contribution: 1,
                 performance:0
             },
-            texts:['毫无作为','不太负责','表现一般','付出很多','全程付出'],
             rules: {
                 name: [{ required: true, message: "请输入人员名称", trigger: "change" }],
                 role: [{ required: true, message: "请输入人员职责", trigger: "blur" }],
