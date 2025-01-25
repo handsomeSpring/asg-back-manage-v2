@@ -204,6 +204,7 @@
 /* 代码区域 */
 pre code {
   font-size: 18px;
+  font-family: Menlo,Monaco,Consolas,Courier,monospace;
 }
 /* 移动端统一样式 */
 @media (max-width:1024px) {

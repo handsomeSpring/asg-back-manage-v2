@@ -29,7 +29,7 @@ export default {
   },
   computed:{
     disabledNext(){
-        return this.page * this.limit > this.total;
+        return this.page * this.limit >= this.total;
     },
   },
   methods: {

@@ -30,7 +30,7 @@ export default {
 <style lang='less' scoped>
 .body-content,.header-content{
     display: grid;
-    grid-template-columns: 30% 30% 40%;
+    grid-template-columns: 30% 70%;
     border-bottom: 1px solid #dcdfe6;
     padding:1em 2em;
     color: #909399;

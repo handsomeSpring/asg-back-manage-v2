@@ -4,23 +4,35 @@
         <el-card style="min-height:300px">
             <asgTableCard>
                 <template #header>
-                    <div >
+                    <div style="display:flex;align-items: center;height:100%;margin-left:1em">
                         头部内容插槽
                     </div>
                 </template>
                 <template #content>
                     <div style="padding:1em">
-                        222内容主体插槽
+                        内容主体插槽
                     </div>
                 </template>
             </asgTableCard>
         </el-card>
         <TextTitle class="custom-my-1" title-name="代码展示"></TextTitle>
-        <pre v-highlight>
+    <pre v-highlight>
     <code>
-        {{ content }}
+        &lt;template>
+               &lt;asgTableCard>
+                   &lt;template #header>
+                     &lt;div style="display:flex;align-items: center;height:100%;margin-left:1em">
+                        头部内容插槽
+                     &lt;/div>
+                   &lt;/template>
+                   &lt;template #content>
+                     &lt;div style="padding:1em">
+                        内容主体插槽
+                     &lt;/div>
+               &lt;/asgTableCard>
+            &lt;/template>
     </code>
-</pre>
+    </pre>
         <slotTable :table-data="slotData"></slotTable>
     </div>
 </template>
@@ -49,15 +61,6 @@ export default {
                     doc: '表体插槽'
                 }
             ],
-            content: "//代码示例" + "\n" +
-                "<asgTableCard>" + "\n" +
-                "    <template #header>" + "\n" +
-                "          头部内容插槽" + "\n" +
-                "    </template>" + "\n" +
-                "    <template #content>" + "\n" +
-                "        内容主体插槽" + "\n" +
-                "    </template>" + "\n" +
-                "</asgTableCard>",
         };
     },
 }

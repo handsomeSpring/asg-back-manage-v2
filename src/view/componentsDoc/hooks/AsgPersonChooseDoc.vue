@@ -8,7 +8,30 @@
         <TextTitle class="custom-my-1" title-name="代码展示"></TextTitle>
         <pre v-highlight>
            <code>
-            {{ content }}
+            &lt;template>
+               &lt;el-button type="primary" @click="openDialog">点击我打开人员选择器
+               &lt;/el-button>
+               &lt;p class="custom-my-1">选择的人员是:{{ nodeConfig }}&lt;/p>
+               &lt;AsgPersonChoose ref="personChooseDialog" @finish="chooseFinish">&lt;/AsgPersonChoose>
+            &lt;/template>
+            
+            &lt;script lang="javascript">
+                export default{
+                  date(){
+                    return {
+                        nodeConfig:{}
+                    }
+                  },
+                  methods:{
+                    openDialog() {
+                        this.$refs.personChooseDialog?.openDialog();
+                    },
+                    chooseFinish(node) {
+                        this.nodeConfig = node;
+                    }
+                  }
+                }
+            &lt;/script>
            </code>
        </pre>
         <AsgPersonChoose ref="personChooseDialog" @finish="chooseFinish"></AsgPersonChoose>
@@ -31,12 +54,6 @@ export default {
     data() {
         return {
             nodeConfig: {},
-            content: "//代码示例" + "\n" +
-                "<AsgPersonChoose ref='personChooseDialog' @finish='chooseFinish'>" + "\n" +
-                "</AsgPersonChoose>" + "\n" +
-                "//methods下面" + "\n" +
-                "this.$refs.personChooseDialog?.openDialog();" + "\n" +
-                "</AsgHighSearch>",
             propData: [{
                 name: '$ref',
                 type: '打开弹窗方式',
@@ -56,9 +73,6 @@ export default {
         chooseFinish(node) {
             this.nodeConfig = node;
         }
-    },
-    created() {
-
     },
 }
 </script>

@@ -19,10 +19,25 @@
         </el-card>
         <TextTitle class="custom-my-1" title-name="代码展示"></TextTitle>
         <pre v-highlight>
-    <code>
-        {{ content }}
-    </code>
-</pre>
+           <code>
+            &lt;template>
+               &lt;AsgHighSearch showOperation>
+                   &lt;template #top>
+                       top插槽区域
+                   &lt;/template>
+                   &lt;template #search>
+                       search组件插槽区域
+                   &lt;/template>
+                   &lt;template #btnList>
+                       btnList插槽区域
+                   &lt;/template>
+                   &lt;template #operation>
+                       operation插槽区域
+                   &lt;/template>
+               &lt;/AsgHighSearch>
+            &lt;/template>
+           </code>
+        </pre>
         <propTable :table-data="propData"></propTable>
         <slotTable :table-data="slotData"></slotTable>
     </div>
@@ -68,22 +83,7 @@ export default {
                     name: 'operation',
                     doc: '底部插槽'
                 },
-            ],
-            content: "//代码示例" + "\n" +
-                "<AsgHighSearch showOperation>" + "\n" +
-                "    <template #top>" + "\n" +
-                "        top插槽区域" + "\n" +
-                "    </template>" + "\n" +
-                "    <template #search>" + "\n" +
-                "        search插槽区域" + "\n" +
-                "    </template>" + "\n" +
-                "    <template #btnList>" + "\n" +
-                "        btnList插槽区域" + "\n" +
-                "    </template>" + "\n" +
-                "    <template #operation>" + "\n" +
-                "       operation插槽区域" + "\n" +
-                "    </template>" + "\n" +
-                "</AsgHighSearch>",
+            ]
         };
     },
 }

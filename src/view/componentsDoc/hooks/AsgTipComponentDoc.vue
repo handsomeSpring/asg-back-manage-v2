@@ -16,11 +16,24 @@
             </AsgTipComponent>
         </el-card>
         <TextTitle class="custom-my-1" title-name="代码展示"></TextTitle>
-        <pre v-highlight>
+    <pre v-highlight>
     <code>
-        {{ content }}
+        &lt;template>
+               &lt;AsgTipComponent type="primary">
+                  插槽里面写内容即可,type="primary"
+               &lt;/AsgTipComponent>
+               &lt;AsgTipComponent type="warning">
+                  插槽里面写内容即可,type="warning"
+               &lt;/AsgTipComponent>
+               &lt;AsgTipComponent type="danger">
+                  插槽里面写内容即可,type="danger"
+               &lt;/AsgTipComponent>
+               &lt;AsgTipComponent type="success">
+                  插槽里面写内容即可,type="success"
+               &lt;/AsgTipComponent>
+        &lt;/template>
     </code>
-</pre>
+    </pre>
         <propTable :table-data="propData"></propTable>
         <slotTable :table-data="slotData"></slotTable>
 
@@ -56,10 +69,6 @@ export default {
                     doc: '提示词内容部分'
                 },
             ],
-            content: "//代码示例" + "\n" +
-                "<AsgTipComponent type='danger'>" + "\n" +
-                "          插槽里面写内容即可" + "\n" +
-                "</AsgTipComponent>",
         };
     },
 }
