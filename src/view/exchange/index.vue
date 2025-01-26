@@ -59,6 +59,9 @@
                         <el-input style="width:80%" size="small" type="textarea" v-model="props.row.introduction"
                           disabled :rows="5"></el-input>
                       </el-form-item>
+                      <el-form-item label="介绍视频链接">
+                        <a class="href-target" target="blank" :href="props.row.intro_url">{{ props.row.intro_url }}</a>
+                      </el-form-item>
                     </el-form>
                   </div>
                   <div class="right-container">

@@ -1,14 +1,8 @@
 <template>
   <div>
-    <el-table height="70vh" v-loading="loading" element-loading-text="拼命加载中" element-loading-spinner="el-icon-loading"
+    <el-table :key="activeName" height="70vh" v-loading="loading" element-loading-text="拼命加载中" element-loading-spinner="el-icon-loading"
       :data="tableData" :header-cell-style="{ background: '#f2f6fd', color: '#000' }">
-      <el-table-column prop="id" label="序号" width="80" align="center"> </el-table-column>
-      <el-table-column label="头像" width="150" align="center">
-        <template slot-scope="scope">
-          <el-image :src="scope.row.base64">
-          </el-image>
-        </template>
-      </el-table-column>
+      <el-table-column prop="id" label="序号" width="100" align="center"> </el-table-column>
       <el-table-column label="职位" width="250" align="center">
         <template slot-scope="scope">
           <div style="display: flex;align-items: center;justify-content: center;">
@@ -33,7 +27,7 @@
           {{ row.email || '-' }}
         </template>
       </el-table-column>
-      <el-table-column label="操作" width="150" align="center">
+      <el-table-column label="操作" width="250" align="center">
         <template #default="{ row }">
           <el-button style="color:#f40" type="text" @click="refuseUser(row)">辞退</el-button>
         </template>
@@ -54,6 +48,10 @@ export default {
     loading: {
       type: Boolean,
       default: false
+    },
+    activeName:{
+      type:String,
+      default:'1'
     }
   },
   methods: {

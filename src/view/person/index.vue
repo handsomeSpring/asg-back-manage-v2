@@ -25,11 +25,12 @@
       </template>
       <template #btnList>
         <el-button size="small" type="primary" v-show="activeName === '1'" @click="initGetUsers" icon="el-icon-search">查询</el-button>
+        <el-button size="small" type="primary" v-show="activeName !== '1'" @click="refreshData" icon="el-icon-search">刷新</el-button>
         <el-button size="small" @click="resetForm">重置</el-button>
       </template>
     </AsgHighSearch>
     <Suvivors ref="survivors" v-if="activeName === '1'" :keyword="keyword" :officium="officium"></Suvivors>
-    <rolePersonMange v-if="activeName !== '1'" :tableData="tableData" @refresh="handleClick(this.active, $event)">
+    <rolePersonMange v-if="activeName !== '1'" :loading="loading" :tableData="tableData" @refresh="refreshData" :activeName="activeName">
     </rolePersonMange>
   </div>
 </template>
@@ -53,7 +54,8 @@ export default {
       officium: "",
       roleOptions: [],
       tableData: [],
-      activeName: '1'
+      activeName: '1',
+      loading:false,
     }
   },
   async created() {
@@ -79,6 +81,15 @@ export default {
         }
         this.initData(mapList[active]);
       }
+    },
+    // 刷新解说、裁判、导播列表
+    refreshData(){
+      const mapList = {
+          '2': "Commentator",
+          '3': 'Judge',
+          '4': 'Anchor',
+        }
+        this.initData(mapList[this.activeName]);
     },
     async initData(role) {
       try {

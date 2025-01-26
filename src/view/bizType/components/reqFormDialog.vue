@@ -75,6 +75,15 @@
                     </template>
                     {{ form.introduction }}
                 </el-descriptions-item>
+                <el-descriptions-item :span="3">
+                <template slot="label">
+                    <div class="des_label">
+                        <svg-icon iconClass="introductionSelf" width="18px" height="18px"></svg-icon>
+                        <p>介绍视频链接</p>
+                    </div>
+                </template>
+                <a class="href-target" target="blank" :href="form.intro_url">{{ form.intro_url }}</a>
+            </el-descriptions-item>
             </el-descriptions>
         </el-dialog>
         <el-descriptions v-else class="margin-top" :column="isMobile ? 1 : 3" size="small" border>
@@ -150,6 +159,15 @@
                 </template>
                 {{ form.introduction }}
             </el-descriptions-item>
+            <el-descriptions-item :span="3">
+                <template slot="label">
+                    <div class="des_label">
+                        <svg-icon iconClass="introductionSelf" width="18px" height="18px"></svg-icon>
+                        <p>介绍视频链接</p>
+                    </div>
+                </template>
+                <a class="href-target" target="blank" :href="form.intro_url">{{ form.intro_url }}</a>
+            </el-descriptions-item>
         </el-descriptions>
     </div>
 </template>
@@ -219,5 +237,10 @@ export default {
 
 /deep/.el-descriptions--small.is-bordered .el-descriptions-item__cell {
     width: 120px
+}
+.href-target{
+    color:#4090EF;
+    text-decoration: underline;
+    text-underline-offset: 0.5em;
 }
 </style>
