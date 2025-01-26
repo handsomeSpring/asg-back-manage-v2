@@ -11,7 +11,7 @@
             &lt;template>
                &lt;el-button type="primary" @click="openDialog">点击我打开人员选择器
                &lt;/el-button>
-               &lt;p class="custom-my-1">选择的人员是:{{ nodeConfig }}&lt;/p>
+               &lt;p class="custom-my-1">选择的人员是:&#123; &#123; nodeConfig &#125; &#125;&lt;/p>
                &lt;AsgPersonChoose ref="personChooseDialog" @finish="chooseFinish">&lt;/AsgPersonChoose>
             &lt;/template>
             
