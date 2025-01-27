@@ -1,11 +1,13 @@
 <template>
   <div class="detail-schedule-content">
-    <AsgTipComponent style="width:85%">
-      <p class="asg-tip-content">
-        <i
-          class="el-icon-warning"></i>以下内容是赛程的所有信息，如果需要新增字段，请联系开发人员。注意：自定义赛程人员选班模式下，解说无法选班；当前时间若超出比赛开始时间也无法选班；如果想邀请外援嘉宾来充当裁判或者导播，请选择自定义人员；如果想邀请嘉宾来参与解说，请在备注栏备注。
-      </p>
-    </AsgTipComponent>
+    <div class="tip-content">
+      <AsgTipComponent>
+        <p class="asg-tip-content">
+          <i
+            class="el-icon-warning"></i>以下内容是赛程的所有信息，如果需要新增字段，请联系开发人员。注意：自定义赛程人员选班模式下，解说无法选班；当前时间若超出比赛开始时间也无法选班；如果想邀请外援嘉宾来充当裁判或者导播，请选择自定义人员；如果想邀请嘉宾来参与解说，请在备注栏备注。
+        </p>
+      </AsgTipComponent>
+    </div>
     <TextTitle title-name="基本信息"></TextTitle>
     <el-form class="my-1" ref="form" :model="form" label-position="right" label-width="120px" :rules="rules">
       <el-row>
@@ -130,6 +132,13 @@
         </el-table-column>
       </el-table>
     </div>
+    <div class="tip-content">
+      <AsgTipComponent type="warning">
+        <p class="asg-tip-content">
+          <i class="el-icon-warning"></i>如果遇到发布失败的情况，可能是QQ机器人被封的原因。
+        </p>
+      </AsgTipComponent>
+    </div>
     <TextTitle v-show="requireComs" title-name="赛程信息发布管理"></TextTitle>
     <el-card style="width:95%;margin:1em auto">
       <el-form ref="groupForm" :model="groupForm" label-position="right" label-width="120px" :rules="groupRules">
@@ -216,7 +225,7 @@ export default {
       return this.form.personType ? this.form.personType.includes("referee") : true;
     },
     requireComs() {
-      return this.form.personType ?  this.form.personType.includes("commentary") : true;
+      return this.form.personType ? this.form.personType.includes("commentary") : true;
     },
   },
   data() {
@@ -422,7 +431,7 @@ export default {
       const comList = this.comTableList.map(item => item.chinaname).join(',') ?? '待定';
       let message = '';
       if (!winteam) {
-        message = `<ASG赛程通知>各位侦探：${belong}-${tag}:${team1_name} vs ${team2_name}的比赛将于${opentime}开赛，解说：${comList}、导播:${referee || '待定'}、裁判${judge || '待定'},敬请期待！`;
+        message = `<ASG赛程通知>各位侦探：${belong}-${tag}:${team1_name} vs ${team2_name}的比赛将于${opentime}开赛，解说：${comList || '待定'}、导播:${referee || '待定'}、裁判${judge || '待定'},敬请期待！`;
       } else {
         message = `<ASG赛程通知>各位侦探：${belong}-${tag}:${team1_name} vs ${team2_name}的比赛获胜战队是${winteam},恭喜${winteam}战队获得了该场比赛的胜利！`;
       }
@@ -464,6 +473,11 @@ export default {
 
   .my-1 {
     margin: 1em 0;
+  }
+
+  .tip-content {
+    width: 95%;
+    margin: 0 auto;
   }
 
   .com_table--warp {

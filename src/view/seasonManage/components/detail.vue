@@ -12,9 +12,6 @@
                 <el-step title="已结束" description="报名、修改表单停止、用户关注停止"></el-step>
             </el-steps>
         </AsgTipComponent>
-        <div class="asgProcess-content">
-            <AsgProgress :status="seasonForm.status" @updateStatus="updateStatus"></AsgProgress>
-        </div>
         <TextTitle titleName="基本信息"></TextTitle>
         <el-form class="my-1" ref="seasonForm" :model="seasonForm" label-width="120px" label-position="right"
             :rules="formRules">
@@ -46,14 +43,9 @@
             <el-row>
                 <el-col :span="24">
                     <el-form-item label="赛季阶段" prop="status">
-                        <el-radio-group v-model="seasonForm.status" size="small">
-                            <el-radio label="0">筹备中</el-radio>
-                            <el-radio label="1">报名中</el-radio>
-                            <el-radio label="2">建联期</el-radio>
-                            <el-radio label="3">公示中</el-radio>
-                            <el-radio label="4">进行中</el-radio>
-                            <el-radio label="5">赛季结束</el-radio>
-                        </el-radio-group>
+                        <div class="asgProcess-content">
+                            <AsgProgress :status="seasonForm.status" @updateStatus="updateStatus"></AsgProgress>
+                        </div>
                     </el-form-item>
                 </el-col>
             </el-row>
@@ -209,8 +201,8 @@ export default {
         };
     },
     methods: {
-        updateStatus(status){
-            console.log(status,'status===');
+        updateStatus(status) {
+            console.log(status, 'status===');
             this.seasonForm.status = status.toString();
         },
         handleClick(item) {
@@ -301,14 +293,15 @@ export default {
 }
 </script>
 <style lang='less' scoped>
-.main-title{
+.main-title {
     text-align: center;
     font-size: 1.5em;
     font-family: 'hk';
-    margin:1em 0;
-    color:#5e6d82;
+    margin: 1em 0;
+    color: #5e6d82;
     font-weight: bold;
 }
+
 .my-1 {
     margin: 1em 0;
 }

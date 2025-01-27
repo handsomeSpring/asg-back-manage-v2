@@ -78,12 +78,10 @@ export default {
         align-items: center;
         gap: 1em;
         height: calc(100px - 2.6em);
-        margin-bottom: 0.8em;
-
         .avatar {
             width: 50px;
             height: 50px;
-            border-radius: 6px;
+            border-radius: 1em;
             flex-shrink: 0;
         }
 
@@ -125,33 +123,24 @@ export default {
         .tab-list {
             width: 90%;
             margin: 0.5em auto;
-            border-radius: 6px;
-            border: 1px solid #e7e7e7;
             display: grid;
             grid-template-columns: repeat(3, 1fr);
             height: 2em;
             overflow: hidden;
-            transition: 0.27s all;
+            gap:1em;
             .tab-item {
                 font-size: 13px;
                 font-weight: 600;
+                border-radius: 1em;
                 font-family: 'hk';
                 display: flex;
                 align-items: center;
                 justify-content: center;
                 cursor: pointer;
-
-                &:nth-child(1) {
-                    border-right: 1px solid #e7e7e7;
-                }
-
-                &:nth-child(2) {
-                    border-right: 1px solid #e7e7e7;
-                }
-
+                transition: 0.27s all;
                 &.active {
-                    background: #4090EF;
-                    color: #FFF;
+                    background: #d6e1f7;
+                    color: #4090EF;
                 }
             }
         }

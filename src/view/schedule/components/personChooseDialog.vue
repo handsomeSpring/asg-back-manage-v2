@@ -1,6 +1,6 @@
 <template>
     <el-dialog title="选择人员" top="5vh" :visible="visible" :close-on-click-modal="false" width="40%" @close="handleClose"
-        @open="initRoles">
+        @open="handleOpen">
         <el-radio-group style="margin-bottom: 12px;" size="small" v-model="personType">
             <el-radio-button label="1">职位库选择</el-radio-button>
             <el-radio-button label="2">自定义名称</el-radio-button>
@@ -117,6 +117,22 @@ export default {
             this.choosePerson.chinaname = '';
             this.choosePerson.id = 0;
         },
+        handleOpen() {
+            this.refereeOptions.forEach(item => {
+                if (item.id === this.checkId) {
+                    this.choosePerson.id = item.id;
+                    this.choosePerson.chinaname = item.chinaname
+                }
+                item.isCheck = item.id === this.checkId;
+            });
+            this.judgetOptions.forEach(item => {
+                if (item.id === this.checkId) {
+                    this.choosePerson.id = item.id;
+                    this.choosePerson.chinaname = item.chinaname
+                }
+                item.isCheck = item.id === this.checkId;
+            });
+        },
         handleClose() {
             this.visible = false;
             this.handleReset();
@@ -177,6 +193,9 @@ export default {
                 this.loading = false;
             }
         }
+    },
+    created() {
+        this.initRoles();
     }
 }
 </script>
