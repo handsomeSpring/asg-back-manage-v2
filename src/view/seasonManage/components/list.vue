@@ -27,7 +27,6 @@
                     </template>
                     <template #content>
                         <div class="table-content">
-                            <!-- <AsgProgress :status="item.status"></AsgProgress> -->
                             <p class="text">赛季时间：
                                 <span style="color: #4090ef">
                                     {{ new Date(item.opentime) | parseTime("{y}-{m}-{d}") }}

@@ -2,7 +2,7 @@
   <div class="status-grid-container">
     <div class="grid-item" v-for="(item, index) in list" :key="index">
       <div class="label">{{ item.label }}</div>
-      <div class="circle" :class="item.status < Number(status) ? '' : item.status === Number(status) ? 'process' : 'wait'">
+      <div class="circle" :class="item.status < Number(status) ? '' : item.status === Number(status) ? 'process' : 'wait'" @click="handleClick(item.status)">
         <div class="inner" v-if="item.status === Number(status)"></div>
         <i class="el-icon-check" v-if="item.status < Number(status)"></i>
       </div>
@@ -10,7 +10,7 @@
     </div>
     <div class="grid-item">
       <div class="label">已结束</div>
-      <div class="circle" :class="status === '5' ? 'over' : 'wait'">
+      <div class="circle" :class="status === '5' ? 'over' : 'wait'" @click="handleClick(5)">
         <i class="el-icon-finished"></i>
       </div>
     </div>
@@ -52,6 +52,11 @@ export default {
       ],
     };
   },
+  methods:{
+    handleClick(status){
+      this.$emit('updateStatus',status);
+    }
+  }
 };
 </script>
 
@@ -67,6 +72,10 @@ export default {
     align-items: center;
     position: relative;
     height: 40px;
+    cursor:pointer;
+    &:hover .circle {
+      transform: scale(1.2);
+    }
     .label {
       position: absolute;
       bottom: 40px;
@@ -85,6 +94,7 @@ export default {
       display: flex;
       align-items: center;
       justify-content: center;
+      transition: 0.38s all;
       .inner{
         width:10px;
         height:10px;

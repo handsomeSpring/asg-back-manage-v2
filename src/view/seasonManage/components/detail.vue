@@ -1,7 +1,8 @@
 <template>
     <div>
-        <TextTitle :titleName="type === 'add' ? '新增赛季填报' : '更新赛季填报'"></TextTitle>
-        <el-alert class="my-1" type="warning" title="赛季阶段填报提示" :closable="false">
+        <h4 class="main-title">{{ type === 'add' ? '新增赛季填报' : '更新赛季填报' }}</h4>
+        <TextTitle titleName="赛季状态填报"></TextTitle>
+        <AsgTipComponent type="warning" style="width:85%">
             <el-steps :active="6" align-center>
                 <el-step title="筹备中" description="用户不可以报名、不可以修改表单、不可以查看报名队伍"></el-step>
                 <el-step title="报名中" description="用户可以报名、不可以修改表单、不可以查看报名队伍"></el-step>
@@ -10,7 +11,10 @@
                 <el-step title="进行中" description="报名、修改表单停止、用户关注停止"></el-step>
                 <el-step title="已结束" description="报名、修改表单停止、用户关注停止"></el-step>
             </el-steps>
-        </el-alert>
+        </AsgTipComponent>
+        <div class="asgProcess-content">
+            <AsgProgress :status="seasonForm.status" @updateStatus="updateStatus"></AsgProgress>
+        </div>
         <TextTitle titleName="基本信息"></TextTitle>
         <el-form class="my-1" ref="seasonForm" :model="seasonForm" label-width="120px" label-position="right"
             :rules="formRules">
@@ -56,25 +60,26 @@
             <el-row>
                 <el-col :span="24">
                     <el-form-item label="赛季规则">
-                        <v-md-editor v-model="rules" height="400px"></v-md-editor>
+                        <v-md-editor v-model="rules" height="500px" style="width:90%"></v-md-editor>
                     </el-form-item>
+                    <AsgTipComponent type="danger" style="width:85%">
+                        <i class="el-icon-info"></i>赛季规则更新需要更替markdown文件，所以更新会有延迟，若发现规则没有立即更新请勿觉得是BUG，耐心等待即可。
+                    </AsgTipComponent>
                 </el-col>
             </el-row>
         </el-form>
-        <TextTitle titleName="赛季阶段状态"></TextTitle>
-        <div class="asgProcess-content">
-            <AsgProgress :status="seasonForm.status"></AsgProgress>
-        </div>
         <TextTitle titleName="赛季信息配置"></TextTitle>
         <div class="my-1">
             <personTable :tableData.sync="config.personConfig"></personTable>
         </div>
         <TextTitle titleName="报名字段配置"></TextTitle>
         <AsgTipComponent type="danger" style="width:85%">
-            点击想要的字段，若为<span style="color:#134196;margin:0 0.4em">蓝色激活</span>状态即表示是该赛季的报名必填字段。注意：像选手名称、选手id和选手参赛名称字段，必填比较合适，不然会影响后面裁判、导播判断选手名称。
+            点击想要的字段，若为<span
+                style="color:#134196;margin:0 0.4em">蓝色激活</span>状态即表示是该赛季的报名必填字段。注意：像选手名称、选手id和选手参赛名称字段，必填比较合适，不然会影响后面裁判、导播判断选手名称。
         </AsgTipComponent>
         <div class="my-1 flex-content">
-            <div class="item" :class="config.formConfig.includes(item.fieldCode) ? 'active' : ''" v-for="(item,index) in filedConfig" :key="index" @click="handleClick(item)">
+            <div class="item" :class="config.formConfig.includes(item.fieldCode) ? 'active' : ''"
+                v-for="(item, index) in filedConfig" :key="index" @click="handleClick(item)">
                 <p>{{ item.fieldName }}</p>
                 <p>{{ item.fieldCode }}</p>
                 <p>{{ item.type }}</p>
@@ -114,18 +119,12 @@ export default {
     watch: {
         'seasonForm.is_over': {
             handler(newVal) {
-                if (newVal) {
-                    this.seasonForm.status = '5'
-                } else {
-                    this.seasonForm.status = '4'
-                }
+                this.seasonForm.status = newVal ? '5' : '4'
             }
         },
         'seasonForm.status': {
             handler(newVal) {
-                if (newVal === '5') {
-                    this.seasonForm.is_over = true
-                }
+                this.seasonForm.is_over = newVal === '5'
             }
         },
     },
@@ -143,45 +142,45 @@ export default {
         return {
             filedConfig: [
                 {
-                    fieldName:'选手阵营',
-                    fieldCode:'camp',
-                    type:'boolean',
+                    fieldName: '选手阵营',
+                    fieldCode: 'camp',
+                    type: 'boolean',
 
                 },
                 {
-                    fieldName:'参赛名称',
-                    fieldCode:'gamerName',
-                    type:'string',
+                    fieldName: '参赛名称',
+                    fieldCode: 'gamerName',
+                    type: 'string',
                 },
                 {
-                    fieldName:'游戏名称',
-                    fieldCode:'playerName',
-                    type:'string',
+                    fieldName: '游戏名称',
+                    fieldCode: 'playerName',
+                    type: 'string',
                 },
                 {
-                    fieldName:'游戏id',
-                    fieldCode:'idNumber',
-                    type:'string',
+                    fieldName: '游戏id',
+                    fieldCode: 'idNumber',
+                    type: 'string',
                 },
                 {
-                    fieldName:'身份证',
-                    fieldCode:'identifier',
-                    type:'string',
+                    fieldName: '身份证',
+                    fieldCode: 'identifier',
+                    type: 'string',
                 },
                 {
-                    fieldName:'电话号码',
-                    fieldCode:'phoneNumber',
-                    type:'string',
+                    fieldName: '电话号码',
+                    fieldCode: 'phoneNumber',
+                    type: 'string',
                 },
                 {
-                    fieldName:'真实姓名',
-                    fieldCode:'realName',
-                    type:'string',
+                    fieldName: '真实姓名',
+                    fieldCode: 'realName',
+                    type: 'string',
                 },
                 {
-                    fieldName:'常用角色',
-                    fieldCode:'role',
-                    type:'string',
+                    fieldName: '常用角色',
+                    fieldCode: 'role',
+                    type: 'string',
                 },
             ],
             seasonForm: {
@@ -210,12 +209,16 @@ export default {
         };
     },
     methods: {
-        handleClick(item){
+        updateStatus(status){
+            console.log(status,'status===');
+            this.seasonForm.status = status.toString();
+        },
+        handleClick(item) {
             const index = this.config.formConfig.findIndex(el => el === item.fieldCode);
-            if(index === -1){
+            if (index === -1) {
                 this.config.formConfig.push(item.fieldCode);
-            }else{
-                this.config.formConfig.splice(index ,1);
+            } else {
+                this.config.formConfig.splice(index, 1);
             }
         },
         async updateItem() {
@@ -229,7 +232,7 @@ export default {
                 const req = {
                     ...this.seasonForm,
                     rule_markdown: this.rules,
-                    config:JSON.stringify(this.config)
+                    config: JSON.stringify(this.config)
                 };
                 const { status } = await updateEvents(req);
                 if (status !== 200) throw new Error("服务端异常，请联系网站管理员！");
@@ -257,7 +260,8 @@ export default {
                     const reqDTO = {
                         ...this.seasonForm,
                         rule_markdown: this.rules,
-                        config:JSON.stringify(this.config)
+                        events_rule_uri: `/doc/rule/${this.seasonForm.name}.md`,
+                        config: JSON.stringify(this.config)
                     };
                     pushNewEvents(reqDTO)
                         .then(({ status }) => {
@@ -297,32 +301,43 @@ export default {
 }
 </script>
 <style lang='less' scoped>
+.main-title{
+    text-align: center;
+    font-size: 1.5em;
+    font-family: 'hk';
+    margin:1em 0;
+    color:#5e6d82;
+    font-weight: bold;
+}
 .my-1 {
     margin: 1em 0;
 }
-.flex-content{
+
+.flex-content {
     display: flex;
     align-items: center;
-    gap:1em;
+    gap: 1em;
     width: 100%;
     flex-wrap: wrap;
-    .item{
+
+    .item {
         flex-shrink: 0;
         flex-grow: 0;
         border-radius: 1em;
         box-sizing: border-box;
-        border:1px solid #ddd;
+        border: 1px solid #ddd;
         background: #f7f7f7;
         display: flex;
         align-items: center;
         flex-direction: column;
         justify-content: center;
-        padding:1em;
-        width:300px;
+        padding: 1em;
+        width: 300px;
         cursor: pointer;
-        &.active{
+
+        &.active {
             background: #ecf8ff;
-            border-color:#134196
+            border-color: #134196
         }
     }
 }
