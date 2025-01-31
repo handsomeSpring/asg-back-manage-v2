@@ -5,54 +5,36 @@
       <span class="title">ASG赛事后台管理系统</span>
     </header>
     <main>
-      <el-image class="img-wrap" :src="require('@/assets/images/manager.svg')">
-      </el-image>
-      <div class="loginwrap">
-        <div class="header-form">
-          <p>系统登录</p>
-        </div>
-        <div class="info">
-          <el-form ref="ruleForm" :model="userform" :rules="rules" class="demo-ruleForm">
-            <el-form-item label="用户名" prop="username">
-              <el-input suffix-icon="el-icon-user-solid" v-model="userform.username" placeholder="请输入用户名"></el-input>
-            </el-form-item>
-            <el-form-item label="密码" prop="password">
-              <el-input v-model="userform.password" :type="inputtype" placeholder="请输入密码"
-                @keyup.enter.native="submit('ruleForm')">
-                <i @click="toggleEye" slot="suffix" :class="eye_status"></i>
-              </el-input>
-            </el-form-item>
-            <el-form-item>
-              <div class="login__btn--primary" :class="loading ? 'disabled' : ''" @click="submit('ruleForm')">
-                <p class="login__btn--text">登录</p>
-                <div v-show="loading" class="loader"></div>
-              </div>
-            </el-form-item>
-          </el-form>
-        </div>
+      <div class="center-content" v-if="!isMobile">
+        <el-image class="img-wrap" :src="require('@/assets/images/manager.svg')">
+        </el-image>
       </div>
-      <div class="mobile-loginwrap">
-        <div class="header-form">
-          <p>系统登录</p>
-        </div>
-        <div class="info">
-          <el-form ref="ruleForm" :model="userform" :rules="rules" class="demo-ruleForm">
-            <el-form-item label="用户名" prop="username">
-              <el-input suffix-icon="el-icon-user-solid" v-model="userform.username" placeholder="请输入用户名"></el-input>
-            </el-form-item>
-            <el-form-item label="密码" prop="password">
-              <el-input v-model="userform.password" :type="inputtype" placeholder="请输入密码"
-                @keyup.enter.native="submit('ruleForm')">
-                <i @click="toggleEye" slot="suffix" :class="eye_status"></i>
-              </el-input>
-            </el-form-item>
-            <el-form-item>
-              <div class="login__btn--primary" :class="loading ? 'disabled' : ''" @click="submit('ruleForm')">
-                <p class="login__btn--text">登录</p>
-                <div v-show="loading" class="loader"></div>
-              </div>
-            </el-form-item>
-          </el-form>
+      <div class="center-content">
+        <div class="loginwrap">
+          <div class="header-form">
+            <p class="header-title">系统登录</p>
+          </div>
+          <div class="info">
+            <el-form ref="ruleForm" :model="userform" :rules="rules" class="demo-ruleForm">
+              <el-form-item label="用户名" prop="username">
+                <el-input v-model="userform.username" placeholder="请输入用户名">
+                    <i class="el-icon-user-solid" slot="suffix"></i>
+                </el-input>
+              </el-form-item>
+              <el-form-item label="密码" prop="password">
+                <el-input v-model="userform.password" :type="inputtype" placeholder="请输入密码"
+                  @keyup.enter.native="submit('ruleForm')">
+                  <i @click="toggleEye" slot="suffix" :class="eye_status"></i>
+                </el-input>
+              </el-form-item>
+              <el-form-item>
+                <div class="login__btn--primary" :class="loading ? 'disabled' : ''" @click="submit('ruleForm')">
+                  <p class="login__btn--text">登 录</p>
+                  <div v-show="loading" class="loader"></div>
+                </div>
+              </el-form-item>
+            </el-form>
+          </div>
         </div>
       </div>
     </main>
@@ -93,8 +75,12 @@ export default {
         password: [
           { required: true, message: "密码不能为空", trigger: "blur" },
         ],
-      }
+      },
+      isMobile: false,
     };
+  },
+  created() {
+    this.isMobile = isMobile();
   },
   methods: {
     async login() {
@@ -228,179 +214,106 @@ header {
 main {
   width: 100%;
   height: calc(100dvh - 140px);
-  position: relative;
   overflow: hidden;
   background: url('../../assets/images/background.png');
   background-size: cover;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 
-  .img-wrap {
-    position: absolute;
-    left: 12vw;
-    top: 8vh;
-    width: 32vw;
-    height: 32vw;
-  }
+  .center-content {
+    width: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 
-  .loginwrap {
-    width: 380px;
-    padding: 18px 0 60px;
-    border: 1px solid #ddd;
-    background-color: white;
-    position: absolute;
-    right: -435px;
-    box-sizing: border-box;
-    top: calc((100dvh - 140px - 50vh - 40px) / 2);
-    border-radius: 8px;
-    animation: forwards move 0.8s;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.12), 0 0 6px rgba(0, 0, 0, 0.04);
-
-    p {
-      text-align: center;
-      font-size: 22px;
-      margin: 10px 0;
-
-      i {
-        color: #ebb563;
-      }
+    .img-wrap {
+      width: 60%;
+      height: 60%
     }
 
-    .info {
-      width: 70%;
-      margin: 0 auto;
-      padding: 2%;
+    .loginwrap {
+      width: 380px;
+      padding: 18px 0 60px;
+      border: 1px solid #ddd;
+      background-color: white;
+      box-sizing: border-box;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.12), 0 0 6px rgba(0, 0, 0, 0.04);
+      opacity: 0;
+      animation: forwards showOpacity 1.2s;
 
-      .el-form-item {
-        margin: 0;
-        padding: 0;
-        margin-bottom: 20px;
+      .header-form {
+        margin: 16px;
+        text-align: center;
 
-        &:nth-child(2) {
-          margin-bottom: 30px;
+        .header-title {
+          font-size: 1.4rem;
+          font-weight: bold;
+          color: #4090ef;
+        }
+      }
+
+      .info {
+        width: 73%;
+        margin: 0 auto;
+        padding: 2%;
+
+        .el-form-item {
+          margin: 0;
+          padding: 0;
+          margin-bottom: 20px;
+
+          &:nth-child(2) {
+            margin-bottom: 30px;
+          }
+
+          .el-form-item__label {
+            line-height: 30px;
+          }
+
+          .el-input i{
+              line-height: 40px;
+              font-size: 1.2em;
+          }
         }
 
-        .el-form-item__label {
-          line-height: 30px;
-        }
+        // 按钮
 
-        .el-input {
-          i {
-            line-height: 40px;
-            font-size: 22px;
+
+        .login__btn--primary {
+          background: #66b1ff;
+          border-color: #66b1ff;
+          color: #fff;
+          white-space: nowrap;
+          cursor: pointer;
+          box-sizing: border-box;
+          outline: 0;
+          transition: 0.1s;
+          border-radius: 4px;
+          margin-top: 1em;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          height: 2.6em;
+
+          .login__btn--text {
+            font-size: 1.1em;
+            font-weight: 500;
+          }
+
+          &.disabled {
+            background: #7eb8f7;
+            border-color: #7bb3f0;
+          }
+
+          &:hover {
+            background: #7eb8f7;
+            border-color: #7bb3f0;
           }
         }
       }
     }
-  }
-
-  .mobile-loginwrap {
-    display: none;
-
-    p {
-      text-align: center;
-      font-size: 22px;
-      margin: 10px 0;
-
-      i {
-        color: #ebb563;
-      }
-    }
-
-    .info {
-      width: 70%;
-      margin: 0 auto;
-      padding: 2%;
-
-      .el-form-item {
-        margin: 0;
-        padding: 0;
-        margin-bottom: 20px;
-
-        &:nth-child(2) {
-          margin-bottom: 30px;
-        }
-
-        .el-form-item__label {
-          line-height: 30px;
-        }
-
-        .el-input {
-          i {
-            line-height: 40px;
-            font-size: 22px;
-          }
-        }
-      }
-    }
-  }
-
-  @keyframes move {
-    0% {
-      transform: translateX(0);
-    }
-
-    100% {
-      transform: translateX(-600px);
-    }
-  }
-}
-
-// 底部
-footer {
-  height: 70px;
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-
-  p {
-    font-size: 13px;
-    color: #303030;
-  }
-}
-
-.header-form {
-  margin: 16px;
-  text-align: center;
-
-  p {
-    font-size: 1.2rem;
-    font-weight: bold;
-    color: #4090ef;
-  }
-}
-
-.login__btn--primary {
-  background: #66b1ff;
-  border-color: #66b1ff;
-  color: #fff;
-  white-space: nowrap;
-  cursor: pointer;
-  box-sizing: border-box;
-  outline: 0;
-  transition: 0.1s;
-  border-radius: 4px;
-  margin-top: 12px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 40px;
-
-  .login__btn--text {
-    font-size: 14px;
-    font-weight: 500;
-    margin-right: 12px;
-  }
-
-  &.disabled {
-    background: #7eb8f7;
-    border-color: #7bb3f0;
-    cursor: not-allowed;
-  }
-
-  &:hover {
-    background: #7eb8f7;
-    border-color: #7bb3f0;
   }
 
   /* HTML: <div class="loader"></div> */
@@ -425,6 +338,18 @@ footer {
   @keyframes l4 {
     to {
       transform: rotate(1turn);
+    }
+  }
+
+  @keyframes showOpacity {
+    0% {
+      opacity: 0;
+      transform: translateY(-20px);
+    }
+
+    100% {
+      opacity: 1;
+      transform: translateY(0);
     }
   }
 }
