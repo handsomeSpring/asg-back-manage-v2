@@ -34,63 +34,7 @@
             </div>
           </td>
         </tr>
-        <template v-if="isNested">
-          <tr
-            v-for="(child, idx) of item.goodsList || item.goods || []"
-            :key="child.id || idx"
-            @mouseover="hoverIndex = index"
-            @mouseleave="hoverIndex = null"
-          >
-            <td v-for="subItem in column" class="project-content__border">
-              <div
-                v-if="subItem.slot"
-                class="project-content"
-                :style="subItem.style"
-              >
-                <slot :name="subItem.prop" :data="child"></slot>
-              </div>
-              <div v-else :style="subItem.style" class="project-content">
-                <div v-if="subItem.type === 'index'">{{ idx + 1 }}</div>
-                <div v-else-if="subItem.type === 'projInfo'">
-                  <p>预算项目名称：{{ child.budgetName }}</p>
-                  <p>资金性质：{{ child.fundSourceName }}</p>
-                  <p>指标类型：{{ child.budgetIndexName }}</p>
-                  <p>指标管理处室：{{ child.indexManageOfficeName }}</p>
-                </div>
-                <div v-else-if="subItem.type === 'goodsInfo'">
-                  <p>预算金额：{{ child.initialBudget }}</p>
-                  <p>数量(单位)：{{ child.quantity }}({{ child.unit }})</p>
-                  <p>单价(元)：{{ child.unitPrice }}</p>
-                  <p>
-                    采购品目：{{ child.catalogCode || ""
-                    }}{{ child.catalogName || "" }}
-                  </p>
-                </div>
-                <div v-else-if="subItem.type === 'plan'">
-                  <p>项目名称：{{ child.planName }}</p>
-                  <p>
-                    涉及进口：{{
-                      child.hasImportedProduct === "1" ? "是" : "否"
-                    }}
-                  </p>
-                  <p>采购分类：{{ child.projTypeName }}</p>
-                  <p>备注：{{ child.remarks }}</p>
-                </div>
-                <div v-else-if="subItem.type === 'purchaseImplType'">
-                  <p>{{ child.implFormName }}</p>
-                </div>
-                <div v-else-if="subItem.type === 'budgetMoney'">
-                  <p>{{ child.planTotal | moneyFormat }}</p>
-                </div>
-                <div v-else>
-                  {{ child[subItem.prop] }}
-                </div>
-              </div>
-            </td>
-          </tr>
-        </template>
         <tr
-          v-else
           @mouseover="hoverIndex = index"
           @mouseleave="hoverIndex = null"
         >
@@ -268,11 +212,6 @@ export default {
       type: Array,
       default: () => [],
     },
-    isNested: {
-      required: false,
-      type: Boolean,
-      default: false,
-    },
   },
   data() {
     return {
@@ -309,8 +248,14 @@ table {
   font-size: 14px;
 
   tr th {
+    &:first-child{
+      border-radius: 6px 0 0 6px ;
+    }
+    &:last-child{
+      border-radius: 0 6px 6px 0;
+    }
     padding: 12px 0;
-    background: #e5f0ff;
+    background:  #b3d4ff
   }
   tr th:first-child {
     width: 50px;
@@ -321,11 +266,13 @@ table {
   justify-content: space-between;
   align-items: center;
   padding: 12px 16px;
-  background: linear-gradient(180deg, #e5f0ff 0%, #ffffff 30%);
+  background: linear-gradient(172deg,
+      #b3d4ff 0%,
+      rgba(255, 255, 255, 0) 93%);
+  border-image: linear-gradient(172deg,
+      #b3d4ff 0%,
+      rgba(255, 255, 255, 0) 93%);
   border-radius: 6px 6px 0 0;
-  &:hover {
-    background: #f2f6fd;
-  }
   div > span {
     margin-right: 15px;
   }
@@ -350,8 +297,11 @@ table {
 }
 .project-content__border:first-child {
   border-left: 1px solid #eee;
+  border-radius: 0 0 0 6px;
 }
-
+.project-content__border:last-child {
+  border-radius: 0 0 6px 0;
+}
 .data-empty {
   padding: 30px 0;
   border: 1px solid #fafafa;

@@ -39,7 +39,7 @@
 
 <script>
 import TextTitle from '@/components/TextTitle.vue';
-import asgTableCard from '@/components/asg-table-card.vue';
+import asgTableCard from '@/components/AsgTableCard.vue';
 import slotTable from '../components/slotTable.vue';
 export default {
     name: 'AsgTableCardDoc',

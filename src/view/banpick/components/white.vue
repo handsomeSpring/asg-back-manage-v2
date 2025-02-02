@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="asg-table-main">
-      <baseTable :data="tableData" :column="tableProps">
+      <AsgHighTable :data="tableData" :column="tableProps">
         <template #projectHeader="{ data }">
           <div>
             <span>
@@ -38,7 +38,7 @@
           <p>负责人联系方式：{{ data.headTel }}</p>
           <p>合作方社交账号：{{ data.account }}</p>
         </template>
-      </baseTable>
+      </AsgHighTable>
     </div>
     <el-pagination style="text-align: right;" @size-change="handleSizeChange" @current-change="handleCurrentChange"
       :current-page="listQuery.page" :page-sizes="[10, 20, 30, 100]" :page-size="listQuery.page_long"
@@ -48,11 +48,11 @@
 </template>
 
 <script>
-import baseTable from "@/components/baseTable.vue";
+import AsgHighTable from "@/components/AsgHighTable.vue";
 export default {
-  name: "white",
+  name: "white-page",
   components: {
-    baseTable,
+    AsgHighTable,
   },
   props: {
     tableData: {

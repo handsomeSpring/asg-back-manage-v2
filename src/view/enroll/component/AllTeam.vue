@@ -20,7 +20,7 @@
     </el-row>
     <el-scrollbar :native="false" wrapStyle="" wrapClass="" viewClass="" viewStyle="" :noresize="false" tag="section"
       style="height: calc(70vh - 30px); margin-bottom: 10px">
-      <baseTable v-loading="loading" element-loading-text="系统加载中，请稍等" element-loading-spinner="el-icon-loading"
+      <AsgHighTable v-loading="loading" element-loading-text="系统加载中，请稍等" element-loading-spinner="el-icon-loading"
         :data="tableData" :column="tableProps">
         <template #projectHeader="{ data }">
           <div>
@@ -53,7 +53,7 @@
             <el-tag size="mini" :type="item.role_lin === '求生者' ? 'primary' : 'danger'">{{ item.role_lin }}</el-tag>
           </el-col>
         </template>
-      </baseTable>
+      </AsgHighTable>
     </el-scrollbar>
     <!-- <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="listQuery.page"
       :page-sizes="[10, 20, 30, 100]" :page-size="listQuery.page_long" layout="total, sizes, prev, pager, next, jumper"
@@ -65,11 +65,11 @@
 <script>
 import { delEnrollTeam } from "@/api/enroll/index";
 import { getAllEvents,getPlayerDetails } from "@/api/gameSeason/index";
-import baseTable from "@/components/baseTable.vue";
+import AsgHighTable from "@/components/AsgHighTable.vue";
 export default {
   name: "AllTeam",
   components: {
-    baseTable,
+    AsgHighTable,
   },
   created() {
     this.initSeason();

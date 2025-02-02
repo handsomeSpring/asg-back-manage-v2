@@ -233,7 +233,7 @@ import auditRequestBase from "./auditRequestBase.vue";
 import { mapGetters } from "vuex";
 import { getTodayString, parseTime } from "@/utils/filters";
 import { uuid } from "@/utils";
-import asgTableCard from "@/components/asg-table-card.vue";
+import asgTableCard from "@/components/AsgTableCard.vue";
 import reqFormDialog from "./reqFormDialog.vue";
 import { deepClone } from "@/utils";
 import { postAudit, statusChange4, findFormById } from "@/api/admin/index.js";

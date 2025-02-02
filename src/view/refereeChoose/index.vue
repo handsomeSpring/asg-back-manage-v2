@@ -77,7 +77,7 @@ import { getScheduleFrontNew } from "@/api/schedule/index.js";
 import { mapGetters } from "vuex";
 import { anchorChoose } from "@/api/schedule/referee.js";
 import cancelDialog from "./components/cancelDialog.vue";
-import asgTableCard from "@/components/asg-table-card.vue";
+import asgTableCard from "@/components/AsgTableCard.vue";
 export default {
   name: "refereeChoose",
   components: {

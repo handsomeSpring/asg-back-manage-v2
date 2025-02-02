@@ -137,7 +137,7 @@ import { delSchedule, importExcel } from "@/api/schedule/index";
 import { getAllEvents } from "@/api/gameSeason/index";
 import exportDia from "./exportDia.vue";
 import DialogChoose from "./DialogChoose.vue";
-import asgTableCard from "@/components/asg-table-card.vue";
+import asgTableCard from "@/components/AsgTableCard.vue";
 import GameResult from "./GameResult.vue";
 import viewResultDialog from "./viewResultDialog.vue";
 import { getUserRoles, getAllScheduleV2 } from "@/api/schedule/index";

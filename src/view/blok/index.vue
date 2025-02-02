@@ -6,7 +6,7 @@
     ></ChamplionPlubish>
     <!-- 展示 -->
     <div class="asg-table-main">
-      <baseTable :data="cham" :column="tableProps" v-loading="loading">
+      <AsgHighTable :data="cham" :column="tableProps" v-loading="loading">
         <template #projectHeader="{ data }">
           <div class="header--rela">
             <span>
@@ -59,7 +59,7 @@
         <template #like="{ data }">
           <span>{{ data.vote }}</span>
         </template>
-      </baseTable>
+      </AsgHighTable>
     </div>
     <el-dialog
       title="修改冠军"
@@ -127,7 +127,7 @@
 
 <script>
 import { getAllCham, deleteCham, updateChampion } from "@/api/cham/index.js";
-import baseTable from "@/components/baseTable.vue";
+import AsgHighTable from "@/components/AsgHighTable.vue";
 import ChamplionPlubish from "@/view/blok/ChamplionPlubish.vue";
 import { getAllEvents } from "@/api/gameSeason/index";
 import { getByTitle } from "@/api/config";
@@ -135,7 +135,7 @@ import { getByTitle } from "@/api/config";
 export default {
   name: "ChamplionManage",
   components: {
-    baseTable,
+    AsgHighTable,
     ChamplionPlubish,
   },
   data() {

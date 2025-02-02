@@ -58,7 +58,7 @@
 import { getByTitle } from "@/api/config";
 import { getAllEvents } from "@/api/gameSeason/index";
 import { getEnrollTeam, delEnrollTeam } from "@/api/enroll/index.js";
-import asgTableCard from "@/components/asg-table-card.vue";
+import asgTableCard from "@/components/AsgTableCard.vue";
 import dialoginfo from "./component/dialoginfo.vue";
 export default {
   name: "enrollList",

@@ -62,7 +62,7 @@ import {
     getAllEvents,
     deleteEvents
 } from "@/api/gameSeason/index";
-import asgTableCard from "@/components/asg-table-card.vue";
+import asgTableCard from "@/components/AsgTableCard.vue";
 export default {
     name: 'season-list',
     components: {

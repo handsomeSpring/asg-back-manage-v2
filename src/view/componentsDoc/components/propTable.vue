@@ -1,6 +1,6 @@
 <template>
     <div>
-        <TextTitle class="custom-my-1" title-name="prop- Attributes"></TextTitle>
+        <TextTitle class="custom-my-1" :title-name="textTitleName"></TextTitle>
         <div class="header-content">
             <div>参数</div>
             <div>类型</div>
@@ -25,6 +25,10 @@ export default {
     tableData:{
         type:Array,
         default:()=>[]
+    },
+    textTitleName:{
+        type:String,
+        default:'prop- Attributes'
     }
   }
 }

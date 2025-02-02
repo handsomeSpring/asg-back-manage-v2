@@ -1,5 +1,6 @@
 import AsgHighSearchDoc from './AsgHighSearchDoc.vue';
 import AsgTableCardDoc from './AsgTableCardDoc.vue';
+import AsgHighTableDoc from './AsgHighTableDoc.vue';
 import AsgTipComponentDoc from './AsgTipComponentDoc.vue';
 import AsgPersonChooseDoc from './AsgPersonChooseDoc.vue';
 import AsgCheckBoxDoc from './AsgCheckBoxDoc.vue';
@@ -10,6 +11,7 @@ import AsgMobilePageDoc from './AsgMobilePageDoc.vue';
 const components = {
     AsgHighSearchDoc,
     AsgTableCardDoc,
+    AsgHighTableDoc,
     AsgTipComponentDoc,
     AsgPersonChooseDoc,
     AsgCheckBoxDoc,
