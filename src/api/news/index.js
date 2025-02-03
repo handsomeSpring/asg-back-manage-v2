@@ -1,4 +1,4 @@
-import request from '../../utils/request'
+import request from '@/utils/request'
 // 发布公告
 export function pushNews(data){
     return request({

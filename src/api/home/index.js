@@ -1,5 +1,5 @@
-import { getToken } from "../../utils/auth";
-import request from "../../utils/request";
+import { getToken } from "@/utils/auth";
+import request from "@/utils/request";
 //登录
 export function getInfo() {
   return request.get("/api/v1/user");

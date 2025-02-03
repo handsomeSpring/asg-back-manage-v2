@@ -42,7 +42,6 @@
 import AsgTipComponent from '@/components/AsgTipComponent.vue';
 import widgetOptions from './hooks/index'
 import introOptions from './introductions/index'
-import SvgIcon from '@/components/SvgIcon.vue';
 export default {
     name: 'asg-components-document',
     components: {
