@@ -59,6 +59,11 @@
                             type:'slot',
                             prop:'sex',
                             label:'性别'
+                          },
+                          {
+                            type:'prop',
+                            prop:'hobby',
+                            label:'兴趣爱好'
                           }
                         ],
                         loading:false
@@ -132,6 +137,11 @@ export default {
                 type:'slot',
                 prop:'sex',
                 label:'性别'
+            },
+            {
+                type:'prop',
+                prop:'hobby',
+                label:'兴趣爱好'
             }
         ],
         propTable:[

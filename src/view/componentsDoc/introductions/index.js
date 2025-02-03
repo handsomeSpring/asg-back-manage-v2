@@ -1,8 +1,12 @@
 import baseIntroDoc from "./baseIntroDoc.vue";
-import mobileDevDoc from "./mobileDevDoc.vue"
+import baseDevDoc from "./baseDevDoc.vue";
+import mobileDevDoc from "./mobileDevDoc.vue";
+import axiosUseDoc from "./axiosUseDoc.vue";
 
 const components = {
     baseIntroDoc,
+    baseDevDoc,
+    axiosUseDoc,
     mobileDevDoc
 };
 
