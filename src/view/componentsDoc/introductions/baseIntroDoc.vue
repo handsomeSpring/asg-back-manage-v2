@@ -5,7 +5,7 @@
             <el-table-column label="项目名称" prop="name" align="center"></el-table-column>
             <el-table-column label="兼容设备" prop="adp" align="center"></el-table-column>
             <el-table-column label="技术栈" prop="methods" align="center"></el-table-column>
-            <el-table-column label="链接地址" prop="href" align="center">
+            <el-table-column label="项目地址" prop="href" align="center">
                 <template #default="{ row }">
                     <el-link type="primary" :href="row.href" target="_blank">{{ row.href }}</el-link>
                 </template>
@@ -13,10 +13,10 @@
         </el-table>
         <TextTitle class="custom-my-1" title-name="github项目地址"></TextTitle>
         <el-link type="primary" href="https://github.com/handsomeSpring/asg-back-manage-v2"
-            target="_blank">https://github.com/handsomeSpring/asg-back-manage-v2</el-link>
+            target="_blank">第五人格ASG赛事后台管理系统地址</el-link>
         <br />
         <el-link type="primary" href="https://github.com/handsomeSpring/commentary_v2"
-            target="_blank">https://github.com/handsomeSpring/commentary_v2</el-link>
+            target="_blank">第五人格ASG赛事解说选班系统地址</el-link>
         <TextTitle class="custom-my-1" title-name="目前针对解说端和后台开放环境配置流程"></TextTitle>
         <el-table :data="environmentData" border stripe :header-cell-style="{ background: '#f2f6fd', color: '#000' }">
             <el-table-column label="项目名称" prop="name" align="center"></el-table-column>

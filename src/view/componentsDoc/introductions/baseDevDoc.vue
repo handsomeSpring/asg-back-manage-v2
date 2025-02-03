@@ -6,7 +6,7 @@
             <el-table-column label="代码" prop="prop" align="center"></el-table-column>
             <el-table-column label="示例" prop="exam" align="center"></el-table-column>
         </el-table>
-        <TextTitle class="custom-my-1" title-name="常用javascript技巧"></TextTitle>
+        <TextTitle class="custom-my-1" title-name="常用javascript方法"></TextTitle>
         <el-table :data="javaData" border stripe :header-cell-style="{ background: '#f2f6fd', color: '#000' }">
             <el-table-column label="方法名" prop="name" align="center"></el-table-column>
             <el-table-column label="描述" prop="doc" align="center"></el-table-column>
@@ -44,7 +44,7 @@ export default {
             {
                 name:'findIndex',
                 doc:'查找数组元素所在下标',
-                exam:'const a = [1,2,3].find(item =>  item === 2 ),a为1'
+                exam:'const a = [1,2,3].findIndex(item =>  item === 2 ),a为1'
             },
             {
                 name:'reduce',
