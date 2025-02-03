@@ -110,7 +110,7 @@
                                                 {{ settingInfo.component === 'router-view' ? '>' : '.vue' }}
                                             </template>
                                 </el-input>
-                                <el-button plain @click="setRouterView" size="small">设置为无跳转</el-button>
+                                <el-button v-show="!isForbid" plain @click="setRouterView" size="small">设置为无跳转</el-button>
                             </el-form-item>
                         </el-col>
                     </el-row>
