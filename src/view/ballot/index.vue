@@ -33,6 +33,7 @@
               <el-input style="width: 250px" v-model="nowTeam" size="small" @keyup.enter.native="addNew">
                 <el-button size="small" slot="append" @click="addNew">添加</el-button>
               </el-input>
+              <el-button class="custom-my-1" type="primary" size="small" @click="importTeam">导入参赛队伍</el-button>
               <div class="number-count">
                 <p>目前已添加战队数：</p>
                 <p class="fontWeight">{{ teamList.length }}个</p>
@@ -66,16 +67,19 @@
             <Card :maxTeamNum="maxTeamNum" :groups="groups" :groupIndex="groupIndex" @addItem="addInGroup"
               v-for="(item, index) in teamList" :key="index" :back="item"></Card>
           </div>
+          <AsgTipComponent type="primary">
           <p class="text_info">
             自动计算：一组最多{{ maxTeamNum }}支战队
             <span class="warning">点击组容器选择该组，翻牌后战队会自动进入该组。</span>
           </p>
+          </AsgTipComponent>
+
           <div class="group-wrap">
             <div :class="{ active: groupIndex === index }" class="group" v-for="(_, index) in groups" :key="index"
               @click="handleChooseGroup(index)">
               <div class="title">第{{ index + 1 }}组</div>
               <div class="team-wrap">
-                <p v-for="el in groups[index]">{{ el }}</p>
+                <p v-for="(el ,i) in groups[index]" :key="i">{{ el }}</p>
               </div>
             </div>
           </div>
@@ -90,6 +94,17 @@
           " size="small">取 消</el-button>
           <el-button size="small" type="primary" @click="dialogVisible = false">确 定</el-button>
         </div>
+      </el-dialog>
+      <el-dialog title="导入参赛队伍" width="40%" :visible.sync="teamVisible" :close-on-click-modal="false">
+        <AsgTipComponent type="primary">
+          <p class="text_info">
+            请用英文逗号\ , \拼接每一个队伍到输入框里，不要出现空格，否则会导入失败！导入参赛队伍会清空目前添加的所有队伍，请谨慎操作。
+          </p>
+        </AsgTipComponent>
+        <el-input v-model="teamString" type="textarea" :rows="5" placeholder="请粘贴队伍到输入框中，例如XXS,Lyon,7Z"></el-input>
+        <span slot="footer">
+          <el-button size="small" type="primary" @click="finishImportTeam">确 认 导 入</el-button>
+        </span>
       </el-dialog>
     </el-container>
     <div class="btn_list">
@@ -106,7 +121,7 @@
         <el-button class="extract-wrap" size="small" type="primary" :loading="loading" @click="shuffle">洗牌</el-button>
       </template>
       <div v-if="activeName === 3">
-        <el-button size="small" type="primary" @click="inLastCur">进入翻牌环节</el-button>
+        <el-button size="small" type="primary" @click="inLastCur" :disabled="!ballotMode">进入翻牌环节</el-button>
       </div>
     </div>
 
@@ -118,16 +133,18 @@ import Card from "./components/Card";
 import BallotModeChoose from "./components/BallotModeChoose.vue";
 import Second from "./components/Second";
 import { shuffle } from "@/utils/index";
+import AsgTipComponent from "@/components/AsgTipComponent.vue";
 export default {
   name: "ballot-info",
   components: {
     Card,
     Second,
     BallotModeChoose,
+    AsgTipComponent
   },
   data() {
     return {
-      activeName: 1,
+      activeName:1,
       nowTeam: "", //现在输入的队伍名
       teamList: [], //所有待抽签的队伍名
       url: "",
@@ -139,6 +156,8 @@ export default {
       groupIndex: null,
       hasRotate: false, //是否已被反派
       ballotMode: "", //抽签模式 '1' 淘汰赛 '2' 小组赛
+      teamVisible:false, //导入参赛队伍弹窗
+      teamString:'',
     };
   },
   computed: {
@@ -147,6 +166,20 @@ export default {
     },
   },
   methods: {
+    finishImportTeam(){
+      try {
+        this.teamList = this.teamString.split(',');
+      } catch (error) {
+        this.$message.error(error.message + '导入失败-字符串匹配错误！');
+        this.teamList = [];
+      } finally {
+        this.teamVisible = false;
+        this.teamString = '';
+      }
+    },
+    importTeam(){
+      this.teamVisible = true;
+    },
     addNew() {
       if (!this.nowTeam) {
         this.$message.error("请输入战队名");
@@ -158,11 +191,7 @@ export default {
     closeTag(index) {
       this.teamList.splice(index, 1);
     },
-    finishChoose() {
-      console.log(this.teamList, this.maxTeamNum, 'this');
-    },
     inBallot() {
-      console.log(this.teamList, this.maxTeamNum, 'this');
       if (this.teamList.length % 2 === 0 && this.teamList.length !== 0) {
         this.activeName = 2;
       } else {
@@ -196,6 +225,7 @@ export default {
           type: "warning",
         }
       ).then(() => {
+        this.loading = false;
         // 第四步需要重置信息
         if (this.activeName === 4) {
           this.hasRotate = false;
@@ -295,7 +325,6 @@ export default {
   display: flex;
   justify-content: start;
   align-items: center;
-  margin: 24px 0;
 }
 
 .fontWeight {
@@ -341,8 +370,8 @@ export default {
       p {
         width: 100%;
         text-align: center;
-        background-color: #EBF3FE;
-        color: #0C80E5;
+        background-color: #245aa1;
+        color: #F7E151;
         margin: 6px;
         padding: 6px 0;
       }
@@ -360,12 +389,13 @@ export default {
 }
 
 .text_info {
-  color: #979797;
   font-size: 14px;
-  font-weight: 500;
+  color: #5e6d82;
+  line-height: 1.5em;
+  font-weight: 600;
 
   .warning {
-    color: rgb(179, 149, 72);
+    color: #ff943e;
     margin-left: 24px;
   }
 }

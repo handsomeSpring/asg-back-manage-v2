@@ -7,7 +7,7 @@
 
 <script>
 export default {
-  name: "Card",
+  name: "Card-info",
   props: {
     cover: {
       type: String,
@@ -19,7 +19,7 @@ export default {
     },
     groupIndex:{
       type:Number,
-      required:true
+      default:0
     },
     maxTeamNum:{
       type:Number,
@@ -42,6 +42,7 @@ export default {
   },
   methods:{
     handleRotate(){
+      if(this.coverDeg !== 0) return;
       if(this.groupIndex === null){
         this.$message.error("请先选择组别！");
         return;
@@ -50,21 +51,9 @@ export default {
         this.$message.error("该组已抽满，请换一个组别！");
         return;
       }
-      if(this.coverDeg === 0){
-        this.$emit("addItem",this.back);
-        this.coverDeg += 180
-        this.backDeg += 180
-      }else{
-        return;
-      }
-      // if(this.coverDeg === 0){
-      //   this.coverDeg += 180
-      //   this.backDeg += 180
-      // }else{
-      //   this.coverDeg -= 180
-      //   this.backDeg -= 180
-      // }
-     
+      this.$emit("addItem",this.back);
+      this.coverDeg += 180
+      this.backDeg += 180
       this.$refs.cover.style.transform = `rotateY(${this.coverDeg}deg)`
       this.$refs.back.style.transform = `rotateY(${this.backDeg}deg)`
     }

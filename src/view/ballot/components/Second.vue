@@ -17,7 +17,7 @@
 
 <script>
 export default {
-  name: "Second",
+  name: "Second-page",
   data() {
     return {
       audioEle: null,
@@ -118,6 +118,7 @@ export default {
           this.$confirm("抽取完毕，是否进入下一步？", "提示", {
             confirmButtonText: "确定",
             cancelButtonText: "重抽",
+            closeOnClickModal:false,
             type: "warning",
           })
             .then(() => {
@@ -193,7 +194,7 @@ export default {
 .shuffle-img {
   display: block;
   position: absolute;
-  left: calc(50% - 90PX);
+  left: calc(50% - 90px);
   width: 180px;
   height: 300px;
 
