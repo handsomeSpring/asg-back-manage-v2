@@ -61,9 +61,7 @@
             <el-row>
                 <el-col :span="8">
                     <el-form-item label="预算金额" prop="budgetMoney">
-                        <money-input v-model="form.budgetMoney" size="small"></money-input>
-                        <p class="money-text">{{ form.budgetMoney | toChies }}<span style="margin-left:6px">元整</span>
-                        </p>
+                        <asg-money-input v-model="form.budgetMoney" size="small"></asg-money-input>
                     </el-form-item>
                 </el-col>
                 <el-col :span="16">
@@ -85,8 +83,12 @@
 import { getByTitle } from '@/api/config';
 import { saveBudget } from "@/api/budget";
 import { mapGetters } from 'vuex';
+import AsgMoneyInput from '@/components/AsgMoneyInput.vue';
 export default {
     name: 'budget-detail',
+    components:{
+        AsgMoneyInput
+    },
     props: {
         eventOptions: {
             type: Array,
@@ -226,8 +228,4 @@ footer {
     margin: 12px 0;
 }
 
-.money-text {
-    color: #4090EF;
-    font-weight: 600;
-}
 </style>

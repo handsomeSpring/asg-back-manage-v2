@@ -149,7 +149,7 @@ import slotTable from '../components/slotTable.vue';
 import AsgTipComponent from '@/components/AsgTipComponent.vue';
 export default {
   name: 'AsgHighTableDoc',
-  text: '高表头表格',
+  text: 'AsgHighTable 高表格',
   components: {
     TextTitle,
     AsgHighTable,

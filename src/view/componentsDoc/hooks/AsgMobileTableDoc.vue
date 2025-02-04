@@ -91,7 +91,7 @@ import mobileTable from '@/components/mobile/mobileTable.vue';
 import propTable from '../components/propTable.vue';
 export default {
   name:'AsgMobileTableDoc',
-  text:'移动端表格',
+  text:'AsgMobileTable 移动端表格',
   components:{
     mobileTable,
     TextTitle,

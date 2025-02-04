@@ -9,7 +9,7 @@
         </AsgTipComponent>
         <main>
             <el-menu :default-active="componentType" class="el-menu-vertical-demo" active-text-color="#fff"
-                text-color="#000" @select="handleSelect">
+                text-color="#888888" @select="handleSelect">
                 <el-submenu index="1">
                     <template slot="title">
                         <svg-icon color="#4090EF" iconClass="template" width="24px" height="24px"></svg-icon>

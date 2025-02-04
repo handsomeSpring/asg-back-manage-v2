@@ -47,7 +47,7 @@ import AsgTipComponent from '@/components/AsgTipComponent.vue';
 import slotTable from '../components/slotTable.vue';
 export default {
     name: 'AsgTipComponentDoc',
-    text: '顶格标题提示词',
+    text: 'AsgTipComponent 标题提示',
     components: {
         AsgTipComponent,
         TextTitle,

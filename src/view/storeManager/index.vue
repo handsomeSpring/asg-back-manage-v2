@@ -62,7 +62,7 @@
           </el-col>
         </el-row>
         <el-form-item label="商品价格" prop="price">
-          <money-input size="small" v-model="form.price"> </money-input>
+          <asg-money-input size="small" v-model="form.price"> </asg-money-input>
         </el-form-item>
         <el-form-item label="商品描述" prop="description">
           <el-input size="small" v-model="form.description" type="textarea" :rows="3"></el-input>
@@ -84,8 +84,12 @@
 import { addNew, getStore, editGoods, deleteItem } from "@/api/storeManager/index";
 import { getByTitle } from "@/api/config";
 import { deepClone } from "@/utils";
+import AsgMoneyInput from "@/components/AsgMoneyInput.vue";
 export default {
   name: 'storeManager',
+  components:{
+    AsgMoneyInput
+  },
   data() {
     return {
       type: '',

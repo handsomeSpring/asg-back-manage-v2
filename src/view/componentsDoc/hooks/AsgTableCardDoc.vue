@@ -43,7 +43,7 @@ import asgTableCard from '@/components/AsgTableCard.vue';
 import slotTable from '../components/slotTable.vue';
 export default {
     name: 'AsgTableCardDoc',
-    text: '蓝色表格',
+    text: 'AsgTableCard 蓝色表格',
     components: {
         asgTableCard,
         TextTitle,

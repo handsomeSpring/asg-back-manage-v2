@@ -1,7 +1,10 @@
 <!--用法示例-->
 <!--<money-input v-model="listQuery.name" :decimal="4" :symbol="symbol" clearable></money-input>-->
 <template>
-  <div
+  <div class="asg-money-input-content">
+    <div
+    v-if="!readOnly"
+    class="input-content"
     :class="[
       type === 'textarea' ? 'el-textarea' : 'el-input',
       inputSize ? 'el-input--' + inputSize : '',
@@ -94,6 +97,8 @@
       :aria-label="label"
     >
     </textarea>
+    </div>
+    <span class="chi-text">{{ value | convertMoney}}</span>
   </div>
 </template>
 
@@ -102,7 +107,7 @@ import emitter from 'element-ui/src/mixins/emitter';
 import Migrating from 'element-ui/src/mixins/migrating';
 import calcTextareaHeight from 'element-ui/packages/input/src/calcTextareaHeight';
 import merge from 'element-ui/src/utils/merge';
-import accounting from './accounting'
+import accounting from './componentHooks/accounting'
 
 export default {
   name: 'MoneyInput',
@@ -146,7 +151,6 @@ export default {
     id: String,
     maxlength: Number,
     minlength: Number,
-    readonly: Boolean,
     autofocus: Boolean,
     disabled: Boolean,
     type: {
@@ -191,8 +195,12 @@ export default {
     },
     decimal: {
       type: Number,
-      default: 4,
+      default: 2,
       desc: '小数位'
+    },
+    readOnly:{
+      type:Boolean,
+      default:false
     }
   },
 
@@ -230,10 +238,11 @@ export default {
         if (this.focused) {
           return accounting.unformat(this.value);
         } else {
+          const decimal = this.decimal <= 2 ? this.decimal : 2;
           if (this.danweiName) {
-            return accounting.formatMoney(this.value, this.symbol, this.decimal) + ' ' + this.danweiName;
+            return accounting.formatMoney(this.value, this.symbol, decimal) + ' ' + this.danweiName;
           }
-          return accounting.formatMoney(this.value, this.symbol, this.decimal);
+          return accounting.formatMoney(this.value, this.symbol, decimal);
         }
       },
       set(newValue) {
@@ -315,7 +324,8 @@ export default {
       if (this.min && (value < this.min) && (value >= 0)) {
         value = this.min
       }
-      const formatvalue = parseFloat(parseFloat(accounting.unformat(value)).toFixed(this.decimal));
+      const decimal = this.decimal <= 2 ? this.decimal : 2;
+      const formatvalue = parseFloat(parseFloat(accounting.unformat(value)).toFixed(decimal));
       this.$emit('input', formatvalue);
       // this.setCurrentValue(value);
     },
@@ -380,3 +390,22 @@ export default {
   }
 };
 </script>
+<style lang="less" scoped>
+.asg-money-input-content{
+  display: flex;
+  align-items: flex-start;
+  width:100%;
+  gap:12px;
+  .input-content{
+    width:60%;
+    flex-shrink: 0;
+    flex-grow: 0;
+  }
+  .chi-text{
+    color:#4090EF;
+    font-family: 'hk';
+    font-weight: 600;
+    font-size: 1em;
+  }
+}
+</style>

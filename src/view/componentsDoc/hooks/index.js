@@ -7,17 +7,21 @@ import AsgCheckBoxDoc from './AsgCheckBoxDoc.vue';
 import AsgPriorityCompDoc from './AsgPriorityCompDoc.vue';
 import AsgMobileTableDoc from './AsgMobileTableDoc.vue';
 import AsgMobilePageDoc from './AsgMobilePageDoc.vue';
+import AsgTableDoc from './AsgTableDoc.vue';
+import AsgMoneyInputDoc from './AsgMoneyInputDoc.vue';
 
 const components = {
     AsgHighSearchDoc,
     AsgTableCardDoc,
     AsgHighTableDoc,
+    AsgTableDoc,
     AsgTipComponentDoc,
     AsgPersonChooseDoc,
     AsgCheckBoxDoc,
     AsgPriorityCompDoc,
     AsgMobileTableDoc,
-    AsgMobilePageDoc
+    AsgMobilePageDoc,
+    AsgMoneyInputDoc
 };
 
 const widgets = [];

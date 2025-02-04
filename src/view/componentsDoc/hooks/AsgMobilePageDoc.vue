@@ -52,7 +52,7 @@ import mobilePage from '@/components/mobile/mobilePage.vue';
 import propTable from '../components/propTable.vue';
 export default {
   name:'AsgMobilePageDoc',
-  text:'移动端分页',
+  text:'AsgMobilePage 移动端分页',
   components:{
     TextTitle,
     mobilePage,

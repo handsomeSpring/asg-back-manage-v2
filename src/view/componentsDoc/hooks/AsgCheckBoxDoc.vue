@@ -39,7 +39,7 @@ export default {
     propTable,
     TextTitle
   },
-  text:'开关选择器',
+  text:'AsgCheckBox 开关选择器',
     data() {
       return {
         readOnly:false,

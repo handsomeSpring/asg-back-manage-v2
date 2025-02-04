@@ -50,7 +50,7 @@ import propTable from '../components/propTable.vue';
 import slotTable from '../components/slotTable.vue';
 export default {
     name: 'AsgHighSearchDoc',
-    text: '高级搜索组件',
+    text: 'AsgHighSearch 高级搜索',
     components: {
         AsgHighSearch,
         TextTitle,

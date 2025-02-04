@@ -33,7 +33,7 @@ import AsgPriorityComp from '@/components/AsgPriorityComp.vue';
 import propTable from '../components/propTable.vue';
 export default {
   name:'AsgPriorityCompDoc',
-  text:'优先级选择器',
+  text:'AsgPriorityComp 优先级',
   components:{
     AsgPriorityComp,
     propTable

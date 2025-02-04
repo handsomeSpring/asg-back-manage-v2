@@ -67,11 +67,8 @@
                         <el-row>
                             <el-col :span="8">
                                 <el-form-item label="预算金额" prop="budgetMoney">
-                                    <money-input v-if="item.status === '0'" v-model="item.budgetMoney"
-                                        size="small"></money-input>
-                                    <p v-else class="money-text">{{ item.budgetMoney | toChies }}<span
-                                            style="margin-left:6px">元整</span>
-                                    </p>
+                                    <asg-money-input :readOnly="item.status !== '0'" v-model="item.budgetMoney"
+                                        size="small"></asg-money-input>
                                 </el-form-item>
                             </el-col>
                             <el-col :span="16">
@@ -126,8 +123,12 @@
 <script>
 import { getBudget, updateBudget, changeBudgetStatus,delBudget } from "@/api/budget";
 import { mapGetters } from "vuex";
+import AsgMoneyInput from "@/components/AsgMoneyInput.vue";
 export default {
     name: 'detail-supplier',
+    components:{
+        AsgMoneyInput
+    },
     props: {
         eventId: {
             type: Number,

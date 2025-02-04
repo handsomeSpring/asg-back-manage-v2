@@ -5,8 +5,6 @@
     </div>
 </template>
 
-<script setup lang='ts'>
-</script>
 <style scoped>
 /* HTML: <div class="loader"></div> */
 .full__size--fix {

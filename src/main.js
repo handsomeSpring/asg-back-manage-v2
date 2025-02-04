@@ -41,9 +41,6 @@ Vue.component('full-screen-loading', FullScreenLoading);
 Vue.use(VMdEditor);
 Vue.use(VMdPreview);
 Vue.use(Highlight);
-import MoneyInput from './components/MoneyInput'
-Vue.use(MoneyInput)
-
 VMdPreview.use(githubTheme, {
   Hljs: hljs,
 });

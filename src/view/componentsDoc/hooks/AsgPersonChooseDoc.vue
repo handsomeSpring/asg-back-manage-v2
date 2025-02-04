@@ -45,7 +45,7 @@ import TextTitle from '@/components/TextTitle.vue';
 import propTable from '../components/propTable.vue';
 export default {
     name: 'AsgPersonChooseDoc',
-    text: '人员选择器',
+    text: 'AsgPersonChoose 人员选择器',
     components: {
         AsgPersonChoose,
         TextTitle,
