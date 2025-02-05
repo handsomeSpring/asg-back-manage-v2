@@ -4,7 +4,7 @@
       <AsgTipComponent>
         <p class="asg-tip-content">
           <i
-            class="el-icon-warning"></i>以下内容是赛程的所有信息，如果需要新增字段，请联系开发人员。注意：自定义赛程人员选班模式下，解说无法选班；当前时间若超出比赛开始时间也无法选班；如果想邀请外援嘉宾来充当裁判或者导播，请选择自定义人员；如果想邀请嘉宾来参与解说，请在备注栏备注。
+            class="el-icon-warning"></i>以下内容是赛程的所有信息，如果需要新增字段，请联系开发人员。注意：自定义解说人员选班模式下，解说无法选班；当前时间若超出比赛开始时间也无法选班；如果想邀请外援嘉宾来充当裁判或者导播，请选择自定义人员；如果想邀请嘉宾来参与解说，请在备注栏备注。
         </p>
       </AsgTipComponent>
     </div>
@@ -54,7 +54,7 @@
           <el-form-item label="选班模式" prop="isAllowChoose">
             <el-radio-group v-model="form.isAllowChoose" size="small">
               <el-radio-button :label="1">允许解说选班</el-radio-button>
-              <el-radio-button :label="0">自定义赛程人员</el-radio-button>
+              <el-radio-button :label="0">自定义解说人员</el-radio-button>
             </el-radio-group>
           </el-form-item>
         </el-col>
@@ -132,30 +132,32 @@
         </el-table-column>
       </el-table>
     </div>
-    <div class="tip-content">
-      <AsgTipComponent type="warning">
-        <p class="asg-tip-content">
-          <i class="el-icon-warning"></i>如果遇到发布失败的情况，可能是QQ机器人被封的原因。
-        </p>
-      </AsgTipComponent>
-    </div>
-    <TextTitle v-show="requireComs" title-name="赛程信息发布管理"></TextTitle>
-    <el-card style="width:95%;margin:1em auto">
-      <el-form ref="groupForm" :model="groupForm" label-position="right" label-width="120px" :rules="groupRules">
-        <el-form-item label="QQ群" prop="group">
-          <el-select size="small" v-model="groupForm.group" @change="handleChange">
-            <el-option v-for="(item, index) in groupOptions" :key="index" :label="item.label"
-              :value="item.value"></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="消息" prop="message">
-          <el-input type="textarea" v-model="groupForm.message" :rows="5" maxlength="120" show-word-limit></el-input>
-        </el-form-item>
-        <el-form-item>
-          <el-button type="primary" :loading="groupLoading" @click="handleSendQQ">发 布 公 告</el-button>
-        </el-form-item>
-      </el-form>
-    </el-card>
+    <template v-if="formType !== 'add'">
+      <TextTitle v-show="requireComs" title-name="赛程信息发布管理"></TextTitle>
+      <div class="tip-content">
+        <AsgTipComponent type="warning">
+          <p class="asg-tip-content">
+            <i class="el-icon-warning"></i>如果遇到发布失败的情况，可能是QQ机器人被封的原因。
+          </p>
+        </AsgTipComponent>
+      </div>
+      <el-card style="width:95%;margin:1em auto">
+        <el-form ref="groupForm" :model="groupForm" label-position="right" label-width="120px" :rules="groupRules">
+          <el-form-item label="QQ群" prop="group">
+            <el-select size="small" v-model="groupForm.group" @change="handleChange">
+              <el-option v-for="(item, index) in groupOptions" :key="index" :label="item.label"
+                :value="item.value"></el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="消息" prop="message">
+            <el-input type="textarea" v-model="groupForm.message" :rows="5" maxlength="120" show-word-limit></el-input>
+          </el-form-item>
+          <el-form-item>
+            <el-button type="primary" :loading="groupLoading" @click="handleSendQQ">发 布 公 告</el-button>
+          </el-form-item>
+        </el-form>
+      </el-card>
+    </template>
     <div class="btn-list">
       <el-button plain icon="el-icon-arrow-left" @click="onSuccess">返回</el-button>
       <el-button v-if="formType === 'add'" icon="el-icon-folder-checked" type="primary" :loading="btnloading"

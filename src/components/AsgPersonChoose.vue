@@ -1,6 +1,6 @@
 <template>
     <el-dialog :fullscreen="isMobile" title="人员选择" width="30%" :visible.sync="dialogVisible">
-        <el-scrollbar style="height:50vh">
+        <el-scrollbar :style="{height: isMobile ? '100dvh' : '50vh' }">
             <el-input style="margin:1em 0" size="small" v-model="filterText" placeholder="请输入中文名搜索"
                 clearable></el-input>
             <el-tree class="filter-tree" ref="tree" :data="allRoles" :props="defaultProps" accordion highlight-current

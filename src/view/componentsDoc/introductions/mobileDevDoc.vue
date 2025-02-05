@@ -60,7 +60,7 @@ export default {
             {
                 name:'媒体查询',
                 doc:'使用@media写一份移动端样式。',
-                exam:"例如，在src\assets\mobileStyles文件夹下创建一个highSearch/index.less文件，在里面写移动端的样式，然后在highSearch/index.vue里引入该less文件即可。"
+                exam:"例如，在src/assets/mobileStyles文件夹下创建一个highSearch/index.less文件，在里面写移动端的样式，然后在highSearch/index.vue里引入该less文件即可。"
             }
         ]
     }

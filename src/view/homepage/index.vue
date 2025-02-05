@@ -7,7 +7,7 @@
       <el-container>
         <el-header><common-header /></el-header>
         <headerTabs ref="headerTabs" v-show="$route.fullPath !== '/index'"></headerTabs>
-        <el-scrollbar ref="queRef" :style="{ height: actuallHeight }">
+        <el-scrollbar class="backtop-scroll" ref="queRef" :style="{ height: actuallHeight }">
           <el-main style="height: 100%">
             <transition name="fade-transform" mode="out-in">
               <router-view></router-view>
@@ -55,10 +55,10 @@ export default {
     return {
       isCollapse: false,
       actuallHeight: "calc(100vh - 100px)",
-      isMobile:false,
+      isMobile: false,
     };
   },
-  created(){
+  created() {
     this.isMobile = isMobile();
   },
   mounted() {
@@ -94,9 +94,10 @@ export default {
 <style scoped lang="less">
 @import url('../../assets/mobileStyles/homePage/index.less');
 
-.asg-common-aside{
+.asg-common-aside {
   background-color: var(--aside-background-color);
 }
+
 .el-header {
   padding: 0;
 }
@@ -123,5 +124,4 @@ export default {
 .el-main {
   overflow-x: hidden;
 }
-
 </style>
