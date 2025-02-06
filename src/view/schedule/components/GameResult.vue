@@ -55,11 +55,12 @@
                     </div>
                 </div>
             </li>
+            <el-divider>操作</el-divider>
+            <el-button style="margin:0 20px" :loading="loading" type="primary" size="small"
+            @click="handleSaveResult">{{ showResult ? '更新' : '保存' }}赛果</el-button>
         </div>
         <el-divider>选择获胜队伍</el-divider>
         <el-row>
-            <el-button style="margin:0 20px" :loading="loading" type="primary" size="small"
-                @click="handleSaveResult">{{ showResult ? '更新' : '保存' }}赛果</el-button>
             <template v-if="showResult">
                 <el-select size="small" v-model="winteam" clearable>
                     <el-option v-for="item in chooseTeam" :key="item.id" :label="item.label" :value="item.value">
@@ -67,14 +68,21 @@
                 </el-select>
                 <el-button style="margin-left: 20px" type="primary" size="small" @click="setWinner">设置获胜队伍</el-button>
             </template>
+            <AsgTipComponent v-else type="warning">
+                <p>请先填报并保存赛事结果后再进行选择获胜队伍。</p>
+            </AsgTipComponent>
         </el-row>
     </el-dialog>
 </template>
 
 <script>
 import { setWinGame, setFinalScore } from "@/api/schedule/index";
+import AsgTipComponent from "@/components/AsgTipComponent.vue";
 export default {
     name: 'ASGGameResult',
+    components:{
+        AsgTipComponent
+    },
     props: {
         dialogVisible: {
             type: Boolean,

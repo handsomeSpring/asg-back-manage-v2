@@ -74,10 +74,11 @@
         <el-col :span="12" v-if="requiredJudge">
           <el-form-item label="裁判" prop="judge">
             <el-input style="width: 80%" v-model="form.judge" readonly size="small"
+              placeholder="聚焦后选择裁判"
               @focus="handlePersonChoose('judge')">
               <template #append>
-                <p style="cursor: pointer" @click="handlePersonChoose('judge')">
-                  <i class="el-icon-plus"></i>
+                <p class="clear-icon" @click="clearChoose('judge')">
+                  <i class="el-icon-circle-close"></i>
                 </p>
               </template>
             </el-input>
@@ -86,10 +87,11 @@
         <el-col :span="12" v-if="requiredReferee">
           <el-form-item label="导播" prop="referee">
             <el-input style="width: 80%" v-model="form.referee" readonly size="small"
+              placeholder="聚焦后选择导播"
               @focus="handlePersonChoose('referee')">
               <template #append>
-                <p style="cursor: pointer" @click="handlePersonChoose('referee')">
-                  <i class="el-icon-plus"></i>
+                <p class="clear-icon" @click="clearChoose('referee')">
+                  <i class="el-icon-circle-close"></i>
                 </p>
               </template>
             </el-input>
@@ -361,9 +363,15 @@ export default {
       this.tagKey = key;
       this.choosePersonDialog = true;
     },
-    getPerson(userObj) {
+    // 选择人员
+    getPerson(userObj){
       this.form[this.tagKey] = userObj.chinaname;
       this.form[`${this.tagKey}_Id`] = userObj.id;
+    },
+    // 清空人员
+    clearChoose(type) {
+      this.form[type] = '';
+      this.form[`${type}_Id`] = '';
     },
     async submit() {
       try {
@@ -455,6 +463,12 @@ export default {
 };
 </script>
 <style lang="less" scoped>
+.clear-icon{
+  cursor:pointer;
+  &:hover{
+    color:#4090EF;
+  }
+}
 .detail-schedule-content {
   padding: 2em;
   min-height: 100vh;
