@@ -72,6 +72,7 @@
         <div class="my-1 flex-content">
             <div class="item" :class="config.formConfig.includes(item.fieldCode) ? 'active' : ''"
                 v-for="(item, index) in filedConfig" :key="index" @click="handleClick(item)">
+                <div v-if="item.required" class="required-tag">必选</div>
                 <p>{{ item.fieldName }}</p>
                 <p>{{ item.fieldCode }}</p>
                 <p>{{ item.type }}</p>
@@ -137,22 +138,24 @@ export default {
                     fieldName: '选手阵营',
                     fieldCode: 'camp',
                     type: 'boolean',
-
+                    required:true
                 },
                 {
-                    fieldName: '参赛名称',
+                    fieldName: '游戏名称',
                     fieldCode: 'gamerName',
                     type: 'string',
                 },
                 {
-                    fieldName: '游戏名称',
+                    fieldName: '参赛名称',
                     fieldCode: 'playerName',
                     type: 'string',
+                    required:true
                 },
                 {
                     fieldName: '游戏id',
                     fieldCode: 'idNumber',
                     type: 'string',
+                    required:true
                 },
                 {
                     fieldName: '身份证',
@@ -183,7 +186,7 @@ export default {
             },
             config: {
                 personConfig: [],
-                formConfig: []
+                formConfig: ['idNumber','playerName','camp']
             },
             rules: '',
             formRules: {
@@ -206,6 +209,7 @@ export default {
             this.seasonForm.status = status.toString();
         },
         handleClick(item) {
+            if(item.required) return;
             const index = this.config.formConfig.findIndex(el => el === item.fieldCode);
             if (index === -1) {
                 this.config.formConfig.push(item.fieldCode);
@@ -327,10 +331,26 @@ export default {
         padding: 1em;
         width: 300px;
         cursor: pointer;
-
+        position: relative;
+        overflow: hidden;
         &.active {
             background: #ecf8ff;
             border-color: #134196
+        }
+        .required-tag{
+            position: absolute;
+            top:10px;
+            width:100px;
+            height:20px;
+            left:-30px;
+            background: #fef0f0;
+            color:#f56c6c;
+            border:1px solid #fde2e2;
+            text-align: center;
+            line-height: 20px;
+            font-size: 12px;
+            font-weight: bold;
+            transform: rotate(-45deg);
         }
     }
 }
