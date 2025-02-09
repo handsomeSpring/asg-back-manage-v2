@@ -80,9 +80,9 @@
             <div class="item" :class="config.formConfig.includes(item.fieldCode) ? 'active' : ''"
                 v-for="(item, index) in filedConfig" :key="index" @click="handleClick(item)">
                 <div v-if="item.required" class="required-tag">必选</div>
-                <p>{{ item.fieldName }}</p>
-                <p>{{ item.fieldCode }}</p>
-                <p>{{ item.type }}</p>
+                <p>字段中文:{{ item.fieldName }}</p>
+                <p>字段编码:{{ item.fieldCode }}</p>
+                <p>字段类型:{{ item.type }}</p>
             </div>
         </div>
         <div class="footer-btn-list">
@@ -160,15 +160,15 @@ export default {
                     required: true
                 },
                 {
-                    fieldName: '游戏id',
+                    fieldName: '身份证',
                     fieldCode: 'idNumber',
                     type: 'string',
-                    required: true
                 },
                 {
-                    fieldName: '身份证',
+                    fieldName: '游戏数字Id',
                     fieldCode: 'identifier',
                     type: 'string',
+                    required: true
                 },
                 {
                     fieldName: '电话号码',
@@ -194,7 +194,7 @@ export default {
             },
             config: {
                 personConfig: [],
-                formConfig: ['idNumber', 'playerName', 'camp']
+                formConfig: ['identifier', 'playerName', 'camp']
             },
             rules: '',
             formRules: {
@@ -216,7 +216,6 @@ export default {
             this.isRuleChange = '1';
         },
         updateStatus(status) {
-            console.log(status, 'status===');
             this.seasonForm.status = status.toString();
         },
         handleClick(item) {
@@ -398,6 +397,9 @@ export default {
             font-size: 12px;
             font-weight: bold;
             transform: rotate(-45deg);
+            p {
+                font-size: 0.8em;
+            }
         }
     }
 }

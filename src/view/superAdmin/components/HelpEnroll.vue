@@ -47,6 +47,15 @@ export default {
         callback();
       }
     };
+    var firstPass = (rule, value, callback) => {
+      if (value === '') {
+        callback(new Error('请输入密码！'));
+      } else if (value.length < 6) {
+        callback(new Error('密码长度不够，至少六位'));
+      } else {
+        callback();
+      }
+    };
     var userName = (rule, value, callback) => {
       const chineseRegex = /[\u4e00-\u9fa5]/;
       if (value === '') {
@@ -74,7 +83,7 @@ export default {
           { required: true, message: '请输入中文名', trigger: 'blur' },
         ],
         password: [
-          { required: true, message: '请输入密码', trigger: 'blur' },
+          { required: true, validator: firstPass, trigger: 'blur' },
         ],
         rePassword: [
           { required: true, validator: checkPass, trigger: 'blur' }
