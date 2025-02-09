@@ -73,8 +73,7 @@
         </el-col>
         <el-col :span="12" v-if="requiredJudge">
           <el-form-item label="裁判" prop="judge">
-            <el-input style="width: 80%" v-model="form.judge" readonly size="small"
-              placeholder="聚焦后选择裁判"
+            <el-input style="width: 80%" v-model="form.judge" readonly size="small" placeholder="聚焦后选择裁判"
               @focus="handlePersonChoose('judge')">
               <template #append>
                 <p class="clear-icon" @click="clearChoose('judge')">
@@ -86,8 +85,7 @@
         </el-col>
         <el-col :span="12" v-if="requiredReferee">
           <el-form-item label="导播" prop="referee">
-            <el-input style="width: 80%" v-model="form.referee" readonly size="small"
-              placeholder="聚焦后选择导播"
+            <el-input style="width: 80%" v-model="form.referee" readonly size="small" placeholder="聚焦后选择导播"
               @focus="handlePersonChoose('referee')">
               <template #append>
                 <p class="clear-icon" @click="clearChoose('referee')">
@@ -243,8 +241,8 @@ export default {
         team2_name: "",
         referee: "",
         judge: "",
-        judge_Id: "",
-        referee_Id: "",
+        judge_Id: null,
+        referee_Id: null,
         comLimit: 2,
         isAllowChoose: 1,
         personType: "",
@@ -318,6 +316,9 @@ export default {
       this.comTableList.splice(index, 1);
     },
     handleChoosePerson(node) {
+      const isExist = this.comTableList.findIndex(item => item.id === node.id);
+      if (isExist !== -1) return this.$message.error('该解说已存在！');
+      // -1就是新增
       if (this.comIndex === -1) {
         this.comTableList.push({
           id: node.id,
@@ -364,14 +365,14 @@ export default {
       this.choosePersonDialog = true;
     },
     // 选择人员
-    getPerson(userObj){
+    getPerson(userObj) {
       this.form[this.tagKey] = userObj.chinaname;
       this.form[`${this.tagKey}_Id`] = userObj.id;
     },
     // 清空人员
     clearChoose(type) {
       this.form[type] = '';
-      this.form[`${type}_Id`] = '';
+      this.form[`${type}_Id`] = null;
     },
     async submit() {
       try {
@@ -379,6 +380,9 @@ export default {
         if (!valid) return;
         if (this.requireComs && this.comTableList.length > this.form.comLimit) {
           throw new Error('登记解说数量超过最大解说数量！');
+        }
+        if (this.form.team1_name === this.form.team2_name) {
+          throw new Error('主场战队与客场战队名称相同，请核对！');
         }
         this.btnloading = true;
         const requestParams = {
@@ -392,11 +396,15 @@ export default {
         this.$message.success("操作成功!");
         this.onSuccess();
       } catch (error) {
+        console.log(error, '===error');
         if (error instanceof Object && !error.message) {
           return this.$message.error("请完整填写表单");
         }
         if (error?.response?.data?.code === 400) {
           return this.$message.error("操作失败，无权访问");
+        }
+        if(error instanceof Object && !!error.message){
+          return this.$message.error(error.message)
         }
         this.$message.error("操作失败，后端服务器异常");
       } finally {
@@ -409,6 +417,9 @@ export default {
         if (!valid) return;
         if (this.requireComs && this.comTableList.length > this.form.comLimit) {
           throw new Error('登记解说数量超过最大解说数量！');
+        }
+        if (this.form.team1_name === this.form.team2_name) {
+          throw new Error('主场战队与客场战队名称相同，请核对！');
         }
         this.btnloading = true;
         const info = {
@@ -463,12 +474,14 @@ export default {
 };
 </script>
 <style lang="less" scoped>
-.clear-icon{
-  cursor:pointer;
-  &:hover{
-    color:#4090EF;
+.clear-icon {
+  cursor: pointer;
+
+  &:hover {
+    color: #4090EF;
   }
 }
+
 .detail-schedule-content {
   padding: 2em;
   min-height: 100vh;

@@ -52,7 +52,14 @@
             <el-row>
                 <el-col :span="24">
                     <el-form-item label="赛季规则">
-                        <v-md-editor v-model="rules" height="500px" style="width:90%"></v-md-editor>
+                        <div class="mask-container" v-if="isRuleChange === '0' && this.type !== 'add'">
+                            <div class="mask-inner">
+                                <p>为了减少服务器性能压力，修改规则需要手动同意才能进行修改。</p>
+                                <el-button plain size="small" @click="needUpdateRule">修改规则</el-button>
+                            </div>
+                            <div v-html="rules"></div>
+                        </div>
+                        <v-md-editor v-else v-model="rules" height="500px" style="width:90%"></v-md-editor>
                     </el-form-item>
                     <AsgTipComponent type="danger" style="width:85%">
                         <i class="el-icon-info"></i>赛季规则更新需要更替markdown文件，所以更新会有延迟，若发现规则没有立即更新请勿觉得是BUG，耐心等待即可。
@@ -133,12 +140,13 @@ export default {
     },
     data() {
         return {
+            isRuleChange: '0', //是否需要传入规则
             filedConfig: [
                 {
                     fieldName: '选手阵营',
                     fieldCode: 'camp',
                     type: 'boolean',
-                    required:true
+                    required: true
                 },
                 {
                     fieldName: '游戏名称',
@@ -149,13 +157,13 @@ export default {
                     fieldName: '参赛名称',
                     fieldCode: 'playerName',
                     type: 'string',
-                    required:true
+                    required: true
                 },
                 {
                     fieldName: '游戏id',
                     fieldCode: 'idNumber',
                     type: 'string',
-                    required:true
+                    required: true
                 },
                 {
                     fieldName: '身份证',
@@ -186,7 +194,7 @@ export default {
             },
             config: {
                 personConfig: [],
-                formConfig: ['idNumber','playerName','camp']
+                formConfig: ['idNumber', 'playerName', 'camp']
             },
             rules: '',
             formRules: {
@@ -204,12 +212,15 @@ export default {
         };
     },
     methods: {
+        needUpdateRule() {
+            this.isRuleChange = '1';
+        },
         updateStatus(status) {
             console.log(status, 'status===');
             this.seasonForm.status = status.toString();
         },
         handleClick(item) {
-            if(item.required) return;
+            if (item.required) return;
             const index = this.config.formConfig.findIndex(el => el === item.fieldCode);
             if (index === -1) {
                 this.config.formConfig.push(item.fieldCode);
@@ -228,7 +239,8 @@ export default {
                 const req = {
                     ...this.seasonForm,
                     rule_markdown: this.rules,
-                    config: JSON.stringify(this.config)
+                    config: JSON.stringify(this.config),
+                    isRuleChange:this.isRuleChange
                 };
                 const { status } = await updateEvents(req);
                 if (status !== 200) throw new Error("服务端异常，请联系网站管理员！");
@@ -297,6 +309,39 @@ export default {
 }
 </script>
 <style lang='less' scoped>
+.mask-container {
+    width: 90%;
+    min-height: 350px;
+    position: relative;
+
+    &:hover {
+        .mask-inner {
+            transition: 0.65s all;
+            opacity: 1;
+        }
+    }
+
+    .mask-inner {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        opacity: 0;
+        background-color: rgba(0, 0, 0, 0.77);
+        /* 半透明黑色背景 */
+        z-index: 1000;
+        /* 确保蒙层在最上层 */
+        display: flex;
+        align-items: center;
+        padding-top: 12px;
+        justify-content: flex-start;
+        color:#fff;
+        gap:12px;
+        flex-direction: column;
+    }
+}
+
 .main-title {
     text-align: center;
     font-size: 1.5em;
@@ -333,19 +378,21 @@ export default {
         cursor: pointer;
         position: relative;
         overflow: hidden;
+
         &.active {
             background: #ecf8ff;
             border-color: #134196
         }
-        .required-tag{
+
+        .required-tag {
             position: absolute;
-            top:10px;
-            width:100px;
-            height:20px;
-            left:-30px;
+            top: 10px;
+            width: 100px;
+            height: 20px;
+            left: -30px;
             background: #fef0f0;
-            color:#f56c6c;
-            border:1px solid #fde2e2;
+            color: #f56c6c;
+            border: 1px solid #fde2e2;
             text-align: center;
             line-height: 20px;
             font-size: 12px;

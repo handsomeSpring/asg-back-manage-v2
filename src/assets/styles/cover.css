@@ -1,0 +1,38 @@
+
+.product-cover__bg{
+    position: fixed;
+    width: 100vw;
+    height: 100dvh;
+    background: #000;
+    z-index:999;
+    left:0;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    justify-content: center;
+  }
+  .product-cover__bg .cover-title{
+    color:var(--theme-color);
+    font-size: 5.2em;
+  }
+  .product-cover__bg .cover-stroke__wrap{
+    height: 100px;
+    margin: 0 auto;
+    background-color: #000;
+    text-align: center;
+    -webkit-text-stroke: 2px var(--theme-color); 
+    color: transparent;
+    text-align: center;
+  }
+  .product-cover__bg .cover-stroke__wrap h2{
+    font-size: 5em;
+    animation: moveToCenter 1000ms linear forwards;
+  }
+  @keyframes moveToCenter {
+    0%{
+      left:0;
+    }
+    100%{
+      left:45%
+    }
+ }
