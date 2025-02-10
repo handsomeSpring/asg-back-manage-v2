@@ -241,8 +241,9 @@ export default {
                     config: JSON.stringify(this.config),
                     isRuleChange:this.isRuleChange
                 };
-                const { status } = await updateEvents(req);
+                const { status, data } = await updateEvents(req);
                 if (status !== 200) throw new Error("服务端异常，请联系网站管理员！");
+                if(data.code && data.code !== 200) throw new Error(data.message ?? '未知后端错误：非code:200');
                 this.dialogVisible = false;
                 this.$message.success("更新成功！");
                 this.toList();

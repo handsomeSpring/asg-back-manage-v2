@@ -120,6 +120,7 @@ export default {
         const { rePassword, ...remain } = this.form;
         const { status } = await adminEnrollUser(remain);
         if (status !== 200) throw new Error('注册失败,服务端异常！');
+        this.$message.success('注册成功！');
       } catch (error) {
         this.$message.error(error.message);
       } finally {

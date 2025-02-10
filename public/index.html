@@ -14,7 +14,7 @@
       btn.onclick = function () {
         const dom = document.querySelector('.product-cover__bg');
         if (!!dom.style) {
-          dom.style.display = 'none';
+          dom.style.transform = "scaleY(0)";
         }
       }
     }
@@ -31,6 +31,7 @@
       align-items: center;
       flex-direction: column;
       justify-content: center;
+      transition: 0.68s all;
     }
 
     .product-cover__bg .cover-title {
@@ -194,7 +195,7 @@
       <span class="textspan55">加</span>
       <span class="textspan55">载</span>
       <span class="textspan55">中</span>
-      <span class="textspan55">......</span>
+      <span class="textspan55">...</span>
     </div>
     <div class="cover-stroke__wrap">
       <h2>AvengerS</h2>
