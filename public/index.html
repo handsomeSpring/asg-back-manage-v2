@@ -9,11 +9,11 @@
   <title>ASG赛事后台系统 —— 系统登录</title>
   <script>
     window.SERVE_IP = "https://api.idvasg.cn";
-    window.onload = function(){
+    window.onload = function () {
       const btn = document.querySelector('.product-cover__bg .cover-button');
-      btn.onclick = function(){
+      btn.onclick = function () {
         const dom = document.querySelector('.product-cover__bg');
-        if(!!dom.style){
+        if (!!dom.style) {
           dom.style.display = 'none';
         }
       }
@@ -56,34 +56,68 @@
     }
 
     .cover-button {
-      width: 100px;
-      height: 45px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      outline: none;
+      width: 120px;
+      height: 50px;
+      background-color: #0093E9;
+      color: #ffffff;
+      font-size: 16px;
+      font-weight: bold;
+      letter-spacing: 2px;
+      border: none;
+      border-radius: 25px;
       cursor: pointer;
-      margin-top: 1em;
-      background: #000;
-      border-radius: 12px;
-      border:2px solid var(--theme-color);
-      color:#fff;
-      font-size: 0.8em;
-      opacity: 0;
+      position: relative;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      transition: all .1s linear;
+      z-index: 1;
+      margin-top:1em;
       animation: showOpacity 2000ms linear forwards;
-      animation-delay: 2000ms;
+      animation-delay: 1200ms;
     }
-    .cover-button:hover{
-      background: var(--theme-color);
+
+    .cover-button:before,
+    .cover-button:after {
+      content: "";
+      width: 120px;
+      height: 50px;
+      border-radius: 25px;
+      position: absolute;
+      animation: eff68 1.4s linear infinite;
+      z-index: -1;
     }
+
+    .cover-button:after {
+      animation-delay: 0.7s;
+    }
+
+    @keyframes eff68 {
+      0% {
+        box-shadow: 0 0 0 0px #0093E9;
+        opacity: 0.2;
+      }
+
+      100% {
+        box-shadow: 0 0 0 30px #0093E9;
+        opacity: 0;
+      }
+    }
+
+    .cover-button:active {
+      transform: scale(0.96);
+    }
+
     @media (max-width: 1024px) {
-      .product-cover__bg .cover-stroke__wrap h2{
+      .product-cover__bg .cover-stroke__wrap h2 {
         font-size: 3em;
       }
-      .product-cover__bg .cover-title{
+
+      .product-cover__bg .cover-title {
         font-size: 3.2em;
       }
     }
+
     @keyframes showOpacity {
       0% {
         opacity: 0;
@@ -94,22 +128,56 @@
       }
     }
 
-    .cover-loading {
-      width: 50px;
-      height: 50px;
-      border-radius: 100%;
-      background-color: var(--theme-color);
-      animation: ball-scale infinite linear 1.25s;
+    .text55 {
+      position: relative;
+      display: flex;
+      justify-content: center;
+      align-items: center;
     }
 
-    @keyframes ball-scale {
-      0% {
-        transform: scale(0.1);
+    .textspan55 {
+      font-size: 16px;
+      font-weight: 800;
+      color: rgba(255, 255, 255, 0.9);
+      letter-spacing: 6px;
+      animation: textspaneff55 3s linear infinite;
+    }
+
+    .textspan55:nth-of-type(1) {
+      animation-delay: 1.8s;
+    }
+
+    .textspan55:nth-of-type(2) {
+      animation-delay: 2.2s;
+    }
+
+    .textspan55:nth-of-type(3) {
+      animation-delay: 2.6s;
+    }
+
+    .textspan55:nth-of-type(4) {
+      animation-delay: 3s;
+    }
+
+    @keyframes textspaneff55 {
+      50% {
+        text-shadow: 0 0 0 rgba(255, 255, 255, 0);
+        filter: blur(0);
+        transform: translate(0, 0) rotate(0deg) skew(0deg) scale(1);
+        color: rgba(255, 255, 255, 1);
         opacity: 1;
       }
 
+      80% {
+        text-shadow: 0 0 8px rgba(255, 255, 255, 1);
+        filter: blur(10px);
+      }
+
       100% {
-        transform: scale(1);
+        text-shadow: 0 0 0 rgba(255, 255, 255, 0);
+        filter: blur(20px);
+        transform: translate(100px, -100px) rotate(-45deg) skew(60deg) scale(2);
+        color: rgba(255, 255, 255, 0);
         opacity: 0;
       }
     }
@@ -122,14 +190,17 @@
         Please enable it to continue.</strong>
   </noscript>
   <div class="product-cover__bg">
-    <div class="cover-loading"></div>
+    <div class="text55">
+      <span class="textspan55">加</span>
+      <span class="textspan55">载</span>
+      <span class="textspan55">中</span>
+      <span class="textspan55">......</span>
+    </div>
     <div class="cover-stroke__wrap">
       <h2>AvengerS</h2>
     </div>
     <p class="cover-title">后台管理系统</p>
-    <button class="cover-button">
-      一键体验
-    </button>
+    <button class="cover-button">一键体验</button>
   </div>
   <div id="app">
   </div>
