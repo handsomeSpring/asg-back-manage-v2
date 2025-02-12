@@ -38,8 +38,9 @@
                 parseTime("{y}-{m}-{d} {h}:{i}:{s}") }}</p>
             </div>
             <div class="team__roles">
-              <el-tag size="small" v-for="(role, index) in item.roles" :key="index"
-                :type="role.isSur ? 'primary' : 'danger'">{{ role.name }}</el-tag>
+              <div class="role-tag" v-for="(role, index) in item.roles" :key="index"
+                :class="role.isSur ? 'primary' : 'danger'">{{ role.name }}
+              </div>
             </div>
           </div>
         </template>
@@ -201,10 +202,10 @@ export default {
             vote: item.form.piaoshu,
             roles: (item?.roles ?? []).map(role => {
               return {
-                commonRoles: role?.commonRoles ?? '未公布',
+                commonRoles: role?.commonRoles ?? '未填报常用角色',
                 isSur: role.roleLin === '求生者',
                 name: role.roleName,
-                rank: this.historyRank.find(rank => rank.value.toString() === (role.roleRank ?? -1).toString())?.label ?? '位置段位'
+                rank: this.historyRank.find(rank => rank.value.toString() === (role.roleRank ?? -1).toString())?.label ?? '未填报段位'
               }
             })
           }
@@ -267,6 +268,24 @@ export default {
   grid-template-columns: repeat(4, 1fr);
   gap: 24px;
   margin-right: 50px;
+  .role-tag{
+    padding:2pt 4pt;
+    border-radius: 6pt;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    width: 80px;
+    text-align: center;
+    font-size: 14px;
+    &.primary{
+      color:#1070AB;
+      background: #AED2E8;
+    }
+    &.danger{
+      color:#EF2D2D;
+      background: #FFC8C8;
+    }
+  }
 }
 
 .table-title {
