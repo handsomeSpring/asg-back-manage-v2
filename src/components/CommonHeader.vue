@@ -5,7 +5,11 @@
             }}</span></router-link></span>
     </div>
     <div class="r-content">
-      <div class="single__router" @click="routerToGw">前往ASG官网<i class="el-icon-d-arrow-right"></i></div>
+      <el-autocomplete class="inline-input" size="small" v-model="searchInfo" :fetch-suggestions="querySearch"
+        placeholder="请输入关键字检索" @select="handleSelectMenu">
+        <i class="el-icon-search el-input__icon" slot="suffix">
+        </i>
+      </el-autocomplete>
       <div class="wait__do">
         <li @click="() => { $router.push({ path: '/guide' }) }">
           <el-badge size="small" :max="99" :value="waitDoNumber" class="item">
@@ -30,7 +34,7 @@
           </li>
         </el-tooltip>
         <el-tooltip class="item" effect="dark" content="切换主题" placement="bottom">
-          <li @click="handleCommand('5',$event)">
+          <li @click="handleCommand('5', $event)">
             <i class="el-icon-bangzhu"></i>
           </li>
         </el-tooltip>
@@ -58,22 +62,77 @@ export default {
   name: "CommonHeader",
   data() {
     return {
-      version: ''
+      version: '',
+      showSearch: false,
+      searchInfo: '',
+      searchList: [
+        {
+          value: '前往ASG官网',
+          type: 'function',
+          prop: 'routerToGw'
+        }
+      ],
     };
   },
   computed: {
-    ...mapGetters(['waitDoNumber', 'waitAuthNumber'])
+    ...mapGetters(['waitDoNumber', 'waitAuthNumber', 'menuOptions'])
+  },
+  watch: {
+    $route: {
+      handler() {
+        this.searchInfo = '';
+      },
+    },
   },
   created() {
+    if (this.menuOptions && Array.isArray(this.menuOptions)) {
+      this.menuOptions.forEach(item => {
+        if (item.component !== 'router-view') {
+          this.searchList.push({
+            value: item.title,
+            type: 'router',
+            path: item.path
+          })
+        };
+        if (item.children && item.children.length > 0) {
+          item.children.forEach(child => {
+            this.searchList.push({
+              value: child.title,
+              type: 'router',
+              path: child.path
+            })
+          })
+        }
+      })
+    }
     getByTitle('versionConfig').then(res => {
       this.version = res.data.find(item => item.system === 'admin')?.version ?? '无版本号';
     })
   },
   methods: {
+    handleSelectMenu(item) {
+      if (item.type === 'function') {
+        this[item.prop]();
+      } else if (item.type === 'router') {
+        console.log(item.path, 'item.path===')
+        this.$router.push(item.path)
+      }
+    },
+    querySearch(queryString, cb) {
+      var searchList = this.searchList;
+      var results = queryString ? searchList.filter(this.createFilter(queryString)) : searchList;
+      // 调用 callback 返回建议列表的数据
+      cb(results);
+    },
+    createFilter(queryString) {
+      return (searchList) => {
+        return (searchList.value.toLowerCase().indexOf(queryString.toLowerCase()) === 0);
+      };
+    },
     routerToGw() {
       window.location.href = `https://idvasg.cn/#/?${encodeURIComponent(getToken())}`;
     },
-    handleCommand(command,$event) {
+    handleCommand(command, $event) {
       if (command === '1') {
         this.goManager();
       } else if (command === '2') {
@@ -99,11 +158,11 @@ export default {
       transition.ready.then(() => {
         document.documentElement.animate(
           {
-           clipPath: [`circle(0% at ${x}px ${y}px)`, `circle(${tragetRadius}px at ${x}px ${y}px)`],
+            clipPath: [`circle(0% at ${x}px ${y}px)`, `circle(${tragetRadius}px at ${x}px ${y}px)`],
           },
           {
-           duration:450,
-           pseudoElement: '::view-transition-new(root)'
+            duration: 450,
+            pseudoElement: '::view-transition-new(root)'
           }
         )
       })
@@ -113,6 +172,13 @@ export default {
     },
     toCustom() {
       this.$router.push({ path: '/myCustomWorker' });
+    },
+    focusSeachInp() {
+      this.showSearch = true;
+    },
+    blurSearchInp() {
+      this.showSearch = false;
+      this.searchInfo = '';
     },
     async logout() {
       try {
@@ -162,7 +228,7 @@ export default {
 .header-container {
   padding: 0 20px;
   // background-color: #0D47A1;
-  background-color:var(--background-color);
+  background-color: var(--background-color);
   height: 60px;
   display: flex;
   justify-content: space-between;
@@ -276,24 +342,18 @@ span {
     transform: scale(1);
   }
 }
-
-.single__router {
-  width: fit-content;
-  height: 22px;
-  padding: 5px 16px;
-  background: #262E3B;
-  color: #B9BDC4;
-  font-size: 14px;
-  display: flex;
-  align-items: center;
-  font-weight: 600;
-  border-radius: 3px;
-  cursor: pointer;
-
-  &:hover {
-    color: @activeColor;
+  .single__router {
+    height: 22px;
+    padding: 5px 22px;
+    width: calc(100% - 32px);
+    background: #262E3B;
+    font-size: 14px;
+    border-radius: 3px;
+    outline: none;
+    border: none;
+    color: #4090EF;
   }
-}
+
 
 .info-body {
   padding: 12px;
