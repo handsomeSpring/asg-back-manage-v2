@@ -185,6 +185,11 @@ export default {
                     fieldCode: 'role',
                     type: 'string',
                 },
+                {
+                    fieldName:'历史段位',
+                    fieldCode:'rank',
+                    type:'number'
+                }
             ],
             seasonForm: {
                 status: "0",
