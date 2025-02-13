@@ -29,8 +29,6 @@
 </template>
 
 <script>
-import { toChies } from '@/utils/filters';
-
 export default {
   name: "sixteemTem",
   data() {
