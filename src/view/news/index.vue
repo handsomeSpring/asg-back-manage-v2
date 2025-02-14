@@ -122,7 +122,7 @@ export default {
       try {
         const { data, status } = await pushNews(this.form);
         if (status !== 200) throw new Error('后端服务器异常，请联系后端人员修复！');
-        if (data && data.code !== 200) throw new Error(data?.message ?? '未知错误！');
+        if (data.code && data.code !== 200) throw new Error(data?.message ?? '未知错误！');
         this.$message.success("发布成功！");
         this.form = {};
         this.isShowBox = false;
@@ -134,8 +134,9 @@ export default {
     async updNews() {
       try {
         const { data, status } = await updateNews(this.form);
+        console.log('===',this.form)
         if (status !== 200) throw new Error('后端服务器异常，请联系后端人员修复！');
-        if (data && data.code !== 200) throw new Error(data?.message ?? '未知错误！');
+        if (data.code && data.code !== 200) throw new Error(data?.message ?? '未知错误！');
         this.$message.success("更新成功！");
         this.form.title = '';
         this.form.msg = '';
@@ -189,6 +190,7 @@ export default {
     },
     //编辑公告
     openUpdDialog(row) {
+      console.log(row,'row===是')
       this.form = {
         ...row
       };

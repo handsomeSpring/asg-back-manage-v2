@@ -19,7 +19,7 @@ export function getNews(type){
 }
 // 修改公告
 export function updateNews(obj){
-    const { id,msg,title } = obj;
+    const { id,msg,title,type } = obj;
     return request({
         url:'/api/v1/admin/news',
         method:"PUT",
@@ -28,7 +28,8 @@ export function updateNews(obj){
         },
         data:{
             msg,
-            title
+            title,
+            type
         }
     })
 }
