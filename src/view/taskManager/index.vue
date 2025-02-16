@@ -426,12 +426,22 @@ export default {
             approvalPerson: this.userName,
           };
           await taskDone(requestData);
-          this.initTask();
           this.$message.success("操作成功！");
         }
       } catch (error) {
         if (typeof error === "string" && error === "cancel") return;
+        if (
+          error instanceof Object
+          && 'response' in error
+          && error.response instanceof Object
+          && 'data' in error.response
+          && !!error.response.data
+        ) {
+          return this.$message.error(`机器人通知报错：${error.response.data.message}`);
+        }
         this.$message.error(error.message);
+      } finally{
+        this.initTask();
       }
     },
     async initTask(type) {

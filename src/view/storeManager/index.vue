@@ -1,45 +1,48 @@
 <template>
   <div>
     <header>
-      <el-select size="small" v-model="chooseType" @change="initStoreList" clearable>
+      <el-select size="small" v-model="chooseType" @change="initStoreList" clearable placeholder="全部">
         <el-option v-for="item in typeOptions" :key="item.value" :label="item.label" :value="item.value">
         </el-option>
       </el-select>
-      <el-button type="primary"  icon="el-icon-plus" size="small" @click="openDialog('add')">新增商品</el-button>
+      <el-button type="primary" icon="el-icon-plus" size="small" @click="openDialog('add')">新增商品</el-button>
     </header>
     <div class="asg-table-main">
-      <el-table v-loading="loading" border :data="tableData" style="width:100%" :header-cell-style="{ background: '#f2f6fd', color: '#000' }">
-      <el-table-column type="index" label="序号" width="80px" align="center"></el-table-column>
-      <el-table-column label="商品名称" prop="name"></el-table-column>
-      <el-table-column label="所需积分" prop="price" width="120px" align="center">
-        <template #default="{row}">
-          <span>{{ row.price === 0 ? '免费' :row.price }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="商品描述" prop="description" min-width="240px"></el-table-column>
-      <el-table-column label="商品介绍" prop="information" min-width="240px"></el-table-column>
-      <el-table-column label="商品分类" prop="type" align="center">
-        <template #default="{row}">
-          <div class="table__container">
-            <p class="my-task-auth margin-icon">
-              <i class="el-icon-s-goods"></i> {{ keyMap[row.type] }}
-            </p>
-          </div>
-        </template>
-      </el-table-column>
-      <el-table-column label="操作" min-width="70px" align="center">
-        <template #default="{ row }">
-            <i class="el-icon-edit" style="
+      <el-table v-loading="loading" border :data="tableData" style="width:100%"
+        :header-cell-style="{ background: '#f2f6fd', color: '#000' }">
+        <el-table-column type="index" label="序号" width="80px" align="center"></el-table-column>
+        <el-table-column label="商品名称" prop="name"></el-table-column>
+        <el-table-column label="所需积分" prop="price" width="120px" align="center">
+          <template #default="{ row }">
+            <span>{{ row.price === 0 ? '免费' : row.price }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="商品描述" prop="description" min-width="240px"></el-table-column>
+        <el-table-column label="商品介绍" prop="information" min-width="240px"></el-table-column>
+        <el-table-column label="商品分类" prop="type" align="center">
+          <template #default="{ row }">
+            <div class="table__container">
+              <p class="my-task-auth margin-icon">
+                <i class="el-icon-s-goods"></i> {{ keyMap[row.type] }}
+              </p>
+            </div>
+          </template>
+        </el-table-column>
+        <el-table-column label="操作" min-width="70px" align="center">
+          <template #default="{ row }">
+            <div class="flex-content-btnlist">
+              <i class="el-icon-edit" style="
                   color: rgb(91, 182, 242);
                   font-size: 16px;
                   cursor: pointer;
                   margin-right: 24px;
-                " @click="openDialog('edit', row)"
-            ></i>
-            <i class="el-icon-delete" style="color: red; font-size: 16px; cursor: pointer"
-            @click="deleteItem(row.id)"></i>
-        </template>
-      </el-table-column>
+                " @click="openDialog('edit', row)"></i>
+              <div style="cursor: pointer" @click="deleteItem(row.id)">
+                <svg-icon iconClass="deleteBash" width="15px" height="15px" color="#f40"></svg-icon>
+              </div>
+            </div>
+          </template>
+        </el-table-column>
       </el-table>
     </div>
     <!-- 弹窗 -->
@@ -62,7 +65,7 @@
           </el-col>
         </el-row>
         <el-form-item label="商品价格" prop="price">
-          <asg-money-input size="small" v-model="form.price"> </asg-money-input>
+          <asg-money-input size="small" v-model="form.price" :decimal="0"> </asg-money-input>
         </el-form-item>
         <el-form-item label="商品描述" prop="description">
           <el-input size="small" v-model="form.description" type="textarea" :rows="3"></el-input>
@@ -87,7 +90,7 @@ import { deepClone } from "@/utils";
 import AsgMoneyInput from "@/components/AsgMoneyInput.vue";
 export default {
   name: 'storeManager',
-  components:{
+  components: {
     AsgMoneyInput
   },
   data() {
@@ -95,7 +98,7 @@ export default {
       type: '',
       title: '',
       dialogVisible: false,
-      chooseType:"",
+      chooseType: "",
       form: {},
       saveUrl: {
         'add': addNew,
@@ -103,13 +106,13 @@ export default {
       },
       tableData: [],
       typeOptions: [],
-      keyMap:{},
-      rules:{
-        name:{required:true,message:'请输入商品名称',trigger:'blur'},
-        type:{required:true,message:'请选择商品类型',trigger:'change'},
-        price:{required:true,message:'请输入价格',trigger:'blur'},
-        description:{required:true,message:'请输入商品描述',trigger:'blur'},
-        information:{required:true,message:'请输入商品介绍',trigger:'blur'},
+      keyMap: {},
+      rules: {
+        name: { required: true, message: '请输入商品名称', trigger: 'blur' },
+        type: { required: true, message: '请选择商品类型', trigger: 'change' },
+        price: { required: true, message: '请输入价格', trigger: 'blur' },
+        description: { required: true, message: '请输入商品描述', trigger: 'blur' },
+        information: { required: true, message: '请输入商品介绍', trigger: 'blur' },
       }
     };
   },
@@ -130,7 +133,7 @@ export default {
     async handleSave() {
       try {
         const result = await this.$refs.form.validate();
-        if(!result){
+        if (!result) {
           return this.$message.error('请完整填写商品表单');
         }
         const postParams = this.form;
@@ -169,12 +172,21 @@ export default {
       }
     },
     async deleteItem(id) {
+      console.log('进入了===')
       try {
-        const { status, message } = await deleteItem(id);
-        if (status !== 200) throw new Error(message);
-        this.$message.success('删除成功');
-        this.initStoreList();
+        const flag = await this.$confirm('您确定删除这条数据吗?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        })
+        if (flag === 'confirm') {
+          const { status, message } = await deleteItem(id);
+          if (status !== 200) throw new Error(message);
+          this.$message.success('删除成功');
+          this.initStoreList();
+        }
       } catch (error) {
+        if (typeof error === 'string' && error === 'cancel') return;
         if (
           error instanceof Object
           && 'response' in error
@@ -212,10 +224,16 @@ header {
   width: 100%;
   margin: 12px 0;
 }
-.table__container{
+
+.table__container {
   display: flex;
   align-items: center;
   justify-content: center;
   width: 100%;
+}
+.flex-content-btnlist{
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 </style>
