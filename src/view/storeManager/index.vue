@@ -143,6 +143,7 @@ export default {
         const { status, message } = await this.saveUrl[this.type](postParams);
         if (status !== 200) throw new Error(message);
         this.$message.success(`${this.type === 'add' ? '新增' : '变更'}成功！`);
+        this.dialogVisible = false;
         this.initStoreList();
       } catch (error) {
         if (
@@ -154,9 +155,14 @@ export default {
         ) {
           return this.$message.error(error.response.data.message);
         }
+        if(error instanceof Object){
+          for (const key in error) {
+            if(Array.isArray(error[key]) && !!error[key][0]){
+              return this.$message.error(error[key][0]?.message ?? '表单信息不完整！')
+            }
+          }
+        }
         this.$message.error('服务端异常，请联系网站管理员');
-      } finally {
-        this.dialogVisible = false;
       }
     },
     async initStoreList() {
