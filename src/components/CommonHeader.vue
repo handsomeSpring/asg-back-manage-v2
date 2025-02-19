@@ -106,7 +106,9 @@ export default {
       })
     }
     getByTitle('versionConfig').then(res => {
-      this.version = res.data.find(item => item.system === 'admin')?.version ?? '无版本号';
+      if(res.data && Array.isArray(res.data)){
+        this.version = res.data.find(item => item.system === 'admin')?.version ?? '无版本号';
+      }
     })
   },
   methods: {

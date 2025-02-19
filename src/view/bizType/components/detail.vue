@@ -147,16 +147,16 @@
             <el-form ref="authForm" class="asg-form-main" :model="nowSupplementaryInfo" :rules="authRules"
               :label-position="isMobile ? 'top' : 'right'" label-width="150px">
               <el-form-item label="主要审批意见" prop="opinion">
-                <el-input :style="{ width: isMobile ? '100%' : '80%' }" v-model="nowSupplementaryInfo.opinion" maxlength="25"
-                  show-word-limit></el-input>
+                <el-input :style="{ width: isMobile ? '100%' : '80%' }" v-model="nowSupplementaryInfo.opinion"
+                  maxlength="25" show-word-limit></el-input>
               </el-form-item>
               <el-form-item label="修订意见" v-if="form.status === '2'" prop="reviseOpinion">
-                <el-input maxlength="50" show-word-limit :style="{ width: isMobile ? '100%' : '80%' }" type="textarea" :rows="4" size="small"
-                  v-model="nowSupplementaryInfo.reviseOpinion"></el-input>
+                <el-input maxlength="50" show-word-limit :style="{ width: isMobile ? '100%' : '80%' }" type="textarea"
+                  :rows="4" size="small" v-model="nowSupplementaryInfo.reviseOpinion"></el-input>
               </el-form-item>
               <el-form-item label="补充意见" prop="otherOpinion">
-                <el-input maxlength="50" show-word-limit :style="{ width: isMobile ? '100%' : '80%' }" type="textarea" :rows="4" size="small"
-                  v-model="nowSupplementaryInfo.otherOpinion"></el-input>
+                <el-input maxlength="50" show-word-limit :style="{ width: isMobile ? '100%' : '80%' }" type="textarea"
+                  :rows="4" size="small" v-model="nowSupplementaryInfo.otherOpinion"></el-input>
               </el-form-item>
             </el-form>
           </template>
@@ -209,9 +209,11 @@
     <auditRequestBase ref="auditRequestBase" :checkId="form.relativeId" :bizTypeOptions="bizTypeOptions"
       @finishChoose="handleBizTypeChoose"></auditRequestBase>
     <reqFormDialog ref="reqForm" :form="reqForm"></reqFormDialog>
-    <el-dialog title="最终决策" :fullscreen="isMobile" :visible.sync="finalResultDialogVisible" width="30%" :close-on-click-modal="false">
+    <el-dialog title="最终决策" :fullscreen="isMobile" :visible.sync="finalResultDialogVisible" width="30%"
+      :close-on-click-modal="false">
       <div class="tip_type">
-        <p>根据规则配置，您属于最后一个几点，拥有对该申请业务流程的最终决策权。关于``<span class="weight-light">{{ relativeComplete }}</span>``的申请单，请选择您的决策。</p>
+        <p>根据规则配置，您属于最后一个几点，拥有对该申请业务流程的最终决策权。关于``<span class="weight-light">{{ relativeComplete }}</span>``的申请单，请选择您的决策。
+        </p>
       </div>
       <span slot="footer" class="dialog_btn_list">
         <el-button size="small" type="success" @click="handleSet('2')"><i style="margin-right: 6px"
@@ -565,6 +567,12 @@ export default {
     },
     // 送审/办结
     async handleAccept(reqType) {
+      const loading = this.$loading({
+        lock: true,
+        text: "正在加载中......",
+        spinner: "el-icon-loading",
+        background: "rgba(0, 0, 0, 0.8)",
+      });
       let req = {};
       if (this.type === "add") {
         req = {
@@ -606,9 +614,12 @@ export default {
         if (data.code && data.code !== 200)
           throw new Error(data.message ?? "未知错误");
         this.$message.success("操作成功！");
-        this.$emit("toList");
+     
       } catch (error) {
         this.$message.error(error.message);
+      }finally{
+        this.$emit("toList");
+        loading.close();
       }
     },
     checkBudget() {
