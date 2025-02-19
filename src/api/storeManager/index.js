@@ -69,3 +69,5 @@ export function buyGoods(storeid){
         data:storeid
     })
   }
+
+
