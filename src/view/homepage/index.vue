@@ -18,19 +18,7 @@
       </el-container>
       <projOperation v-show="$route.path !== '/index'"></projOperation>
     </el-container>
-    <el-container v-else class="mobile-layout">
-      <el-header>
-        <router-link class="back" to="/mobileGuide">
-          <i class="el-icon-arrow-left"></i>返回首页
-        </router-link>
-        <div class="title">ASG后台管理系统</div>
-      </el-header>
-      <el-scrollbar ref="queRef" style="height: calc(100dvh - 60px)">
-        <transition name="fade-transform" mode="out-in">
-          <router-view></router-view>
-        </transition>
-      </el-scrollbar>
-    </el-container>
+    <MobileLayout v-else></MobileLayout>
   </div>
 </template>
 
@@ -41,6 +29,7 @@ import CommonFooter from "@/components/CommonFooter.vue";
 import projOperation from "@/components/projOperation.vue";
 import headerTabs from "@/components/headerTabs.vue";
 import { isMobile } from "@/utils";
+import MobileLayout from "./mobileGuide/MobileLayout.vue";
 
 export default {
   name: "HomePage",
@@ -50,6 +39,7 @@ export default {
     projOperation,
     headerTabs,
     CommonFooter,
+    MobileLayout
   },
   data() {
     return {
@@ -92,8 +82,6 @@ export default {
 </script>
 
 <style scoped lang="less">
-@import url('../../assets/mobileStyles/homePage/index.less');
-
 .asg-common-aside {
   background-color: var(--aside-background-color);
 }

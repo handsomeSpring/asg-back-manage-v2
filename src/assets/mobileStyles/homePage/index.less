@@ -1,25 +1,63 @@
+@--main-color: #0089f3;
 @media (max-width: 1024px) {
-    .mobile-layout {
-        display: flex !important;
-        width: 100%;
-        .el-header {
-            padding: 0 20px;
-            background-color: #0D47A1;
-            height: 60px;
+    .mobile_layout__container {
+        .mobile-layout__header {
             display: flex;
-            justify-content: space-between;
             align-items: center;
-            color:#fff;
-            .back{
-                font-size: 0.8em;
-                font-weight: 400;
-                color:#fff;
+            height: 50px;
+            background: @--main-color;
+            .user-avatar{
+                width: 30px;
+                height: 30px;
+                border-radius: 50%;
+                border: 2px solid #fff;
+                margin-left: 1em;
             }
-            .title{
-                font-size: 1em;
+            h2{
+                color:#fff;
+                font-size: 1.1em;
                 font-family: 'hk';
-                font-weight: 500;
+                margin:0 auto;
+            }
+            .asg-operation-icon{
+                margin-right: 1em;
+                font-size: 1.2em;
+                color:#fff;
+                cursor: pointer;
             }
         }
+        // 中间部分
+        .mobile-layout__main{
+            height:calc(100dvh - 50px);
+            padding-bottom: 50px;
+            overflow-y: auto;
+        }
+        // 底部
+        .mobile-layout__footer{
+            background: @--main-color;
+            display: grid;
+            grid-template-columns: repeat(3,1fr);
+            height:50px;
+            position: fixed;
+            bottom:0;
+            width:100%;
+            .footer-tab{
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                width: 100%;
+                gap:0.2em;
+                color:#fff;
+                transition: .3s all;
+                &.active{
+                    color:#F7E751;
+                }
+                p{
+                    font-size: 0.65em;
+                }
+            }
+        }
+
     }
 }
