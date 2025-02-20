@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="all-main-content">
     <el-container v-if="!isMobile" class="layout">
       <el-aside width="auto" class="asg-common-aside">
         <common-aside />
@@ -82,6 +82,11 @@ export default {
 </script>
 
 <style scoped lang="less">
+.all-main-content{
+  width: 100vw;
+  height: 100dvh;
+  overflow: hidden;
+}
 .asg-common-aside {
   background-color: var(--aside-background-color);
 }
