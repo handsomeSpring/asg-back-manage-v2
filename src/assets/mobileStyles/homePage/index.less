@@ -6,58 +6,120 @@
             align-items: center;
             height: 50px;
             background: @--main-color;
-            .user-avatar{
+
+            .user-avatar {
                 width: 30px;
                 height: 30px;
                 border-radius: 50%;
                 border: 2px solid #fff;
                 margin-left: 1em;
+
+                .error-image {
+                    width: 30px;
+                    height: 30px;
+                    background-color: #e7e7e7;
+                }
             }
-            h2{
-                color:#fff;
+
+            h2 {
+                color: #fff;
                 font-size: 1.1em;
                 font-family: 'hk';
-                margin:0 auto;
+                margin: 0 auto;
             }
-            .asg-operation-icon{
+
+            .asg-operation-icon {
                 margin-right: 1em;
-                font-size: 1.2em;
-                color:#fff;
+                font-size: 24px;
+                color: #fff;
                 cursor: pointer;
             }
         }
+
         // 中间部分
-        .mobile-layout__main{
-            height:calc(100dvh - 50px);
+        .mobile-layout__main {
+            height: calc(100dvh - 50px);
             padding-bottom: 50px;
             overflow-y: auto;
         }
+
         // 底部
-        .mobile-layout__footer{
+        .mobile-layout__footer {
             background: @--main-color;
             display: grid;
-            grid-template-columns: repeat(3,1fr);
-            height:50px;
+            grid-template-columns: repeat(3, 1fr);
+            height: 50px;
             position: fixed;
-            bottom:0;
-            width:100%;
-            .footer-tab{
+            bottom: 0;
+            width: 100%;
+
+            .footer-tab {
                 display: flex;
                 flex-direction: column;
                 align-items: center;
                 justify-content: center;
                 width: 100%;
-                gap:0.2em;
-                color:#fff;
+                gap: 0.2em;
+                color: #fff;
                 transition: .3s all;
-                &.active{
-                    color:#F7E751;
+
+                &.active {
+                    color: #F7E751;
                 }
-                p{
-                    font-size: 0.65em;
+
+                p {
+                    font-size: 0.6em;
                 }
             }
         }
 
+        // 抽屉部分
+        .menu-drawer-container {
+            position: relative;
+            width: 100%;
+            background: #e7e7e7;
+
+            .menu-content {
+                height: calc(100dvh - 50px);
+                padding-bottom: 50px;
+                overflow: scroll;
+
+                // 菜单部分
+                .content-parent {
+                    margin: 1em auto;
+                    width: 90%;
+                    background: #fff;
+                    border-radius: 6px;
+
+                    .menu_header {}
+
+                    .child-menu {
+                        height: 40px;
+                        display: flex;
+                        align-items: center;
+                        border-bottom: 1px solid #e7e7e7;
+                        font-size: 0.9em;
+
+                        .svg-icon {
+                            margin: 0 0.5em;
+                        }
+                    }
+                }
+            }
+            // 底部操作按钮
+            .operation-btnlist {
+                width: 100%;
+                position: absolute;
+                height: 50px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                border-top: 1px solid @--main-color;
+                bottom: 0;
+                font-size: 14px;
+                color: #fff;
+                background: #f40;
+            }
+        }
     }
 }
