@@ -1,21 +1,23 @@
 <template>
-    <div>
-        <full-screen-loading v-show="loading"></full-screen-loading>
-        <el-empty v-if="list.length === 0" description="暂无任务"></el-empty>
-        <div class="content-main">
-            <el-alert :type="computedType(item.status)" class="my-alert" v-for="item in list" :closable="false"
-                :key="item.id" :title="item.taskName">
-                <p>{{ item.taskDescription }}</p>
-                <div class="taskInfo">
-                    <p> <span :class="`level-${item.priority}`">{{
-                        item.priority | filterPriority
-                            }}</span></p>
-                    <p> {{ item.status | filterComplete }}</p>
-                    <el-button v-if="['0', '3'].includes(item.status)" icon="el-icon-circle-check" size="small" type="primary"
-                        @click="handleFinish(item.id)">完成任务</el-button>
-                </div>
-            </el-alert>
-        </div>
+    <div class="mobile-task-container">
+        <full-screen-loading v-if="loading"></full-screen-loading>
+        <tempalte v-else>
+            <el-empty style="height:100%" v-if="list.length === 0" description="暂无任务"></el-empty>
+            <div class="content-main" v-else>
+                <el-alert :type="computedType(item.status)" class="my-alert" v-for="item in list" :closable="false"
+                    :key="item.id" :title="item.taskName">
+                    <p>{{ item.taskDescription }}</p>
+                    <div class="taskInfo">
+                        <p> <span :class="`level-${item.priority}`">{{
+                            item.priority | filterPriority
+                                }}</span></p>
+                        <p> {{ item.status | filterComplete }}</p>
+                        <el-button v-if="['0', '3'].includes(item.status)" icon="el-icon-circle-check" size="small"
+                            type="primary" @click="handleFinish(item.id)">完成任务</el-button>
+                    </div>
+                </el-alert>
+            </div>
+        </tempalte>
     </div>
 </template>
 
@@ -99,6 +101,10 @@ export default {
 }
 </script>
 <style lang='less' scoped>
+.mobile-task-container {
+    height: 100%;
+}
+
 .content-main {
     width: 90%;
     margin: 1em auto;
