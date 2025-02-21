@@ -72,8 +72,10 @@ export default {
 </script>
 <style lang='less' scoped>
 .mobile-homepage-container {
-  margin: 1em 0;
   padding: 0 1em;
+  padding-bottom: 65px;
+  overflow: hidden;
+  background: #fff;
 
   .tip-comp-text {
     font-size: 0.9em;

@@ -148,4 +148,5 @@ export default {
     gap: 24px;
   }
 }
+@import url('../../../assets/mobileStyles/taskSetting/index.less');
 </style>

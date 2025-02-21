@@ -266,4 +266,5 @@ span {
         text-indent: 2em;
     }
 }
+@import url('../../../assets/mobileStyles/taskSetting/settingTask.less');
 </style>

@@ -1,18 +1,23 @@
 <template>
-    <div class="mobile-table-list" v-loading="loading">
-        <div class="no-empty" v-if="tableData.length === 0">暂无数据</div>
-        <template v-else>
-            <el-descriptions :label-style="label_style" class="margin-top" :column="1" size="small" border
-                v-for="(row, i) in tableData" :key="i">
-                <el-descriptions-item v-for="(prop, index) in tableProps" :key="index">
-                    <template slot="label">
-                        <p>{{ prop.label }}</p>
-                    </template>
-                    <p v-if="prop.type === 'index'">{{ i + 1 }}</p>
-                    <slot v-else-if="prop.type === 'slot'" :name="prop.prop" :row="row" :index="index"></slot>
-                    <p v-else>{{ row[prop.prop] || '/' }}</p>
-                </el-descriptions-item>
-            </el-descriptions>
+    <div class="mobile-table-list" :style="{
+        'min-height':minHeight
+    }" v-loading="loading">
+        <el-skeleton :rows="6" animated :loading="skeLoading" />
+        <template v-if="!skeLoading">
+            <div class="no-empty" v-if="tableData.length === 0">{{ noDateText }}</div>
+            <template v-else>
+                <el-descriptions :label-style="label_style" class="margin-top" :column="1" size="small" border
+                    v-for="(row, i) in tableData" :key="i">
+                    <el-descriptions-item v-for="(prop, index) in tableProps" :key="index">
+                        <template slot="label">
+                            <p>{{ prop.label }}</p>
+                        </template>
+                        <p v-if="prop.type === 'index'">{{ i + 1 }}</p>
+                        <slot v-else-if="prop.type === 'slot'" :name="prop.prop" :row="row" :index="index"></slot>
+                        <p v-else>{{ row[prop.prop] || '/' }}</p>
+                    </el-descriptions-item>
+                </el-descriptions>
+            </template>
         </template>
     </div>
 </template>
@@ -35,6 +40,20 @@ export default {
             type: Boolean,
             default: false
         },
+        // 是否骨架屏加载
+        skeLoading:{
+            type:Boolean,
+            default:false
+        },
+        // 最小高度:
+        minHeight:{
+            type:String,
+            default:'70vh'
+        },
+        noDateText:{
+            type:String,
+            default:'暂无数据'
+        }
     },
     data() {
         return {
@@ -58,11 +77,9 @@ export default {
 .mobile-table-list {
     width: 95%;
     margin: 1em auto;
-    min-height: 70dvh;
-
     .no-empty {
+        height:100%;
         width: 100%;
-        height: 70vh;
         display: flex;
         justify-content: center;
         align-items: center;
