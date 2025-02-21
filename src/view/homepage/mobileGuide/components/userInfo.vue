@@ -24,11 +24,11 @@
             </li>
             <li class="list-item">
                 <p class="title">积分</p>
-                <p class="user-text">{{ userInfo.money || "未开启积分" }}</p>
+                <p class="user-text active">{{ userInfo.money ?? "未开启积分" }}</p>
             </li>
             <li class="list-item">
-                <p class="title">岗位</p>
-                <p class="user-text">{{ userInfo.roleListName || '无岗位' }}</p>
+                <p class="title">菜单权限</p>
+                <p class="user-text">{{ userInfo.roleListName || '游客' }}</p>
             </li>
         </main>
     </div>
@@ -130,6 +130,9 @@ export default {
                 color: #333;
                 font-size: 0.9em;
                 font-family: 'hk';
+                &.active{
+                    color:#0089f3;
+                }
             }
         }
     }
