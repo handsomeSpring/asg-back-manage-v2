@@ -1,7 +1,7 @@
 <template>
     <div class="task__container">
         <div class="task__main--grid">
-            <el-card class="custom__card--auto" shadow="none">
+            <div class="custom__card--auto">
                 <li>
                     <p id="taskName" class="item__title--pointer">任务标题</p>
                     <el-input size="small" v-model="taskObj.taskName" placeholder="请输入任务标题" clearable></el-input>
@@ -25,10 +25,9 @@
                     <el-button size="small" icon="el-icon-document-checked" type="primary"
                         @click="addTask">新建任务</el-button>
                 </li>
-            </el-card>
+            </div>
             <div class="task__code--highlight">
                 <p class="title" id="money-1">积分规则</p>
-
                 <div v-for="(item, index) in moneyRules" :key="index">
                     <p class="point__title">
                         {{ index }}积分
