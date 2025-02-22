@@ -7,11 +7,13 @@ import VueRouter from "vue-router";
 import { getToken } from "@/utils/auth";
 //引入组件
 import Login from "@/view/login/index.vue";
+import MobileLogin from "@/view/login/MobileLogin.vue";
 import Err from "@/view/Err.vue";
 import customWorker from "@/view/customWorker/index.vue";
 import { getPermission } from '@/utils/permission.js';
 import Layout from '@/view/homepage/index.vue';
 import userInfo from '@/view/userInfo/index.vue';
+import { isMobile } from "@/utils";
 const originalPush = VueRouter.prototype.push;
 VueRouter.prototype.push = function push(location) {
   return originalPush.call(this, location).catch(err => err)
@@ -30,7 +32,7 @@ const router = new VueRouter({
     {
       path: "/login",
       name: "系统登录",
-      component: Login,
+      component: isMobile() ? Login : MobileLogin,
     },
     {
       path: "/404",
