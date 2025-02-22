@@ -5,10 +5,12 @@
         <i class="el-icon-chat-line-round"></i>欢迎来到第五人格ASG赛事后台管理系统移动端，本系统主要用于管理赛事和导播\裁判选班，若有问题，请反馈给QQ：793651012。
       </p>
     </AsgTipComponent>
-    <el-divider content-position="center">ASG三大系统</el-divider>
-    <div class="list-comp active">第五人格ASG后台管理系统</div>
-    <div class="list-comp" @click="routerToNew('https://commentary.idvasg.cn/')">第五人格ASG解说端</div>
-    <div class="list-comp" @click="routerToNew('https://idvasg.cn/')">第五人格ASG官网</div>
+    <div class="mobile-info">
+      <h2 class="management-text">ASG后台管理系统</h2>
+      <p class="management-info">第五人格ASG三大系统之一：登记、管理、运营。迎合数字化时代，助力办最好的民间比赛。</p>
+    </div>
+    <div class="list-comp">第五人格ASG解说端</div>
+    <div class="list-comp">第五人格ASG官网</div>
     <el-divider content-position="center">ASG合作伙伴</el-divider>
     <el-skeleton :rows="6" :loading="loading" animated />
     <template v-if="!loading">
@@ -42,9 +44,6 @@ export default {
     this.initFriends()
   },
   methods: {
-    routerToNew(link) {
-      window.open(link, '_blank')
-    },
     async initFriends() {
       try {
         this.loading = true;
@@ -75,6 +74,7 @@ export default {
   padding: 0 1em;
   padding-bottom: 65px;
   overflow: hidden;
+  min-height: 100%;
   background: #fff;
 
   .tip-comp-text {
@@ -82,11 +82,36 @@ export default {
     color: #5E6D82;
     line-height: 1.3em;
     text-indent: 1em;
-    i{
-      color:#E6A23C;
+
+    i {
+      color: #E6A23C;
       margin-right: 0.3em;
     }
   }
+
+  .mobile-info {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap:30px;
+    margin:2em 0;
+    .management-text {
+      background: -webkit-linear-gradient(315deg, #42d392 25%, #647eff);
+      background-clip: text;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-align: center;
+    }
+    .management-info{
+      text-align: center;
+      font-size: 1em;
+      font-weight: 500;
+      color:rgba(60, 60, 60, .7);
+      line-height:2em;
+    }
+  }
+
 
   .list-comp {
     width: 100%;
@@ -100,11 +125,6 @@ export default {
     color: #606266;
     box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
     box-sizing: border-box;
-
-    &.active {
-      background: #ECF8FF;
-      border: 2px dashed #50bfff;
-    }
   }
 
   // 合作伙伴

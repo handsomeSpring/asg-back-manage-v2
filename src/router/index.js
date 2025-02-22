@@ -32,7 +32,7 @@ const router = new VueRouter({
     {
       path: "/login",
       name: "系统登录",
-      component: isMobile() ? Login : MobileLogin,
+      component: !isMobile() ? Login : MobileLogin,
     },
     {
       path: "/404",
