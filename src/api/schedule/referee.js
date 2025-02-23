@@ -26,7 +26,7 @@ export function cancelGame(gameId,reason){
 // 裁判选班口
 export function judgeChoose(gameIds){
     return request({
-        url:'', //todo
+        url:'/api/v1/judge', //todo
         method:'POST',
         params:{
             gameIds
@@ -36,7 +36,7 @@ export function judgeChoose(gameIds){
 // 裁判取消选班口
 export function judgeCancelGame(gameId,reason){
     return request({
-        url:'', //todo
+        url:'/api/v1/judge', //todo
         method:'DELETE',
         params:{
             gameId,
