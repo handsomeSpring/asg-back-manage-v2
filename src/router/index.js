@@ -58,6 +58,7 @@ const router = new VueRouter({
     {
       path: "/",
       component: Layout,
+      redirect:'/login',
       name: 'home',
       children:[
         {
@@ -85,12 +86,7 @@ router.beforeEach(async (to, from, next) => {
   }
   if (getToken()) {
     // 只要路由发生了跳转，就可以执行进度条
-    // 设置后置守卫，路由跳转成功就可以关闭进度条
-    if (to.path === '/') {
-      next('/guide');
-    } else {
-      next(true)
-    }
+      next()
   } else {
     if (to.path === '/') {
       next('/login');
