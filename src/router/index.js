@@ -10,7 +10,8 @@ import Login from "@/view/login/index.vue";
 import MobileLogin from "@/view/login/MobileLogin.vue";
 import Err from "@/view/Err.vue";
 import customWorker from "@/view/customWorker/index.vue";
-import { getPermission } from '@/utils/permission.js';
+import store from '@/store/index';
+import { getPermission, getUserInfo } from '@/utils/permission.js';
 import Layout from '@/view/homepage/index.vue';
 import userInfo from '@/view/userInfo/index.vue';
 import { isMobile } from "@/utils";
@@ -58,9 +59,9 @@ const router = new VueRouter({
     {
       path: "/",
       component: Layout,
-      redirect:'/login',
+      redirect: '/login',
       name: 'home',
-      children:[
+      children: [
         {
           path: "userInfo",
           component: userInfo,
@@ -71,7 +72,7 @@ const router = new VueRouter({
   ],
 });
 // 设置白名单：登录、404、临时抽签
-const whiteList = ['/login', '/404', '/match/ballot']
+const whiteList = ['/login', '/404']
 let isAddRouter = false;
 // 设置路由前置守卫
 router.beforeEach(async (to, from, next) => {
@@ -98,23 +99,36 @@ router.beforeEach(async (to, from, next) => {
   //     next('/404')
   //   }
   // }
-  if(to.path === '/login' && hasToken){
+  const isAddRouter = store?.getters?.isAddRouter ?? false;
+  if (to.path === '/login' && hasToken) {
     next('/guide');
   }
-  console.log(to.path,'是否又token');
-  if(hasToken && to.path !== '/404'){
-    console.log(!isAddRouter,'isAddRouter')
-    if(!isAddRouter){
-      isAddRouter = true;
-      await getPermission();
-      next({...to,replace:true})
-    }else{
-      next();
+  if (whiteList.indexOf(to.path) === -1) {
+    if (hasToken) {
+      if (!isAddRouter) {
+        store.commit("SET_ROUTERSTATE", true);
+        // 获取动态路由和获取用户信息
+        await getUserInfo();
+        await getPermission();
+        next({ ...to, replace: true })
+      } else {
+        if (to.matched.length === 0) {
+          next('/404');
+        } else {
+          next();
+        }
+      }
+    } else {
+      if (to.matched.length === 0) {
+        next('/404');
+      } else {
+        next();
+      }
     }
-  }else{
+  } else {
     next();
-    nProgress.done();
   }
+  nProgress.done();
 })
 
 router.afterEach((to) => {

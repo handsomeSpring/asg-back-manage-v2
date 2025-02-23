@@ -8,5 +8,6 @@ const getters = {
     roles:state => state.user.userInfo.roleListName,
     waitDoNumber:state => state.user.waitDoNumber,
     waitAuthNumber:state => state.user.waitAuthNumber,
+    isAddRouter:state => state.app.isAddRouter
 };
 export default getters;

@@ -4,6 +4,7 @@ import router from "@/router/index.js";
 const _import = require("@/router/_import.js");
 import { getMenu } from "@/api/home/index.js";
 import { isMobile } from '@/utils/index';
+import { getInfo } from "@/api/home";
 import Err from '@/view/Err.vue';
 function importComponent(componentPath){
     try {
@@ -85,4 +86,21 @@ export async function getPermission() {
     } catch (error) {
         console.log(error.message);
     }
+}
+
+// 获取个人信息
+export async function getUserInfo(){
+  try {
+    const { data } = await getInfo();
+    store.commit("getUserInfo", data);
+    window.sessionStorage.setItem("money", data.money);
+    window.sessionStorage.setItem("baseImg", data.base64);
+    window.sessionStorage.setItem("chinaname", data.chinaname);
+    window.sessionStorage.setItem("officium", data.officium);
+    window.sessionStorage.setItem("id", data.id);
+    window.sessionStorage.setItem("isadmin", data.isadmin);
+    window.sessionStorage.setItem("money", data.money);
+  } catch (error) {
+    console.log(error.message);
+  }
 }

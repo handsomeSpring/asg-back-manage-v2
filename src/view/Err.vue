@@ -17,10 +17,18 @@
 </template>
 
 <script>
+import { removeToken } from '@/utils/auth';
+
 export default {
   name: 'Err-Page',
   methods: {
     backToLogin() {
+      this.$store.commit("removeToken");
+      sessionStorage.removeItem('baseImg');
+      this.$store.commit("SET_WAITDO_NUMBER", null);
+      this.$store.commit("SET_WAITAUTH_NUMBER", null);
+      this.$store.commit("SET_ROUTERSTATE", false);
+      this.$router.push("/login");
       this.$router.push({ path: "/login" })
     }
   }

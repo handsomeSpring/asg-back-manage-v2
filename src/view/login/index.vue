@@ -44,12 +44,9 @@
 
 <script>
 import { loginUser } from "@/api/login/index";
-import { getInfo } from "@/api/home";
 import CommonFooter from "@/components/CommonFooter.vue";
 import { getByTitle } from "@/api/config";
-import { getPermission } from "@/utils/permission.js";
 import { mapGetters } from "vuex";
-import { findTasks, getTask } from "@/api/admin/index.js";
 import { isMobile } from '@/utils/index';
 export default {
   name: "LoginComp",
@@ -57,7 +54,7 @@ export default {
     CommonFooter,
   },
   computed: {
-    ...mapGetters(['waitDoNumber', 'waitAuthNumber', 'userInfo'])
+    ...mapGetters(['waitDoNumber', 'waitAuthNumber'])
   },
   data() {
     return {
@@ -91,10 +88,8 @@ export default {
         if (data.code && data.code === 404) throw new Error(data.message);
         this.$store.commit("setToken", data);
         await this.initRoles();
-        await this.initGetInfo();
         const path = isMobile() ? '/mobileGuide' : '/guide';
         this.$router.push(path);
-        this.$message.success("登录成功！");
       } catch (error) {
         if (error.response?.data?.message) {
           return this.$message.error(error.response.data.message);
@@ -102,54 +97,6 @@ export default {
         return this.$message.error(error.message);
       } finally {
         this.loading = false;
-      }
-    },
-    async initGetInfo() {
-      const { data } = await getInfo();
-      this.$store.commit("getUserInfo", data);
-      sessionStorage.setItem("money", data.money);
-      sessionStorage.setItem("baseImg", data.base64);
-      sessionStorage.setItem("chinaname", data.chinaname);
-      sessionStorage.setItem("officium", data.officium);
-      sessionStorage.setItem("id", data.id);
-      sessionStorage.setItem("isadmin", data.isadmin);
-      sessionStorage.setItem("money", data.money);
-      await this.getWaitDone();
-      await getPermission();
-    },
-    async getWaitDone() {
-      try {
-        if (this.waitDoNumber === null) {
-          const id = Number(this.userInfo.id);
-          if (Number.isNaN(id)) throw new Error('id不合法');
-          getTask(id)
-            .then((res) => {
-              const waitDoNumber = res.data.filter(item => item.status === '0').length;
-              this.$store.commit("SET_WAITDO_NUMBER", waitDoNumber);
-            })
-            .catch((err) => {
-              this.$message.error(err instanceof Error ? err.message : err);
-            });
-        }
-        if (this.waitAuthNumber === null) {
-          const requestBody = {
-            chinaname: '',
-            status: '1',
-            page: 1,
-            limit: 999
-          }
-          findTasks(requestBody).then(({ data, status }) => {
-            let waitAuthNumber = 0;
-            if (status !== 200 || data.code === 401) {
-              waitAuthNumber = 0;
-            } else {
-              waitAuthNumber = data?.data?.total ?? 0;
-            }
-            this.$store.commit("SET_WAITAUTH_NUMBER", waitAuthNumber);
-          })
-        }
-      } catch (error) {
-        console.log(error.message);
       }
     },
     toggleEye() {

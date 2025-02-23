@@ -58,6 +58,7 @@ import { confirmUpdate } from "@/api/login/index.js";
 import { getToken } from "@/utils/auth";
 import { getByTitle } from "@/api/config";
 import { mapGetters } from "vuex";
+import { findTasks, getTask } from "@/api/admin/index.js";
 export default {
   name: "CommonHeader",
   data() {
@@ -75,7 +76,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(['waitDoNumber', 'waitAuthNumber', 'menuOptions'])
+    ...mapGetters(['waitDoNumber', 'waitAuthNumber', 'menuOptions','userInfo'])
   },
   watch: {
     $route: {
@@ -85,6 +86,7 @@ export default {
     },
   },
   created() {
+    this.getWaitDone();
     if (this.menuOptions && Array.isArray(this.menuOptions)) {
       this.menuOptions.forEach(item => {
         if (item.component !== 'router-view') {
@@ -111,7 +113,45 @@ export default {
       }
     })
   },
+  mounted(){
+    this.$message.success(`欢迎！尊敬的${this.userInfo.chinaname}`);
+  },
   methods: {
+    async getWaitDone() {
+      try {
+        if (this.waitDoNumber === null) {
+          const id = Number(this.userInfo.id);
+          if (Number.isNaN(id)) throw new Error('id不合法');
+          getTask(id)
+            .then((res) => {
+              const waitDoNumber = res.data.filter(item => item.status === '0').length;
+              this.$store.commit("SET_WAITDO_NUMBER", waitDoNumber);
+            })
+            .catch((err) => {
+              this.$message.error(err instanceof Error ? err.message : err);
+            });
+        }
+        if (this.waitAuthNumber === null) {
+          const requestBody = {
+            chinaname: '',
+            status: '1',
+            page: 1,
+            limit: 999
+          }
+          findTasks(requestBody).then(({ data, status }) => {
+            let waitAuthNumber = 0;
+            if (status !== 200 || data.code === 401) {
+              waitAuthNumber = 0;
+            } else {
+              waitAuthNumber = data?.data?.total ?? 0;
+            }
+            this.$store.commit("SET_WAITAUTH_NUMBER", waitAuthNumber);
+          })
+        }
+      } catch (error) {
+        console.log(error.message);
+      }
+    },
     handleSelectMenu(item) {
       if (item.type === 'function') {
         this[item.prop]();
@@ -194,6 +234,7 @@ export default {
           sessionStorage.removeItem('baseImg');
           this.$store.commit("SET_WAITDO_NUMBER", null);
           this.$store.commit("SET_WAITAUTH_NUMBER", null);
+          this.$store.commit("SET_ROUTERSTATE", false);
           this.$router.push("/login");
           this.$message.warning("您已退出登录！");
         }
