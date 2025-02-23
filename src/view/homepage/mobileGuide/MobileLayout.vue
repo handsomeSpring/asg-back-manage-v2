@@ -120,6 +120,7 @@ export default {
                     sessionStorage.removeItem('baseImg');
                     this.$store.commit("SET_WAITDO_NUMBER", null);
                     this.$store.commit("SET_WAITAUTH_NUMBER", null);
+                    this.$store.commit("SET_ROUTERSTATE", false);
                     this.$router.push("/login");
                     this.$message.warning("您已退出登录！");
                 }

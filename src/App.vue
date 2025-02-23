@@ -12,8 +12,8 @@ export default {
       this.$store.replaceState(Object.assign({}, this.$store.state, JSON.parse(sessionStorage.getItem("store"))));
       sessionStorage.removeItem("store");
     }
-    //在页面刷新时将vuex里的信息保存到sessionStorage里22
-    window.addEventListener("beforeunload", () => {
+    //在页面刷新时将vuex里的信息保存到sessionStorage// 兼容ios
+    window.addEventListener("pagehide", () => {
       sessionStorage.setItem("store", JSON.stringify(this.$store.state));
       sessionStorage.setItem('beforeupload-path',this.$route.path)
     });

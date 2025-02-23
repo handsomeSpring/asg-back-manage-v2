@@ -3,10 +3,10 @@
         <header>
             <el-image :src="avatar" class="user-avatar" @click="uploadAvatar">
                 <div slot="error">
-                    <img class="error-image" src="@/assets/images/logo.png" />
+                    <img class="error-image" src="@/assets/images/logo.png" @click="uploadAvatar"/>
                 </div>
             </el-image>
-            <p class="avatar-click">点击修改头像</p>
+            <p class="avatar-click" @click="uploadAvatar">点击修改头像</p>
         </header>
         <input id="avatar" type="file" style="display: none" @input="beforeInputAvatar" />
         <main>

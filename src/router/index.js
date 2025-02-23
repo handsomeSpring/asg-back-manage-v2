@@ -45,12 +45,6 @@ const router = new VueRouter({
       name: "自定义工作台",
       component: customWorker
     },
-    // {
-    //   path: '*',
-    //   name: "无法匹配路由",
-    //   redirect: '/404',
-    //   component: Err,
-    // },
     {
       path: "/mobileGuide",
       component: Layout,
@@ -73,7 +67,6 @@ const router = new VueRouter({
 });
 // 设置白名单：登录、404、临时抽签
 const whiteList = ['/login', '/404']
-let isAddRouter = false;
 // 设置路由前置守卫
 router.beforeEach(async (to, from, next) => {
   const hasToken = getToken();
@@ -101,7 +94,7 @@ router.beforeEach(async (to, from, next) => {
   // }
   const isAddRouter = store?.getters?.isAddRouter ?? false;
   if (to.path === '/login' && hasToken) {
-    next('/guide');
+    next(isMobile() ? '/mobileGuide' : '/guide' );
   }
   if (whiteList.indexOf(to.path) === -1) {
     if (hasToken) {

@@ -9,8 +9,16 @@
       <h2 class="management-text">ASG后台管理系统</h2>
       <p class="management-info">第五人格ASG三大系统之一：登记、管理、运营。迎合数字化时代，助力办最好的民间比赛。</p>
     </div>
-    <div class="list-comp">第五人格ASG解说端</div>
-    <div class="list-comp">第五人格ASG官网</div>
+    <div class="list-comp">
+      <div class="item-comp">
+        <p>ASG解说端</p>
+        <svg-icon class="icon-my" iconClass="myWork" height="80px" width="80px"></svg-icon>
+      </div>
+      <div class="item-comp">
+        <p>ASG赛事官网</p>
+        <svg-icon class="icon-my" iconClass="myWork" height="80px" width="80px"></svg-icon>
+      </div>
+    </div>
     <el-divider content-position="center">ASG合作伙伴</el-divider>
     <el-skeleton :rows="6" :loading="loading" animated />
     <template v-if="!loading">
@@ -115,18 +123,48 @@ export default {
 
   .list-comp {
     width: 100%;
-    border-radius: 12px;
-    height: 120px;
-    margin: 1.5em 0;
     display: flex;
     align-items: center;
-    justify-content: center;
-    background: #F2F6FC;
-    color: #606266;
-    box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
-    box-sizing: border-box;
+    justify-content: space-between;
+    gap:1em;
+    .item-comp{
+      border-radius: 0.7em;
+      border:1px solid #f9fcff;
+      width:50%;
+      padding:2em;
+      background: linear-gradient(173deg, #b3d4ff, #fff0 93%);
+      position: relative;
+      text-align: center;
+      overflow: hidden;
+      transform: translateX(-100vw);
+      animation: moveIn 480ms forwards;
+      p{
+        position: relative;
+        z-index:2;
+        color:#0089f3;
+        font-size: 14px;
+        font-weight: bold;
+        font-family: 'hk';
+      }
+      .icon-my{
+        position: absolute;
+        right:-10px;
+        bottom:-20px;
+        z-index: 0;
+      }
+    }
   }
-
+  @keyframes moveIn {
+    0%{
+      transform: translateX(-100vw);
+    }
+    60%{
+      transform: translateX(5vw) skewX(-25deg);
+    }
+    100%{
+      transform: translateX(0) skewX(0);
+    }
+  }
   // 合作伙伴
   .grid-coperation-container {
     display: grid;
