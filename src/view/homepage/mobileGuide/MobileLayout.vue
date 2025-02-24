@@ -124,7 +124,7 @@ export default {
                     this.$store.commit("SET_WAITAUTH_NUMBER", null);
                     this.$store.commit("SET_ROUTERSTATE", false);
                     this.$router.push("/login");
-                    this.$message.warning("您已退出登录！");
+                    this.$toast("已退出！");
                 }
             } catch (error) {
                 if (typeof error === 'string' && error === 'cancel') return;

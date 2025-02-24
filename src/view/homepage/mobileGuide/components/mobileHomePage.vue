@@ -64,6 +64,7 @@ export default {
     };
   },
   created() {
+    this.$toast('登录成功',1700);
     this.initFriends()
   },
   methods: {

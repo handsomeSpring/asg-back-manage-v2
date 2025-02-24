@@ -8,6 +8,7 @@ Vue.use(VueRouter)
 import store from '@/store/index'
 import ElementUI from 'element-ui';
 import FullScreenLoading from '@/components/FullScreenLoading.vue';
+import showToast from '@/components/AsgToast/toast.js';
 import 'element-ui/lib/theme-chalk/index.css';
 import "@/assets/index";
 import "@/assets/styles/reset.css";
@@ -53,7 +54,7 @@ Vue.prototype.$jsPlumb = jsPlumb.jsPlumb;
 //全局使用 v-md-edit 插件
 import ButtonFix from "./components/ButtonFix.vue"
 Vue.component("ButtonFix",ButtonFix)
-
+Vue.prototype.$toast = showToast;
 //配置v-md-edit插件的代码高亮为github模式，使用highlight.js
 
 // Vue.use(SlideVerify);
