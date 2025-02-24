@@ -33,6 +33,7 @@ const router = new VueRouter({
     {
       path: "/login",
       name: "系统登录",
+      // component: Login
       component: isMobile() ? MobileLogin : Login,
     },
     {
@@ -101,9 +102,19 @@ router.beforeEach(async (to, from, next) => {
       if (!isAddRouter) {
         store.commit("SET_ROUTERSTATE", true);
         // 获取动态路由和获取用户信息
-        await getUserInfo();
-        await getPermission();
-        next({ ...to, replace: true })
+        const result = await getUserInfo();
+        if(result){
+          store.commit("removeToken");
+          sessionStorage.removeItem('baseImg');
+          store.commit("SET_WAITDO_NUMBER", null);
+          store.commit("SET_WAITAUTH_NUMBER", null);
+          store.commit("SET_ROUTERSTATE", false);
+          router.push("/login");
+          next('/login');
+        }else{
+          await getPermission();
+          next({ ...to, replace: true })
+        }
       } else {
         if (to.matched.length === 0) {
           next('/404');

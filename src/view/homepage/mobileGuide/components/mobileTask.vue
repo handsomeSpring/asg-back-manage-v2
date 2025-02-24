@@ -1,7 +1,7 @@
 <template>
     <div class="mobile-task-container">
         <full-screen-loading v-if="loading"></full-screen-loading>
-        <tempalte v-else>
+        <template v-else>
             <el-empty style="height:100%" v-if="list.length === 0" description="暂无任务"></el-empty>
             <div class="content-main" v-else>
                 <el-alert :type="computedType(item.status)" class="my-alert" v-for="item in list" :closable="false"
@@ -17,7 +17,7 @@
                     </div>
                 </el-alert>
             </div>
-        </tempalte>
+        </template>
     </div>
 </template>
 

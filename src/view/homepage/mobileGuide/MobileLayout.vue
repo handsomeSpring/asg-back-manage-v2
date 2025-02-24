@@ -11,8 +11,10 @@
         </div>
         <div class="mobile-layout__main">
             <transition name="fade-transform" mode="out-in">
-                <component v-if="$route.fullPath === '/mobileGuide'" :is="homePageComp"></component>
-                <router-view v-else></router-view>
+                <KeepAlive include="mobileHomePage">
+                    <component v-if="$route.fullPath === '/mobileGuide'" :is="homePageComp"></component>
+                    <router-view v-else></router-view>
+                </KeepAlive>
             </transition>
         </div>
         <transition name="el-zoom-in-bottom">

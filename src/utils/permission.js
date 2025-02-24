@@ -91,7 +91,8 @@ export async function getPermission() {
 // 获取个人信息
 export async function getUserInfo(){
   try {
-    const { data } = await getInfo();
+    const { data,status } = await getInfo();
+    if(status !== 200) throw new Error('错误了');
     store.commit("getUserInfo", data);
     window.sessionStorage.setItem("money", data.money);
     window.sessionStorage.setItem("baseImg", data.base64);
@@ -102,5 +103,8 @@ export async function getUserInfo(){
     window.sessionStorage.setItem("money", data.money);
   } catch (error) {
     console.log(error.message);
+    return new Promise(resolve => {
+        resolve(true)
+    })
   }
 }
