@@ -31,6 +31,7 @@ import Editor from 'vue2-ace-editor'
 // 全局注册filters 
 import * as filters from './utils/filters'
 import Highlight from '@/utils/directive.js'; // 这里是你项目highlight.js所在路径
+import './assets/styles/tailwind.min.css';
 
 Object.keys(filters).forEach(key => {
   Vue.filter(key, filters[key])
@@ -60,9 +61,11 @@ Vue.prototype.$toast = showToast;
 // Vue.use(SlideVerify);
 Vue.use(ElementUI);
 
-import introJS from 'intro.js'
-import 'intro.js/introjs.css'
-Vue.prototype.$intro = introJS
+// import introJS from 'intro.js'
+// import 'intro.js/introjs.css'
+// Vue.prototype.$intro = introJS
+
+
 Vue.config.productionTip = false
 
 new Vue({

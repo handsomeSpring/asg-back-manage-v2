@@ -283,6 +283,5 @@ export default {
 </script>
 
 <style scoped lang="less">
-@import url('../../assets/styles/tailwind.min.css');
 @import url('../../assets/mobileStyles/login/style.css');
 </style>

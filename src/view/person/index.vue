@@ -118,12 +118,11 @@ export default {
   .item-row {
     border-radius: 4px;
     border: 1px solid #e7e7e7;
-    padding: 9px 14px;
+    padding: 0.3em 0.7em;
     cursor: pointer;
-    font-size: 14px;
+    font-size: 13px;
     font-weight: 400;
     color: #494949;
-    font-family: 'hk';
     transition: .27s all;
 
     &:hover {

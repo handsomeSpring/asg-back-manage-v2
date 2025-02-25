@@ -201,7 +201,6 @@ export default {
   height: 56px;
   width: calc(100% - 70px);
   background: linear-gradient(90deg, #f1f5fd 16%, #c9d6f8 93%);
-  border-radius: 3px 3px 3px 3px;
   border: 1px solid #a0b7f2;
   display: flex;
   align-items: center;
@@ -209,7 +208,7 @@ export default {
   padding: 12px 15px;
   border-radius: 3px;
   margin: 0 20px 12px;
-
+  padding:2.5em;
   .left__container {
     display: flex;
     align-items: center;

@@ -1,26 +1,33 @@
 <!-- eslint-disable vue/no-use-v-if-with-v-for  background-color="#0089f3" -->
 <template>
   <div>
-    <el-menu :collapse="isCollapse" :default-active="$route.path" class="el-menu-vertical-demo"
-      text-color="#e3f2fd" active-text-color="#f7e157" router :unique-opened="true">
+    <el-menu :collapse="isCollapse" :default-active="$route.path" class="el-menu-vertical-demo" text-color="#e3f2fd"
+      active-text-color="#f7e157" router :unique-opened="true">
       <div class="aside__header">
         <img src="@/assets/images/logo_black.png">
         <p v-show="!isCollapse">最强民间赛事</p>
       </div>
-      <template v-for="(menu, index) in menuOptions" >
+      <template v-for="(menu, index) in menuOptions">
         <el-menu-item v-if="menu.children.length === 0" :index="menu.path" :key="`no-Child-${index}`">
+          <div class="flex-menu">
             <svg-icon style="margin-right: 5px" :iconClass="menu.iconClass" width="20px" height="20px"></svg-icon>
             <span slot="title">{{ menu.title }}</span>
+          </div>
+
         </el-menu-item>
         <el-submenu v-else :index="menu.path" :key="`has-Child-${index}`">
           <template slot="title">
-            <svg-icon style="margin-right: 5px" :iconClass="menu.iconClass" width="20px" height="20px"></svg-icon>
-            <span>{{ menu.title }}</span>
+            <div class="flex-menu">
+              <svg-icon style="margin-right: 5px" :iconClass="menu.iconClass" width="20px" height="20px"></svg-icon>
+              <span>{{ menu.title }}</span>
+            </div>
           </template>
           <el-menu-item-group>
             <el-menu-item v-for="(child, childI) in menu.children" :index="child.path" :key="childI" v-if="child.show">
-              <svg-icon style="margin-right: 5px" :iconClass="child.iconClass" width="16px" height="16px"></svg-icon>
-              {{ child.title }}
+              <div class="flex-menu">
+                <svg-icon style="margin-right: 5px" :iconClass="child.iconClass" width="16px" height="16px"></svg-icon>
+                {{ child.title }}
+              </div>
             </el-menu-item>
           </el-menu-item-group>
         </el-submenu>
@@ -35,7 +42,7 @@ import { mapGetters } from 'vuex';
 export default {
   name: "CommonAside",
   computed: {
-    ...mapGetters(['isCollapse','menuOptions']),
+    ...mapGetters(['isCollapse', 'menuOptions']),
   },
 };
 </script>
@@ -45,16 +52,21 @@ export default {
   width: 200px;
   min-height: 400px;
 }
+
 .el-menu {
   height: 100vh;
   border-right: none;
   background-color: var(--aside-background-color);
-  .el-menu-item-group{
+
+  .el-menu-item-group {
     background-color: var(--aside-background-color);
   }
-  .el-menu-item:focus, .el-menu-item:hover{
-    background-color: rgb(0,110,194)
+
+  .el-menu-item:focus,
+  .el-menu-item:hover {
+    background-color: rgb(0, 110, 194)
   }
+
   h4 {
     color: #fff;
     text-align: center;
@@ -65,9 +77,11 @@ export default {
     padding: 0 6px;
   }
 }
-/deep/.el-submenu__title:hover{
-  background-color: rgb(0,110,194) !important;
+
+/deep/.el-submenu__title:hover {
+  background-color: rgb(0, 110, 194) !important;
 }
+
 /deep/.el-submenu__title i {
   color: #f9f9f9;
 }
@@ -91,5 +105,9 @@ export default {
     height: 25px;
     border-radius: 4px;
   }
+}
+.flex-menu{
+  display: flex;
+  align-items: center;
 }
 </style>
