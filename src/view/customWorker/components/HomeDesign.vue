@@ -208,7 +208,6 @@ export default {
   padding: 12px 15px;
   border-radius: 3px;
   margin: 0 20px 12px;
-  padding:2.5em;
   .left__container {
     display: flex;
     align-items: center;

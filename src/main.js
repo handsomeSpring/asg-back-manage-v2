@@ -31,7 +31,7 @@ import Editor from 'vue2-ace-editor'
 // 全局注册filters 
 import * as filters from './utils/filters'
 import Highlight from '@/utils/directive.js'; // 这里是你项目highlight.js所在路径
-import './assets/styles/tailwind.min.css';
+// import './assets/styles/tailwind.min.css';
 
 Object.keys(filters).forEach(key => {
   Vue.filter(key, filters[key])
