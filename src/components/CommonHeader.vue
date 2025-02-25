@@ -114,7 +114,7 @@ export default {
     })
   },
   mounted(){
-    this.$message.success(`欢迎！尊敬的${this.userInfo.chinaname}`);
+    this.$message.success(`欢迎！尊敬的${this.userInfo.chinaname}!`);
   },
   methods: {
     async getWaitDone() {

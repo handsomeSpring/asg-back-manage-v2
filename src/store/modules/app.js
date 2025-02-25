@@ -4,6 +4,7 @@ const app = {
         roleList:[], //职位配置
         adminList:[],
         isAddRouter:false, //是否添加了路由配置
+        fullLoading:false, //全局loading，跳组件用的时候使用。
     },
     mutations: {
         //修改菜单展开收起的方法
@@ -21,6 +22,10 @@ const app = {
         },
         SET_ROUTERSTATE(state, bool){
             state.isAddRouter = bool;
+        },
+        SET_FULL_LOADING(state, bool){
+            console.log('改掉了嘛？？？',bool);
+            state.fullLoading = bool;
         }
     },
     actions:{}

@@ -33,8 +33,8 @@ const router = new VueRouter({
     {
       path: "/login",
       name: "系统登录",
-      // component: Login
-      component: isMobile() ? MobileLogin : Login,
+      component: Login
+      // component: isMobile() ? MobileLogin : Login,
     },
     {
       path: "/404",
@@ -112,6 +112,7 @@ router.beforeEach(async (to, from, next) => {
           router.push("/login");
           next('/login');
         }else{
+          store.commit("SET_FULL_LOADING", false);
           await getPermission();
           next({ ...to, replace: true })
         }

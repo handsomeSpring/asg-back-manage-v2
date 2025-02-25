@@ -28,9 +28,9 @@
                 </el-input>
               </el-form-item>
               <el-form-item>
-                <div class="login__btn--primary" :class="loading ? 'disabled' : ''" @click="submit('ruleForm')">
+                <div class="login__btn--primary" :class="gettersLoading ? 'disabled' : ''" @click="submit('ruleForm')">
                   <p class="login__btn--text">登 录</p>
-                  <div v-show="loading" class="loader"></div>
+                  <div v-show="gettersLoading" class="loader"></div>
                 </div>
               </el-form-item>
             </el-form>
@@ -54,7 +54,7 @@ export default {
     CommonFooter,
   },
   computed: {
-    ...mapGetters(['waitDoNumber', 'waitAuthNumber'])
+    ...mapGetters(['waitDoNumber', 'waitAuthNumber','gettersLoading'])
   },
   data() {
     return {
@@ -62,7 +62,6 @@ export default {
         username: "",
         password: "",
       },
-      loading: false,
       eye_status: "el-icon-lock",
       inputtype: "password",
       rules: {
@@ -82,7 +81,7 @@ export default {
   methods: {
     async login() {
       try {
-        this.loading = true;
+        this.$store.commit("SET_FULL_LOADING", true);
         const { data, status, message } = await loginUser(this.userform);
         if (status !== 200) throw new Error(message);
         if (data.code && data.code === 404) throw new Error(data.message);
@@ -91,12 +90,11 @@ export default {
         const path = isMobile() ? '/mobileGuide' : '/guide';
         this.$router.push(path);
       } catch (error) {
+        this.$store.commit("SET_FULL_LOADING", false);
         if (error.response?.data?.message) {
           return this.$message.error(error.response.data.message);
         }
         return this.$message.error(error.message);
-      } finally {
-        this.loading = false;
       }
     },
     toggleEye() {
@@ -109,7 +107,7 @@ export default {
       }
     },
     submit(formName) {
-      if (this.loading) return;
+      if (this.gettersLoading) return;
       this.$refs[formName].validate((valid) => {
         if (valid) {
           this.login();
