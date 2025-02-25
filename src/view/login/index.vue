@@ -1,60 +1,226 @@
 <template>
-  <div>
-    <header class="clearfix">
-      <el-image class="pc-avatar" :src="require('@/assets/images/logo.png')"></el-image>
-      <span class="title">ASG赛事后台管理系统</span>
-    </header>
-    <main>
-      <div class="center-content" v-if="!isMobile">
-        <el-image class="img-wrap" :src="require('@/assets/images/manager.svg')">
-        </el-image>
+
+  <div class="relative min-h-screen flex">
+    <div class="
+                    flex flex-col
+                    sm:flex-row
+                    items-center
+                    md:items-start
+                    sm:justify-center
+                    md:justify-start
+                    flex-auto
+                    min-w-0
+                    bg-white
+                ">
+      <div class="
+                        bg-image
+                        sm:w-1/2
+                        xl:w-3/5
+                        h-full
+                        hidden
+                        md:flex
+                        flex-auto
+                        items-center
+                        justify-center
+                        p-10
+                        overflow-hidden
+                        bg-purple-900
+                        text-white
+                        bg-no-repeat bg-cover
+                        relative
+                    ">
+        <div class="
+                            absolute
+                            bg-gradient-to-b
+                            from-indigo-600
+                            to-blue-500
+                            opacity-75
+                            inset-0
+                            z-0
+                        "></div>
+        <div class="w-full max-w-md z-10">
+          <div class="sm:text-4xl xl:text-5xl font-bold leading-tight mb-6">AvengerS Gaming</div>
+          <div class="sm:text-sm xl:text-md text-gray-200 font-normal">
+            第五人格ASG赛事后台管理系统，致力于结合数字化时代，多措并举，创办高效、高质量第五人格民间比赛。</div>
+        </div>
+        <ul class="circles">
+          <li></li>
+          <li></li>
+          <li></li>
+          <li></li>
+          <li></li>
+          <li></li>
+          <li></li>
+          <li></li>
+          <li></li>
+          <li></li>
+        </ul>
       </div>
-      <div class="center-content">
-        <div class="loginwrap">
-          <div class="header-form">
-            <p class="header-title">系统登录</p>
+      <div class="
+                        md:flex md:items-center md:justify-center
+                        w-full
+                        sm:w-auto
+                        md:h-full
+                        w-2/5
+                        xl:w-2/5
+                        p-8
+                        md:p-10
+                        lg:p-14
+                        sm:rounded-lg
+                        md:rounded-none
+                        bg-white
+                    ">
+        <div class="max-w-md w-full mx-auto space-y-8">
+          <div class="text-center">
+            <h2 class="mt-6 text-3xl font-bold text-gray-900">欢迎登录!</h2>
           </div>
-          <div class="info">
-            <el-form ref="ruleForm" :model="userform" :rules="rules" class="demo-ruleForm">
-              <el-form-item label="用户名" prop="username">
-                <el-input v-model="userform.username" placeholder="请输入用户名">
-                    <i class="el-icon-user-solid" slot="suffix"></i>
-                </el-input>
-              </el-form-item>
-              <el-form-item label="密码" prop="password">
-                <el-input v-model="userform.password" :type="inputtype" placeholder="请输入密码"
-                  @keyup.enter.native="submit('ruleForm')">
-                  <i @click="toggleEye" slot="suffix" :class="eye_status"></i>
-                </el-input>
-              </el-form-item>
-              <el-form-item>
-                <div class="login__btn--primary" :class="gettersLoading ? 'disabled' : ''" @click="submit('ruleForm')">
-                  <p class="login__btn--text">登 录</p>
-                  <div v-show="gettersLoading" class="loader"></div>
-                </div>
-              </el-form-item>
-            </el-form>
+          <div class="flex flex-row justify-center items-center space-x-3">
+            <a href="https://space.bilibili.com/436148512?spm_id_from=333.1007.0.0" target="_blank" class="
+                                    w-11
+                                    h-11
+                                    items-center
+                                    justify-center
+                                    inline-flex
+                                    rounded-2xl
+                                    font-bold
+                                    text-lg
+                                    bg-blue-900
+                                    hover:shadow-lg
+                                    cursor-pointer
+                                    transition
+                                    ease-in
+                                    duration-300
+                                "><img class="w-4 h-4" src="../../assets/images/person.png" /></a>
+            <a href="https://space.bilibili.com/436148512?spm_id_from=333.1007.0.0" target="_blank" class="
+                                    w-11
+                                    h-11
+                                    items-center
+                                    justify-center
+                                    inline-flex
+                                    rounded-2xl
+                                    font-bold
+                                    text-lg text-white
+                                    bg-blue-400
+                                    hover:shadow-lg
+                                    cursor-pointer
+                                    transition
+                                    ease-in
+                                    duration-300
+                                "><img class="w-4 h-4" src="../../assets/images/logo_black.png" /></a>
+            <a href="https://space.bilibili.com/436148512?spm_id_from=333.1007.0.0" target="_blank" class="
+                                    w-11
+                                    h-11
+                                    items-center
+                                    justify-center
+                                    inline-flex
+                                    rounded-2xl
+                                    font-bold
+                                    text-lg text-white
+                                    bg-blue-500
+                                    hover:shadow-lg
+                                    cursor-pointer
+                                    transition
+                                    ease-in
+                                    duration-300
+                                "><img
+                src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZlcnNpb249IjEuMSIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIHhtbG5zOnN2Z2pzPSJodHRwOi8vc3ZnanMuY29tL3N2Z2pzIiB3aWR0aD0iNTEyIiBoZWlnaHQ9IjUxMiIgeD0iMCIgeT0iMCIgdmlld0JveD0iMCAwIDI0IDI0IiBzdHlsZT0iZW5hYmxlLWJhY2tncm91bmQ6bmV3IDAgMCA1MTIgNTEyIiB4bWw6c3BhY2U9InByZXNlcnZlIj48Zz48cGF0aCB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIGQ9Im0yMy45OTQgMjR2LS4wMDFoLjAwNnYtOC44MDJjMC00LjMwNi0uOTI3LTcuNjIzLTUuOTYxLTcuNjIzLTIuNDIgMC00LjA0NCAxLjMyOC00LjcwNyAyLjU4N2gtLjA3di0yLjE4NWgtNC43NzN2MTYuMDIzaDQuOTd2LTcuOTM0YzAtMi4wODkuMzk2LTQuMTA5IDIuOTgzLTQuMTA5IDIuNTQ5IDAgMi41ODcgMi4zODQgMi41ODcgNC4yNDN2Ny44MDF6IiBmaWxsPSIjZmZmZmZmIiBkYXRhLW9yaWdpbmFsPSIjMDAwMDAwIiBzdHlsZT0iIj48L3BhdGg+PHBhdGggeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiBkPSJtLjM5NiA3Ljk3N2g0Ljk3NnYxNi4wMjNoLTQuOTc2eiIgZmlsbD0iI2ZmZmZmZiIgZGF0YS1vcmlnaW5hbD0iIzAwMDAwMCIgc3R5bGU9IiI+PC9wYXRoPjxwYXRoIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgZD0ibTIuODgyIDBjLTEuNTkxIDAtMi44ODIgMS4yOTEtMi44ODIgMi44ODJzMS4yOTEgMi45MDkgMi44ODIgMi45MDkgMi44ODItMS4zMTggMi44ODItMi45MDljLS4wMDEtMS41OTEtMS4yOTItMi44ODItMi44ODItMi44ODJ6IiBmaWxsPSIjZmZmZmZmIiBkYXRhLW9yaWdpbmFsPSIjMDAwMDAwIiBzdHlsZT0iIj48L3BhdGg+PC9nPjwvc3ZnPg=="
+                class="w-4 h-4" /></a>
           </div>
+          <div class="flex items-center justify-center space-x-2">
+            <span class="h-px w-16 bg-gray-200"></span>
+            <span class="text-gray-300 font-normal">使用用户名登录</span>
+            <span class="h-px w-16 bg-gray-200"></span>
+          </div>
+          <div class="mt-8 space-y-6">
+            <input type="hidden" name="remember" value="true" />
+            <div class="relative">
+              <label class="ml-3 text-sm font-bold text-gray-700 tracking-wide">用户名</label>
+              <input v-model="userform.username" @focus="isError = false" :class="isError ? 'error-input' : ''" class="
+                                        w-full
+                                        text-base
+                                        px-4
+                                        py-2
+                                        border-b border-gray-300
+                                        focus:outline-none
+                                        rounded-2xl
+                                        focus:border-indigo-500
+                                    " type="" placeholder="请输入用户名" />
+            </div>
+            <div class="mt-8 content-center">
+              <label class="ml-3 text-sm font-bold text-gray-700 tracking-wide">密码</label>
+              <input v-model="userform.password" @focus="isError = false" :class="isError ? 'error-input' : ''" class="
+                                        w-full
+                                        content-center
+                                        text-base
+                                        px-4
+                                        py-2
+                                        border-b
+                                        rounded-2xl
+                                        border-gray-300
+                                        focus:outline-none focus:border-indigo-500
+                                    " type="password" placeholder="请输入密码" />
+            </div>
+          </div>
+          <!-- 底部按钮 -->
+          <div>
+            <div class="my-12">
+              <button @click="handleLogin" class="
+                                        w-full
+                                        flex
+                                        justify-center
+                                        bg-gradient-to-r
+                                        from-indigo-500
+                                        to-blue-600
+                                        hover:bg-gradient-to-l
+                                        hover:from-blue-500
+                                        hover:to-indigo-600
+                                        text-gray-100
+                                        p-4
+                                        rounded-full
+                                        tracking-wide
+                                        font-semibold
+                                        shadow-lg
+                                        cursor-pointer
+                                        transition
+                                        ease-in
+                                        duration-500
+                                    ">登 录<div v-show="gettersLoading" class="ml-2 loader"></div></button>
+            </div>
+            <p class="
+                                    items-center
+                                    justify-center
+                                    mt-10
+                                    text-center text-md text-gray-500
+                                ">
+              <span>还没有账号？</span>
+              <a href="https://commentary.idvasg.cn/#/" target="_blank" class="
+                                        text-indigo-400
+                                        hover:text-blue-500
+                                        no-underline
+                                        hover:underline
+                                        cursor-pointer
+                                        transition
+                                        ease-in
+                                        duration-300
+                                    ">立即注册</a>
+            </p>
+          </div>
+
         </div>
       </div>
-    </main>
-    <CommonFooter></CommonFooter>
+    </div>
   </div>
 </template>
 
 <script>
 import { loginUser } from "@/api/login/index";
-import CommonFooter from "@/components/CommonFooter.vue";
 import { getByTitle } from "@/api/config";
 import { mapGetters } from "vuex";
 import { isMobile } from '@/utils/index';
 export default {
   name: "LoginComp",
-  components: {
-    CommonFooter,
-  },
   computed: {
-    ...mapGetters(['waitDoNumber', 'waitAuthNumber','gettersLoading'])
+    ...mapGetters(['waitDoNumber', 'waitAuthNumber', 'gettersLoading'])
   },
   data() {
     return {
@@ -62,16 +228,8 @@ export default {
         username: "",
         password: "",
       },
-      eye_status: "el-icon-lock",
       inputtype: "password",
-      rules: {
-        username: [
-          { required: true, message: "用户名不能为空", trigger: "blur" },
-        ],
-        password: [
-          { required: true, message: "密码不能为空", trigger: "blur" },
-        ],
-      },
+      isError: false,
       isMobile: false,
     };
   },
@@ -106,15 +264,14 @@ export default {
         this.inputtype = "password";
       }
     },
-    submit(formName) {
+    handleLogin() {
       if (this.gettersLoading) return;
-      this.$refs[formName].validate((valid) => {
-        if (valid) {
-          this.login();
-        } else {
-          this.$message.warning("请完整输入账号和密码！");
-        }
-      });
+      if (!this.userform.username || !this.userform.password) {
+        this.isError = true;
+        this.$toast('请完整输入账号和密码！');
+        return;
+      }
+      this.login();
     },
     async initRoles() {
       const { data } = await getByTitle("roleList");
@@ -126,176 +283,6 @@ export default {
 </script>
 
 <style scoped lang="less">
-@import url('../../assets/mobileStyles/login/index.less');
-@title-font: 1.5rem;
-
-// 头部
-header {
-  width: 100%;
-  height: 70px;
-  display: flex;
-  justify-content: start;
-  align-items: center;
-  gap: 12px;
-
-  .pc-avatar {
-    margin-left: 40px;
-    display: block;
-    width: 50px;
-    height: 50px
-  }
-
-  span {
-    color: #0089f3;
-    display: block;
-    font-weight: 700;
-    line-height: 70px;
-    height: 70px;
-    font-size: @title-font;
-  }
-}
-
-// 中间部分
-main {
-  width: 100%;
-  height: calc(100dvh - 140px);
-  overflow: hidden;
-  background: url('../../assets/images/background.png');
-  background-size: cover;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  .center-content {
-    width: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    .img-wrap {
-      width: 60%;
-      height: 60%
-    }
-
-    .loginwrap {
-      width: 380px;
-      padding: 18px 0 60px;
-      border: 1px solid #ddd;
-      background-color: white;
-      box-sizing: border-box;
-      border-radius: 8px;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.12), 0 0 6px rgba(0, 0, 0, 0.04);
-      opacity: 0;
-      animation: forwards showOpacity 0.732s;
-
-      .header-form {
-        margin: 16px;
-        text-align: center;
-
-        .header-title {
-          font-size: 1.4rem;
-          font-weight: bold;
-          color: #4090ef;
-        }
-      }
-
-      .info {
-        width: 73%;
-        margin: 0 auto;
-        padding: 2%;
-
-        .el-form-item {
-          margin: 0;
-          padding: 0;
-          margin-bottom: 20px;
-
-          &:nth-child(2) {
-            margin-bottom: 30px;
-          }
-
-          .el-form-item__label {
-            line-height: 30px;
-          }
-
-          .el-input i{
-              line-height: 40px;
-              font-size: 1.2em;
-          }
-        }
-
-        // 按钮
-
-
-        .login__btn--primary {
-          background: #66b1ff;
-          border-color: #66b1ff;
-          color: #fff;
-          white-space: nowrap;
-          cursor: pointer;
-          box-sizing: border-box;
-          outline: 0;
-          transition: 0.1s;
-          border-radius: 4px;
-          margin-top: 1em;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          height: 2.6em;
-
-          .login__btn--text {
-            font-size: 1.1em;
-            font-weight: 500;
-          }
-
-          &.disabled {
-            background: #7eb8f7;
-            border-color: #7bb3f0;
-          }
-
-          &:hover {
-            background: #7eb8f7;
-            border-color: #7bb3f0;
-          }
-        }
-      }
-    }
-  }
-
-  /* HTML: <div class="loader"></div> */
-  .loader {
-    width: 18px;
-    --b: 4px;
-    aspect-ratio: 1;
-    border-radius: 50%;
-    padding: 1px;
-    background: conic-gradient(#0000 10%, #c5dbeb) content-box;
-    -webkit-mask: repeating-conic-gradient(#0000 0deg,
-        #000 1deg 20deg,
-        #0000 21deg 36deg),
-      radial-gradient(farthest-side,
-        #0000 calc(100% - var(--b) - 1px),
-        #000 calc(100% - var(--b)));
-    -webkit-mask-composite: destination-in;
-    mask-composite: intersect;
-    animation: l4 1s infinite steps(10);
-  }
-
-  @keyframes l4 {
-    to {
-      transform: rotate(1turn);
-    }
-  }
-
-  @keyframes showOpacity {
-    0% {
-      opacity: 0;
-      transform: translateY(-80px);
-    }
-
-    100% {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-}
+@import url('../../assets/styles/tailwind.min.css');
+@import url('../../assets/mobileStyles/login/style.css');
 </style>

@@ -46,10 +46,12 @@
                     <template v-if="adapterMenu.length > 0">
                         <div class="content-parent" v-for="(menu, index) in adapterMenu" :key="index">
                             <div class="menu_header">
-                                <div class="menu-title"><svg-icon class="svg-icon" color="#4090EF"
-                                        :iconClass="menu.iconClass"></svg-icon>{{
-                                            menu.title }}</div>
-                            </div>
+                                <div class="menu-title">
+                                    <svg-icon class="svg-icon" color="#4090EF"
+                                        :iconClass="menu.iconClass"></svg-icon>
+                                        {{ menu.title }}
+                                    </div>
+                               </div>
                             <div class="child-menu" v-for="(child, childI) in menu.children" :key="`child-${childI}`"
                                 @click="handleJump(child)">
                                 <svg-icon class="svg-icon" color="#000" width="16px" height="16px"
