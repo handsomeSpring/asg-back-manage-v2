@@ -220,7 +220,7 @@ import { isMobile } from '@/utils/index';
 export default {
   name: "LoginComp",
   computed: {
-    ...mapGetters(['waitDoNumber', 'waitAuthNumber', 'gettersLoading'])
+    ...mapGetters(['gettersLoading'])
   },
   data() {
     return {
