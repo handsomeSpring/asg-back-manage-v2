@@ -206,10 +206,6 @@ export default {
       .item {
         background: #f9f9f9;
         height: 75px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-
         img {
           height: 40px;
           width: 40px;

@@ -9,25 +9,18 @@
       </div>
       <template v-for="(menu, index) in menuOptions">
         <el-menu-item v-if="menu.children.length === 0" :index="menu.path" :key="`no-Child-${index}`">
-          <div class="flex-menu">
             <svg-icon style="margin-right: 5px" :iconClass="menu.iconClass" width="20px" height="20px"></svg-icon>
             <span slot="title">{{ menu.title }}</span>
-          </div>
-
         </el-menu-item>
         <el-submenu v-else :index="menu.path" :key="`has-Child-${index}`">
           <template slot="title">
-            <div class="flex-menu">
               <svg-icon style="margin-right: 5px" :iconClass="menu.iconClass" width="20px" height="20px"></svg-icon>
               <span>{{ menu.title }}</span>
-            </div>
           </template>
           <el-menu-item-group>
             <el-menu-item v-for="(child, childI) in menu.children" :index="child.path" :key="childI" v-if="child.show">
-              <div class="flex-menu">
                 <svg-icon style="margin-right: 5px" :iconClass="child.iconClass" width="16px" height="16px"></svg-icon>
                 {{ child.title }}
-              </div>
             </el-menu-item>
           </el-menu-item-group>
         </el-submenu>
@@ -105,9 +98,5 @@ export default {
     height: 25px;
     border-radius: 4px;
   }
-}
-.flex-menu{
-  display: flex;
-  align-items: center;
 }
 </style>
