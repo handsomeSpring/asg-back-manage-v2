@@ -6,10 +6,16 @@
 @media only screen and (max-width: 1024px){
     .login-pc__container .login-pc__wrap .right-part{
         width:100% !important;
+        .main-form{
+            .divider-login,.login-form{
+                width:100% !important;
+            }
+        }
     }
     .login-pc__container .left-part{
         display: none !important;
     }
+    .login-pc__container .login-pc__wrap .right-part 
     
 }
 .login-pc__container {
@@ -61,6 +67,8 @@
                     margin-top: 1em;
                     color: #dfdfdf;
                     font-size: 0.9em;
+                    text-indent: 2em;
+                    line-height: 1.5em;
                 }
             }
         }
@@ -104,7 +112,12 @@
                         display: flex;
                         align-items: center;
                         justify-content: center;
-
+                        &.lighten-2{
+                            background: #3b82f6;
+                        }
+                        &.lighten-3{
+                            background: #79a0e0;
+                        }
                         .icon-image {
                             width: 1rem;
                             height: 1rem;

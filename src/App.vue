@@ -11,11 +11,13 @@ export default {
     if (sessionStorage.getItem("store")) {
       this.$store.replaceState(Object.assign({}, this.$store.state, JSON.parse(sessionStorage.getItem("store"))));
       sessionStorage.removeItem("store");
+      this.$store.commit("SET_ROUTERSTATE", false);
     }
     //在页面刷新时将vuex里的信息保存到sessionStorage// 兼容ios
     window.addEventListener("pagehide", () => {
       sessionStorage.setItem("store", JSON.stringify(this.$store.state));
       sessionStorage.setItem('beforeupload-path',this.$route.path)
+      this.$store.commit("SET_ROUTERSTATE", false);
     });
   }
 };

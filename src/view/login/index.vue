@@ -7,7 +7,7 @@
         <div class="text-container">
           <div class="big-title">AvengerS Gaming</div>
           <div class="text-info">
-            第五人格ASG赛事后台管理系统，致力于结合数字化时代，多措并举，创办高效、高质量第五人格民间比赛。</div>
+            第五人格ASG赛事后台管理系统，致力于结合数字化时代，多措并举，创办高效、高质量第五人格民间比赛，激发选手积极参与比赛的内生动力，成为ASG主办团队办赛的行动指南。</div>
         </div>
         <ul class="circles">
           <li></li>
@@ -28,13 +28,14 @@
             <h2>欢迎登录!</h2>
           </div>
           <div class="icon-list">
-            <a href="https://space.bilibili.com/436148512?spm_id_from=333.1007.0.0" target="_blank" class="icon-tab
-                                "><img class="icon-image" src="../../assets/images/person.png" /></a>
-            <a href="https://space.bilibili.com/436148512?spm_id_from=333.1007.0.0" target="_blank" class="icon-tab
-                                "><img class="icon-image" src="../../assets/images/logo_black.png" /></a>
-            <a href="https://space.bilibili.com/436148512?spm_id_from=333.1007.0.0" target="_blank" class="icon-tab
-                                "><img
-                src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZlcnNpb249IjEuMSIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIHhtbG5zOnN2Z2pzPSJodHRwOi8vc3ZnanMuY29tL3N2Z2pzIiB3aWR0aD0iNTEyIiBoZWlnaHQ9IjUxMiIgeD0iMCIgeT0iMCIgdmlld0JveD0iMCAwIDI0IDI0IiBzdHlsZT0iZW5hYmxlLWJhY2tncm91bmQ6bmV3IDAgMCA1MTIgNTEyIiB4bWw6c3BhY2U9InByZXNlcnZlIj48Zz48cGF0aCB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIGQ9Im0yMy45OTQgMjR2LS4wMDFoLjAwNnYtOC44MDJjMC00LjMwNi0uOTI3LTcuNjIzLTUuOTYxLTcuNjIzLTIuNDIgMC00LjA0NCAxLjMyOC00LjcwNyAyLjU4N2gtLjA3di0yLjE4NWgtNC43NzN2MTYuMDIzaDQuOTd2LTcuOTM0YzAtMi4wODkuMzk2LTQuMTA5IDIuOTgzLTQuMTA5IDIuNTQ5IDAgMi41ODcgMi4zODQgMi41ODcgNC4yNDN2Ny44MDF6IiBmaWxsPSIjZmZmZmZmIiBkYXRhLW9yaWdpbmFsPSIjMDAwMDAwIiBzdHlsZT0iIj48L3BhdGg+PHBhdGggeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiBkPSJtLjM5NiA3Ljk3N2g0Ljk3NnYxNi4wMjNoLTQuOTc2eiIgZmlsbD0iI2ZmZmZmZiIgZGF0YS1vcmlnaW5hbD0iIzAwMDAwMCIgc3R5bGU9IiI+PC9wYXRoPjxwYXRoIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgZD0ibTIuODgyIDBjLTEuNTkxIDAtMi44ODIgMS4yOTEtMi44ODIgMi44ODJzMS4yOTEgMi45MDkgMi44ODIgMi45MDkgMi44ODItMS4zMTggMi44ODItMi45MDljLS4wMDEtMS41OTEtMS4yOTItMi44ODItMi44ODItMi44ODJ6IiBmaWxsPSIjZmZmZmZmIiBkYXRhLW9yaWdpbmFsPSIjMDAwMDAwIiBzdHlsZT0iIj48L3BhdGg+PC9nPjwvc3ZnPg=="
+            <a href="https://space.bilibili.com/436148512?spm_id_from=333.1007.0.0" target="_blank" class="icon-tab">
+              <img class="icon-image" src="../../assets/images/person.png" />
+            </a>
+            <a href="https://space.bilibili.com/436148512?spm_id_from=333.1007.0.0" target="_blank" class="icon-tab lighten-2">
+              <img class="icon-image" src="../../assets/images/logo_black.png" />
+            </a>
+            <a href="https://space.bilibili.com/436148512?spm_id_from=333.1007.0.0" target="_blank" class="icon-tab lighten-3">
+              <img src="../../assets/images/goodsImg.png"
                 class="icon-image" /></a>
           </div>
           <el-divider class="divider-login">使用用户名登录</el-divider>

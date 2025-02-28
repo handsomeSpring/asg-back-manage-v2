@@ -71,9 +71,9 @@ export default {
                 const { status, message } = await taskFinish(id);
                 if (status !== 200) throw new Error(message);
                 this.initAssign();
-                this.$message.success("操作成功");
+                this.$toast.success("操作成功");
             } catch (error) {
-                this.$message.error(error.message);
+                this.$toast.error(error.message);
             }
         },
         async initAssign() {
@@ -87,7 +87,7 @@ export default {
                 const number = this.list.filter(item => item.status === '0').length ?? 0;
                 this.$store.commit("SET_WAITDO_NUMBER", number);
             } catch (error) {
-                this.$message.error(error instanceof Error ? error.message : error);
+                this.$toast.error(error instanceof Error ? error.message : error);
             } finally {
                 setTimeout(() => {
                     this.loading = false;

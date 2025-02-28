@@ -89,7 +89,7 @@ export default {
           }
         });
       } catch (error) {
-        this.$message.error(error.message);
+        this.$toast.error(error.message);
       } finally {
         this.$nextTick(() => {
           this.loading = false;

@@ -67,7 +67,7 @@ export default {
                     const fileBase = event.target.result;
                     const { status } = await uploadImg(fileBase);
                     if (status !== 200) throw new Error("服务端异常，请联系网站管理员");
-                    vue.$message.success("上传成功");
+                    vue.$toast("上传成功");
                     vue.$store.commit("SET_LOGO", fileBase);
                 };
             } catch (error) {
