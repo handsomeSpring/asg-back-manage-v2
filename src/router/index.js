@@ -34,7 +34,7 @@ const router = new VueRouter({
       path: "/login",
       name: "系统登录",
       // component:isMobile() ? MobileLogin : Login
-      component:Login
+      component: Login
     },
     {
       path: "/404",
@@ -95,15 +95,16 @@ router.beforeEach(async (to, from, next) => {
   // }
   const isAddRouter = store?.getters?.isAddRouter ?? false;
   if (to.path === '/login' && hasToken) {
-    next(isMobile() ? '/mobileGuide' : '/guide' );
+    next(isMobile() ? '/mobileGuide' : '/guide');
   }
+  console.log(isAddRouter,'isAddRouter什么情况');
   if (whiteList.indexOf(to.path) === -1) {
     if (hasToken) {
       if (!isAddRouter) {
         store.commit("SET_ROUTERSTATE", true);
         // 获取动态路由和获取用户信息
         const result = await getUserInfo();
-        if(result){
+        if (result) {
           store.commit("removeToken");
           sessionStorage.removeItem('baseImg');
           store.commit("SET_WAITDO_NUMBER", null);
@@ -111,7 +112,7 @@ router.beforeEach(async (to, from, next) => {
           store.commit("SET_ROUTERSTATE", false);
           router.push("/login");
           next('/login');
-        }else{
+        } else {
           store.commit("SET_FULL_LOADING", false);
           await getPermission();
           next({ ...to, replace: true })
@@ -124,10 +125,14 @@ router.beforeEach(async (to, from, next) => {
         }
       }
     } else {
-      if (to.matched.length === 0) {
-        next('/404');
+      if (['/mobileGuide', '/guide'].includes(to.path)) {
+         next('/login');
       } else {
-        next();
+        if (to.matched.length === 0) {
+          next('/404');
+        } else {
+          next();
+        }
       }
     }
   } else {
