@@ -17,7 +17,6 @@
 </template>
 
 <script>
-import { removeToken } from '@/utils/auth';
 
 export default {
   name: 'Err-Page',
