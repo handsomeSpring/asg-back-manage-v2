@@ -41,7 +41,7 @@
         </template>
       </tbody>
     </table>
-    <mobileTable v-else :table-data="taskList" :table-props="tableProps" :skeLoading="skeyLoading" minHeight="20vh">
+    <mobileTable v-else :table-data="taskList" :table-props="tableProps" :skeLoading="skeyLoading">
       <template #priority="{ row }">
         <span class="circle_list" :class="`level-${row.priority}`">{{
           row.priority | filterPriority

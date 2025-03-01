@@ -1,7 +1,5 @@
 <template>
-    <div class="mobile-table-list" :style="{
-        'min-height':minHeight
-    }" v-loading="loading">
+    <div class="mobile-table-list" v-loading="loading">
         <el-skeleton :rows="6" animated :loading="skeLoading" />
         <template v-if="!skeLoading">
             <div class="no-empty" v-if="tableData.length === 0">{{ noDateText }}</div>
@@ -19,6 +17,8 @@
                 </el-descriptions>
             </template>
         </template>
+        <!-- 留白 -->
+        <div v-show="hasLeaveBlank" class="op-cut"></div>
     </div>
 </template>
 
@@ -41,18 +41,18 @@ export default {
             default: false
         },
         // 是否骨架屏加载
-        skeLoading:{
-            type:Boolean,
-            default:false
+        skeLoading: {
+            type: Boolean,
+            default: false
         },
-        // 最小高度:
-        minHeight:{
-            type:String,
-            default:'70vh'
+        // 是否需要留白
+        hasLeaveBlank: {
+            type: Boolean,
+            default: true
         },
-        noDateText:{
-            type:String,
-            default:'暂无数据'
+        noDateText: {
+            type: String,
+            default: '暂无数据'
         }
     },
     data() {
@@ -65,9 +65,6 @@ export default {
             },
         };
     },
-    methods: {
-
-    },
     created() {
         this.isMobile = isMobile();
     },
@@ -75,10 +72,16 @@ export default {
 </script>
 <style lang='less' scoped>
 .mobile-table-list {
-    width: 95%;
-    margin: 1em auto;
+    width: 94%;
+    margin: 0 auto;
+    height: calc(100dvh - 32px - 50px - 24px - 60px);
+
+    .op-cut {
+        height: 60px;
+    }
+
     .no-empty {
-        height:100%;
+        height: 100%;
         width: 100%;
         display: flex;
         justify-content: center;

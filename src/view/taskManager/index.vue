@@ -105,7 +105,7 @@
       </el-pagination>
     </main>
     <template v-else>
-      <mobileTable :loading="loading" :table-data="tableData" :table-props="tableProps">
+      <mobileTable :skeLoading="loading" :table-data="tableData" :table-props="tableProps">
         <template #priority="{ row }">
           <p :class="`level-${row.priority}`">
             {{ row.priority | filterPriority }}

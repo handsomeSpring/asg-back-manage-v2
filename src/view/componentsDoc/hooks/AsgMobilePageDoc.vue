@@ -3,7 +3,7 @@
         <TextTitle class="custom-my-1" title-name="基本样式展示"></TextTitle>
         <el-card>
             第{{listQuery.page}}页内容
-            <mobilePage :page="listQuery.page" :total="total" :limit="listQuery.limit"  @current-change="handleChange($event, 'page')">
+            <mobilePage :page="listQuery.page" :isFixBottom="false" :total="total" :limit="listQuery.limit"  @current-change="handleChange($event, 'page')">
             </mobilePage>
         </el-card>
         <TextTitle class="custom-my-1" title-name="代码展示"></TextTitle>
@@ -85,6 +85,12 @@ export default {
             name:'current-change',
             type:'事件Event（emit）',
             doc:'类似于el-pagination的current-change'
+          },
+          {
+            name:'isFixBottom',
+            type:'Boolean（默认为false）',
+            doc:'是否固定在底部'
+            
           }
         ]
     }

@@ -54,7 +54,7 @@
                                </div>
                             <div class="child-menu" v-for="(child, childI) in menu.children" :key="`child-${childI}`"
                                 @click="handleJump(child)">
-                                <svg-icon class="svg-icon" color="#000" width="16px" height="16px"
+                                <svg-icon class="svg-icon" color="#606266" width="16px" height="16px"
                                     :iconClass="child.iconClass"></svg-icon>
                                 <p class="menu-text">{{ child.title }}</p>
                             </div>

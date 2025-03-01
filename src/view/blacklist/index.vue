@@ -1,52 +1,65 @@
 <template>
   <div>
     <AsgHighSearch>
-      <template #top>
-        <el-button type="primary" size="small" @click="handleEdit()">
-          <i class="el-icon-plus"></i>新增违规记录
-        </el-button>
-      </template>
-      <template #btnList>
-        <el-button size="small" type="primary" @click="handleSearch">查询</el-button>
-        <el-button size="small" @click="handleReset">重置</el-button>
-      </template>
-      <template #search>
-        <el-input size="small" v-model="pageQuery.violator" placeholder="请输入违规人员名单" clearable>
-          <template #append>
-            <el-button icon="el-icon-search" @click="handleSearch"></el-button>
-          </template>
-        </el-input>
-        <el-date-picker size="small" v-model="pageQuery.recordYear" type="year" placeholder="选择年份" value-format="yyyy">
-        </el-date-picker>
-      </template>
-    </AsgHighSearch>
-    <main v-loading="loading" element-loading-text="系统加载中，请稍等" element-loading-spinner="el-icon-loading">
-      <div class="asg-table-main">
-        <el-table :data="tableData" border style="width: 100%"
-          :header-cell-style="{ 'text-align': 'center', 'color': 'black' }" :cell-style="{ 'text-align': 'center' }">
-          <el-table-column type="index" label="序号" width="80" />
-          <el-table-column prop="recordTime" label="记录时间" width="180" :formatter="(row) => row.record_time" />
-          <el-table-column prop="violator" label="违规人员名称" width="180" />
-          <el-table-column prop="platformRecord" label="违规平台" :formatter="(row) => row.platform_record" />
-          <el-table-column prop="featureId" label="特征id" :formatter="(row) => row.feature_id" />
-          <el-table-column prop="offendingDetails" label="违规内容" :formatter="(row) => row.offending_details" />
-          <el-table-column prop="processingResult" label="处理结果" :formatter="(row) => row.processing_result" />
-          <el-table-column label="操作" width="180">
-            <template slot-scope="scope">
-              <el-button type="text" @click="handleEdit(scope.row)">编辑</el-button>
-              <el-button type="text" @click="handleDelete(scope.row)" class="delete-btn">删除</el-button>
+        <template #top>
+          <el-button type="primary" size="small" @click="handleEdit()">
+            <i class="el-icon-plus"></i>新增违规记录
+          </el-button>
+        </template>
+        <template #btnList>
+          <el-button size="small" type="primary" @click="handleSearch">查询</el-button>
+          <el-button size="small" @click="handleReset">重置</el-button>
+        </template>
+        <template #search>
+          <el-input size="small" v-model="pageQuery.violator" placeholder="请输入违规人员名单" clearable>
+            <template #append>
+              <el-button icon="el-icon-search" @click="handleSearch"></el-button>
             </template>
-          </el-table-column>
-        </el-table>
-      </div>
-      <el-pagination style="margin-top: 18px; text-align: right" @size-change="handlePageSizeChange"
-        @current-change="handlePageChange" :current-page="pageQuery.page" :page-sizes="[10, 20, 30, 40, 50]"
-        :page-size="pageQuery.limit" layout="total, sizes, prev, pager, next, jumper" :total="total">
-      </el-pagination>
-    </main>
-    <el-dialog :title="dialogTitle" :visible.sync="dialogVisible" width="50%" :before-close="handleClose"
+          </el-input>
+          <el-date-picker size="small" v-model="pageQuery.recordYear" type="year" placeholder="选择年份"
+            value-format="yyyy">
+          </el-date-picker>
+        </template>
+      </AsgHighSearch>
+    <template v-if="!isMobile">
+      <main v-loading="loading" element-loading-text="系统加载中，请稍等" element-loading-spinner="el-icon-loading">
+        <div class="asg-table-main">
+          <el-table :data="tableData" border style="width: 100%"
+            :header-cell-style="{ 'text-align': 'center', 'color': 'black' }" :cell-style="{ 'text-align': 'center' }">
+            <el-table-column type="index" label="序号" width="80" />
+            <el-table-column prop="recordTime" label="记录时间" width="180" :formatter="(row) => row.record_time" />
+            <el-table-column prop="violator" label="违规人员名称" width="180" />
+            <el-table-column prop="platformRecord" label="违规平台" :formatter="(row) => row.platform_record" />
+            <el-table-column prop="featureId" label="特征id" :formatter="(row) => row.feature_id" />
+            <el-table-column prop="offendingDetails" label="违规内容" :formatter="(row) => row.offending_details" />
+            <el-table-column prop="processingResult" label="处理结果" :formatter="(row) => row.processing_result" />
+            <el-table-column label="操作" width="180">
+              <template slot-scope="scope">
+                <el-button type="text" @click="handleEdit(scope.row)">编辑</el-button>
+                <el-button type="text" @click="handleDelete(scope.row)" class="delete-btn">删除</el-button>
+              </template>
+            </el-table-column>
+          </el-table>
+        </div>
+        <el-pagination style="margin-top: 18px; text-align: right" @size-change="handlePageSizeChange"
+          @current-change="handlePageChange" :current-page="pageQuery.page" :page-sizes="[10, 20, 30, 40, 50]"
+          :page-size="pageQuery.limit" layout="total, sizes, prev, pager, next, jumper" :total="total">
+        </el-pagination>
+      </main>
+    </template>
+    <!-- 移动端 -->
+    <template v-else>
+      <mobileTable :skeLoading="loading" :table-data="tableData" :table-props="tableProps">
+        <template #operation="{row}">
+          <el-button type="text" @click="handleEdit(row)">编辑</el-button>
+          <el-button type="text" @click="handleDelete(row)" class="delete-btn">删除</el-button>
+        </template>
+      </mobileTable>
+      <mobilePage :page="pageQuery.page" :total="total" :limit="pageQuery.limit"  @current-change="handlePageChange"></mobilePage>
+    </template>
+    <el-dialog :fullscreen="isMobile" :title="dialogTitle" :visible.sync="dialogVisible" width="50%" :before-close="handleClose"
       :close-on-click-modal="false">
-      <el-form :model="formData" ref="ruleRef" label-width="120px" :rules="rules" label-position="right">
+      <el-form :model="formData" ref="ruleRef" label-width="120px" :rules="rules" :label-position="isMobile ? 'top' : 'right'">
         <el-form-item label="记录时间" prop="recordTime">
           <el-date-picker v-model="formData.recordTime" type="date" placeholder="选择日期" value-format="yyyy-MM-DD"
             format="yyyy-MM-DD" class="full-width">
@@ -81,12 +94,17 @@
 
 <script>
 import AsgHighSearch from "@/components/AsgHighSearch.vue";
-import { FindBlacks, addRecord, deleteRecord, updateRecord } from "@/api/black/index"
+import { FindBlacks, addRecord, deleteRecord, updateRecord } from "@/api/black/index";
+import { isMobile } from "@/utils";
+import mobilePage from "@/components/mobile/mobilePage.vue";
+import mobileTable from "@/components/mobile/mobileTable.vue";
 
 export default {
-  name: "Index",
+  name: "asgBlack-Page",
   components: {
     AsgHighSearch,
+    mobileTable,
+    mobilePage
   },
   data() {
     return {
@@ -96,6 +114,48 @@ export default {
         violator: '',
         recordYear: ''
       },
+      isMobile:false,
+      tableProps: [
+        {
+          label: '序号',
+          type: 'index'
+        },
+        {
+          label: '记录时间',
+          prop: 'record_time',
+          type: 'prop'
+        },
+        {
+          label: '违规人员名称',
+          prop: 'violator',
+          type: 'prop'
+        },
+        {
+          label: '违规平台',
+          prop: 'platform_record',
+          type: 'prop'
+        },
+        {
+          label: '特征id',
+          prop: 'feature_id',
+          type: 'prop'
+        },
+        {
+          label: '违规内容',
+          prop: 'offending_details',
+          type: 'prop'
+        },
+        {
+          label: '处理结果',
+          prop: 'processing_result',
+          type: 'prop'
+        },
+        {
+          label: '操作',
+          prop: 'operation',
+          type: 'slot'
+        },
+      ],
       tableData: [
       ],
       total: 0,
@@ -153,7 +213,7 @@ export default {
       this.dialogVisible = true
       if (row) {
         this.dialogTitle = '编辑违规人员'
-        let copyRow={...row}
+        let copyRow = { ...row }
         this.formData = this.convertToCamelCase(copyRow)
       } else {
         const today = new Date()
@@ -253,6 +313,7 @@ export default {
     },
   },
   created() {
+    this.isMobile = isMobile();
     this.initTable()
   }
 };

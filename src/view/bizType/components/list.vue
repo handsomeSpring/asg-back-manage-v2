@@ -103,7 +103,7 @@
       </el-pagination>
     </template>
     <template v-else>
-      <mobileTable :loading="loading" :table-data="tableData" :table-props="tableProps">
+      <mobileTable :skeLoading="loading" :table-data="tableData" :table-props="tableProps">
         <template #budgetMoney="{ row }">
           <p v-if="row.budgetUse === '1'" class="ellipsis__text money__text">
             {{ row.budgetMoney | moneyFormat }} /
@@ -133,9 +133,7 @@
           <el-button type="text" @click="handleHistoryTrance(row)">跟踪</el-button>
         </template>
       </mobileTable>
-      <div class="container-page-mobile-footer">
-        <mobilePage :page="listQuery.page" :total="total" :limit="listQuery.limit"  @current-change="handlePageChange('page', $event)"></mobilePage>
-      </div>
+      <mobilePage :page="listQuery.page" :total="total" :limit="listQuery.limit"  @current-change="handlePageChange('page', $event)"></mobilePage>
     </template>
     <AsgHistoryRecord :dialog-visible.sync="dialogVisible" :tableData="historyLine"></AsgHistoryRecord>
   </div>
@@ -427,9 +425,5 @@ export default {
   .red_tag {
     color: #f40;
   }
-}
-.container-page-mobile-footer{
-  width:95%;
-  margin:0 auto;
 }
 </style>

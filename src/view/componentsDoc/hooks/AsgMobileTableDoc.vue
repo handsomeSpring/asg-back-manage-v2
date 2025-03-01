@@ -166,9 +166,9 @@ export default {
           doc: '骨架屏加载特效'
         },
         {
-          name: 'minHeight',
-          type: 'String(默认为70vh)',
-          doc: '表格最小高度'
+          name: 'hasLeaveBlank',
+          type: 'Boolean(默认为true)',
+          doc: '底部是否需要留白，正常情况下，如果有fix定位到底部，需要留白。'
         },
         {
           name: 'noDateText',

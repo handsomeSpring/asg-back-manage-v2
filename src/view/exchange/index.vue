@@ -155,7 +155,7 @@
       </el-pagination>
     </template>
     <template v-else>
-      <mobileTable :loading="loading" :tableData="tableData" :table-props="tableProps">
+      <mobileTable :skeLoading="loading" :tableData="tableData" :table-props="tableProps">
         <template #sex="{ row }">
           <el-tag size="small" :type="row.sex === 1 ? 'primary' : 'danger'">{{ row.sex === 1 ? '男' : '女' }}</el-tag>
         </template>
