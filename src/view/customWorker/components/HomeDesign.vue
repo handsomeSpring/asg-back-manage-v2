@@ -39,7 +39,7 @@
       </div>
       <div class="right__container">
         <img src="@/assets/images/person.png" />
-        <p>我经常发现，快乐几乎常常是辛勤工作的一种反应！</p>
+        <p>梦虽遥，追则能达；愿虽艰，持则可圆</p>
       </div>
     </header>
     <div class="empty-consult" v-if="showEmpty && !design">
