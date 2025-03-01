@@ -3,11 +3,13 @@
         <div class="mobile-layout__header">
             <el-image :src="avatar" class="user-avatar" @click="goBack('userInfo')">
                 <div slot="error">
-                    <img class="error-image" src="@/assets/images/logo.png" />
+                    <img class="error-image" src="@/assets/images/logo.png" @click="goBack('userInfo')"/>
                 </div>
             </el-image>
             <h2>ASG后台管理系统</h2>
-            <i class="el-icon-s-tools asg-operation-icon" @click="openDrawer"></i>
+            <div style="margin-right: 1em;" @click="openDrawer">
+                <svg-icon iconClass="menuConfig" color="#fff" width="25px" height="25px"></svg-icon>
+            </div>
         </div>
         <div class="mobile-layout__main">
             <transition name="fade-transform" mode="out-in">

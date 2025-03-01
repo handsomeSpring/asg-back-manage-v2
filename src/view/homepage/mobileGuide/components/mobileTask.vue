@@ -3,20 +3,25 @@
         <full-screen-loading v-if="loading"></full-screen-loading>
         <template v-else>
             <el-empty style="height:100%" v-if="list.length === 0" description="暂无任务"></el-empty>
-            <div class="content-main" v-else>
-                <el-alert :type="computedType(item.status)" class="my-alert" v-for="item in list" :closable="false"
-                    :key="item.id" :title="item.taskName">
-                    <p>{{ item.taskDescription }}</p>
-                    <div class="taskInfo">
-                        <p> <span :class="`level-${item.priority}`">{{
-                            item.priority | filterPriority
-                                }}</span></p>
-                        <p> {{ item.status | filterComplete }}</p>
-                        <el-button v-if="['0', '3'].includes(item.status)" icon="el-icon-circle-check" size="small"
-                            type="primary" @click="handleFinish(item.id)">完成任务</el-button>
+            <template v-else>
+                <div class="my-alert" v-for="item in list" :closable="false" :key="item.id">
+                    <div class="tag--absolute">
+                        <p :class="`level-${item.priority}`">{{ item.priority | filterPriority }}</p>
                     </div>
-                </el-alert>
-            </div>
+                    <div class="card-header">
+                        <i class="el-icon-s-order"></i>{{ item.taskName }}
+                    </div>
+                    <p class="task-detail">
+                        <span class="tag" :class="computedType(item.status)">[{{ item.status | filterComplete }}]</span>{{ item.taskDescription }}
+                    </p>
+                    <div class="taskInfo">
+                        <button class="my-button" v-if="['0', '3'].includes(item.status)"
+                            @click="handleFinish(item.id)">
+                            完成任务
+                        </button>
+                    </div>
+                </div>
+            </template>
         </template>
     </div>
 </template>
@@ -59,8 +64,8 @@ export default {
     methods: {
         computedType(type) {
             const mapList = {
-                '0': 'info',
-                '1': 'warning',
+                '0': 'process',
+                '1': 'waitAuth',
                 '2': 'success',
                 '3': 'error'
             }
@@ -102,39 +107,88 @@ export default {
 </script>
 <style lang='less' scoped>
 .mobile-task-container {
-    height: 100%;
-}
-
-.content-main {
-    width: 90%;
-    margin: 1em auto;
-
+    height: calc(100% - 1em - 60px);
+    padding: 1em;
+    background: #F5F6F7;
+    overflow: auto;
     .my-alert {
+        position: relative;
+        border-radius: 16pt;
         margin-bottom: 1em;
+        padding: 1em;
+        overflow: hidden;
+        background: #fff;
+
+        .tag--absolute {
+            position: absolute;
+            background: linear-gradient(173deg, #b3d4ff, #fff0 93%);
+            top: 0;
+            right: 0;
+            top: 10px;
+            right: -23px;
+            width: 89px;
+            text-align: center;
+            transform: rotate(45deg);
+            padding: 0.2rem 0;
+            font-size: 1rem;
+            font-weight: bold;
+        }
+
+        .card-header {
+            height: 32px;
+            display: flex;
+            align-items: center;
+            color: #2b8248;
+            width: 100%;
+            gap: 0.2em;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            overflow: hidden;
+        }
+
+        .task-detail {
+            color: #333;
+            font-size: 0.85rem;
+            text-indent: 2em;
+            padding: 0.7em 0;
+            border-bottom: 1px solid #999;
+            border-top: 1px solid #999;
+
+            .tag {
+                color: #8fc1ff;
+                font-size: 0.85rem;
+                font-weight: bold;
+                margin-right: 0.2em;
+                &.process{
+                    color:#4090EF;
+                }
+                &.waitAuth{
+                     color:#DD7D17;
+                }
+                &.success{
+                    color:#105126;
+                }
+                &.error{
+                    color:#EF2D2D;
+                }
+            }
+        }
 
         .taskInfo {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
+            display: flex;
+            justify-content: center;
+            align-items: center;
             width: 100%;
-            padding: 0.5em;
-            margin-top: 0.5em;
-            border-top: 1px solid #e7e7e7;
+            padding-top: 1em;
 
-            p {
-                display: flex;
-                align-items: center;
-
-                &:first-child {
-                    justify-content: flex-start;
-                }
-
-                &:nth-child(2) {
-                    justify-content: center;
-                }
-
-                &:nth-child(3) {
-                    justify-content: end;
-                }
+            .my-button {
+                padding: 8px 32px;
+                border-radius: 16pt;
+                font-size: 1rem;
+                background: #AED2E8;
+                cursor: pointer;
+                border: none;
+                width: 60%;
             }
         }
     }
