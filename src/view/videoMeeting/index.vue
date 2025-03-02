@@ -25,7 +25,7 @@
         </template>
         <div v-show="allSrcLoad" class="video-container">
             <li v-show="type === item.typeCode || type === 'all'" v-for="(item, index) in allVideos" :key="index">
-                <video controls @loadeddata="videoLoaded">
+                <video controls poster="../../assets/images/videoPoster.png">
                     <source :src="item.url" :type="item.videoType" />
                 </video>
                 <div class="intro_wrap">{{ item.intro || '介绍视频' }}</div>
@@ -45,7 +45,6 @@ export default {
             type: 'all',
             allVideos: [],
             loading: true,
-            loadedVideoCount: 0, // 记录已加载完成的视频数量
             allSrcLoad: false
         };
     },
@@ -68,23 +67,15 @@ export default {
                 if (r1.status !== 200 || r2.status !== 200) throw new Error('获取videoType，videoUrl全局参数失败！');
                 this.allTypes = r1.data;
                 this.allVideos = r2.data;
-                this.loadedVideoCount = 0;
-                if (this.allVideos.length === 0) {
-                    this.loading = false;
-                    this.allSrcLoad = true;
-                }
             } catch (error) {
                 this.$toast(error.message);
+            } finally{
+                setTimeout(() => {
+                    this.loading = false;
+                    this.allSrcLoad = true;
+                }, 1500);
             }
         },
-        videoLoaded() {
-            this.loadedVideoCount++;
-            console.log(this.loadedVideoCount, 'loadedVideoCount');
-            if (this.loadedVideoCount === this.allVideos.length) {
-                this.loading = false;
-                this.allSrcLoad = true;
-            }
-        }
     },
     created() {
         this.init();
@@ -113,6 +104,7 @@ export default {
         display: flex;
         align-items: center;
         margin-bottom: 1em;
+        flex-wrap: wrap;
         gap: 1rem;
 
         .choose--item {
@@ -129,7 +121,7 @@ export default {
             font-size: 0.85rem;
             transition: background-color .3s, color .3s;
             font-weight: 500;
-
+            flex-shrink: 0;
             &:hover {
                 background: #cbced1;
                 color: #18191C
@@ -154,11 +146,12 @@ export default {
             video {
                 width: 100%;
                 border-radius: 12px 12px 0 0;
+                object-fit: cover;
+                display: block;
             }
 
             .intro_wrap {
                 border: 1px solid #61666D;
-                margin-top: -4px;
                 font-size: 0.85rem;
                 padding: 0.5em;
                 font-weight: 500;
@@ -173,7 +166,7 @@ export default {
 
 @media (max-width: 1024px) {
     .ske-template {
-        grid-template-columns: repeat(2, 1fr) !important;
+        grid-template-columns: repeat(1, 1fr) !important;
     }
 
     .meeting--container {
