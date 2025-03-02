@@ -7,22 +7,23 @@
             </div>
         </div>
         <template v-if="loading">
-                <el-skeleton :loading="loading" animated>
-                    <template slot="template">
-                        <div class="ske-template">
-                            <el-skeleton-item style="width: 240px; height: 140px;"  variant="image" />
-                            <el-skeleton-item style="width: 240px; height: 140px;" variant="image" />
-                            <el-skeleton-item style="width: 240px; height: 140px;"  variant="image" />
-                        </div>
-                    </template>
-                </el-skeleton>
-            </template>
-        <div  v-else class="video-container">
-            <template>
-                <video controls v-for="(item, index) in nowChooseVideo" :key="index">
+            <el-skeleton :loading="loading" animated>
+                <template slot="template">
+                    <div class="ske-template">
+                        <el-skeleton-item style="width: 240px; height: 140px;" variant="image" />
+                        <el-skeleton-item style="width: 240px; height: 140px;" variant="image" />
+                        <el-skeleton-item style="width: 240px; height: 140px;" variant="image" />
+                    </div>
+                </template>
+            </el-skeleton>
+        </template>
+        <div v-else class="video-container">
+            <li v-for="(item, index) in nowChooseVideo" :key="index">
+                <video controls>
                     <source :src="item.url" :type="item.videoType" />
                 </video>
-            </template>
+                <div class="intro_wrap">{{ item.intro || '介绍视频' }}</div>
+            </li>
         </div>
     </div>
 </template>
@@ -36,7 +37,7 @@ export default {
             allTypes: [],
             type: 'all',
             allVideos: [],
-            loading:true,
+            loading: true,
         };
     },
     computed: {
@@ -64,10 +65,10 @@ export default {
                 this.allVideos = r2.data;
             } catch (error) {
                 this.$toast(error.message);
-            }finally{
-                 this.$nextTick(()=>{
+            } finally {
+                this.$nextTick(() => {
                     this.loading = false;
-                 })
+                })
             }
 
         }
@@ -78,12 +79,13 @@ export default {
 }
 </script>
 <style lang='less' scoped>
-.ske-template{
+.ske-template {
     display: grid;
-    grid-template-columns: repeat(6,1fr);
-    gap:2rem;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 2rem;
     height: 180px;
 }
+
 .meeting--container {
     min-height: 70dvh;
 
@@ -100,7 +102,7 @@ export default {
             width: fit-content;
             border: 1px solid #F1F2F3;
             border-radius: 6px;
-            background-color: #F6F7F8;
+            background-color: #d8dbde;
             color: #61666D;
             text-align: center;
             padding: 0.2em 1rem;
@@ -109,7 +111,7 @@ export default {
             font-weight: 500;
 
             &:hover {
-                background: #E3E5E7;
+                background: #cbced1;
                 color: #18191C
             }
 
@@ -124,11 +126,41 @@ export default {
         grid-template-columns: repeat(6, 1fr);
         gap: 16px;
 
-        video {
-            width: 100%;
-            border-radius: 12px;
+        li {
+            box-sizing: border-box;
+            video {
+                width: 100%;
+                border-radius: 12px 12px 0 0;
+            }
+
+            .intro_wrap {
+                border:1px solid #61666D;
+                margin-top:-4px;
+                font-size: 0.85rem;
+                padding:0.5em;
+                font-weight: 500;
+                color:#61666D;
+                border-radius: 0 0 12px 12px;
+            }
         }
+
     }
 
+}
+
+@media (max-width: 1024px) {
+    .ske-template {
+        grid-template-columns: repeat(2, 1fr) !important;
+    }
+
+    .meeting--container {
+        height: calc(100dvh - 50px - 2em);
+        overflow: auto;
+        padding: 1em;
+
+        .video-container {
+            grid-template-columns: repeat(1, 1fr) !important;
+        }
+    }
 }
 </style>
