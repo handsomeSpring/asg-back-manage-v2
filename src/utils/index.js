@@ -71,3 +71,15 @@ export function uuid() {
 export function isMobile(){
   return window.innerWidth < 1024;
 }
+
+// 寻找父亲元素节点
+export function isDescendant(child,parent){
+   let node = child;
+   while(node){
+    if(node === parent){
+      return true
+    }
+    node = node.parentNode;
+   }
+   return false;
+}

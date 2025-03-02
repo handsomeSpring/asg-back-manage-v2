@@ -8,7 +8,7 @@
                     class="el-icon-arrow-right foldIcon"></i>
             </div>
         </div>
-        <transition name="mybox">
+        <transition name="el-zoom-in-top">
             <div v-show="foldIcon" class="operation_list">
                 <div class="grid__container">
                     <div :class="isCustomRow ? '' : 'search_content'">
@@ -30,6 +30,7 @@
 </template>
 
 <script>
+import { isDescendant } from '@/utils/index';
 export default {
     name: 'AsgHighSearch',
     props:{
@@ -48,18 +49,34 @@ export default {
         return {
             foldIcon: false
         };
+    },
+    methods:{
+        handleClick(e){
+            if(!this.foldIcon) return;
+            const parent = document.querySelector('.wrap-flex');
+            const child = e.target;
+            if(!isDescendant(child,parent)){
+                this.foldIcon = false;
+            }
+        }
+    },
+    mounted(){
+        window.addEventListener('click',this.handleClick)
+    },
+    beforeDestroy(){
+        window.removeEventListener('click',this.handleClick)
     }
 }
 </script>
 <style lang='less' scoped>
 @import url('../assets/mobileStyles/common/asghighSeach.less');
 .wrap-flex {
+    position: relative;
     .flex__content--between {
         display: flex;
         justify-content: space-between;
         align-items: center;
         margin-bottom: 12px;
-
         .high-light {
             color: #f40;
             font-size: 14px;
@@ -76,7 +93,7 @@ export default {
             padding: 6px 10px;
             border-radius: 4px;
             gap: 4px;
-
+            height:20px;
             &:hover {
                 color: #4090ef;
                 border-color: #4090ef;
@@ -87,13 +104,16 @@ export default {
     .operation_list {
         transition: 0.4s;
         padding: 24px;
-        overflow: hidden;
-        overflow: visible;
         border: 1px solid #d2d2d2;
         border-top: 2px solid #f5f5f5;
         box-shadow: 1px 5px 5px #eee;
         box-sizing: border-box;
         margin-bottom: 12px;
+        width: 100%;
+        position: absolute;
+        background: #FFF;
+        top:44px;
+        z-index:999;
 
         .operation__button {
             display: flex;

@@ -69,11 +69,14 @@ export default {
               ? 0
               : (this.$refs.headerTabs?.$refs?.containerGrid?.clientHeight ?? 0);
           this.actuallHeight = `calc(100vh - 60px - ${tabHeight}px)`;
-          const scrollbarEl = this.$refs.queRef.wrap;
-          scrollbarEl.scrollTo({
+          const scrollbarEl = this.$refs.queRef?.wrap;
+          if(scrollbarEl){
+            scrollbarEl.scrollTo({
             top: 0,
             behavior: "instant",
           });
+          }
+
         });
       },
     },

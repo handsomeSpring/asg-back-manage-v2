@@ -60,7 +60,7 @@ export default {
             isMobile: false,
             label_style: {
                 'text-align': 'left',//文本居中
-                'width': '50%',
+                'width': '30%',
                 'word-break': 'keep-all'
             },
         };

@@ -97,7 +97,6 @@ router.beforeEach(async (to, from, next) => {
   if (to.path === '/login' && hasToken) {
     next(isMobile() ? '/mobileGuide' : '/guide');
   }
-  console.log(isAddRouter,'isAddRouter什么情况');
   if (whiteList.indexOf(to.path) === -1) {
     if (hasToken) {
       if (!isAddRouter) {

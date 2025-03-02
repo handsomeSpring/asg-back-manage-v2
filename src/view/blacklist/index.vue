@@ -2,7 +2,7 @@
   <div>
     <AsgHighSearch>
         <template #top>
-          <el-button type="primary" size="small" @click="handleEdit()">
+          <el-button type="primary" size="small" @click="handleEdit">
             <i class="el-icon-plus"></i>新增违规记录
           </el-button>
         </template>
@@ -16,7 +16,7 @@
               <el-button icon="el-icon-search" @click="handleSearch"></el-button>
             </template>
           </el-input>
-          <el-date-picker size="small" v-model="pageQuery.recordYear" type="year" placeholder="选择年份"
+          <el-date-picker style="width:100%" size="small" v-model="pageQuery.recordYear" type="year" placeholder="选择年份"
             value-format="yyyy">
           </el-date-picker>
         </template>
@@ -25,7 +25,7 @@
       <main v-loading="loading" element-loading-text="系统加载中，请稍等" element-loading-spinner="el-icon-loading">
         <div class="asg-table-main">
           <el-table :data="tableData" border style="width: 100%"
-            :header-cell-style="{ 'text-align': 'center', 'color': 'black' }" :cell-style="{ 'text-align': 'center' }">
+          :header-cell-style="{ background: '#f2f6fd', color: '#000', 'text-align': 'center' }" :cell-style="{ 'text-align': 'center' }">
             <el-table-column type="index" label="序号" width="80" />
             <el-table-column prop="recordTime" label="记录时间" width="180" :formatter="(row) => row.record_time" />
             <el-table-column prop="violator" label="违规人员名称" width="180" />
