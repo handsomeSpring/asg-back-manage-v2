@@ -42,7 +42,7 @@
     </div>
     <el-drawer title="赞助ASG赛事" :visible.sync="drawer" direction="ttb" size="100%">
       <div class="main-draw-body">
-        联系QQ：3124961425--星宇
+        {{ cooperationNotice }}
       </div>
     </el-drawer>
   </div>
@@ -51,6 +51,7 @@
 <script>
 import AsgTipComponent from '@/components/AsgTipComponent.vue';
 import { getFriendList } from '@/api/admin/index.js';
+import { getByTitle } from '@/api/config';
 export default {
   name: 'mobileHomePage',
   components: {
@@ -60,7 +61,8 @@ export default {
     return {
       loading: false,
       coperationData: [],
-      drawer:false
+      drawer:false,
+      cooperationNotice:''
     };
   },
   created() {
@@ -77,6 +79,8 @@ export default {
     async initFriends() {
       try {
         this.loading = true;
+        const result = await getByTitle('cooperationNotice');
+        this.cooperationNotice = result?.data || '无内容'
         const { data, status } = await getFriendList({
           page: 1,
           page_long: 20
@@ -251,6 +255,8 @@ export default {
   // 弹出层
   .main-draw-body{
     padding:2em;
+    color: #72767b;
+    text-indent: 2em;
   }
 }
 </style>

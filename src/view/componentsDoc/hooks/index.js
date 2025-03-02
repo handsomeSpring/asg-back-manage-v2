@@ -9,6 +9,7 @@ import AsgMobileTableDoc from './AsgMobileTableDoc.vue';
 import AsgMobilePageDoc from './AsgMobilePageDoc.vue';
 import AsgTableDoc from './AsgTableDoc.vue';
 import AsgMoneyInputDoc from './AsgMoneyInputDoc.vue';
+import AsgSvgIconDoc from './AsgSvgIconDoc.vue';
 
 const components = {
     AsgHighSearchDoc,
@@ -21,7 +22,8 @@ const components = {
     AsgPriorityCompDoc,
     AsgMobileTableDoc,
     AsgMobilePageDoc,
-    AsgMoneyInputDoc
+    AsgMoneyInputDoc,
+    AsgSvgIconDoc
 };
 
 const widgets = [];

@@ -73,10 +73,11 @@ export default {
     box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
     left:0;
     .page-container-mobile {
+        width: 100%;
         display: grid;
         grid-template-columns: repeat(3, 1fr);
         gap: 2em;
-        margin: 1em 0;
+        margin:0 1em;
         align-items: center;
 
         .center-page-container {
