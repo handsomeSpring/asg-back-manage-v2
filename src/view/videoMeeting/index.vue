@@ -123,14 +123,12 @@ export default {
             font-weight: 500;
             flex-shrink: 0;
             &:hover {
-                background: #cbced1;
-                color: #18191C
+                color: #4090EF;
+                border: 1px solid #4090EF;
             }
-
             &.active {
                 color: #4090EF;
                 border: 1px solid #4090EF;
-                box-sizing: border-box;
             }
         }
     }
@@ -148,6 +146,7 @@ export default {
                 border-radius: 12px 12px 0 0;
                 object-fit: cover;
                 display: block;
+                aspect-ratio: 16 / 9;
             }
 
             .intro_wrap {
