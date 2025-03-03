@@ -16,9 +16,9 @@
                         <el-skeleton-item variant="text" style="width:  120px;height:32px" />
                     </div>
                     <div class="ske-template">
-                        <el-skeleton-item style="width: 240px; height: 140px;" variant="image" />
-                        <el-skeleton-item style="width: 240px; height: 140px;" variant="image" />
-                        <el-skeleton-item style="width: 240px; height: 140px;" variant="image" />
+                        <el-skeleton-item style="width: 100%; height: 140px;" variant="image" />
+                        <el-skeleton-item style="width: 100%; height: 140px;" variant="image" />
+                        <el-skeleton-item style="width: 100%; height: 140px;" variant="image" />
                     </div>
                 </template>
             </el-skeleton>

@@ -19,6 +19,10 @@
                 <p class="user-text">{{ userInfo.id }}</p>
             </li>
             <li class="list-item">
+                <p class="title">QQ号</p>
+                <p class="user-text">{{ userInfo.qqnumber || '未绑定QQ号' }}</p>
+            </li>
+            <li class="list-item">
                 <p class="title">职位</p>
                 <p class="user-text">{{ userInfo.officium | filterRole }}</p>
             </li>
@@ -122,14 +126,14 @@ export default {
 
             .title {
                 color: #858a8e;
-                font-size: 0.8em;
-                width: 20%;
+                font-size: 0.8rem;
+                width: 5rem;
+                flex-shrink: 0;
             }
 
             .user-text {
                 color: #333;
                 font-size: 0.9em;
-                font-family: 'hk';
                 &.active{
                     color:#0089f3;
                 }

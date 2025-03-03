@@ -39,12 +39,6 @@
           v-for="item in details"
           :key="item.name"
         >
-          <template slot="extra">
-            <div style="margin-right: 10px">
-              <el-tag v-if="item.sex === '0'" type="danger">女</el-tag>
-              <el-tag v-else>男</el-tag>
-            </div>
-          </template>
           <el-descriptions-item>
             <template slot="label">
               <i class="el-icon-user"></i>
@@ -55,16 +49,16 @@
           <el-descriptions-item>
             <template slot="label">
               <i class="el-icon-monitor"></i>
-              职位
+              工作内容
             </template>
-            {{ item.role }}
+            {{ item.worker }}
           </el-descriptions-item>
           <el-descriptions-item :label-style="labelS">
             <template slot="label">
               <i class="el-icon-tickets"></i>
-              详细介绍
+              具体工作
             </template>
-            {{ item.remark || "暂无介绍" }}
+            {{ item.description || "暂无介绍" }}
           </el-descriptions-item>
         </el-descriptions>
       </el-drawer>
@@ -80,7 +74,7 @@ import ThirdCur from "./components/ThirdCur.vue";
 import FouthCur from "./components/FouthCur.vue";
 
 export default {
-  name: "Workflow",
+  name: "Workflow-Show",
   components: {
     FirstCur,
     SecondCur,
@@ -104,16 +98,7 @@ export default {
   mounted() {
     getByTitle("orgConfig")
       .then((res) => {
-        const data = res.data.filter((item) => item.code !== "waitAssign");
-        this.details = [];
-        for (const parent of data) {
-          for (const child of parent.data) {
-            this.details.push({
-              label: parent.label,
-              ...child,
-            });
-          }
-        }
+        this.details = res.data;
       })
       .catch((err) => {
         this.$message.error("获取云端配置失败！");

@@ -1,5 +1,5 @@
 <template>
-  <span>
+  <div class="his-task-container">
     <table v-if="!isMobile">
       <thead>
         <th width="20%">任务标题</th>
@@ -53,8 +53,7 @@
         </el-tag>
       </template>
     </mobileTable>
-  </span>
-
+  </div>
 </template>
 
 <script>
@@ -184,7 +183,9 @@ export default {
 <style lang="less" scoped>
 @borderColor: #e9e9e8;
 @bgColor: #f2f6fd;
-
+.his-task-container{
+  overflow-y: auto;
+}
 table {
   width: 100%;
   border-collapse: collapse;

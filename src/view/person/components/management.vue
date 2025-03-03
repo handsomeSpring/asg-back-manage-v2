@@ -132,7 +132,7 @@ export default {
   display: grid;
   gap: 24px;
   grid-template-columns: 20vw auto;
-  background: #D6E8FE;
+
   .left_tree-content{
     height:100%;
     overflow: hidden scroll;

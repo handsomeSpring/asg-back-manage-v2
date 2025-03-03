@@ -26,34 +26,37 @@
         </el-form-item>
         <el-form-item>
           <el-button style="width:100%" size="small" type="primary" @click="handleSubmit('ruleForm')">{{ dialogName
-            }}</el-button>
+          }}</el-button>
         </el-form-item>
       </el-form>
     </el-dialog>
-    <el-timeline v-if="newsData.length > 0">
-      <el-timeline-item v-for="(activity, index) in newsData" :key="index" :timestamp="handleTime(activity.time)"
-        placement="top">
-        <el-card style="position: relative;">
-          <header>
-            <div class="position-l">
-              <p v-if="activity.type === '1'" class="my-task-auth margin-icon">
-                <i class="el-icon-s-order"></i>{{ activity.type | noticeType }}
+    <el-skeleton :rows="6" :loading="loading" animated />
+    <template v-if="!loading">
+      <el-timeline v-if="newsData.length > 0">
+        <el-timeline-item v-for="(activity, index) in newsData" :key="index" :timestamp="handleTime(activity.time)"
+          placement="top">
+          <el-card style="position: relative;">
+            <header>
+              <div class="position-l">
+                <p v-if="activity.type === '1'" class="my-task-auth margin-icon">
+                  <i class="el-icon-s-order"></i>{{ activity.type | noticeType }}
+                </p>
+                <p class="my-task-success margin-icon" v-else>
+                  <i class="el-icon-s-order"></i>{{ activity.type | noticeType }}
+                </p>
+                <el-tag size="small"><i class="el-icon-s-custom"></i>{{ activity.formName }}</el-tag>
+              </div>
+              <p class="position-w">
+                <i class="el-icon-edit edit-icon" @click="openUpdDialog(activity)"></i>
+                <i class="el-icon-delete-solid del-icon" @click="delNews(activity)"></i>
               </p>
-              <p class="my-task-success margin-icon" v-else>
-                <i class="el-icon-s-order"></i>{{ activity.type | noticeType }}
-              </p>
-              <el-tag size="small"><i class="el-icon-s-custom"></i>{{ activity.formName }}</el-tag>
-            </div>
-            <p class="position-w">
-              <i class="el-icon-edit edit-icon" @click="openUpdDialog(activity)"></i>
-              <i class="el-icon-delete-solid del-icon" @click="delNews(activity)"></i>
-            </p>
-          </header>
-          <p class="msg__container">{{ activity.msg }}</p>
-        </el-card>
-      </el-timeline-item>
-    </el-timeline>
-    <el-empty v-else description="暂无公告"></el-empty>
+            </header>
+            <p class="msg__container">{{ activity.msg }}</p>
+          </el-card>
+        </el-timeline-item>
+      </el-timeline>
+      <el-empty v-else description="暂无公告"></el-empty>
+    </template>
   </div>
 </template>
 
@@ -86,7 +89,8 @@ export default {
         ],
       },
       isMobile: false,
-      noticeType: []
+      noticeType: [],
+      loading: true
     };
   },
   filters: {
@@ -95,6 +99,7 @@ export default {
     }
   },
   async created() {
+    this.loading = true;
     this.isMobile = isMobile();
     const { data } = await getByTitle('noticeType');
     this.noticeType = data;
@@ -134,7 +139,7 @@ export default {
     async updNews() {
       try {
         const { data, status } = await updateNews(this.form);
-        console.log('===',this.form)
+        console.log('===', this.form)
         if (status !== 200) throw new Error('后端服务器异常，请联系后端人员修复！');
         if (data.code && data.code !== 200) throw new Error(data?.message ?? '未知错误！');
         this.$message.success("更新成功！");
@@ -148,13 +153,8 @@ export default {
     },
     //获取news
     async initNews() {
-      const loading = this.$loading({
-        lock: true,
-        text: "正在加载中......",
-        spinner: "el-icon-loading",
-        background: "rgba(0, 0, 0, 0.8)",
-      });
       try {
+        this.loading = true;
         const { data, status } = await getNews(this.search_Type);
         if (status !== 200) throw new Error('后端服务器异常，请联系后端人员修复！');
         this.newsData = data;
@@ -162,7 +162,7 @@ export default {
         this.newsData = [];
         this.$message.error(error.message);
       } finally {
-        loading.close();
+        this.loading = false;
       }
     },
     //删除公告
@@ -190,7 +190,7 @@ export default {
     },
     //编辑公告
     openUpdDialog(row) {
-      console.log(row,'row===是')
+      console.log(row, 'row===是')
       this.form = {
         ...row
       };
