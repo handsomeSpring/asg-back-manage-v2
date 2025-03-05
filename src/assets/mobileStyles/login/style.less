@@ -164,6 +164,18 @@
                             outline-offset: 2px;
                         }
                     }
+                    .input-container{
+                        position: relative;
+                        .input-icon {
+                            position: absolute;
+                            right: 1.5rem; /* 调整图标与右侧的距离 */
+                            top: 50%;
+                            transform: translateY(-50%); /* 垂直居中 */
+                            pointer-events: none; /* 使图标不影响输入框的点击 */
+                            z-index:999;
+                            pointer-events: auto; /* 确保图标可以响应点击事件 */
+                          }
+                    }
                 }
 
                 .login-btn {

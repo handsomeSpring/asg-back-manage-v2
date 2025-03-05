@@ -46,8 +46,12 @@
           </div>
           <div class="login-form">
             <label class="input-label">密码</label>
-            <input v-model="userform.password" @focus="isError = false" :class="isError ? 'error-input' : ''"
-              class="input-side" type="password" placeholder="请输入密码" />
+            <div class="input-container">
+              <input v-model="userform.password" @focus="isError = false" :class="isError ? 'error-input' : ''"
+              class="input-side" :type="inputtype" placeholder="请输入密码" />
+              <i :class="eye_status" class="input-icon" @click="toggleEye"></i> <!-- 添加的图标 -->
+            </div>
+
           </div>
           <!-- 底部按钮 -->
           <div class="login-form">
@@ -82,6 +86,7 @@ export default {
         password: "",
       },
       inputtype: "password",
+      eye_status:'el-icon-lock',
       isError: false,
       isMobile: false,
     };
