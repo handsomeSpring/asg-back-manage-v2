@@ -6,7 +6,7 @@
                     <img class="error-image" src="@/assets/images/logo.png" @click="goBack('userInfo')"/>
                 </div>
             </el-image>
-            <h2>ASG后台管理系统</h2>
+            <h2>{{ headerTitle }}</h2>
             <div style="margin-right: 1em;" @click="openDrawer">
                 <svg-icon iconClass="menuConfig" color="#fff" width="25px" height="25px"></svg-icon>
             </div>
@@ -86,12 +86,25 @@ export default {
         homePage
     },
     computed: {
-        ...mapGetters(['userInfo', 'menuOptions']),
+        ...mapGetters(['userInfo', 'menuOptions','mainHeaderTitle']),
         avatar() {
             return this.userInfo.base64 || sessionStorage.getItem("baseImg");
         },
         adapterMenu() {
             return this.menuOptions.filter(item => item.children.length > 0);
+        },
+        headerTitle(){
+            if(this.$route.fullPath === '/mobileGuide'){
+                if(this.homePageComp === 'userInfo'){
+                    return '个人中心';
+                }else if(this.homePageComp === 'taskPage'){
+                    return '任务列表';
+                }else{
+                    return '移动端首页';
+                }
+            }else{
+                return this.mainHeaderTitle;
+            }
         }
     },
     data() {

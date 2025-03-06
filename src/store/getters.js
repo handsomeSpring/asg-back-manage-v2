@@ -9,6 +9,7 @@ const getters = {
     waitDoNumber:state => state.user.waitDoNumber,
     waitAuthNumber:state => state.user.waitAuthNumber,
     isAddRouter:state => state.app.isAddRouter,
-    gettersLoading:state => state.app.fullLoading
+    gettersLoading:state => state.app.fullLoading,
+    mainHeaderTitle:state => state.app.title
 };
 export default getters;

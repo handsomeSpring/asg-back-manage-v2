@@ -49,7 +49,7 @@ const router = new VueRouter({
     {
       path: "/mobileGuide",
       component: Layout,
-      name: '用户中心',
+      name: '移动端首页',
     },
     {
       path: "/",
@@ -142,6 +142,7 @@ router.beforeEach(async (to, from, next) => {
 
 router.afterEach((to) => {
   document.title = 'ASG赛事后台系统 ——' + to.name;
+  store.commit("SET_TITLE", to.name);
   nProgress.done();
 });
 export default router;
