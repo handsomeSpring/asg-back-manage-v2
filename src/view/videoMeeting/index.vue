@@ -1,6 +1,6 @@
 <template>
     <div class="meeting--container">
-        <div  v-show="allSrcLoad" class="meeting_header">
+        <div v-show="allSrcLoad" class="meeting_header">
             <div class="choose--item" :class="type === item.typeCode ? 'active' : ''" v-for="item in allTypes"
                 :key="item.typeCode" @click="getChoose(item)">
                 {{ item.typeName }}
@@ -10,55 +10,72 @@
             <el-skeleton :loading="loading" animated>
                 <template slot="template">
                     <div class="ske-tag">
-                        <el-skeleton-item variant="text" style="width: 120px;height:32px"  />
+                        <el-skeleton-item variant="text" style="width: 120px;height:32px" />
                         <el-skeleton-item variant="text" style="width:  120px;height:32px" />
                         <el-skeleton-item variant="text" style="width:  120px;height:32px" />
                         <el-skeleton-item variant="text" style="width:  120px;height:32px" />
                     </div>
                     <div class="ske-template">
-                        <el-skeleton-item style="width: 100%; height: 140px;" variant="image" />
-                        <el-skeleton-item style="width: 100%; height: 140px;" variant="image" />
-                        <el-skeleton-item style="width: 100%; height: 140px;" variant="image" />
+                        <el-skeleton-item style="width: 100%; height: 240px;" variant="image" />
+                        <el-skeleton-item style="width: 100%; height: 240px;" variant="image" />
+                        <el-skeleton-item style="width: 100%; height: 240px;" variant="image" />
                     </div>
                 </template>
             </el-skeleton>
         </template>
         <div v-show="allSrcLoad" class="video-container">
             <li v-show="type === item.typeCode || type === 'all'" v-for="(item, index) in allVideos" :key="index">
-                <video controls poster="../../assets/images/videoPoster.png">
-                    <source :src="item.url" :type="item.videoType" />
-                </video>
+                <div class="video-wrap">
+                    <img src="../../assets/images/videoPoster.png" @click="handleOpenVideo(item)">
+                    <div class="video-mask">
+                        <i class="el-icon-video-play"></i>
+                    </div>
+                </div>
                 <div class="intro_wrap">{{ item.intro || '介绍视频' }}</div>
             </li>
             <el-empty v-show="nowVideoCount === 0" description="暂无视频"></el-empty>
         </div>
+        <videoPlayer v-if="!isIndex" @goBack="goHome" :videoInfo="videoInfo"></videoPlayer>
     </div>
 </template>
 
 <script>
+import videoPlayer from './videoPlayer.vue';
 import { getByTitle } from '@/api/config';
 export default {
     name: 'VideoMetting',
+    components: {
+        videoPlayer
+    },
     data() {
         return {
             allTypes: [],
             type: 'all',
             allVideos: [],
             loading: true,
-            allSrcLoad: false
+            allSrcLoad: false,
+            isIndex: true,
+            videoInfo: {}
         };
     },
     computed: {
         baseUrl() {
             return window.SERVE_IP + '/video/';
         },
-        nowVideoCount(){
+        nowVideoCount() {
             return this.type === 'all' ? this.allVideos.length : this.allVideos.filter(item => item.typeCode === this.type).length;
         }
     },
     methods: {
+        goHome() {
+            this.isIndex = true;
+        },
         getChoose(choose) {
             this.type = choose.typeCode;
+        },
+        handleOpenVideo(row) {
+            this.videoInfo = row;
+            this.isIndex = false;
         },
         async init() {
             try {
@@ -69,11 +86,9 @@ export default {
                 this.allVideos = r2.data;
             } catch (error) {
                 this.$toast(error.message);
-            } finally{
-                setTimeout(() => {
-                    this.loading = false;
-                    this.allSrcLoad = true;
-                }, 1500);
+            } finally {
+                this.loading = false;
+                this.allSrcLoad = true;
             }
         },
     },
@@ -89,12 +104,13 @@ export default {
     gap: 2rem;
     height: 180px;
 }
-.ske-tag{
+
+.ske-tag {
     display: flex;
     align-items: center;
     width: 100%;
     margin-bottom: 12px;
-    gap:12px;
+    gap: 12px;
 }
 
 .meeting--container {
@@ -122,10 +138,12 @@ export default {
             transition: background-color .3s, color .3s;
             font-weight: 500;
             flex-shrink: 0;
+
             &:hover {
                 color: #4090EF;
                 border: 1px solid #4090EF;
             }
+
             &.active {
                 color: #4090EF;
                 border: 1px solid #4090EF;
@@ -140,13 +158,42 @@ export default {
 
         li {
             box-sizing: border-box;
-
-            video {
+            .video-wrap {
                 width: 100%;
-                border-radius: 12px 12px 0 0;
-                object-fit: cover;
-                display: block;
                 aspect-ratio: 16 / 9;
+                border-radius: 12px 12px 0 0;
+                overflow: hidden;
+                position: relative;
+                cursor: pointer;
+
+                img {
+                    width: 100%;
+                    display: block;
+                    height: 100%
+                }
+
+                .video-mask {
+                    position: absolute;
+                    left: 0;
+                    top: 0;
+                    width: 100%;
+                    height: 20px;
+                    background-color: rgba(0, 0, 0, 0.5);
+                    /* 半透明黑色背景 */
+                    z-index: 1;
+                    /* 确保蒙层在视频上方 */
+                    height: 100%;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    pointer-events: none;
+
+                    i {
+                        color: #fff;
+                        font-size: 5rem;
+                        pointer-events: none;
+                    }
+                }
             }
 
             .intro_wrap {
