@@ -23,7 +23,7 @@
                     </div>
                     <p>视频缓冲中...</p>
                 </div>
-                <video controls @canplay="canPlayVideo">
+                <video muted autoplay controls @canplay="canPlayVideo">
                     <source :src="videoInfo.url" :type="videoInfo.videoType" />
                 </video>
             </div>
