@@ -6,7 +6,7 @@
                     <img class="error-image" src="@/assets/images/logo.png" @click="goBack('userInfo')"/>
                 </div>
             </el-image>
-            <h2>{{ headerTitle }}</h2>
+            <h2>后台管理系统移动端</h2>
             <div style="margin-right: 1em;" @click="openDrawer">
                 <svg-icon iconClass="menuConfig" color="#fff" width="25px" height="25px"></svg-icon>
             </div>
