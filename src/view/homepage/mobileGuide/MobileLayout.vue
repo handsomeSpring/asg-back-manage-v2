@@ -93,19 +93,6 @@ export default {
         adapterMenu() {
             return this.menuOptions.filter(item => item.children.length > 0);
         },
-        headerTitle(){
-            if(this.$route.fullPath === '/mobileGuide'){
-                if(this.homePageComp === 'userInfo'){
-                    return '个人中心';
-                }else if(this.homePageComp === 'taskPage'){
-                    return '任务列表';
-                }else{
-                    return '移动端首页';
-                }
-            }else{
-                return this.mainHeaderTitle;
-            }
-        }
     },
     data() {
         return {
