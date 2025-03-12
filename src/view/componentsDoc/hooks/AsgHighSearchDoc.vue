@@ -64,6 +64,16 @@ export default {
                     name: 'showOperation',
                     type: 'Boolean(默认为false)',
                     doc: '是否展示操作区域'
+                },
+                {
+                    name: 'isCustomRow',
+                    type: 'Boolean(false)',
+                    doc: '是否自定义搜索布局容器样式，默认是一行四个gird布局'
+                },
+                {
+                    name: 'foldTop',
+                    type: 'String（默认是44px）',
+                    doc: '弹出层离顶部容器的top距离'
                 }
             ],
             slotData: [

@@ -113,7 +113,7 @@ export default {
   align-items: center;
   justify-content: flex-start;
   gap: 24px;
-  margin: 1em 0;
+  margin: 1em 0 0;
 
   .item-row {
     border-radius: 4px;

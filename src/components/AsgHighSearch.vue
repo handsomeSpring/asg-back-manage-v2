@@ -8,8 +8,10 @@
                     class="el-icon-arrow-right foldIcon"></i>
             </div>
         </div>
-        <transition name="el-zoom-in-top">
-            <div v-show="foldIcon" class="operation_list">
+        <transition name="el-fade-in-linear">
+            <div v-show="foldIcon" class="operation_list" :style="{
+                'top':this.foldTop
+            }">
                 <div class="grid__container">
                     <div :class="isCustomRow ? '' : 'search_content'">
                         <slot name="search"></slot>
@@ -43,7 +45,11 @@ export default {
         isCustomRow:{
             type:Boolean,
             default:false
-        }
+        },
+        foldTop:{
+            type:String,
+            defautl:'44px'
+        },
     },
     data() {
         return {
@@ -112,7 +118,6 @@ export default {
         width: 100%;
         position: absolute;
         background: #FFF;
-        top:44px;
         z-index:999;
 
         .operation__button {

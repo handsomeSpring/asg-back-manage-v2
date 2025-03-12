@@ -48,6 +48,11 @@ const user = {
         },
         SET_WAITAUTH_NUMBER(state, number){
             state.waitAuthNumber = number;
+        },
+        // 处理任务
+        SEAL_TASK_NUMBER(state){
+            if(state.waitAuthNumber <= 0 || state.waitAuthNumber === null) return;
+            state.waitAuthNumber -= 1;
         }
     },
     actions:{}
