@@ -110,7 +110,9 @@
                                                 {{ settingInfo.component === 'router-view' ? '>' : '.vue' }}
                                             </template>
                                 </el-input>
-                                <el-button v-show="!isForbid" plain @click="setRouterView" size="small">设置为无跳转</el-button>
+                                <el-button v-show="!isForbid" plain @click="setRouterView" size="small">
+                                    {{ settingInfo.component === 'router-view' ?  '转为组件模式' : '设置为无跳转'}}
+                                </el-button>
                             </el-form-item>
                         </el-col>
                     </el-row>
@@ -275,7 +277,11 @@ export default {
             }
         },
         setRouterView() {
-            this.settingInfo.component = 'router-view'
+            if(this.settingInfo.component === 'router-view'){
+                this.settingInfo.component = '';
+            }else{
+                this.settingInfo.component = 'router-view';
+            }
         },
         addNewParent() {
             this.type = 'new';
