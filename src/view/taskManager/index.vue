@@ -364,9 +364,9 @@ export default {
       });
       try {
         // const message = `<ASG机器人通知>尊敬的${item.chinaname}，请检查您的任务:"${item.taskName}" 是否完成，若完成，请上后台点击完成！`
-        const { status } = await remindTasks(item.id);
-        if (status !== 200) throw new Error("服务端异常！");
-        this.$message.success("发送成功！");
+        const { status, data:{ message:successMessage} } = await remindTasks(item.id);
+        if (status !== 200) throw new Error(message);
+        this.$message.success(successMessage ?? '发送成功！');
       } catch (error) {
         this.$message.error(error.message);
       } finally {

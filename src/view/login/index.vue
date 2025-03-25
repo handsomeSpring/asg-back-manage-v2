@@ -64,6 +64,7 @@
           <a href="https://commentary.idvasg.cn/#/" target="_blank" class="hilight-info
                                     ">立即注册</a>
         </p>
+        <a download href="https://gitee.com/zhuo-spring/asg-tauri-project/releases/download/latest/ASG-Tauri_0.1.3_x64_en-US.msi">下载windows10客户端</a>
       </div>
     </div>
   </div>
