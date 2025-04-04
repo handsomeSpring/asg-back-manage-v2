@@ -12,7 +12,7 @@
         <asgTableCard v-for="(item, index) in tableData" :key="index">
           <template v-slot:header>
             <div class="table-header">
-              <el-checkbox v-if="new Date() < new Date(item.opentime)" v-model="item.isCheck"
+              <el-checkbox v-if="new Date() < new Date(item.opentime) && item.isAllowChoose !== 0" v-model="item.isCheck"
                 @input="handleCheck($event, item)"
                 :disabled="item.judeg_Id === userInfo.id || !!item.judge_Id"></el-checkbox>
               <p>{{ item.team1_name }} vs {{ item.team2_name }}<span style="color:#f40;margin-left: 1em;"
@@ -44,6 +44,7 @@
                     item.judge || "虚位以待"
                     }}</span>
                 </p>
+                <p v-show="item.isAllowChoose === 0" class="text warning"><i class="el-icon-info" style="margin-right: 5px;"></i>由于主办方设置，该场不允许选班</p>
               </div>
               <div class="right-content">
                 <p v-if="!item.judge_Id && !item.judge" style="color:#0c80e5">虚位以待</p>
@@ -246,7 +247,10 @@ export default {
       .text {
         font-size: 0.9em;
         font-weight: 500;
-        font-family: 'hk';
+        &.warning{
+          color:#f40;
+          font-size:0.75em;
+        }
       }
     }
 
