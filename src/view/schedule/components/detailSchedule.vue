@@ -62,7 +62,7 @@
           <el-form-item label="人员构成" prop="personType">
             <el-radio-group v-model="form.personType">
               <el-radio v-for="(item, index) in personGroups" :label="item.value" :key="index">{{ item.label
-                }}</el-radio>
+              }}</el-radio>
             </el-radio-group>
           </el-form-item>
         </el-col>
@@ -125,8 +125,8 @@
         <el-table-column label="解说序号" prop="id" align="center"></el-table-column>
         <el-table-column label="解说名称" prop="chinaname" align="center"></el-table-column>
         <el-table-column label="操作" align="center">
-          <template #default="{ $index }">
-            <el-button type="text" @click="openPerson($index)">更新</el-button>
+          <template #default="{ $index, row }">
+            <el-button type="text" @click="openPerson($index, row)">更新</el-button>
             <el-button type="text" @click="deletePerson($index)">删除</el-button>
           </template>
         </el-table-column>
@@ -308,16 +308,24 @@ export default {
       this.groupForm.qq = this.groupOptions.find(item => item.value === this.groupForm.group)?.qq ?? '';
     },
     // 打开人员选择
-    openPerson(index) {
+    openPerson(index, row) {
       this.comIndex = index;
-      this.$refs.asgPersonChoose?.openDialog();
+      if (index === -1) {
+        this.$refs.asgPersonChoose?.openDialog()
+      } else {
+        this.$refs.asgPersonChoose?.openDialog({
+          label: row.chinaname || '',
+          id: row.id || 0,
+          officium: row.officium || 'none'
+        });
+      }
     },
     deletePerson(index) {
       this.comTableList.splice(index, 1);
     },
     handleChoosePerson(node) {
       const isExist = this.comTableList.findIndex(item => item.id === node.id);
-      if (isExist !== -1) return this.$message.error('该解说已存在！');
+      if (isExist !== -1 && node.id !== 0) return this.$message.error('该解说已存在！');
       // -1就是新增
       if (this.comIndex === -1) {
         this.comTableList.push({
@@ -403,7 +411,7 @@ export default {
         if (error?.response?.data?.code === 400) {
           return this.$message.error("操作失败，无权访问");
         }
-        if(error instanceof Object && !!error.message){
+        if (error instanceof Object && !!error.message) {
           return this.$message.error(error.message)
         }
         this.$message.error("操作失败，后端服务器异常");

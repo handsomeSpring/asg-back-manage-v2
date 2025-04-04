@@ -1,11 +1,23 @@
 <template>
     <el-dialog :fullscreen="isMobile" title="人员选择" width="30%" :visible.sync="dialogVisible">
-        <el-scrollbar :style="{height: isMobile ? '100dvh' : '50vh' }">
-            <el-input style="margin:1em 0" size="small" v-model="filterText" placeholder="请输入中文名搜索"
-                clearable></el-input>
-            <el-tree class="filter-tree" ref="tree" :data="allRoles" :props="defaultProps" accordion highlight-current
-                :filter-node-method="filterNode" @node-click="nodeClick"></el-tree>
-        </el-scrollbar>
+        <el-tabs v-model="activeTab">
+            <el-tab-pane label="ASG职位库" name="first">
+                <el-scrollbar :style="{ height: isMobile ? '100dvh' : '50vh' }">
+                    <el-input style="margin:1em 0" size="small" v-model="filterText" placeholder="请输入中文名搜索"
+                        clearable></el-input>
+                    <el-tree class="filter-tree" ref="tree" :data="allRoles" :props="defaultProps" accordion
+                        highlight-current :filter-node-method="filterNode" @node-click="nodeClick"></el-tree>
+                </el-scrollbar>
+            </el-tab-pane>
+            <el-tab-pane label="自定义角色" name="second">
+                <div class="gap__flex">
+                    <el-input size="small" v-model="customForm.id" disabled></el-input>
+                    <el-input size="small" v-model="customForm.label" placeholder="请输入名称"></el-input>
+                    <el-input size="small" v-model="customForm.officium" placeholder="请输入职位" disabled></el-input>
+                    <el-button size="small" type="primary" @click="handleRegister">登 记</el-button>
+                </div>
+            </el-tab-pane>
+        </el-tabs>
     </el-dialog>
 </template>
 
@@ -17,6 +29,7 @@ export default {
     name: 'asg-person-choose',
     data() {
         return {
+            activeTab: 'first',
             defaultProps: {
                 children: "children",
                 label: "label",
@@ -24,17 +37,24 @@ export default {
             filterText: "",
             allRoles: [],
             dialogVisible: false,
-            isMobile:false,
+            isMobile: false,
+            customForm: {
+                id: 0,
+                label: "",
+                officium: "none",
+            }
         };
     },
     watch: {
         filterText(val) {
-            console.log(val, '=vva');
             this.$refs.tree.filter(val);
         },
     },
     methods: {
-        openDialog() {
+        openDialog(obj) {
+            if(obj && obj instanceof Object){
+                Object.assign(this.customForm, obj);
+            }
             this.dialogVisible = true;
         },
         nodeClick(node) {
@@ -64,7 +84,7 @@ export default {
                     item.forEach((child) => {
                         itemList.children.push({
                             id: child.id,
-                            officium:filterRole(item[0].officium),
+                            officium: filterRole(item[0].officium),
                             label: child.chinaname,
                         });
                     });
@@ -75,6 +95,16 @@ export default {
                 this.$message.error(error.message);
             }
         },
+        handleRegister(){
+            if(!this.customForm.label) return this.$message.error('请输入名称！');
+            this.$emit('finish', this.customForm);
+            this.customForm = {
+                id: 0,
+                label: "",
+                officium: "none",
+            }
+            this.dialogVisible = false;
+        }
     },
     created() {
         this.isMobile = isMobile();
@@ -82,4 +112,11 @@ export default {
     },
 }
 </script>
-<style lang='less' scoped></style>
+<style lang='less' scoped>
+.gap__flex {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+</style>
