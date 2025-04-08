@@ -24,7 +24,7 @@
         <exportDia :belong="belong"></exportDia>
         <el-button style="margin: 0 12px" size="mini" type="primary" @click="toDetail('add')">新增赛程<i
             class="el-icon-plus"></i></el-button>
-        <div class="import_btn" @click="handleInput">
+        <div class="import_btn" @click="handleInput" v-show="!isMobile">
           批量导入
           <svg-icon style="margin-left: 3px" iconClass="import" width="14px" height="14px" color="#fff"></svg-icon>
         </div>
@@ -36,72 +36,90 @@
       <template v-if="scheduleData.length > 0">
         <asgTableCard v-for="(item, index) in scheduleData" :key="index">
           <template v-slot:header>
-            <div style="
+            <template v-if="!isMobile">
+              <div style="
                 display: flex;
                 justify-content: space-between;
                 align-items: center;
                 height: 100%;
               ">
-              <div style="display: flex">
-                <el-tag size="small" type="primary" style="margin: 0 12px">{{
-                  item.tag || "未设置赛标"
-                }}</el-tag>
-                <el-tag size="small" type="danger" style="margin: 0 12px">{{
-                  item.belong
-                }}</el-tag>
-                <p class="fontWeight">
+                <div style="display: flex">
+                  <el-tag size="small" type="primary" style="margin: 0 12px">{{
+                    item.tag || "未设置赛标"
+                  }}</el-tag>
+                  <el-tag size="small" type="danger" style="margin: 0 12px">{{
+                    item.belong
+                  }}</el-tag>
+                  <p class="fontWeight">
+                    {{ item.team1_name }}
+                    <span style="color: rgb(71, 95, 184)">vs</span>
+                    {{ item.team2_name }}
+                  </p>
+                </div>
+                <div>
+                  <el-button style="margin: 0 12px" type="text" size="small"
+                    @click="toDetail('edit', item)">管理赛程</el-button>
+                  <el-button style="margin: 0 12px; color: #f40" type="text" size="small"
+                    @click="delGame(item)">删除赛程</el-button>
+                </div>
+              </div>
+            </template>
+            <template v-else>
+              <div class="schedule--container">
+                <div class="schedule__info">
                   {{ item.team1_name }}
-                  <span style="color: rgb(71, 95, 184)">vs</span>
+                  <span class="vs-icon">vs</span>
                   {{ item.team2_name }}
-                </p>
+                </div>
+                <div>
+                  <i class="el-icon-edit" style="font-size: 16px;margin-right: 1em;color:#4090ef"
+                    @click="toDetail('edit', item)"></i>
+                  <i class="el-icon-delete-solid" style="font-size: 16px;color:#f40" @click="delGame(item)"></i>
+                </div>
               </div>
-              <div>
-                <el-button style="margin: 0 12px" type="text" size="small"
-                  @click="toDetail('edit', item)">管理赛程</el-button>
-                <el-button style="margin: 0 12px; color: #f40" type="text" size="small"
-                  @click="delGame(item)">删除赛程</el-button>
-              </div>
-            </div>
+            </template>
           </template>
           <template v-slot:content>
             <div class="content-grid-wrap">
               <el-descriptions>
-                <el-descriptions-item label="主场战队" :span="1">
+                <el-descriptions-item label="主场战队" :span="isMobile ? 3 : 1">
                   {{ item.team1_name }}
                   <span class="like__icon"> {{ item.team1_piaoshu }}人支持 </span>
                 </el-descriptions-item>
-                <el-descriptions-item label="客场战队" :span="1">
+                <el-descriptions-item label="客场战队" :span="isMobile ? 3 : 1">
                   {{ item.team2_name }}
                   <span class="like__icon"> {{ item.team2_piaoshu }}人支持 </span>
                 </el-descriptions-item>
-                <el-descriptions-item label="裁判" :span="1">{{
+                <el-descriptions-item label="裁判" :span="isMobile ? 3 : 1">{{
                   item.judge || "无裁判"
                 }}</el-descriptions-item>
-                <el-descriptions-item label="比赛时间">{{
+                <el-descriptions-item label="比赛时间" :span="isMobile ? 3 : 1">{{
                   new Date(item.opentime) | parseTime("{y}-{m}-{d} {h}:{i}:{s}")
                 }}</el-descriptions-item>
-                <el-descriptions-item label="解说">
+                <el-descriptions-item label="解说" :span="isMobile ? 3 : 1">
                   {{ handleCommentary(item.commentary)
                   }}<span style="color: #4090ef">(最大数量：{{ item.com_limit }})</span>
                 </el-descriptions-item>
-                <el-descriptions-item label="导播">{{
+                <el-descriptions-item label="导播" :span="isMobile ? 3 : 1">{{
                   item.referee || '无导播'
                 }}</el-descriptions-item>
-                <el-descriptions-item label="回放链接"><el-link v-if="item.bilibiliuri !== 'lose' && item.bilibiliuri"
-                    :href="item.bilibiliuri" target="_blank" type="success">点击前往</el-link>
+                <el-descriptions-item label="回放链接" :span="isMobile ? 3 : 1"><el-link
+                    v-if="item.bilibiliuri !== 'lose' && item.bilibiliuri" :href="item.bilibiliuri" target="_blank"
+                    type="success">点击前往</el-link>
                   <el-link v-else-if="item.bilibiliuri === 'lose'" type="info">回放丢失</el-link>
                   <el-link v-else type="danger">回放尚未上传</el-link></el-descriptions-item>
-                <el-descriptions-item label="是否允许选班">
-                  <span>{{ item.isAllowChoose === 1  ? '允许' : '不允许'}}</span>
+                <el-descriptions-item label="是否允许选班" :span="isMobile ? 3 : 1">
+                  <span>{{ item.isAllowChoose === 1 ? '允许' : '不允许' }}</span>
                 </el-descriptions-item>
-                <el-descriptions-item label="人员构成">
+                <el-descriptions-item label="人员构成" :span="isMobile ? 3 : 1">
                   <p>{{ item.personTypeName }}</p>
                 </el-descriptions-item>
               </el-descriptions>
-              <div class="winner-wrap">
+              <div class="winner-wrap" :span="isMobile ? 3 : 1">
                 <el-popover popper-class="asg-popper" placement="bottom" width="200" trigger="click">
                   <li class="list-asg-content">获胜战队：
-                    <span class="winteam-text" :class="item.winteam ? 'confirm' : 'unconfirm'">{{ item.winteam || '赛程进行中' }}</span>
+                    <span class="winteam-text" :class="item.winteam ? 'confirm' : 'unconfirm'">{{ item.winteam ||
+                      '赛程进行中' }}</span>
                   </li>
                   <li class="list-asg-content">赛后结果：
                     <span class="view-pointer" v-if="!item.winteam" @click="fillGameResult(item)">待登记</span>
@@ -119,16 +137,21 @@
       </template>
       <el-empty v-else description="暂无赛程数据"></el-empty>
     </div>
-    <el-pagination style="float: right; margin-top: 12px" @current-change="handlePageChange($event, 'page')"
-      @size-change="handlePageChange($event, 'limit')" :current-page.sync="listQuery.page" :page-size="listQuery.limit"
-      layout="total, sizes, prev, pager, next, jumper" :total="total">
+    <el-pagination v-if="!isMobile" style="float: right; margin-top: 12px"
+      @current-change="handlePageChange($event, 'page')" @size-change="handlePageChange($event, 'limit')"
+      :current-page.sync="listQuery.page" :page-size="listQuery.limit" layout="total, sizes, prev, pager, next, jumper"
+      :total="total">
     </el-pagination>
+    <mobilePage v-else :page="listQuery.page" :total="total" :limit="listQuery.limit"
+      @current-change="handleChange($event, 'page')"></mobilePage>
     <!-- 弹出框 -->
-    <dialog-choose :eventName="belong" :showChoose.sync="showChoose" @refresh="initSchedule"
+    <dialog-choose :isMobile="isMobile" :eventName="belong" :showChoose.sync="showChoose" @refresh="initSchedule"
       :tagOptions="tagOptions"></dialog-choose>
-    <GameResult :dialogVisible.sync="gameResultDialog" :gameResult="gameResult" @updateLoad="initSchedule"></GameResult>
+    <GameResult :isMobile="isMobile" :dialogVisible.sync="gameResultDialog" :gameResult="gameResult"
+      @updateLoad="initSchedule"></GameResult>
     <!-- <MatchDialog :dialogVisible.sync="matchDialogVisible" :rowItem="rowItem" :groupOptions="groupOptions"></MatchDialog> -->
-    <viewResultDialog :dialogVisible.sync="viewGameResultDialog" :gameResult="gameResult"></viewResultDialog>
+    <viewResultDialog :isMobile="isMobile" :dialogVisible.sync="viewGameResultDialog" :gameResult="gameResult">
+    </viewResultDialog>
   </div>
 </template>
 
@@ -143,6 +166,8 @@ import viewResultDialog from "./viewResultDialog.vue";
 import { getUserRoles, getAllScheduleV2 } from "@/api/schedule/index";
 import * as XLSX from "xlsx";
 import AsgHighSearch from "@/components/AsgHighSearch.vue";
+import { isMobile } from "@/utils";
+import mobilePage from "@/components/mobile/mobilePage.vue";
 export default {
   name: "ScheduleTable",
   props: {
@@ -166,6 +191,7 @@ export default {
     asgTableCard,
     viewResultDialog,
     AsgHighSearch,
+    mobilePage
   },
   data() {
     return {
@@ -189,6 +215,7 @@ export default {
       gameResultDialog: false,
       // 通知弹窗
       viewGameResultDialog: false,
+      isMobile: false,
     };
   },
   methods: {
@@ -445,6 +472,7 @@ export default {
     },
   },
   async created() {
+    this.isMobile = isMobile();
     await this.initSeason();
     this.initSchedule();
     this.initGetCommentary();
@@ -453,28 +481,34 @@ export default {
 </script>
 
 <style scoped lang="less">
+@import url('../../../assets/mobileStyles/schedule/index.less');
+
 .winner {
   color: #cccc00;
 }
 
 .list-asg-content {
-  margin:0.8em 0;
+  margin: 0.8em 0;
   display: flex;
   align-items: center;
-  color:#fff;
-  .winteam-text{
+  color: #fff;
+
+  .winteam-text {
     font-size: 0.9em;
-    &.confirm{
+
+    &.confirm {
       color: #cccc00;
     }
-    &.unconfirm{
-      color:#c0c0c0;
+
+    &.unconfirm {
+      color: #c0c0c0;
     }
   }
-  .view-pointer{
+
+  .view-pointer {
     font-size: 0.9em;
-    color:#95bdee;
-    cursor:pointer;
+    color: #95bdee;
+    cursor: pointer;
     text-decoration: underline;
     text-decoration-color: #7eb1ef;
     text-underline-offset: 0.4em;
@@ -529,7 +563,7 @@ export default {
     display: flex;
     align-items: center;
     justify-content: center;
-    cursor:pointer;
+    cursor: pointer;
 
     .box-content {
       display: flex;
@@ -537,14 +571,16 @@ export default {
       flex-direction: column;
       justify-content: center;
       border-radius: 10px;
-      color:#fff;
+      color: #fff;
       gap: 0.5em;
       font-size: 0.8em;
       padding: 1em;
-      &.wait-do{
+
+      &.wait-do {
         background: #0c80e5;
       }
-      &.success-do{
+
+      &.success-do {
         background: #0bc473;
       }
     }

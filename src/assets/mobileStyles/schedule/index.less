@@ -1,0 +1,34 @@
+@media (max-width: 1024px) {
+    .asg-table-main{
+        width: 95%;
+        margin:0 auto;
+        padding-bottom: 50px;
+    }
+    .schedule--container {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        height: 100%;
+        padding: 0 1em;
+        .schedule__info {
+            font-size: 14px;
+            font-weight: bold;
+            .vs-icon {
+                color: rgb(71, 95, 184);
+                margin: 0 1em;
+            }
+        }
+
+    }
+
+    .content-grid-wrap {
+        grid-template-columns: repeat(1, 1fr) !important;
+        grid-template-rows: 80% 20%;
+
+        .winner-wrap {
+            border-left: none !important;
+            border-top: 1px solid #4090EF;
+            padding:2em 0;
+        }
+    }
+}

@@ -1,6 +1,6 @@
 <template>
-    <el-dialog title="赛果登记" width="50%" :visible="visible" @close="closeDialog" @open="handleOpen"
-        :close-on-click-modal="false">
+    <el-dialog :fullscreen="isMobile" title="赛果登记" width="50%" :visible="visible" @close="closeDialog"
+        @open="handleOpen" :close-on-click-modal="false">
         <div class="result__content">
             <div class="bili">
                 <div></div>
@@ -11,7 +11,7 @@
                     <el-tag type="primary">{{ rightTeam }}</el-tag>
                 </div>
                 <div></div>
-                <p>操作</p>
+                <p v-show="!isMobile">操作</p>
             </div>
             <li v-for="(item, index) in gameInfo" :key="index">
                 <el-divider content-position="left">BO{{ index + 1 }}</el-divider>
@@ -27,7 +27,7 @@
                     </div>
 
                     <p :class="item.side === '1' ? 'hunter' : 'survor'">{{ item.side === '1' ? '屠' : '求' }}</p>
-                    <div class="tl-display-flex">
+                    <div v-show="!isMobile" class="tl-display-flex">
                         <el-switch v-model="item.side" active-value="1" inactive-value='2' active-text="人先"
                             inactive-text="屠先">
                         </el-switch>
@@ -45,6 +45,21 @@
                     </div>
 
                     <p :class="item.side === '1' ? 'survor' : 'hunter'">{{ item.side === '1' ? '求' : '屠' }}</p>
+                    <div class="tl-display-flex" v-show="!isMobile">
+                        <el-button-group size="small">
+                            <el-button size="small" :disabled="gameInfo.length > 5" type="primary" icon="el-icon-plus"
+                                @click="handleAdd"></el-button>
+                            <el-button size="small" type="primary" :disabled="gameInfo.length === 1"
+                                icon="el-icon-close" @click="handleMinus(index)"></el-button>
+                        </el-button-group>
+                    </div>
+                </div>
+                <div class="operation__container" v-show="isMobile">
+                    <div class="tl-display-flex">
+                        <el-switch v-model="item.side" active-value="1" inactive-value='2' active-text="人先"
+                            inactive-text="屠先">
+                        </el-switch>
+                    </div>
                     <div class="tl-display-flex">
                         <el-button-group size="small">
                             <el-button size="small" :disabled="gameInfo.length > 5" type="primary" icon="el-icon-plus"
@@ -56,8 +71,8 @@
                 </div>
             </li>
             <el-divider>操作</el-divider>
-            <el-button style="margin:0 20px" :loading="loading" type="primary" size="small"
-            @click="handleSaveResult">{{ showResult ? '更新' : '保存' }}赛果</el-button>
+            <el-button style="margin:0 20px" :loading="loading" type="primary" size="small" @click="handleSaveResult">{{
+                showResult ? '更新' : '保存' }}赛果</el-button>
         </div>
         <el-divider>选择获胜队伍</el-divider>
         <el-row>
@@ -80,7 +95,7 @@ import { setWinGame, setFinalScore } from "@/api/schedule/index";
 import AsgTipComponent from "@/components/AsgTipComponent.vue";
 export default {
     name: 'ASGGameResult',
-    components:{
+    components: {
         AsgTipComponent
     },
     props: {
@@ -91,6 +106,10 @@ export default {
         gameResult: {
             type: Object,
             default: () => { }
+        },
+        isMobile: {
+            type: Boolean,
+            default: false
         }
     },
     computed: {
@@ -222,6 +241,8 @@ export default {
 }
 </script>
 <style lang='less' scoped>
+@import url('../../../assets/mobileStyles/schedule/gameResult.less');
+
 .result__content {
     width: 100%;
 

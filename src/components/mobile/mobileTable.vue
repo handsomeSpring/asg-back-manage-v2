@@ -1,5 +1,8 @@
 <template>
-    <div class="mobile-table-list" v-loading="loading">
+    <div class="mobile-table-list" :style="{
+        height: isAutoHeight ? 'auto' : 'calc(100dvh - 32px - 50px - 24px - 60px)',
+        width: tableWidth
+    }" v-loading="loading">
         <el-skeleton :rows="6" animated :loading="skeLoading" />
         <template v-if="!skeLoading">
             <div class="no-empty" v-if="tableData.length === 0">{{ noDateText }}</div>
@@ -11,7 +14,7 @@
                             <p>{{ prop.label }}</p>
                         </template>
                         <p v-if="prop.type === 'index'">{{ i + 1 }}</p>
-                        <slot v-else-if="prop.type === 'slot'" :name="prop.prop" :row="row" :index="index"></slot>
+                        <slot v-else-if="prop.type === 'slot'" :name="prop.prop" :row="row" :index="i"></slot>
                         <p v-else>{{ row[prop.prop] || '/' }}</p>
                     </el-descriptions-item>
                 </el-descriptions>
@@ -50,9 +53,20 @@ export default {
             type: Boolean,
             default: true
         },
+        // 无数据时候的展示
         noDateText: {
             type: String,
             default: '暂无数据'
+        },
+        // 是否根据内容撑开高度
+        isAutoHeight:{
+            type:Boolean,
+            default:false
+        },
+        // 表格宽度
+        tableWidth:{
+            type:String,
+            default:'94%'
         }
     },
     data() {
@@ -72,10 +86,7 @@ export default {
 </script>
 <style lang='less' scoped>
 .mobile-table-list {
-    width: 94%;
     margin: 0 auto;
-    height: calc(100dvh - 32px - 50px - 24px - 60px);
-
     .op-cut {
         height: 60px;
     }

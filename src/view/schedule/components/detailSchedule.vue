@@ -9,19 +9,22 @@
       </AsgTipComponent>
     </div>
     <TextTitle title-name="基本信息"></TextTitle>
-    <el-form class="my-1" ref="form" :model="form" label-position="right" label-width="120px" :rules="rules">
+    <el-form class="my-1" ref="form" :model="form" :label-position="isMobile ? 'top' : 'right'" label-width="120px"
+      :rules="rules">
       <el-row>
-        <el-col :span="12">
+        <el-col :span="isMobile ? 24 : 12">
           <el-form-item label="所属赛季" prop="belong">
-            <el-select style="width: 80%" size="small" v-model="form.belong" placeholder="请选择所属赛季">
+            <el-select :style="{ width: isMobile ? '100%' : '80%' }" size="small" v-model="form.belong"
+              placeholder="请选择所属赛季">
               <el-option v-for="item in eventOptions" :key="item.name" :label="item.name" :value="item.name">
               </el-option>
             </el-select>
           </el-form-item>
         </el-col>
-        <el-col :span="12">
+        <el-col :span="isMobile ? 24 : 12">
           <el-form-item label="赛程分类" prop="tag">
-            <el-select style="width: 80%" size="small" v-model="form.tag" placeholder="请输入赛程标签">
+            <el-select :style="{ width: isMobile ? '100%' : '80%' }" size="small" v-model="form.tag"
+              placeholder="请输入赛程标签">
               <el-option v-for="(item, index) in tagOptions" :key="index" :label="item.name" :value="item.name">
               </el-option>
             </el-select>
@@ -29,28 +32,30 @@
         </el-col>
       </el-row>
       <el-row>
-        <el-col :span="12">
+        <el-col :span="isMobile ? 24 : 12">
           <el-form-item label="主场战队" prop="team1_name">
-            <el-autocomplete style="width: 80%" v-model="form.team1_name" size="small" :fetch-suggestions="searchTeam"
-              placeholder="请选择/输入主场战队" :disabled="!form.belong" @select="handleChooseAuto"></el-autocomplete>
+            <el-autocomplete :style="{ width: isMobile ? '100%' : '80%' }" v-model="form.team1_name" size="small"
+              :fetch-suggestions="searchTeam" placeholder="请选择/输入主场战队" :disabled="!form.belong"
+              @select="handleChooseAuto"></el-autocomplete>
           </el-form-item>
         </el-col>
-        <el-col :span="12">
+        <el-col :span="isMobile ? 24 : 12">
           <el-form-item label="客场战队" prop="team2_name">
-            <el-autocomplete style="width: 80%" v-model="form.team2_name" size="small" :fetch-suggestions="searchTeam"
-              placeholder="请选择/输入客场战队" :disabled="!form.belong" @select="handleChooseAuto"></el-autocomplete>
+            <el-autocomplete :style="{ width: isMobile ? '100%' : '80%' }" v-model="form.team2_name" size="small"
+              :fetch-suggestions="searchTeam" placeholder="请选择/输入客场战队" :disabled="!form.belong"
+              @select="handleChooseAuto"></el-autocomplete>
           </el-form-item>
         </el-col>
       </el-row>
       <el-row>
-        <el-col :span="12">
+        <el-col :span="isMobile ? 24 : 12">
           <el-form-item label="比赛时间" prop="opentime">
-            <el-date-picker style="width: 80%" v-model="form.opentime" size="small" type="datetime" placeholder="选择日期时间"
-              value-format="yyyy-MM-dd HH:mm:ss" format="yyyy-MM-dd HH:mm:ss">
+            <el-date-picker :style="{ width: isMobile ? '100%' : '80%' }" v-model="form.opentime" size="small"
+              type="datetime" placeholder="选择日期时间" value-format="yyyy-MM-dd HH:mm:ss" format="yyyy-MM-dd HH:mm:ss">
             </el-date-picker>
           </el-form-item>
         </el-col>
-        <el-col :span="12">
+        <el-col :span="isMobile ? 24 : 12">
           <el-form-item label="选班模式" prop="isAllowChoose">
             <el-radio-group v-model="form.isAllowChoose" size="small">
               <el-radio-button :label="1">允许解说选班</el-radio-button>
@@ -58,7 +63,7 @@
             </el-radio-group>
           </el-form-item>
         </el-col>
-        <el-col :span="12">
+        <el-col :span="isMobile ? 24 : 12">
           <el-form-item label="人员构成" prop="personType">
             <el-radio-group v-model="form.personType">
               <el-radio v-for="(item, index) in personGroups" :label="item.value" :key="index">{{ item.label
@@ -66,15 +71,15 @@
             </el-radio-group>
           </el-form-item>
         </el-col>
-        <el-col :span="12">
+        <el-col :span="isMobile ? 24 : 12">
           <el-form-item label="最大解说数量" prop="comLimit">
             <el-input-number size="small" v-model="form.comLimit" :min="1" :max="3" label="解说数量"></el-input-number>
           </el-form-item>
         </el-col>
-        <el-col :span="12" v-if="requiredJudge">
+        <el-col :span="isMobile ? 24 : 12" v-if="requiredJudge">
           <el-form-item label="裁判" prop="judge">
-            <el-input style="width: 80%" v-model="form.judge" readonly size="small" placeholder="聚焦后选择裁判"
-              @focus="handlePersonChoose('judge')">
+            <el-input :style="{ width: isMobile ? '100%' : '80%' }" v-model="form.judge" readonly size="small"
+              placeholder="聚焦后选择裁判" @focus="handlePersonChoose('judge')">
               <template #append>
                 <p class="clear-icon" @click="clearChoose('judge')">
                   <i class="el-icon-circle-close"></i>
@@ -83,10 +88,10 @@
             </el-input>
           </el-form-item>
         </el-col>
-        <el-col :span="12" v-if="requiredReferee">
+        <el-col :span="isMobile ? 24 : 12" v-if="requiredReferee">
           <el-form-item label="导播" prop="referee">
-            <el-input style="width: 80%" v-model="form.referee" readonly size="small" placeholder="聚焦后选择导播"
-              @focus="handlePersonChoose('referee')">
+            <el-input :style="{ width: isMobile ? '100%' : '80%' }" v-model="form.referee" readonly size="small"
+              placeholder="聚焦后选择导播" @focus="handlePersonChoose('referee')">
               <template #append>
                 <p class="clear-icon" @click="clearChoose('referee')">
                   <i class="el-icon-circle-close"></i>
@@ -97,16 +102,17 @@
         </el-col>
       </el-row>
       <el-row>
-        <el-col :span="12">
+        <el-col :span="isMobile ? 24 : 12">
           <el-form-item label="B站回放地址">
-            <el-input style="width: 80%" size="small" v-model="form.bilibiliuri" placeholder="如果录像丢失，请输入lose" clearable>
+            <el-input :style="{ width: isMobile ? '100%' : '80%' }" size="small" v-model="form.bilibiliuri"
+              placeholder="如果录像丢失，请输入lose" clearable>
             </el-input>
           </el-form-item>
         </el-col>
-        <el-col :span="12">
+        <el-col :span="isMobile ? 24 : 12">
           <el-form-item label="赛程相关备注">
-            <el-input style="width:80%" size="small" type="textarea" v-model="form.remarks" :rows="5" maxlength="150"
-              show-word-limit></el-input>
+            <el-input :style="{ width: isMobile ? '100%' : '80%' }" size="small" type="textarea" v-model="form.remarks"
+              :rows="5" maxlength="150" show-word-limit></el-input>
           </el-form-item>
         </el-col>
       </el-row>
@@ -119,7 +125,7 @@
         <el-button type="primary" size="small" @click="openPerson(-1)"
           :disabled="form.comLimit === comTableList.length">新增解说</el-button>
       </header>
-      <el-table :data="comTableList" border :key="JSON.stringify(comTableList)"
+      <el-table v-if="!isMobile" :data="comTableList" border :key="JSON.stringify(comTableList)"
         :header-cell-style="{ background: '#f2f6fd', color: '#000' }">
         <el-table-column label="序号" type="index" width="80px" align="center"></el-table-column>
         <el-table-column label="解说序号" prop="id" align="center"></el-table-column>
@@ -131,6 +137,12 @@
           </template>
         </el-table-column>
       </el-table>
+      <mobileTable :tableProps="tableProps" :table-data="comTableList" isAutoHeight tableWidth="100%">
+        <template #operation="{ index, row }">
+          <el-button type="text" @click="openPerson(index, row)">更新</el-button>
+          <el-button type="text" @click="deletePerson(index)">删除</el-button>
+        </template>
+      </mobileTable>
     </div>
     <template v-if="formType !== 'add'">
       <TextTitle v-show="requireComs" title-name="赛程信息发布管理"></TextTitle>
@@ -142,7 +154,8 @@
         </AsgTipComponent>
       </div>
       <el-card style="width:95%;margin:1em auto">
-        <el-form ref="groupForm" :model="groupForm" label-position="right" label-width="120px" :rules="groupRules">
+        <el-form ref="groupForm" :model="groupForm" :label-position="isMobile ? 'top' : 'right'" label-width="120px"
+          :rules="groupRules">
           <el-form-item label="QQ群" prop="group">
             <el-select size="small" v-model="groupForm.group" @change="handleChange">
               <el-option v-for="(item, index) in groupOptions" :key="index" :label="item.label"
@@ -184,13 +197,16 @@ import { sendAdminMsg } from '@/api/admin/index.js';
 import AsgPersonChoose from "@/components/AsgPersonChoose.vue";
 import TextTitle from "@/components/TextTitle.vue";
 import AsgTipComponent from "@/components/AsgTipComponent.vue";
+import mobileTable from "@/components/mobile/mobileTable.vue";
+import { isMobile } from "@/utils";
 export default {
   name: "detailSchedule",
   components: {
     personChooseDialog,
     TextTitle,
     AsgPersonChoose,
-    AsgTipComponent
+    AsgTipComponent,
+    mobileTable
   },
   props: {
     formType: {
@@ -233,6 +249,27 @@ export default {
   data() {
     return {
       updateFormId: null,
+      tableProps: [
+        {
+          label: '序号',
+          type: 'index'
+        },
+        {
+          label: '解说序号',
+          prop: 'id',
+          type: 'prop'
+        },
+        {
+          label: '解说名称',
+          prop: 'chinaname',
+          type: 'prop'
+        },
+        {
+          label: '操作',
+          prop: 'operation',
+          type: 'slot'
+        }
+      ],
       form: {
         belong: "",
         tag: "",
@@ -288,6 +325,7 @@ export default {
       },
       choosePersonDialog: false,
       tagKey: "referee",
+      isMobile: false
     };
   },
   methods: {
@@ -468,7 +506,7 @@ export default {
     }
   },
   created() {
-    console.log(this.formRow, 'this.formRow');
+    this.isMobile = isMobile();
     if (this.formType !== 'add') {
       const { com_limit, final_score, winteam, logs, person_type, commentary, id, ...form } = this.formRow;
       Object.assign(this.form, form)
@@ -482,6 +520,8 @@ export default {
 };
 </script>
 <style lang="less" scoped>
+@import url('../../../assets/mobileStyles/schedule/detailSchedule.less');
+
 .clear-icon {
   cursor: pointer;
 

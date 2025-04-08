@@ -1,5 +1,5 @@
 <template>
-    <el-dialog title="选择人员" top="5vh" :visible="visible" :close-on-click-modal="false" width="40%" @close="handleClose"
+    <el-dialog :fullscreen="isMobile" title="选择人员" top="5vh" :visible="visible" :close-on-click-modal="false" width="40%" @close="handleClose"
         @open="handleOpen">
         <el-radio-group style="margin-bottom: 12px;" size="small" v-model="personType">
             <el-radio-button label="1">职位库选择</el-radio-button>
@@ -62,6 +62,7 @@
 </template>
 
 <script>
+import { isMobile } from "@/utils";
 import { getUserRoles } from "@/api/schedule/index";
 export default {
     name: 'personChooseDialog',
@@ -77,6 +78,7 @@ export default {
             refereeVisible: false,
             judgeVisible: false,
             loading: false,
+            isMobile:false
         };
     },
     watch: {
@@ -92,7 +94,7 @@ export default {
             default: false
         },
         checkId: {
-            type: Number | null,
+            type: [Number,null],
             default: -1
         }
     },
@@ -195,6 +197,7 @@ export default {
         }
     },
     created() {
+        this.isMobile = isMobile();
         this.initRoles();
     }
 }
@@ -281,5 +284,10 @@ export default {
 .slide-fade-leave-to {
     transform: translateY(20px);
     opacity: 0;
+}
+@media (max-width: 1024px)  {
+    .dialog__main--grid{
+        grid-template-columns: repeat(1, 1fr);
+    }
 }
 </style>
