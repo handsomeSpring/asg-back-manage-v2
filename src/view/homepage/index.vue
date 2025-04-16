@@ -8,7 +8,9 @@
         <el-header><common-header /></el-header>
         <headerTabs ref="headerTabs" v-show="$route.fullPath !== '/index'"></headerTabs>
         <el-scrollbar class="backtop-scroll" ref="queRef" :style="{ height: actuallHeight }">
-          <el-main style="height: 100%">
+          <el-main style="height: 100%" :style="{
+            padding:$route.path === '/index' ? '0' : '20px',
+          }">
             <transition name="fade-transform" mode="out-in">
               <router-view></router-view>
             </transition>

@@ -124,9 +124,6 @@ export default {
       ],
     };
   },
-  computed: {
-
-  },
   methods: {
     // 删除冠军
     handleDelete(data) {

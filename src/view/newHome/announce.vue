@@ -1,4 +1,25 @@
 <template>
+  <div>222</div>
+</template>
+
+<script>
+export default {
+  name: 'Announce-index',
+  data() {
+    return {
+
+    };
+  },
+  methods: {
+
+  },
+  created() {
+
+  },
+}
+</script>
+<style lang='less' scoped></style>
+<!-- <template>
   <div class="geo"></div>
 </template>
 
@@ -75,4 +96,4 @@ export default {
   width: 100%;
   height: 100%;
 }
-</style>
+</style> -->

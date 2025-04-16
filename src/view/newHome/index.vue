@@ -1,284 +1,376 @@
 <template>
-  <div class="toCover">
-    <!-- 顶部标题 -->
-    <div class="head-wrap"></div>
-    <!-- 三栏布局 -->
-    <div class="container">
-      <div class="left">
-        <!-- 参赛人数统计 -->
-        <div class="enrollNumber">
-          <div class="text-align">
-            <svg-icon
-              style="margin: 5px"
-              iconClass="enrollPerson"
-              width="20px"
-              height="20px"
-              color="#62f8fa"
-            ></svg-icon>
-            <p>ASG历届参赛人数</p>
+  <div class="visual__screen--container">
+    <header></header>
+    <main>
+      <div class="leftPart__container">
+        <dv-border-box-3>
+          <div class="leftPart--inner">
+            <div class="inner-item">
+              <div class="left-nav--inner">
+                <div class="content_wrap">
+                  <ScienceTitle title="服务器内存" />
+                  <WaveLeft />
+                </div>
+                <dv-decoration-2 :dur="2" style="width:100%;height:5px;" />
+              </div>
+            </div>
+            <div class="inner-item">
+              <div class="left-nav--inner">
+                <div class="content_wrap">
+                  <ScienceTitle title="合作伙伴" />
+                  <div class="dv-container--content">
+                    <dv-decoration-12 style="width:150px;height:150px;" />
+                  </div>
+                </div>
+                <dv-decoration-2 :dur="2" style="width:100%;height:5px;" />
+              </div>
+            </div>
+            <div class="inner-item">
+              <div class="left-nav--inner">
+                <div class="content_wrap">
+                  <ScienceTitle title="CPU使用占比" />
+                  <div class="dv-container--content ">
+                    <dv-decoration-9 class="content">
+                      <span class="pointer-text">44%</span>
+                    </dv-decoration-9>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
-          <div class="chart">
-            <div class="bar" id="enroll"></div>
+        </dv-border-box-3>
+      </div>
+      <div class="mainPart__container">
+        <dv-border-box-3>
+          <div class="main-content">
+            <ScienceTitle title="预算金额" />
+            <div class="number__info--wrap">
+              <div class="number__icon" v-for="(number, index) in budgetNumber" :key="index">
+                {{ number }}
+              </div>
+              <div class="number__icon">
+                元
+              </div>
+            </div>
+            <div class="rank__scroll--wrap">
+              <dv-scroll-ranking-board :key="reload" :config="config" style="width:80%;height:100%" />
+            </div>
           </div>
+        </dv-border-box-3>
+      </div>
+      <div class="rightPart__container">
+        <div class="right-top--container">
+          <dv-border-box-8>
+            <div class="pai__container">
+              <ScienceTitle title="赛事举办次数" />
+              <dv-active-ring-chart :config="configRight2" style="width:100%;height:100%" />
+            </div>
+          </dv-border-box-8>
         </div>
-        <!-- 使用率 -->
-        <div class="hunterNumber">
-          <div class="text-align">
-            <svg-icon
-              style="margin: 5px"
-              iconClass="untitled"
-              width="20px"
-              height="20px"
-              color="#62f8fa"
-            ></svg-icon>
-            <p>ASG赛场数据</p>
-          </div>
-          <div class="chart">
-            <div class="bar" id="hunter"></div>
-          </div>
+        <div class="right-top--container">
+          <dv-border-box-4 :reverse="true">
+            <div class="pai__container">
+              <ScienceTitle title="剩余预算" />
+              <dv-percent-pond :config="{
+                value: 19,
+                colors: ['#01c4f9', '#c135ff'],
+              }" style="width:60%;height:40%;margin-top:10%" />
+            </div>
+          </dv-border-box-4>
         </div>
       </div>
-            <!-- 中间 -->
-            <div class="main">
-        <div class="enrollNumber">
-          <div class="text-align">
-            <svg-icon
-              style="margin: 5px"
-              iconClass="map"
-              width="20px"
-              height="20px"
-              color="#62f8fa"
-            ></svg-icon>
-            <p>ASG全国粉丝分布图</p>
+      <div class="footerPart__container">
+        <dv-border-box-4>
+          <div class="footer--wrap">
+            <div class="footer__item--content">
+              <BarWave />
+            </div>
+            <dv-decoration2 :dur="2" :reverse="true" style="width:5px;height:100%;" />
+            <div class="footer__item--content">
+              <FoldWave />
+            </div>
+            <dv-decoration2 :dur="2" :reverse="true" style="width:5px;height:100%;" />
+            <div class="footer__item--content">
+                <dv-capsule-chart :key="reload" :config="staticConfig" style="width:100%;height:100%" />
+            </div>
           </div>
-          <div class="chart">
-            <announce></announce>
-          </div>
-        </div>
-        <div class="hunterNumber">
-          <div class="text-align">
-            <svg-icon
-              style="margin: 5px"
-              iconClass="person"
-              width="20px"
-              height="20px"
-              color="#62f8fa"
-            ></svg-icon>
-            <p>ASG赛事成员发展</p>
-          </div>
-          <div class="chart">
-            <div class="bar" id="orgName"></div>
-          </div>
-        </div>
+        </dv-border-box-4>
       </div>
-      <!-- 右侧 -->
-      <div class="right">
-        <!-- 参赛人数统计 -->
-        <div class="enrollNumber">
-          <div class="text-align">
-            <svg-icon
-              style="margin: 5px"
-              iconClass="bar"
-              width="20px"
-              height="20px"
-              color="#62f8fa"
-            ></svg-icon>
-            <p>ASG官方数据</p>
-          </div>
-          <div class="chart">
-            <div class="bar" id="person"></div>
-          </div>
-        </div>
-        <!-- 高校赛\众创赛 -->
-        <div class="hunterNumber">
-          <div class="text-align">
-            <svg-icon
-              style="margin: 5px"
-              iconClass="budget"
-              width="20px"
-              height="20px"
-              color="#62f8fa"
-            ></svg-icon>
-            <p>ASG季度预算汇总</p>
-          </div>
-          <div class="chart">
-            <div class="bar" id="season"></div>
-          </div>
-        </div>
-      </div>
-    </div>
+    </main>
   </div>
 </template>
 
 <script>
-import echarts from "echarts";
-import announce from "./announce.vue";
-import {
-  enrollOptions,
-  hunterOptions,
-  personOptions,
-  budgetOptions,
-  orgNameOptions
-} from "./echartsInit";
+import { countBudgetTotal } from '@/api/budget/index';
+import ScienceTitle from './scienceTitle.vue';
+import WaveLeft from './WaveLeft.vue';
+import BarWave from './BarWave.vue';
+import FoldWave from './FoldWave.vue';
 import { getStatic } from "@/api/admin/index";
-import { countBudgetTotal } from "@/api/budget/index.js";
 export default {
-  name: "newHome",
+  name: 'visualScreen',
   components: {
-    announce,
+    ScienceTitle,
+    WaveLeft,
+    BarWave,
+    FoldWave
   },
   data() {
     return {
-      static: {},
-      enrollChart: { id: "enroll", dom: "", option: "", isCreated: false },
-      hunterChart: { id: "hunter", dom: "", option: "", isCreated: false },
-      personChart: { id: "person", dom: "", option: "", isCreated: false },
-      seasonChart: { id: "season", dom: "", option: "", isCreated: false },
-      orgNameChart: { id: "orgName", dom: "", option: "", isCreated: false },
+      config: {
+        data: [],
+        unit: '元'
+      },
+      staticConfig:{
+        data:[],
+        unit:'个'
+      },
+      loading: false,
+      budgetNumber: [],
+      reload: new Date().toString(),
+      configRight2: {
+        data: [
+          {
+            name: '高校赛',
+            value: 4
+          },
+          {
+            name: '众创赛',
+            value: 7
+          },
+          {
+            name: '联赛',
+            value: 2
+          },
+          {
+            name: '神将赛',
+            value: 1
+          }
+        ],
+      }
     };
   },
-  async mounted() {
-    console.log('初始化了两次？？？');
-    try {
-      const { data } = await getStatic();
-      this.static = data;
-      const { data:budgetInfo } = await countBudgetTotal();
-      if(budgetInfo && budgetInfo.code === 401) throw new Error(budgetInfo.message ?? '没有权限！');
-      this.budgetInfo = budgetInfo.data.filter(item => Boolean(item.budgetTotalMoney)).map(el => {
-        return {
-          value:el.budgetTotalMoney,
-          name:el.sourceEventName
-        }
-      })
-    } catch (error) {
-      this.$message.error(error.message);
-    } finally{
-      this.t();
-    }
-  },
   methods: {
-    initEnrollData() {
-      this.enrollChart.option = enrollOptions();
-      this.initChart(this.enrollChart);
-    },
-    initHunterData() {
-      this.hunterChart.option = hunterOptions();
-      this.initChart(this.hunterChart);
-    },
-    initPersonData() {
-      this.personChart.option = personOptions(this.static);
-      this.initChart(this.personChart);
-    },
-    initSeasonData() {
-      this.seasonChart.option = budgetOptions(this.budgetInfo);
-      this.initChart(this.seasonChart);
-    },
-    initOrgNameData(){
-      this.orgNameChart.option = orgNameOptions();
-      this.initChart(this.orgNameChart);
-    },
-    t() {
-      this.initEnrollData();
-      this.initHunterData();
-      this.initPersonData();
-      this.initSeasonData();
-      this.initOrgNameData()
-    },
-    // 初始化echarts
-    initChart(chart) {
-      chart.dom = chart.dom || document.getElementById(chart.id);
-      if (chart.dom) {
-        let newChart = echarts.init(chart.dom);
-        if (chart.option) {
-          // 确认获取到option
-          newChart.setOption(chart.option);
-          chart.isCreated = true;
+    async initData() {
+      try {
+        this.loading = true;
+        const { data: { code, data, message } } = await countBudgetTotal();
+        if (code !== 200) throw new Error(message);
+        let count = 0;
+        data.forEach(item => {
+          count += item.budgetTotalMoney;
+          this.config.data.push({
+            value: item.budgetTotalMoney,
+            name: item.sourceEventName
+          })
+        });
+        this.budgetNumber = [];
+        if (count > 99999) {
+          const digitCount = 5;
+          this.budgetNumber.push(...Array(digitCount).fill(9));
+        } else {
+          // Push each digit of count into budgetNumber
+          const countStr = Math.floor(count).toString().padStart(5, '0');
+          for (const digit of countStr) {
+            this.budgetNumber.push(parseInt(digit, 10));
+          }
         }
-        return chart;
-      } else {
-        return chart;
+      } catch (error) {
+        this.$message.error(error instanceof Error ? error.message : error);
+      } finally {
+        this.$nextTick(() => {
+          this.loading = false;
+          this.reload = new Date().toString() + '1';
+        })
       }
     },
+    transFormToChines(key){
+      const mapList = {
+         'form_t':'报名表',
+         'role_t':'选手表',
+         'sh_log_t':'日志表',
+         'sh_t':'赛程表',
+         'user_t':'用户表'
+      };
+      return mapList[key] || key;
+    },
+    async initStatic(){
+      try {
+        const { data } = await getStatic();
+        if(data && data instanceof Object){
+          for (const key in data) {
+              const element = data[key];
+              this.staticConfig.data.push({
+                name: this.transFormToChines(key),
+                value: element
+              })
+          }
+        }
+      } catch (error) {
+        console.error(error);
+        this.$message.error('获取统计数据失败');
+      }
+    }
   },
-};
+  mounted() {
+    this.initData();
+    this.initStatic();
+  },
+}
 </script>
 
 <style scoped lang="less">
-@border-color: rgb(52, 41, 122);
-
-.toCover {
-  margin: -20px;
-  width: calc(100% + 40px);
-  min-height:calc(100vh - 60px);
-  box-sizing: border-box;
-  background-image: linear-gradient(
-    90deg,
-    rgb(0, 24, 74) 0%,
-    rgb(12, 24, 74) 0%,
-    rgb(33, 24, 74) 100%,
-    rgb(54, 24, 74) 100%
-  );
-}
-.head-wrap {
-  height: 80px;
+.visual__screen--container {
   width: 100%;
-  background-image: url("../../assets/images/dataBackground.jpg");
-  background-size: 101% 100%;
-}
-
-.container {
-  display: grid;
-  grid-template-columns: 30% 40% 30%;
-  // height: calc(100vh - 80px - 60px);
-  height: auto;
-  padding: 3px 24px;
-}
-.right {
-  width: 98%;
-  height: 100%;
-}
-
-.left {
-  height: 100%;
-  width: 98%;
-}
-.main {
-  width: 98%;
-  height: 100%;
-}
-.text-align {
-  display: flex;
-  align-items: center;
-  color: #62f8fa;
-  background: #0f4175;
-  height: 30px;
-  padding-left: 5px;
-  font-size: 1.125rem;
-}
-.hunterNumber {
-  border-radius: 2%;
-  width: 100%;
-  box-sizing: border-box;
-  height: 40vh;
-  margin: 6px 0;
-  border: 2px solid @border-color;
-}
-
-.enrollNumber {
-  border-radius: 2%;
-  width: 100%;
-  box-sizing: border-box;
-  height: calc(53vh - 80px - 6px);
-  border: 2px solid @border-color;
-}
-.chart {
-  margin: 0 auto;
+  height: calc(100vh - 60px);
   overflow: hidden;
-  height: calc(100% - 30px);
-  width: 100%;
-}
-.bar {
-  width: 100%;
-  height: 100%;
+  box-sizing: border-box;
+  background-image: url('../../assets/images/visualScreen_bg.png');
+
+  header {
+    height: 80px;
+    width: 100%;
+    background-image: url("../../assets/images/dataBackground.jpg");
+    background-size: 100% 100%;
+  }
+
+  main {
+    width: 100%;
+    height: calc(100% - 80px);
+    display: grid;
+    grid-template-columns: 25% 50% 25%;
+    grid-template-rows: 33% 33% 33%;
+    grid-template-areas:
+      "leftPart mainPart rightPart"
+      "leftPart mainPart rightPart"
+      "leftPart footerPart footerPart";
+
+    .leftPart__container {
+      grid-area: leftPart;
+      height: 100%;
+
+      .leftPart--inner {
+        display: flex;
+        align-items: center;
+        flex-direction: column;
+        padding: 25px;
+        width: calc(100% - 50px);
+        height: calc(100% - 50px);
+
+        .inner-item {
+          width: 100%;
+          height: 100%;
+
+          .left-nav--inner {
+            width: 100%;
+            height: 100%;
+
+            .content_wrap {
+              height: calc(100% - 5px);
+
+              .dv-container--content {
+                width: 100%;
+                height: 100%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+
+                .content {
+                  width: 150px;
+                  height: 150px;
+
+                  .pointer-text {
+                    font-size: 1.2rem;
+                    font-weight: bold;
+                    color: #08e5ff;
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+
+    .mainPart__container {
+      grid-area: mainPart;
+      height: 100%;
+
+      .main-content {
+        padding: 25px;
+        width: calc(100% - 50px);
+        height: calc(100% - 50px);
+
+        .number__info--wrap {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 10px;
+          margin: 1em 0;
+
+          .number__icon {
+            background-color: #04318099;
+            color: #08e5ff;
+            height: 60px;
+            width: 70px;
+            font-size: 35px;
+            font-weight: 700;
+            line-height: 60px;
+            text-align: center;
+          }
+        }
+
+        .rank__scroll--wrap {
+          width: 100%;
+          margin: 1rem 0;
+          height: calc(100% - 70px - 50px - 1rem - 2rem);
+          display: flex;
+          justify-content: center;
+          align-items: center;
+        }
+      }
+    }
+
+    .rightPart__container {
+      height: 100%;
+      grid-area: rightPart;
+      display: grid;
+      grid-template-rows: repeat(2, 1fr);
+
+      .right-top--container {
+        width: 100%;
+        height: 100%;
+
+        .pai__container {
+          width: 100%;
+          height: 100%;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+        }
+      }
+    }
+
+    .footerPart__container {
+      grid-area: footerPart;
+      height: 100%;
+
+      .footer--wrap {
+        display: flex;
+        padding: 20px;
+        height: calc(100% - 40px);
+        width: calc(100% - 40px);
+
+        .footer__item--content {
+          height: 100%;
+          width: 33%;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          gap: 2rem;
+        }
+      }
+    }
+  }
 }
 </style>
