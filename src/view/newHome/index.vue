@@ -91,7 +91,7 @@
             </div>
             <dv-decoration2 :dur="2" :reverse="true" style="width:5px;height:100%;" />
             <div class="footer__item--content">
-                <dv-capsule-chart :key="reload" :config="staticConfig" style="width:100%;height:100%" />
+              <dv-capsule-chart :key="reload2" :config="staticConfig" style="width:100%;height:100%" />
             </div>
           </div>
         </dv-border-box-4>
@@ -121,13 +121,14 @@ export default {
         data: [],
         unit: '元'
       },
-      staticConfig:{
-        data:[],
-        unit:'个'
+      staticConfig: {
+        data: [],
+        unit: '个'
       },
       loading: false,
       budgetNumber: [],
       reload: new Date().toString(),
+      reload2:new Date().toString(),
       configRight2: {
         data: [
           {
@@ -184,31 +185,36 @@ export default {
         })
       }
     },
-    transFormToChines(key){
+    transFormToChines(key) {
       const mapList = {
-         'form_t':'报名表',
-         'role_t':'选手表',
-         'sh_log_t':'日志表',
-         'sh_t':'赛程表',
-         'user_t':'用户表'
+        'form_t': '报名表',
+        'role_t': '选手表',
+        'sh_log_t': '日志表',
+        'sh_t': '赛程表',
+        'user_t': '用户表'
       };
       return mapList[key] || key;
     },
-    async initStatic(){
+    async initStatic() {
       try {
         const { data } = await getStatic();
-        if(data && data instanceof Object){
+        if (data && data instanceof Object) {
           for (const key in data) {
-              const element = data[key];
-              this.staticConfig.data.push({
-                name: this.transFormToChines(key),
-                value: element
-              })
+            const element = data[key];
+            this.staticConfig.data.push({
+              name: this.transFormToChines(key),
+              value: element
+            })
           }
         }
       } catch (error) {
         console.error(error);
         this.$message.error('获取统计数据失败');
+      } finally {
+        this.$nextTick(() => {
+          this.loading = false;
+          this.reload2 = new Date().toString() + '1';
+        })
       }
     }
   },
