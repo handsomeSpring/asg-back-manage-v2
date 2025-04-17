@@ -201,7 +201,7 @@ export default {
                 this.visible = false;
                 this.$emit('updateLoad');
             } catch (error) {
-                this.$message.error(error.message);
+                this.$message.error(`${error.message}-可能是机器人通知错误，刷新页面看看有没有设置成功！`);
             } finally {
                 loading.close();
             }
@@ -212,7 +212,6 @@ export default {
             this.visible = false;
         },
         handleOpen() {
-            console.log(this.gameResult, 'gameResult');
             const { winteam, team1_name, team2_name, final_score } = this.gameResult;
             this.leftTeam = team1_name;
             this.rightTeam = team2_name;

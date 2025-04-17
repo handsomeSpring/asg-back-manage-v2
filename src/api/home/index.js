@@ -47,7 +47,14 @@ export function delUser(userid){
 }
 //设置职位
 export function setRole(userid,officium){
-  return request.post(`/api/v1/admin/setop?userid=${userid}&opname=${officium}`)
+  return request({
+    method:'GET',
+    url:'/api/v1/admin/setop',
+    params:{
+      userid,
+      opname:officium
+    }
+  })
 }
 //成为管理员
 export function getSuperAdmin(password){

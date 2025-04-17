@@ -21,16 +21,16 @@
 
                 </div>
                 <el-collapse-transition>
-                  <div v-show="item.isFold" v-if="item.children && item.children.length > 0" class="children-list">
-                    <li class="child-node" :class="activeId === child.id ? 'active' : ''" v-for="child in item.children"
-                        :key="child.id">
-                        <p>{{ child.title }}</p>
-                        <div class="flex-icon">
-                            <i class="el-icon-view" @click="setConfig(child, true)"></i>
-                            <i class="el-icon-edit" @click="setConfig(child, false)"></i>
-                        </div>
-                    </li>
-                  </div>
+                    <div v-show="item.isFold" v-if="item.children && item.children.length > 0" class="children-list">
+                        <li class="child-node" :class="activeId === child.id ? 'active' : ''"
+                            v-for="child in item.children" :key="child.id">
+                            <p>{{ child.title }}</p>
+                            <div class="flex-icon">
+                                <i class="el-icon-view" @click="setConfig(child, true)"></i>
+                                <i class="el-icon-edit" @click="setConfig(child, false)"></i>
+                            </div>
+                        </li>
+                    </div>
                 </el-collapse-transition>
             </div>
         </el-card>
@@ -54,7 +54,8 @@
                     <el-row>
                         <el-col :span="11">
                             <el-form-item label="父级菜单主键Id" prop="parentId">
-                                <el-select size="small" v-model="settingInfo.parentId" :disabled="type !== 'edit' || isForbid">
+                                <el-select size="small" v-model="settingInfo.parentId"
+                                    :disabled="type !== 'edit' || isForbid">
                                     <el-option v-for="item in parentOptions" :key="item.value" :value="item.value"
                                         :label="item.label"></el-option>
                                 </el-select>
@@ -76,7 +77,8 @@
                         <el-col :span="11" :offset="2">
                             <el-form-item label="菜单图标（勿用彩色图标）">
                                 <div class="flex_icon">
-                                    <el-select size="small" v-model="settingInfo.iconClass" :disabled="isForbid" placeholder="请选择">
+                                    <el-select size="small" v-model="settingInfo.iconClass" :disabled="isForbid"
+                                        placeholder="请选择">
                                         <el-option v-for="item in svgIcon" :key="item.value" :value="item.value">
                                             <div class="flex_icon">
                                                 <span>{{ item.label }}</span>
@@ -111,7 +113,7 @@
                                             </template>
                                 </el-input>
                                 <el-button v-show="!isForbid" plain @click="setRouterView" size="small">
-                                    {{ settingInfo.component === 'router-view' ?  '转为组件模式' : '设置为无跳转'}}
+                                    {{ settingInfo.component === 'router-view' ? '转为组件模式' : '设置为无跳转' }}
                                 </el-button>
                             </el-form-item>
                         </el-col>
@@ -162,11 +164,12 @@
                         </el-col>
                         <el-col v-show="!isForbid" :span="11" :offset="2">
                             <el-form-item>
-                                <el-button type="primary" size="small" @click="handleSaveMenu">{{ ['edit','parentEdit'].includes(type) ? '更新'
-                                    :
-                                    '新增'
-                                    }}菜单</el-button>
-                                <el-button v-if="['edit','parentEdit'].includes(type)" type="danger" size="small" plain
+                                <el-button type="primary" size="small" @click="handleSaveMenu">{{
+                                    ['edit', 'parentEdit'].includes(type) ? '更新'
+                                        :
+                                        '新增'
+                                }}菜单</el-button>
+                                <el-button v-if="['edit', 'parentEdit'].includes(type)" type="danger" size="small" plain
                                     @click="handleDeleteNode">删除菜单</el-button>
                             </el-form-item>
                         </el-col>
@@ -212,8 +215,8 @@ export default {
                 component: [
                     { required: true, message: '请填写前端组件路径', blur: 'blur' }
                 ],
-                adaptability:[
-                    { required: true, message: '请选择适配情况', trigger: 'change'}
+                adaptability: [
+                    { required: true, message: '请选择适配情况', trigger: 'change' }
                 ]
             },
             loading: false,
@@ -267,8 +270,8 @@ export default {
                     }
                 });
                 this.parentOptions.unshift({
-                    label:'根目录',
-                    value:'-1'
+                    label: '根目录',
+                    value: '-1'
                 })
             } catch (error) {
                 this.$message.error(error.message);
@@ -277,9 +280,9 @@ export default {
             }
         },
         setRouterView() {
-            if(this.settingInfo.component === 'router-view'){
+            if (this.settingInfo.component === 'router-view') {
                 this.settingInfo.component = '';
-            }else{
+            } else {
                 this.settingInfo.component = 'router-view';
             }
         },
@@ -297,7 +300,7 @@ export default {
                 auth: [],
                 allowOperate: '1',
                 sort: this.menuList.length + 1,
-                adaptability:'1',
+                adaptability: '1',
             }
             this.isForbid = false;
             this.initFlag = false;
@@ -319,7 +322,7 @@ export default {
                 auth: [],
                 path: '',
                 sort: item.children.length + 1,
-                adaptability:'1'
+                adaptability: '1'
             }
             this.isForbid = false;
             this.initFlag = false;
@@ -352,9 +355,10 @@ export default {
 
         },
         handleSaveMenu() {
-            try {
-                this.$refs.form.validate(async valid => {
-                    if (valid) {
+
+            this.$refs.form.validate(async valid => {
+                if (valid) {
+                    try {
                         const requestBody = {
                             ...this.settingInfo,
                             path: this.pathPrepend + this.settingInfo.path,
@@ -368,14 +372,18 @@ export default {
                         });
                         this.initMenu();
                         this.initFlag = true;
+                    } catch (error) {
+                        if(error?.response?.data?.message){
+                            return this.$message.error(error.response.data.message);
+                        }
+                        if (error instanceof Error && 'message' in error) {
+                            return this.$message.error(error.message);
+                        }
                     }
-                })
-            } catch (error) {
-                if (error instanceof Error && 'message' in error) {
-                    return this.$message.error(error.message);
+                } else {
+                    this.$message.error('请完整填写表单！');
                 }
-                this.$message.error('请完整填写表单！');
-            }
+            })
         },
         setParentConfig(item, dis) {
             this.type = 'parentEdit';

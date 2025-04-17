@@ -21,55 +21,55 @@
 
     &lt;script lang="javascript">
     export default{
-    date(){
-    return {
-    tableData:[
-    {
-    name:'小明',
-    sex:'1',
-    hobby:'打飞机'
-    },
-    {
-    name:'小张',
-    sex:'2',
-    hobby:'第五人格'
-    },
-    {
-    name:'小牛',
-    sex:'2',
-    hobby:'王者荣耀'
-    },
-    {
-    name:'小飞',
-    sex:'1',
-    hobby:'英雄联盟'
-    }
-    ],
-    tableProps:[
-    {
-    type:'index',
-    label:'序号'
-    },
-    {
-    type:'prop',
-    label:'名称',
-    prop:'name'
-    },
-    {
-    type:'slot',
-    prop:'sex',
-    label:'性别'
-    },
-    {
-    type:'prop',
-    prop:'hobby',
-    label:'兴趣爱好'
-    }
-    ],
-    loading:false
-    }
-    },
-    }
+      date(){
+         return {
+            tableData:[
+            {
+               name:'小明',
+               sex:'1',
+               hobby:'打飞机'
+            },
+           {
+           name:'小张',
+           sex:'2',
+           hobby:'第五人格'
+           },
+           {
+           name:'小牛',
+           sex:'2',
+           hobby:'王者荣耀'
+           },
+           {
+           name:'小飞',
+           sex:'1',
+           hobby:'英雄联盟'
+           }
+           ],
+           tableProps:[
+           {
+           type:'index',
+           label:'序号'
+           },
+           {
+           type:'prop',
+           label:'名称',
+           prop:'name'
+           },
+           {
+           type:'slot',
+           prop:'sex',
+           label:'性别'
+           },
+           {
+           type:'prop',
+           prop:'hobby',
+           label:'兴趣爱好'
+           }
+           ],
+           loading:false
+         }
+         },
+         }
     &lt;/script>
   </code>
 </pre>
@@ -174,6 +174,17 @@ export default {
           name: 'noDateText',
           type: 'String(默认为暂无数据)',
           doc: '表格无数据时候展示的文字'
+        },
+        ,
+        {
+          name: 'isAutoHeight',
+          type: 'Boolean(默认为false)',
+          doc: '是否根据内容撑开高度，默认是有固定的高度。如果设置为true，表格的高度会根据内容撑开。'
+        },
+        {
+          name: 'tableWidth',
+          type: 'String(默认是：94%)',
+          doc: '表格宽度，默认是94%。如果设置为100%，表格会撑满整个屏幕。'
         }
       ]
     };
