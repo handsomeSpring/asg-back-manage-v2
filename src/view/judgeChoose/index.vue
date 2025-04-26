@@ -1,6 +1,19 @@
 <!-- 二十TODO-裁判选班 字段位置修改，referee_Id改成judge_Id,导播--裁判 -->
 <template>
   <div>
+    <el-collapse style="margin:1em 0">
+      <el-collapse-item title="裁判规则" name="1">
+        <a href="/rule1.jpg" target="_blank">
+          <img style="width:100%" src="/rule1.jpg" />
+        </a>
+        <a href="/rule2.jpg" target="_blank">
+          <img style="width:100%" src="/rule2.jpg" />
+        </a>
+        <a href="/rule3.jpg" target="_blank">
+          <img style="width:100%" src="/rule3.jpg" />
+        </a>
+      </el-collapse-item>
+    </el-collapse>
     <div class="header__content">
       <el-select size="small" v-model="belong" placeholder="请选择赛季名称" @change="getList(true)">
         <el-option v-for="(item, index) in eventList" :key="index" :label="item.label" :value="item.value"></el-option>
@@ -12,8 +25,8 @@
         <asgTableCard v-for="(item, index) in tableData" :key="index">
           <template v-slot:header>
             <div class="table-header">
-              <el-checkbox v-if="new Date() < new Date(item.opentime) && item.isAllowChoose !== 0" v-model="item.isCheck"
-                @input="handleCheck($event, item)"
+              <el-checkbox v-if="new Date() < new Date(item.opentime) && item.isAllowChoose !== 0"
+                v-model="item.isCheck" @input="handleCheck($event, item)"
                 :disabled="item.judeg_Id === userInfo.id || !!item.judge_Id"></el-checkbox>
               <p>{{ item.team1_name }} vs {{ item.team2_name }}<span style="color:#f40;margin-left: 1em;"
                   v-if="new Date() > new Date(item.opentime)">(赛程已结束)</span></p>
@@ -28,12 +41,12 @@
                 <p class="text">
                   解说：<span style="color: #4090ef">{{
                     item.commentary || "无解说报名"
-                    }}</span>
+                  }}</span>
                 </p>
                 <p class="text">
                   导播：<span style="color: #4090ef">{{
                     item.referee || "无导播报名"
-                    }}</span>
+                  }}</span>
                 </p>
                 <p class="text">
                   赛程类别：
@@ -42,9 +55,10 @@
                 <p class="text">
                   裁判：<span class="referee-comp" :class="item.judge ? 'success' : 'primary'">{{
                     item.judge || "虚位以待"
-                    }}</span>
+                  }}</span>
                 </p>
-                <p v-show="item.isAllowChoose === 0" class="text warning"><i class="el-icon-info" style="margin-right: 5px;"></i>由于主办方设置，该场不允许选班</p>
+                <p v-show="item.isAllowChoose === 0" class="text warning"><i class="el-icon-info"
+                    style="margin-right: 5px;"></i>由于主办方设置，该场不允许选班</p>
               </div>
               <div class="right-content">
                 <p v-if="!item.judge_Id && !item.judge" style="color:#0c80e5">虚位以待</p>
@@ -224,6 +238,7 @@ export default {
 
 .main__container {
   min-height: 70vh;
+
   .table-header {
     display: flex;
     align-items: center;
@@ -247,9 +262,10 @@ export default {
       .text {
         font-size: 0.9em;
         font-weight: 500;
-        &.warning{
-          color:#f40;
-          font-size:0.75em;
+
+        &.warning {
+          color: #f40;
+          font-size: 0.75em;
         }
       }
     }
