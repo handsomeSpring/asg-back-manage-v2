@@ -77,7 +77,7 @@
                         <el-col :span="11" :offset="2">
                             <el-form-item label="菜单图标（勿用彩色图标）">
                                 <div class="flex_icon">
-                                    <el-select size="small" v-model="settingInfo.iconClass" :disabled="isForbid"
+                                    <el-select style="width:60%" v-show="!customIcon" size="small" v-model="settingInfo.iconClass" :disabled="isForbid"
                                         placeholder="请选择">
                                         <el-option v-for="item in svgIcon" :key="item.value" :value="item.value">
                                             <div class="flex_icon">
@@ -87,6 +87,8 @@
                                             </div>
                                         </el-option>
                                     </el-select>
+                                    <el-input style="width:60%" v-show="customIcon" size="small" v-model="settingInfo.iconClass"></el-input>
+                                    <i class="changeIcon el-icon-refresh" @click="changeIconMode"></i>
                                     <svg-icon :iconClass="settingInfo.iconClass" width="40px" height="40px"
                                         color="#4090EF"></svg-icon>
                                 </div>
@@ -159,6 +161,7 @@
                                     <el-radio-button label="1">pc端</el-radio-button>
                                     <el-radio-button label="2">移动端</el-radio-button>
                                     <el-radio-button label="3">pc移动互通</el-radio-button>
+                                    <el-radio-button label="4">桌面后台</el-radio-button>
                                 </el-radio-group>
                             </el-form-item>
                         </el-col>
@@ -220,7 +223,8 @@ export default {
                 ]
             },
             loading: false,
-            parentOptions: []
+            parentOptions: [],
+            customIcon:false,
         }
     },
     computed: {
@@ -245,6 +249,9 @@ export default {
 
     },
     methods: {
+        changeIconMode(){
+            this.customIcon = !this.customIcon;
+        },
         async initMenu() {
             try {
                 this.loading = true;
@@ -413,6 +420,14 @@ export default {
 }
 </script>
 <style lang="less" scoped>
+.changeIcon{
+    font-size: 24px;
+    font-weight: bold;
+    cursor: pointer;;
+    &:hover{
+        color:#4090EF;
+    }
+}
 .menu__container {
     display: grid;
     grid-template-columns: 400px auto;
