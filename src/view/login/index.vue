@@ -28,14 +28,14 @@
             <h2>欢迎登录!</h2>
           </div>
           <div class="icon-list">
+            <a href="https://gitee.com/zhuo-spring/accounting_app/releases" target="_blank" class="icon-tab">
+              <img class="icon-image" src="../../assets/images/accompanyIcon.png" />
+            </a>
             <a href="https://space.bilibili.com/436148512?spm_id_from=333.1007.0.0" target="_blank" class="icon-tab">
-              <img class="icon-image" src="../../assets/images/person.png" />
+              <img class="icon-image" src="../../assets/images/bili.png" />
             </a>
-            <a href="https://space.bilibili.com/436148512?spm_id_from=333.1007.0.0" target="_blank" class="icon-tab lighten-2">
-              <img class="icon-image" src="../../assets/images/logo_black.png" />
-            </a>
-            <a href="https://space.bilibili.com/436148512?spm_id_from=333.1007.0.0" target="_blank" class="icon-tab lighten-3">
-              <img src="../../assets/images/goodsImg.png"
+            <a href="https://gitee.com/zhuo-spring/asg-tauri-project/releases" target="_blank" class="icon-tab">
+              <img src="../../assets/images/extractIcon.png"
                 class="icon-image" /></a>
           </div>
           <el-divider class="divider-login">使用用户名登录</el-divider>
@@ -64,7 +64,6 @@
           <a href="https://commentary.idvasg.cn/#/" target="_blank" class="hilight-info
                                     ">立即注册</a>
         </p>
-        <a href="https://gitee.com/zhuo-spring/asg-tauri-project/releases" target="_blank">下载windows10客户端</a>
       </div>
     </div>
   </div>
