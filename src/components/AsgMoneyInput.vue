@@ -396,6 +396,7 @@ export default {
   align-items: flex-start;
   width:100%;
   gap:12px;
+  align-items: center;
   .input-content{
     width:60%;
     flex-shrink: 0;

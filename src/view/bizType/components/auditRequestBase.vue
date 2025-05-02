@@ -85,7 +85,7 @@ export default {
   },
   props: {
     checkId: {
-      type: Number | null,
+      type: [Number,null],
       required: true,
     },
     bizTypeOptions: {

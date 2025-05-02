@@ -88,7 +88,7 @@
 import AsgTipComponent from '@/components/AsgTipComponent.vue';
 import TextTitle from '@/components/TextTitle.vue';
 import mobileTable from '@/components/mobile/mobileTable.vue';
-import propTable from '../components/propTable.vue';
+import propTable from '@/view/componentsDoc/components/propTable.vue';
 export default {
   name: 'AsgMobileTableDoc',
   text: 'AsgMobileTable 移动端表格',
@@ -175,7 +175,6 @@ export default {
           type: 'String(默认为暂无数据)',
           doc: '表格无数据时候展示的文字'
         },
-        ,
         {
           name: 'isAutoHeight',
           type: 'Boolean(默认为false)',
