@@ -30,43 +30,43 @@
                hobby:'打飞机'
             },
            {
-           name:'小张',
-           sex:'2',
-           hobby:'第五人格'
+               name:'小张',
+               sex:'2',
+               hobby:'第五人格'
            },
            {
-           name:'小牛',
-           sex:'2',
-           hobby:'王者荣耀'
+               name:'小牛',
+               sex:'2',
+               hobby:'王者荣耀'
            },
            {
-           name:'小飞',
-           sex:'1',
-           hobby:'英雄联盟'
+               name:'小飞',
+               sex:'1',
+               hobby:'英雄联盟'
            }
            ],
            tableProps:[
            {
-           type:'index',
-           label:'序号'
+               type:'index',
+               label:'序号'
            },
            {
-           type:'prop',
-           label:'名称',
-           prop:'name'
+               type:'prop',
+               label:'名称',
+               prop:'name'
            },
            {
-           type:'slot',
-           prop:'sex',
-           label:'性别'
+               type:'slot',
+               prop:'sex',
+               label:'性别'
            },
            {
-           type:'prop',
-           prop:'hobby',
-           label:'兴趣爱好'
+               type:'prop',
+               prop:'hobby',
+               label:'兴趣爱好'
            }
            ],
-           loading:false
+            loading:false
          }
          },
          }

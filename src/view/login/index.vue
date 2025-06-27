@@ -35,8 +35,7 @@
               <img class="icon-image" src="../../assets/images/bili.png" />
             </a>
             <a href="https://gitee.com/zhuo-spring/asg-tauri-project/releases" target="_blank" class="icon-tab">
-              <img src="../../assets/images/extractIcon.png"
-                class="icon-image" /></a>
+              <img src="../../assets/images/extractIcon.png" class="icon-image" /></a>
           </div>
           <el-divider class="divider-login">使用用户名登录</el-divider>
           <div class="login-form">
@@ -48,7 +47,7 @@
             <label class="input-label">密码</label>
             <div class="input-container">
               <input v-model="userform.password" @focus="isError = false" :class="isError ? 'error-input' : ''"
-              class="input-side" :type="inputtype" placeholder="请输入密码" />
+                class="input-side" :type="inputtype" placeholder="请输入密码" />
               <i :class="eye_status" class="input-icon" @click="toggleEye"></i> <!-- 添加的图标 -->
             </div>
 
@@ -86,7 +85,7 @@ export default {
         password: "",
       },
       inputtype: "password",
-      eye_status:'el-icon-lock',
+      eye_status: 'el-icon-lock',
       isError: false,
       isMobile: false,
     };

@@ -10,11 +10,15 @@
     "deploy-only": "node deploy.js"
   },
   "dependencies": {
+    "@antv/layout": "^0.3.25",
+    "@antv/x6": "^2.18.1",
+    "@antv/x6-vue-shape": "^2.1.2",
     "@highlightjs/vue-plugin": "^1.0.2",
     "@jiaminghi/data-view": "^2.10.0",
     "@kangc/v-md-editor": "^1.7.11",
     "@vue/babel-helper-vue-jsx-merge-props": "^1.4.0",
     "@vue/babel-preset-jsx": "^1.4.0",
+    "@vue/composition-api": "^1.7.2",
     "axios": "^1.4.0",
     "core-js": "^3.6.5",
     "device.js": "^2.3.0",
@@ -39,6 +43,7 @@
     "xlsx": "^0.18.5"
   },
   "devDependencies": {
+    "@babel/plugin-proposal-class-properties": "^7.18.6",
     "@vue/cli-plugin-babel": "~4.5.0",
     "@vue/cli-plugin-eslint": "~4.5.0",
     "@vue/cli-service": "~4.5.0",

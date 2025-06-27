@@ -33,6 +33,7 @@ import * as filters from './utils/filters'
 import Highlight from '@/utils/directive.js'; // 这里是你项目highlight.js所在路径
 // 将自动注册所有组件为全局组件
 import dataV from '@jiaminghi/data-view'
+
 Object.keys(filters).forEach(key => {
   Vue.filter(key, filters[key])
 })

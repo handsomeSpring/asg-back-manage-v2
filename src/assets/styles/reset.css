@@ -218,3 +218,8 @@ pre code {
     display: none;
   }
 }
+@keyframes ant-line {
+  to {
+    stroke-dashoffset: -1000;
+  }
+}
