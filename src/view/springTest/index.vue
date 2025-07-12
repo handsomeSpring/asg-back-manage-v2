@@ -193,7 +193,6 @@ export default {
 
       // 渲染节点
       layoutData.nodes.forEach(node => {
-        console.log(node);
         this.graph.addNode({
           id: node.id,
           x: node.x,

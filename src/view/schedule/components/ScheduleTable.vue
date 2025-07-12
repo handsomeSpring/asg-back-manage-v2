@@ -143,7 +143,7 @@
       :total="total">
     </el-pagination>
     <mobilePage v-else :page="listQuery.page" :total="total" :limit="listQuery.limit"
-      @current-change="handleChange($event, 'page')"></mobilePage>
+      @current-change="handlePageChange($event, 'page')"></mobilePage>
     <!-- 弹出框 -->
     <dialog-choose :isMobile="isMobile" :eventName="belong" :showChoose.sync="showChoose" @refresh="initSchedule"
       :tagOptions="tagOptions"></dialog-choose>
